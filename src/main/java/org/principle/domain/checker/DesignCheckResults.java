@@ -15,30 +15,38 @@ public class DesignCheckResults {
         this.cycles = cycles;
     }
     
-    public boolean isCyclesDetected() {
-        return !cycles.isEmpty();
-    }
-    public int numOfViolations() {
+    public int numOfLayerViolations() {
         return violations.size();
+    }
+    public int numOfADPViolations() {
+        return cycles.size();
     }
 
     public boolean hasErrors() {
-        return isCyclesDetected() || !violations.isEmpty();
+        return !cycles.isEmpty() || !violations.isEmpty();
     }
     
 
     public String getErrorReport() {
         StringBuffer sb = new StringBuffer();
-        if (isCyclesDetected()) {
-            sb.append("Package cyclesDetected detected!\n");
+        if (!cycles.isEmpty()) {
+            sb.append(apdViolationErrorMessage());
         }
         if (!violations.isEmpty()) {
-            sb.append(errorMessage());
+            sb.append(layerViolationErrorMessage());
         }
         return sb.toString();
     }
     
-    private String errorMessage() {
+    private String apdViolationErrorMessage() {
+        StringBuffer sb = new StringBuffer("APD violations: \n");
+        for (Cycle cycle : cycles) {
+            sb.append(cycle + "\n");
+        }
+        return sb.toString();
+    }
+
+    private String layerViolationErrorMessage() {
         StringBuffer sb = new StringBuffer("DDD layers violations: \n");
         for (LayerReference layerReference : violations) {
             sb.append(layerReference + "\n");

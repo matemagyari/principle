@@ -32,15 +32,6 @@ public class LayerViolationDetector {
             }
         }
 
-        // for (JavaPackage aPackage : packages) {
-        // if (inLayer(aPackage, parameters.getDomainPackage())) {
-        // violations.addAll(getReferencesToLayers(aPackage,
-        // parameters.getAppPackage(), parameters.getInfrastructurePackage()));
-        // } else if (inLayer(aPackage, parameters.getAppPackage())) {
-        // violations.addAll(getReferencesToLayers(aPackage,
-        // parameters.getInfrastructurePackage()));
-        // }
-        // }
         return violations;
     }
 
@@ -51,14 +42,6 @@ public class LayerViolationDetector {
             }
         }
         return Optional.absent();
-    }
-
-    private static boolean inLayer(JavaPackage aPackage, String layer) {
-        return aPackage.getName().startsWith(layer);
-    }
-
-    private List<LayerReference> getReferencesToLayers(JavaPackage aPackage, final String... layers) {
-        return getReferencesToLayers(aPackage, Lists.newArrayList(layers));
     }
 
     @SuppressWarnings("unchecked")

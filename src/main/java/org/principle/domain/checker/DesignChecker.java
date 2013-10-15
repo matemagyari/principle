@@ -12,19 +12,22 @@ import org.principle.domain.detector.cycledetector.CycleDetector;
 import org.principle.domain.detector.cycledetector.core.Cycle;
 import org.principle.domain.detector.layerviolationdetector.LayerReference;
 import org.principle.domain.detector.layerviolationdetector.LayerViolationDetector;
+import org.principle.infrastructure.plugin.DesignCheckerMojo;
 
 public class DesignChecker {
 
     private final LayerViolationDetector layerViolationDetector;
     private final CycleDetector cycleDetector;
-    
+    private final DesingCheckerParameters parameters;
+    DesignCheckerMojo checkerMojo;
     public DesignChecker(DesingCheckerParameters parameters) {
+        this.parameters = parameters;
         layerViolationDetector = new LayerViolationDetector(parameters);
         cycleDetector = new CycleDetector(parameters.getBasePackage());
     }
 
     @SuppressWarnings("unchecked")
-    public DesignCheckResults execute(DesingCheckerParameters parameters) {
+    public DesignCheckResults execute() {
 
         try {
             JDepend jDepend = new JDepend();

@@ -1,11 +1,12 @@
 package org.principle.infrastructure.plugin;
 
+import java.util.List;
+
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.codehaus.plexus.util.StringUtils;
 import org.principle.domain.checker.DesignCheckResults;
 import org.principle.domain.checker.DesignChecker;
 import org.principle.domain.core.DesingCheckerParameters;
@@ -15,25 +16,25 @@ public class DesignCheckerMojo extends AbstractMojo {
 
     @Parameter(property = "designcheck.basePackage", defaultValue = "")
     private String basePackage;
-    @Parameter(property = "designcheck.appPackage", defaultValue = "")
-    private String appPackage;
-    @Parameter(property = "designcheck.infrastructurePackage", defaultValue = "")
-    private String infrastructurePackage;
-    @Parameter(property = "designcheck.domainPackage", defaultValue = "")
-    private String domainPackage;
-    @Parameter(property = "designcheck.breakIfCycleDetected", defaultValue = "false")
-    private boolean breakIfCycleDetected;
-    @Parameter(property = "designcheck.breakIfDDDLayerViolationDetected", defaultValue = "0")
-    private int thresholdDDDLayerViolations;
-
+    
+    @Parameter(property = "designcheck.thresholdLayerViolations", defaultValue = "0")
+    private int thresholdLayerViolations;
+    
+    @Parameter(property = "designcheck.thresholdADPViolations", defaultValue = "0")
+    private int thresholdADPViolations;
+    
+    @Parameter(property = "designcheck.layers")
+    private List<String> layers;
+    
+    
     private DesignChecker designChecker;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-
-        DesingCheckerParameters parameters = defaultParameters();
+        
+        DesingCheckerParameters parameters = buildParameters();
         designChecker = new DesignChecker(parameters);
 
-        DesignCheckResults checkResults = designChecker.execute(parameters);
+        DesignCheckResults checkResults = designChecker.execute();
 
         if (checkResults.hasErrors()) {
             getLog().warn(checkResults.getErrorReport());
@@ -48,27 +49,19 @@ public class DesignCheckerMojo extends AbstractMojo {
 
     private void checkThresholds(DesignCheckResults checkResults) throws MojoFailureException {
         
-        if (breakIfCycleDetected && checkResults.isCyclesDetected()
-                || thresholdDDDLayerViolations < checkResults.numOfViolations()) {
+        if (thresholdADPViolations < checkResults.numOfADPViolations()
+                || thresholdLayerViolations < checkResults.numOfLayerViolations()) {
             
-            throw new MojoFailureException("\nCycle detected: " + checkResults.isCyclesDetected()
-                    + ".\nDDD layer violations (" + thresholdDDDLayerViolations + " permissible): "
-                    + checkResults.numOfViolations());
+            throw new MojoFailureException("\nProblems!");
         }
     }
 
-    private DesingCheckerParameters defaultParameters() {
-        checkNotEmpy("basePackage", basePackage);
-        checkNotEmpy("appPackage", appPackage);
-        checkNotEmpy("domainPackage", domainPackage);
-        checkNotEmpy("infrastructurePackage", infrastructurePackage);
-        return new DesingCheckerParameters(basePackage, appPackage, domainPackage, infrastructurePackage);
+    private DesingCheckerParameters buildParameters() {
+        DesingCheckerParameters parameters = new DesingCheckerParameters(basePackage);
+        parameters.setLayers(layers);
+        return parameters;
     }
 
-    private void checkNotEmpy(String name, String value) {
-        if (StringUtils.isBlank(value)) {
-            throw new RuntimeException(name + " is empty");
-        }
-    }
+
 
 }

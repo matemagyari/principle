@@ -32,22 +32,6 @@ public class Package {
         return reference;
     }
     
-    private Package find(PackageReference reference) {
-        if (this.getReference().equals(reference)) {
-            return this;
-        }
-        if (notUnderMe(reference)) {
-            return null;
-        }
-        for (Package child : children) {
-            Package foundPackage = child.find(reference);
-            if (foundPackage != null) {
-                return foundPackage;
-            }
-        }
-        return null;
-    }
-    
     public List<Package> flatten() {
         List<Package> flattenedHierarchy = Lists.newArrayList();
         flattenedHierarchy = Lists.newArrayList(this);
