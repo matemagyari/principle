@@ -1,5 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.principle</groupId>
 	<artifactId>principle</artifactId>
@@ -65,4 +71,25 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:https://matemagyari@github.com/matemagyari/principle.git</connection>
+		<developerConnection>scm:git:https://matemagyari@github.com/matemagyari/principle.git</developerConnection>
+		<url>origin</url>
+	</scm>
+	<developers>
+		<developer>
+			<id>mate.magyari</id>
+			<name>Mate Magyari</name>
+			<email>mate.magyari@gmail.com</email>
+		</developer>
+	</developers>
 </project>

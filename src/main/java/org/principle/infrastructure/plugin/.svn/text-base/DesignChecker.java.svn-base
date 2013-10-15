@@ -1,0 +1,88 @@
+package gamesys.poker.designchecker.plugin;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+
+import jdepend.framework.JDepend;
+import jdepend.framework.JavaPackage;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+
+public class DesignChecker {
+
+    private final DesingCheckerParameters parameters;
+    
+    public DesignChecker(DesingCheckerParameters parameters) {
+        this.parameters = parameters;
+    }
+
+    @SuppressWarnings("unchecked")
+    DesignCheckResults execute(DesingCheckerParameters parameters) {
+
+        try {
+            JDepend jDepend = new JDepend();
+            jDepend.addDirectory("./target/classes");
+            Collection<JavaPackage> packages = jDepend.analyze();
+            
+            List<PackageRef> violations = findViolations(packages);
+            
+            return new DesignCheckResults(violations, jDepend.containsCycles());
+            
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    private List<PackageRef> findViolations(Collection<JavaPackage> packages) {
+        List<PackageRef> violations = Lists.newArrayList();
+        
+        for (JavaPackage aPackage : packages) {
+            if (inLayer(aPackage, parameters.getDomainPackage())) {
+                violations.addAll(getReferencesToLayers(aPackage, parameters.getAppPackage(), parameters.getInfrastructurePackage()));
+            } else if (inLayer(aPackage, parameters.getAppPackage())) {
+                violations.addAll(getReferencesToLayers(aPackage, parameters.getInfrastructurePackage()));
+            }
+        }
+        return violations;
+    }
+    
+    @SuppressWarnings("unchecked")
+    private List<PackageRef> getReferencesToLayers(JavaPackage aPackage, final String... layers) {
+        
+        
+        List<PackageRef> references = Lists.newArrayList();
+        
+        Collection<JavaPackage> allReferencedPackages = aPackage.getEfferents();
+        
+        Collection<JavaPackage> referencedPackages = filterToRelevantPackages(allReferencedPackages);
+        
+        for (JavaPackage referencedPackage : referencedPackages) {
+            for (String layer : layers) {
+                if (referencedPackage.getName().startsWith(layer)) {
+                    references.add(new PackageRef(aPackage.getName(), referencedPackage.getName()));
+                }
+            }
+        }
+        return references;
+    }
+
+    private List<JavaPackage> filterToRelevantPackages(Collection<JavaPackage> allReferencedPackages) {
+        
+        Predicate<JavaPackage> filter = new Predicate<JavaPackage>() {
+
+            public boolean apply(JavaPackage input) {
+                return input.getName().startsWith(parameters.getBasePackage());
+            }
+  
+        };
+        return Lists.newArrayList( Iterables.filter(allReferencedPackages, filter));
+    }
+
+    private static boolean inLayer(JavaPackage aPackage, String layer) {
+        return aPackage.getName().startsWith(layer);
+    }
+
+}

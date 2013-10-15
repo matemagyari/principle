@@ -1,0 +1,17 @@
+package gamesys.poker.designchecker.plugin;
+
+class PackageRef {
+    
+    private String referer;
+    private String referee;
+    
+    public PackageRef(String referer, String referee) {
+        this.referer = referer;
+        this.referee = referee;
+    }
+
+    @Override
+    public String toString() {
+        return referer + " -> " + referee;
+    }
+}

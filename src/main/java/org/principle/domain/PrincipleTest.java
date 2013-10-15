@@ -8,7 +8,8 @@ import jdepend.framework.JDepend;
 import jdepend.framework.JavaPackage;
 
 import org.junit.Test;
-import org.principle.domain.core.Cycle;
+import org.principle.domain.detector.cycledetector.CycleDetector;
+import org.principle.domain.detector.cycledetector.core.Cycle;
 
 public class PrincipleTest {
     
