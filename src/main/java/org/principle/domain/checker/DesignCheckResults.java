@@ -7,23 +7,23 @@ import org.principle.domain.detector.layerviolationdetector.LayerReference;
 
 public class DesignCheckResults {
     
-    private final List<LayerReference> violations;
+    private final List<LayerReference> layerViolations;
     private final List<Cycle> cycles;
     
     public DesignCheckResults(List<LayerReference> violations, List<Cycle> cycles) {
-        this.violations = violations;
+        this.layerViolations = violations;
         this.cycles = cycles;
     }
     
     public int numOfLayerViolations() {
-        return violations.size();
+        return layerViolations.size();
     }
     public int numOfADPViolations() {
         return cycles.size();
     }
 
     public boolean hasErrors() {
-        return !cycles.isEmpty() || !violations.isEmpty();
+        return !cycles.isEmpty() || !layerViolations.isEmpty();
     }
     
 
@@ -32,14 +32,14 @@ public class DesignCheckResults {
         if (!cycles.isEmpty()) {
             sb.append(apdViolationErrorMessage());
         }
-        if (!violations.isEmpty()) {
+        if (!layerViolations.isEmpty()) {
             sb.append(layerViolationErrorMessage());
         }
         return sb.toString();
     }
     
     private String apdViolationErrorMessage() {
-        StringBuffer sb = new StringBuffer("APD violations: \n");
+        StringBuffer sb = new StringBuffer("APD layerViolations: \n");
         for (Cycle cycle : cycles) {
             sb.append(cycle + "\n");
         }
@@ -47,8 +47,8 @@ public class DesignCheckResults {
     }
 
     private String layerViolationErrorMessage() {
-        StringBuffer sb = new StringBuffer("DDD layers violations: \n");
-        for (LayerReference layerReference : violations) {
+        StringBuffer sb = new StringBuffer("DDD layers layerViolations: \n");
+        for (LayerReference layerReference : layerViolations) {
             sb.append(layerReference + "\n");
         }
         return sb.toString();

@@ -14,9 +14,10 @@ public class PackageReference implements Comparable<PackageReference> {
         return name.startsWith(str);
     }
 
-    public boolean notUnderMe(PackageReference reference) {
-        return !reference.name.startsWith(this.name + ".");
-    }
+	public boolean isNotUnder(PackageReference reference) {
+		return !this.name.startsWith(reference.name + ".");
+	}
+
     
     public PackageReference child(String relativeName) {
         return new PackageReference(this.name + "." + relativeName);
@@ -62,6 +63,5 @@ public class PackageReference implements Comparable<PackageReference> {
     public int compareTo(PackageReference that) {
         return name.compareTo(that.name);
     }
-
 
 }
