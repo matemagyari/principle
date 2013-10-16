@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.principle.domain.core.DesingCheckerParameters;
-import org.principle.domain.detector.cycledetector.core.Package;
+import org.principle.domain.core.Package;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;

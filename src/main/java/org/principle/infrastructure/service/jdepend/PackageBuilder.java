@@ -5,7 +5,7 @@ import java.util.List;
 
 import jdepend.framework.JavaPackage;
 
-import org.principle.domain.detector.cycledetector.core.Package;
+import org.principle.domain.core.Package;
 
 import com.google.common.collect.Lists;
 

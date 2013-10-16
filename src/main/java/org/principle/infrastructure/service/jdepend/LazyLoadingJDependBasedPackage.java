@@ -5,8 +5,8 @@ import java.util.Set;
 
 import jdepend.framework.JavaPackage;
 
-import org.principle.domain.detector.cycledetector.core.Package;
-import org.principle.domain.detector.cycledetector.core.PackageReference;
+import org.principle.domain.core.Package;
+import org.principle.domain.core.PackageReference;
 
 import com.google.common.collect.Sets;
 

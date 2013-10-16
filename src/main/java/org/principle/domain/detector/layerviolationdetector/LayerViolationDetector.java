@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.principle.domain.core.DesingCheckerParameters;
-import org.principle.domain.detector.cycledetector.core.Package;
-import org.principle.domain.detector.cycledetector.core.PackageReference;
+import org.principle.domain.core.Package;
+import org.principle.domain.core.PackageReference;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;

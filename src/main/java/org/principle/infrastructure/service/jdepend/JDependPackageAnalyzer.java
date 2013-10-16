@@ -7,7 +7,7 @@ import jdepend.framework.JavaPackage;
 
 import org.principle.domain.checker.PackageAnalyzer;
 import org.principle.domain.core.DesingCheckerParameters;
-import org.principle.domain.detector.cycledetector.core.Package;
+import org.principle.domain.core.Package;
 
 public class JDependPackageAnalyzer implements PackageAnalyzer {
     

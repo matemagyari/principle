@@ -2,7 +2,7 @@ package org.principle.domain.checker;
 
 import java.util.List;
 
-import org.principle.domain.detector.cycledetector.core.Cycle;
+import org.principle.domain.core.Cycle;
 import org.principle.domain.detector.layerviolationdetector.LayerReference;
 
 public class DesignCheckResults {
