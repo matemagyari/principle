@@ -19,7 +19,7 @@ public class DesignCheckService {
 
     public DesignCheckResults analyze(DesingCheckerParameters parameters) {
         List<Package> packages = packageAnalyzer.analyze(parameters);
-        return designChecker.execute(packages);
+        return designChecker.execute(packages, parameters);
     }
 
 }

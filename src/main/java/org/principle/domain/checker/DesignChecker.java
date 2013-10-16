@@ -2,6 +2,7 @@ package org.principle.domain.checker;
 
 import java.util.List;
 
+import org.principle.domain.core.DesingCheckerParameters;
 import org.principle.domain.detector.cycledetector.CycleDetector;
 import org.principle.domain.detector.cycledetector.core.Cycle;
 import org.principle.domain.detector.cycledetector.core.Package;
@@ -19,10 +20,10 @@ public class DesignChecker {
 
     }
 
-    public DesignCheckResults execute(List<Package> packages) {
+    public DesignCheckResults execute(List<Package> packages, DesingCheckerParameters parameters) {
 
-        List<LayerReference> violations = layerViolationDetector.findViolations(packages);
-        List<Cycle> cycles = cycleDetector.analyze(packages);
+        List<LayerReference> violations = layerViolationDetector.findViolations(packages, parameters);
+        List<Cycle> cycles = cycleDetector.analyze(packages, parameters);
 
         return new DesignCheckResults(violations, cycles);
     }

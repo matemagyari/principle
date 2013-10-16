@@ -7,6 +7,7 @@ import jdepend.framework.JavaPackage;
 
 import org.principle.app.service.PackageAnalyzer;
 import org.principle.domain.core.DesingCheckerParameters;
+import org.principle.domain.detector.cycledetector.core.Package;
 
 public class JDependPackageAnalyzer implements PackageAnalyzer {
     
@@ -18,7 +19,7 @@ public class JDependPackageAnalyzer implements PackageAnalyzer {
         this.packageBuilder = packageBuilder;
     }
 
-    public List<org.principle.domain.detector.cycledetector.core.Package> analyze(DesingCheckerParameters parameters) {
+    public List<Package> analyze(DesingCheckerParameters parameters) {
         Collection<JavaPackage> analyzedPackages = jDependRunner.getAnalyzedPackages(parameters.getBasePackage());
         return packageBuilder.build(analyzedPackages, parameters.getBasePackage());
     }

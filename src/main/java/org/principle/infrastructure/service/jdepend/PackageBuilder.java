@@ -5,23 +5,24 @@ import java.util.List;
 
 import jdepend.framework.JavaPackage;
 
+import org.principle.domain.detector.cycledetector.core.Package;
 
 import com.google.common.collect.Lists;
 
 
 public class PackageBuilder {
 
-    public List<org.principle.domain.detector.cycledetector.core.Package> build(Collection<JavaPackage> analyzedPackages, String basePackage) {
+    public List<Package> build(Collection<JavaPackage> analyzedPackages, String basePackage) {
         
-        List<org.principle.domain.detector.cycledetector.core.Package> result = Lists.newArrayList();
+        List<Package> result = Lists.newArrayList();
         for (JavaPackage javaPackage : analyzedPackages) {
-            org.principle.domain.detector.cycledetector.core.Package aPackage = transform(basePackage, javaPackage);
+            Package aPackage = transform(basePackage, javaPackage);
             result.add(aPackage);
         }
         return result;
     }
 
-    private org.principle.domain.detector.cycledetector.core.Package transform(String basePackage,
+    private Package transform(String basePackage,
             JavaPackage javaPackage) {
         return new LazyLoadingJDependBasedPackage(javaPackage, basePackage);
     }

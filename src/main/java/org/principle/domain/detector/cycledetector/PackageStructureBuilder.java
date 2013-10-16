@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.principle.domain.core.DesingCheckerParameters;
 import org.principle.domain.detector.cycledetector.core.Package;
 
 import com.google.common.base.Predicate;
@@ -13,14 +14,8 @@ import com.google.common.collect.Lists;
 
 public class PackageStructureBuilder {
 
-	private final String basePackage;
-
-	public PackageStructureBuilder(String basePackage) {
-		this.basePackage = basePackage;
-	}
-
-	public Package build(Collection<Package> packages) {
-		List<Package> sortedPackages = sortByName(packages);
+	public Package build(Collection<Package> packages, DesingCheckerParameters parameters) {
+		List<Package> sortedPackages = sortByName(packages, parameters.getBasePackage());
 		Package basePackage = sortedPackages.remove(0);
 		for (Package aPackage : sortedPackages) {
 			basePackage.insert(aPackage);
@@ -29,7 +24,7 @@ public class PackageStructureBuilder {
 	}
 
 
-	private List<Package> sortByName(Collection<Package> packages) {
+	private List<Package> sortByName(Collection<Package> packages, final String basePackageName) {
 		Comparator<Package> comparator = new Comparator<Package>() {
 
 			public int compare(Package p1, Package p2) {
@@ -43,7 +38,7 @@ public class PackageStructureBuilder {
 		Predicate<Package> filter = new Predicate<Package>() {
 
 			public boolean apply(Package input) {
-				return input.getReference().startsWith(basePackage);
+				return input.getReference().startsWith(basePackageName);
 			}
 		};
 		return Lists.newArrayList(Iterables.filter(sortedPackages, filter));

@@ -8,15 +8,9 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.principle.app.service.DesignCheckService;
-import org.principle.app.service.PackageAnalyzer;
 import org.principle.domain.checker.DesignCheckResults;
-import org.principle.domain.checker.DesignChecker;
 import org.principle.domain.core.DesingCheckerParameters;
-import org.principle.domain.detector.cycledetector.CycleDetector;
-import org.principle.domain.detector.layerviolationdetector.LayerViolationDetector;
-import org.principle.infrastructure.service.jdepend.JDependPackageAnalyzer;
-import org.principle.infrastructure.service.jdepend.JDependRunner;
-import org.principle.infrastructure.service.jdepend.PackageBuilder;
+import org.principle.infrastructure.di.PoorMansDIContainer;
 
 @Mojo(name = "designcheck")
 public class DesignCheckerMojo extends AbstractMojo {
@@ -35,9 +29,9 @@ public class DesignCheckerMojo extends AbstractMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
 
+        DesignCheckService designCheckService = PoorMansDIContainer.getDesignCheckService();
+
         DesingCheckerParameters parameters = buildParameters();
-        DesignCheckService designCheckService = getDesingCheckService(parameters);
-        
         DesignCheckResults checkResults = designCheckService.analyze(parameters);
 
         if (checkResults.hasErrors()) {
@@ -51,17 +45,6 @@ public class DesignCheckerMojo extends AbstractMojo {
 
     }
 
-    private DesignCheckService getDesingCheckService(DesingCheckerParameters parameters) {
-        JDependRunner jDependRunner = new JDependRunner();
-        PackageBuilder packageBuilder = new PackageBuilder();
-        PackageAnalyzer packageAnalyzer = new JDependPackageAnalyzer(jDependRunner, packageBuilder);
-        
-        LayerViolationDetector layerViolationDetector = new LayerViolationDetector(parameters);
-        CycleDetector cycleDetector = new CycleDetector(parameters.getBasePackage());
-        DesignChecker designChecker = new DesignChecker(layerViolationDetector, cycleDetector);
-        DesignCheckService designCheckService = new DesignCheckService(packageAnalyzer, designChecker);
-        return designCheckService;
-    }
 
     private void checkThresholds(DesignCheckResults checkResults) throws MojoFailureException {
 
