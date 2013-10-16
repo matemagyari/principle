@@ -1,8 +1,8 @@
 package org.principle.infrastructure.di;
 
 import org.principle.app.service.DesignCheckService;
-import org.principle.app.service.PackageAnalyzer;
 import org.principle.domain.checker.DesignChecker;
+import org.principle.domain.checker.PackageAnalyzer;
 import org.principle.domain.detector.cycledetector.CycleDetector;
 import org.principle.domain.detector.cycledetector.PackageStructureBuilder;
 import org.principle.domain.detector.layerviolationdetector.LayerViolationDetector;

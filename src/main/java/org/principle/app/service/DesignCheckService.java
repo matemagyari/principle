@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.principle.domain.checker.DesignCheckResults;
 import org.principle.domain.checker.DesignChecker;
+import org.principle.domain.checker.PackageAnalyzer;
 import org.principle.domain.core.DesingCheckerParameters;
 import org.principle.domain.detector.cycledetector.core.Package;
 
