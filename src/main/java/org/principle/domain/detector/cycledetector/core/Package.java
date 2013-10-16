@@ -28,7 +28,7 @@ public class Package {
         this(name, new HashSet<PackageReference>());
     }
 
-    protected PackageReference getReference() {
+    public PackageReference getReference() {
         return reference;
     }
 
@@ -36,10 +36,10 @@ public class Package {
         if (this.equals(aPackage)) {
             throw new RuntimeException("Attempted to insert into itself " + this);
         }
-        if (aPackage.isNotUnder(this)) {
+        if (this.isNotAnAncestorOf(aPackage)) {
             throw new RuntimeException(aPackage + " is not under " + this);
         }
-        if (isDirectChildOfMe(aPackage)) {
+        if (this.isDirectParentOf(aPackage)) {
             children.add(aPackage);
         } else {
             insertIndirectChild(aPackage);
@@ -47,10 +47,14 @@ public class Package {
 
     }
     
-    public boolean isNotUnder(Package aPackage) {
-		return this.getReference().isNotUnder(aPackage.getReference());
-	}
-    
+    private boolean isDirectParentOf(Package aPackage) {
+        return this.getReference().isDirectParentOf(aPackage.getReference());
+    }
+
+    private boolean isNotAnAncestorOf(Package aPackage) {
+        return this.getReference().isNotAnAncestorOf(aPackage.getReference());
+    }
+
 	public List<Cycle> detectCycles(Map<PackageReference, Package> packageReferences) {
         Set<Cycle> cycles = detectCycles(new ArrayList<PackageReference>(), new HashSet<Cycle>(), packageReferences);
         return Lists.newArrayList(cycles);
@@ -76,10 +80,6 @@ public class Package {
 
     private String firstPartOfRelativeNameTo(Package parentPackage) {
         return this.getReference().firstPartOfRelativeNameTo(parentPackage.getReference());
-    }
-
-    private boolean isDirectChildOfMe(Package aPackage) {
-        return this.getReference().isDirectChildOfMe(aPackage.getReference());
     }
 
     private Set<Cycle> detectCycles(List<PackageReference> traversedPackages, Set<Cycle> foundCycles, Map<PackageReference, Package> packageReferences) {
@@ -134,7 +134,7 @@ public class Package {
         return accumulatingMap;
     }
 
-    protected Set<PackageReference> getOwnPackageReferences() {
+    public Set<PackageReference> getOwnPackageReferences() {
         return ownPackageReferences;
     }
 

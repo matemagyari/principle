@@ -2,10 +2,11 @@ package org.principle.domain.detector.layerviolationdetector;
 
 import java.util.Collection;
 import java.util.List;
-
-import jdepend.framework.JavaPackage;
+import java.util.Set;
 
 import org.principle.domain.core.DesingCheckerParameters;
+import org.principle.domain.detector.cycledetector.core.Package;
+import org.principle.domain.detector.cycledetector.core.PackageReference;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
@@ -20,11 +21,11 @@ public class LayerViolationDetector {
         this.parameters = parameters;
     }
 
-    public List<LayerReference> findViolations(Collection<JavaPackage> packages) {
+    public List<LayerReference> findViolations(List<Package> packages) {
 
         List<LayerReference> violations = Lists.newArrayList();
 
-        for (JavaPackage aPackage : filterToRelevantPackages(packages)) {
+        for (Package aPackage : filterToRelevantPackages(packages)) {
             Optional<String> layer = getLayer(aPackage);
             if (layer.isPresent()) {
                 List<String> outerLayers = parameters.getOuterLayers(layer.get());
@@ -35,41 +36,52 @@ public class LayerViolationDetector {
         return violations;
     }
 
-    private Optional<String> getLayer(JavaPackage aPackage) {
+    private Optional<String> getLayer(Package aPackage) {
         for (String layer : parameters.getLayers()) {
-            if (aPackage.getName().startsWith(layer)) {
+            if (aPackage.getReference().startsWith(layer)) {
                 return Optional.of(layer);
             }
         }
         return Optional.absent();
     }
 
-    @SuppressWarnings("unchecked")
-    private List<LayerReference> getReferencesToLayers(JavaPackage aPackage, List<String> layers) {
+    private List<LayerReference> getReferencesToLayers(Package aPackage, List<String> layers) {
         List<LayerReference> references = Lists.newArrayList();
 
-        Collection<JavaPackage> allReferencedPackages = aPackage.getEfferents();
+        Set<PackageReference> allReferencedPackages = aPackage.getOwnPackageReferences();
 
-        Collection<JavaPackage> referencedPackages = filterToRelevantPackages(allReferencedPackages);
+        List<PackageReference> referencedPackages = filterToRelevantPackageReferences(allReferencedPackages);
 
-        for (JavaPackage referencedPackage : referencedPackages) {
+        for (PackageReference referencedPackage : referencedPackages) {
             for (String layer : layers) {
-                if (referencedPackage.getName().startsWith(layer)) {
-                    references.add(new LayerReference(aPackage.getName(), referencedPackage.getName()));
+                if (referencedPackage.startsWith(layer)) {
+                    references.add(new LayerReference(aPackage.getReference().getName(), referencedPackage.getName()));
                 }
             }
         }
         return references;
     }
 
-    private List<JavaPackage> filterToRelevantPackages(Collection<JavaPackage> packages) {
+    private List<PackageReference> filterToRelevantPackageReferences(Set<PackageReference> packages) {
 
-        Predicate<JavaPackage> filter = new Predicate<JavaPackage>() {
+        Predicate<PackageReference> filter = new Predicate<PackageReference>() {
 
-            public boolean apply(JavaPackage input) {
-                return input.getName().startsWith(parameters.getBasePackage());
+            public boolean apply(PackageReference input) {
+                return input.startsWith(parameters.getBasePackage());
             }
 
+        };
+        return Lists.newArrayList(Iterables.filter(packages, filter));
+    }
+    
+    private List<Package> filterToRelevantPackages(Collection<Package> packages) {
+        
+        Predicate<Package> filter = new Predicate<Package>() {
+            
+            public boolean apply(Package input) {
+                return input.getReference().startsWith(parameters.getBasePackage());
+            }
+            
         };
         return Lists.newArrayList(Iterables.filter(packages, filter));
     }

@@ -62,7 +62,7 @@
 						<param>app</param>
 						<param>domain</param>
 					</layers>
-					<thresholdLayerViolations>10</thresholdLayerViolations>
+					<thresholdLayerViolations>0</thresholdLayerViolations>
 					<thresholdADPViolations>10</thresholdADPViolations>
 				</configuration>
 				<executions>

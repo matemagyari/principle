@@ -5,10 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import jdepend.framework.JavaPackage;
-
 import org.principle.domain.detector.cycledetector.core.Package;
-import org.principle.domain.detector.cycledetector.jdepend.LazyLoadingJDependBasedPackage;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -22,39 +19,31 @@ public class PackageStructureBuilder {
 		this.basePackage = basePackage;
 	}
 
-	public Package build(Collection<JavaPackage> packages) {
-		List<JavaPackage> sortedPackages = sortByName(packages);
-
-		JavaPackage baseJavaPackage = sortedPackages.remove(0);
-
-		Package basePackage = transform(baseJavaPackage);
-
-		for (JavaPackage javaPackage : sortedPackages) {
-			basePackage.insert(transform(javaPackage));
+	public Package build(Collection<Package> packages) {
+		List<Package> sortedPackages = sortByName(packages);
+		Package basePackage = sortedPackages.remove(0);
+		for (Package aPackage : sortedPackages) {
+			basePackage.insert(aPackage);
 		}
-
 		return basePackage;
 	}
 
-	private Package transform(JavaPackage baseJavaPackage) {
-		return new LazyLoadingJDependBasedPackage(baseJavaPackage, basePackage);
-	}
 
-	private List<JavaPackage> sortByName(Collection<JavaPackage> packages) {
-		Comparator<JavaPackage> comparator = new Comparator<JavaPackage>() {
+	private List<Package> sortByName(Collection<Package> packages) {
+		Comparator<Package> comparator = new Comparator<Package>() {
 
-			public int compare(JavaPackage p1, JavaPackage p2) {
-				return p1.getName().compareTo(p2.getName());
+			public int compare(Package p1, Package p2) {
+				return p1.getReference().getName().compareTo(p2.getReference().getName());
 			}
 		};
 		// act
-		List<JavaPackage> sortedPackages = Lists.newArrayList(packages);
+		List<Package> sortedPackages = Lists.newArrayList(packages);
 		Collections.sort(sortedPackages, comparator);
 
-		Predicate<JavaPackage> filter = new Predicate<JavaPackage>() {
+		Predicate<Package> filter = new Predicate<Package>() {
 
-			public boolean apply(JavaPackage input) {
-				return input.getName().startsWith(basePackage);
+			public boolean apply(Package input) {
+				return input.getReference().startsWith(basePackage);
 			}
 		};
 		return Lists.newArrayList(Iterables.filter(sortedPackages, filter));

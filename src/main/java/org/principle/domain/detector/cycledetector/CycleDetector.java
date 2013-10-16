@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import jdepend.framework.JavaPackage;
-
 import org.principle.domain.detector.cycledetector.core.Cycle;
 import org.principle.domain.detector.cycledetector.core.Package;
 import org.principle.domain.detector.cycledetector.core.PackageReference;
@@ -18,7 +16,7 @@ public class CycleDetector {
         this.packageStructureBuilder = new PackageStructureBuilder(basePackageName);
     }
 
-    public List<Cycle> analyze(Collection<JavaPackage> packages) {
+    public List<Cycle> analyze(Collection<Package> packages) {
         
         Package basePackage = packageStructureBuilder.build(packages);
         Map<PackageReference, Package> references = basePackage.toMap();

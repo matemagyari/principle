@@ -14,10 +14,14 @@ public class PackageReference implements Comparable<PackageReference> {
         return name.startsWith(str);
     }
 
-	public boolean isNotUnder(PackageReference reference) {
-		return !this.name.startsWith(reference.name + ".");
-	}
-
+    public boolean isDirectParentOf(PackageReference reference) {
+        return !reference.relativeNameTo(this).contains(".");
+    }
+    
+    public boolean isNotAnAncestorOf(PackageReference reference) {
+        return !reference.startsWith(this.name + ".");
+    }
+    
     
     public PackageReference child(String relativeName) {
         return new PackageReference(this.name + "." + relativeName);
@@ -32,12 +36,15 @@ public class PackageReference implements Comparable<PackageReference> {
     }
     
 
-    public boolean isDirectChildOfMe(PackageReference reference) {
-        return !reference.relativeNameTo(this).contains(".");
-    }
+
 
     public String firstPartOfRelativeNameTo(PackageReference reference) {
         return this.relativeNameTo(reference).split("\\.", 2)[0];
+    }
+    
+    
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -63,5 +70,7 @@ public class PackageReference implements Comparable<PackageReference> {
     public int compareTo(PackageReference that) {
         return name.compareTo(that.name);
     }
+
+
 
 }
