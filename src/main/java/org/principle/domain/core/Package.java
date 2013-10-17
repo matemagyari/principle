@@ -13,19 +13,13 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-public class Package {
+public abstract class Package {
 
     private final List<Package> children = Lists.newArrayList();
-    private final Set<PackageReference> ownPackageReferences;
     private final PackageReference reference;
 
-    public Package(String name, Set<PackageReference> packageReferences) {
-        this.reference = new PackageReference(name);
-        this.ownPackageReferences = Sets.newHashSet((packageReferences));
-    }
-
     public Package(String name) {
-        this(name, new HashSet<PackageReference>());
+        this.reference = new PackageReference(name);
     }
 
     public PackageReference getReference() {
@@ -47,21 +41,22 @@ public class Package {
 
     }
     
-    private boolean isDirectParentOf(Package aPackage) {
-        return this.getReference().isDirectParentOf(aPackage.getReference());
-    }
 
-    private boolean isNotAnAncestorOf(Package aPackage) {
-        return this.getReference().isNotAnAncestorOf(aPackage.getReference());
-    }
-
-	public List<Cycle> detectCycles(Map<PackageReference, Package> packageReferences) {
+    public List<Cycle> detectCycles(Map<PackageReference, Package> packageReferences) {
         Set<Cycle> cycles = detectCycles(new ArrayList<PackageReference>(), new HashSet<Cycle>(), packageReferences);
         return Lists.newArrayList(cycles);
     }
     
     public Map<PackageReference, Package> toMap() {
         return toMap(new HashMap<PackageReference, Package>());
+    }
+    
+    private boolean isDirectParentOf(Package aPackage) {
+        return this.getReference().isDirectParentOf(aPackage.getReference());
+    }
+
+    private boolean isNotAnAncestorOf(Package aPackage) {
+        return this.getReference().isNotAnAncestorOf(aPackage.getReference());
     }
 
     private void insertIndirectChild(Package aPackage) {
@@ -75,7 +70,13 @@ public class Package {
     }
 
     protected Package createNew(String name) {
-        return new Package(name);
+        return new Package(name) {
+            @Override
+            public Set<PackageReference> getOwnPackageReferences() {
+                return Sets.newHashSet();
+            }
+            
+        };
     }
 
     private String firstPartOfRelativeNameTo(Package parentPackage) {
@@ -106,7 +107,7 @@ public class Package {
         return foundCycles;
     }
 
-    private Set<PackageReference> accumulatedPackageReferences() {
+    public Set<PackageReference> accumulatedPackageReferences() {
         Set<PackageReference> packageReferences = Sets.newHashSet();
         for (Package child : children) {
             packageReferences.addAll(child.accumulatedPackageReferences());
@@ -134,9 +135,7 @@ public class Package {
         return accumulatingMap;
     }
 
-    public Set<PackageReference> getOwnPackageReferences() {
-        return ownPackageReferences;
-    }
+    public abstract Set<PackageReference> getOwnPackageReferences();
 
     @Override
     public boolean equals(Object other) {
