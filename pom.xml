@@ -56,14 +56,14 @@
 				<artifactId>principle</artifactId>
 				<version>0.1-SNAPSHOT</version>
 				<configuration>
-					<basePackage>org.principle</basePackage>
+					<basePackage>org.tindalos.principle</basePackage>
 					<layers>
 						<param>infrastructure</param>
 						<param>app</param>
 						<param>domain</param>
 					</layers>
-					<thresholdLayerViolations>0</thresholdLayerViolations>
-					<thresholdADPViolations>10</thresholdADPViolations>
+					<thresholdLayerViolations>10</thresholdLayerViolations>
+					<thresholdADPViolations>20</thresholdADPViolations>
 				</configuration>
 				<executions>
 					<execution>
