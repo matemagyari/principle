@@ -3,10 +3,10 @@ package org.tindalos.principle.domain.checker;
 import java.util.List;
 import java.util.Map;
 
-import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.detector.core.CheckResult;
 import org.tindalos.principle.domain.detector.cycledetector.APDResult;
 import org.tindalos.principle.domain.detector.cycledetector.APDViolationsReporter;
+import org.tindalos.principle.domain.detector.cycledetector.Cycle;
 import org.tindalos.principle.domain.detector.cycledetector.CycleDetector;
 import org.tindalos.principle.domain.detector.layerviolationdetector.LayerReference;
 import org.tindalos.principle.domain.detector.layerviolationdetector.LayerViolationDetector;
@@ -54,7 +54,7 @@ public class DesignCheckResults {
     }
 
     private List<Cycle> getCycles() {
-    	APDResult checkResult = (APDResult) checkResults.get(CycleDetector.ID);
+    	APDResult checkResult = (APDResult) checkResults.get(CycleDetectorvn.ID);
 		return checkResult.getCycles();
 	}
 

@@ -1,8 +1,9 @@
-package org.tindalos.principle.domain.core;
+package org.tindalos.principle.domain.detector.cycledetector;
 
 import java.util.List;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.tindalos.principle.domain.core.PackageReference;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

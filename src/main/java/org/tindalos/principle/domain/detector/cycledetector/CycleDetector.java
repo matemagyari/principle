@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.DesignCheckerParameters;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageReference;
