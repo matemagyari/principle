@@ -2,9 +2,10 @@ package org.tindalos.principle.domain.detector.layerviolationdetector;
 
 import java.util.List;
 
+import org.tindalos.principle.domain.reporting.ViolationsReporter;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 
-public class LayerViolationsReporter {
+public class LayerViolationsReporter implements ViolationsReporter {
     
     PoorMansDIContainer c;
     

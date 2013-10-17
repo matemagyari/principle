@@ -9,7 +9,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.tindalos.principle.app.service.DesignCheckService;
 import org.tindalos.principle.domain.checker.DesignCheckResults;
-import org.tindalos.principle.domain.core.DesingCheckerParameters;
+import org.tindalos.principle.domain.core.DesignCheckerParameters;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 
 @Mojo(name = "designcheck")
@@ -31,7 +31,7 @@ public class DesignCheckerMojo extends AbstractMojo {
 
         DesignCheckService designCheckService = PoorMansDIContainer.getDesignCheckService();
 
-        DesingCheckerParameters parameters = buildParameters();
+        DesignCheckerParameters parameters = buildParameters();
         DesignCheckResults checkResults = designCheckService.analyze(parameters);
 
         if (checkResults.hasErrors()) {
@@ -55,8 +55,8 @@ public class DesignCheckerMojo extends AbstractMojo {
         }
     }
 
-    private DesingCheckerParameters buildParameters() {
-        DesingCheckerParameters parameters = new DesingCheckerParameters(basePackage);
+    private DesignCheckerParameters buildParameters() {
+        DesignCheckerParameters parameters = new DesignCheckerParameters(basePackage);
         parameters.setLayers(layers);
         return parameters;
     }

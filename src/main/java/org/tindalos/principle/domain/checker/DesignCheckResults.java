@@ -1,57 +1,71 @@
 package org.tindalos.principle.domain.checker;
 
 import java.util.List;
+import java.util.Map;
 
 import org.tindalos.principle.domain.core.Cycle;
+import org.tindalos.principle.domain.detector.core.CheckResult;
 import org.tindalos.principle.domain.detector.cycledetector.APDResult;
 import org.tindalos.principle.domain.detector.cycledetector.APDViolationsReporter;
+import org.tindalos.principle.domain.detector.cycledetector.CycleDetector;
 import org.tindalos.principle.domain.detector.layerviolationdetector.LayerReference;
+import org.tindalos.principle.domain.detector.layerviolationdetector.LayerViolationDetector;
 import org.tindalos.principle.domain.detector.layerviolationdetector.LayerViolationsReporter;
 import org.tindalos.principle.domain.detector.layerviolationdetector.LayerViolationsResult;
-import org.tindalos.principle.domain.reporting.CheckResult;
+
+import com.google.common.collect.Maps;
 
 public class DesignCheckResults {
     
-    private final List<LayerReference> layerViolations;
-    private final List<Cycle> cycles;
-    private final List<CheckResult> checkResults;
+    private final Map<String, CheckResult> checkResults;
     
     public DesignCheckResults(List<CheckResult> checkResults) {
-        this.checkResults = checkResults;
-        this.layerViolations = ((LayerViolationsResult) checkResults.get(0)).getViolations();
-        this.cycles = ((APDResult) checkResults.get(1)).getCycles();
+    	this.checkResults = Maps.newHashMap();
+    	for (CheckResult checkResult : checkResults) {
+    		this.checkResults.put(checkResult.detectorId(), checkResult);
+		}
     }
 
     public int numOfLayerViolations() {
-        return layerViolations.size();
+        return getLayerViolations().size();
     }
     public int numOfADPViolations() {
-        return cycles.size();
+        return getCycles().size();
     }
 
     public boolean hasErrors() {
-        return !cycles.isEmpty() || !layerViolations.isEmpty();
+        return !getCycles().isEmpty() || !getLayerViolations().isEmpty();
     }
     
 
     public String getErrorReport() {
         StringBuffer sb = new StringBuffer();
-        if (!cycles.isEmpty()) {
+        if (!getCycles().isEmpty()) {
             sb.append(apdViolationErrorMessage());
         }
-        if (!layerViolations.isEmpty()) {
+        if (!getLayerViolations().isEmpty()) {
             sb.append(layerViolationErrorMessage());
         }
         return sb.toString();
     }
     
     private String apdViolationErrorMessage() {
-        return new APDViolationsReporter().report(cycles);
+        return new APDViolationsReporter().report(getCycles());
     }
 
-    private String layerViolationErrorMessage() {
-        return new LayerViolationsReporter().report(layerViolations);
+    private List<Cycle> getCycles() {
+    	APDResult checkResult = (APDResult) checkResults.get(CycleDetector.ID);
+		return checkResult.getCycles();
+	}
+
+	private String layerViolationErrorMessage() {
+        return new LayerViolationsReporter().report(getLayerViolations());
     }
+
+	private List<LayerReference> getLayerViolations() {
+		LayerViolationsResult layerViolationsResult = (LayerViolationsResult) checkResults.get(LayerViolationDetector.ID);
+		return layerViolationsResult.getViolations();
+	}
 
     
     

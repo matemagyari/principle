@@ -4,9 +4,10 @@ import java.util.List;
 
 import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.PackageReference;
+import org.tindalos.principle.domain.reporting.ViolationsReporter;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 
-public class APDViolationsReporter {
+public class APDViolationsReporter implements ViolationsReporter {
     
     PoorMansDIContainer c;
     

@@ -6,7 +6,7 @@ import java.util.List;
 import jdepend.framework.JavaPackage;
 
 import org.tindalos.principle.domain.checker.PackageAnalyzer;
-import org.tindalos.principle.domain.core.DesingCheckerParameters;
+import org.tindalos.principle.domain.core.DesignCheckerParameters;
 import org.tindalos.principle.domain.core.Package;
 
 public class JDependPackageAnalyzer implements PackageAnalyzer {
@@ -19,7 +19,7 @@ public class JDependPackageAnalyzer implements PackageAnalyzer {
         this.packageBuilder = packageBuilder;
     }
 
-    public List<Package> analyze(DesingCheckerParameters parameters) {
+    public List<Package> analyze(DesignCheckerParameters parameters) {
         Collection<JavaPackage> analyzedPackages = jDependRunner.getAnalyzedPackages(parameters.getBasePackage());
         return packageBuilder.build(analyzedPackages, parameters.getBasePackage());
     }

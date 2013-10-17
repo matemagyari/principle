@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.detector.layerviolationdetector;
 
 import java.util.List;
 
-import org.tindalos.principle.domain.reporting.CheckResult;
+import org.tindalos.principle.domain.detector.core.CheckResult;
 
 import com.google.common.collect.Lists;
 
@@ -17,5 +17,9 @@ public class LayerViolationsResult implements CheckResult {
     public List<LayerReference> getViolations() {
         return references;
     }
+    
+	public String detectorId() {
+		return LayerViolationDetector.ID;
+	}
 
 }

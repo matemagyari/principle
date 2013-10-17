@@ -2,11 +2,11 @@ package org.tindalos.principle.domain.checker;
 
 import java.util.List;
 
-import org.tindalos.principle.domain.core.CheckInput;
-import org.tindalos.principle.domain.core.DesingCheckerParameters;
-import org.tindalos.principle.domain.core.Detector;
+import org.tindalos.principle.domain.core.DesignCheckerParameters;
 import org.tindalos.principle.domain.core.Package;
-import org.tindalos.principle.domain.reporting.CheckResult;
+import org.tindalos.principle.domain.detector.core.CheckInput;
+import org.tindalos.principle.domain.detector.core.CheckResult;
+import org.tindalos.principle.domain.detector.core.Detector;
 
 import com.google.common.collect.Lists;
 
@@ -21,7 +21,7 @@ public class DesignChecker {
         this.detectors = Lists.newArrayList(detectors);
     }
 
-    public DesignCheckResults execute(List<Package> packages, DesingCheckerParameters parameters) {
+    public DesignCheckResults execute(List<Package> packages, DesignCheckerParameters parameters) {
 
         List<CheckResult> checkResults = Lists.newArrayList();
         CheckInput checkInput = new CheckInput(packages, parameters);

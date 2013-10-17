@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.tindalos.principle.domain.core.DesingCheckerParameters;
+import org.tindalos.principle.domain.core.DesignCheckerParameters;
 import org.tindalos.principle.domain.core.Package;
 
 import com.google.common.base.Predicate;
@@ -14,7 +14,7 @@ import com.google.common.collect.Lists;
 
 public class PackageStructureBuilder {
 
-	public Package build(Collection<Package> packages, DesingCheckerParameters parameters) {
+	public Package build(Collection<Package> packages, DesignCheckerParameters parameters) {
 		List<Package> sortedPackages = sortByName(packages, parameters.getBasePackage());
 		Package basePackage = sortedPackages.remove(0);
 		for (Package aPackage : sortedPackages) {

@@ -4,11 +4,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.tindalos.principle.domain.core.CheckInput;
-import org.tindalos.principle.domain.core.DesingCheckerParameters;
-import org.tindalos.principle.domain.core.Detector;
+import org.tindalos.principle.domain.core.DesignCheckerParameters;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageReference;
+import org.tindalos.principle.domain.detector.core.CheckInput;
+import org.tindalos.principle.domain.detector.core.Detector;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
@@ -16,13 +16,15 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 public class LayerViolationDetector implements Detector {
+	
+	public static final String ID = "LayerViolationDetector";
     
     public LayerViolationsResult analyze(CheckInput checkInput) {
         List<LayerReference> layerReferences = findViolations(checkInput.getPackages(), checkInput.getParameters());
         return new LayerViolationsResult(layerReferences);
     }
 
-    public List<LayerReference> findViolations(List<Package> packages, DesingCheckerParameters parameters) {
+    public List<LayerReference> findViolations(List<Package> packages, DesignCheckerParameters parameters) {
 
         List<LayerReference> violations = Lists.newArrayList();
 
@@ -37,7 +39,7 @@ public class LayerViolationDetector implements Detector {
         return violations;
     }
 
-    private Optional<String> getLayer(Package aPackage, DesingCheckerParameters parameters) {
+    private Optional<String> getLayer(Package aPackage, DesignCheckerParameters parameters) {
         for (String layer : parameters.getLayers()) {
             if (aPackage.getReference().startsWith(layer)) {
                 return Optional.of(layer);

@@ -6,13 +6,13 @@ import org.codehaus.plexus.util.StringUtils;
 
 import com.google.common.collect.Lists;
 
-public class DesingCheckerParameters {
+public class DesignCheckerParameters {
     
     private String basePackage;
     
     private List<String> layers;
 
-    public DesingCheckerParameters(String basePackage, String... layers) {
+    public DesignCheckerParameters(String basePackage, String... layers) {
         checkNotEmpy("basePackage", basePackage);
         this.basePackage = basePackage;
         setLayers(layers);
