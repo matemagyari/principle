@@ -115,7 +115,7 @@
 			<url>https://oss.sonatype.org/service/local/snapshot/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
--->
+    -->
 	<scm>
 		<connection>scm:git:https://matemagyari@github.com/matemagyari/principle.git</connection>
 		<developerConnection>scm:git:https://matemagyari@github.com/matemagyari/principle.git</developerConnection>
