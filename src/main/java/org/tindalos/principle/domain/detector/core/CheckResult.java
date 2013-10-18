@@ -4,4 +4,8 @@ public interface CheckResult {
 	
 	String detectorId();
 	
+	boolean violationsDetected();
+	
+	int numberOfViolations();
+	
 }

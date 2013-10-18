@@ -21,5 +21,13 @@ public class LayerViolationsResult implements CheckResult {
 	public String detectorId() {
 		return LayerViolationDetector.ID;
 	}
+	
+    public boolean violationsDetected() {
+        return !references.isEmpty();
+    }
+    
+    public int numberOfViolations() {
+        return references.size();
+    }
 
 }

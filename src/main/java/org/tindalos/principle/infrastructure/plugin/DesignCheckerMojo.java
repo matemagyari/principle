@@ -10,6 +10,10 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.tindalos.principle.app.service.DesignCheckService;
 import org.tindalos.principle.domain.checker.DesignCheckResults;
 import org.tindalos.principle.domain.core.DesignCheckerParameters;
+import org.tindalos.principle.domain.detector.cycledetector.APDResult;
+import org.tindalos.principle.domain.detector.cycledetector.CycleDetector;
+import org.tindalos.principle.domain.detector.layerviolationdetector.LayerViolationDetector;
+import org.tindalos.principle.domain.detector.layerviolationdetector.LayerViolationsResult;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 
 @Mojo(name = "designcheck")
@@ -33,7 +37,7 @@ public class DesignCheckerMojo extends AbstractMojo {
 
         DesignCheckerParameters parameters = buildParameters();
         DesignCheckResults checkResults = designCheckService.analyze(parameters);
-
+        
         if (checkResults.hasErrors()) {
             getLog().warn(checkResults.getErrorReport());
 
@@ -47,9 +51,12 @@ public class DesignCheckerMojo extends AbstractMojo {
 
 
     private void checkThresholds(DesignCheckResults checkResults) throws MojoFailureException {
+        
+        APDResult apdResult = checkResults.getResult(CycleDetector.ID);
+        LayerViolationsResult layerViolationsResult = checkResults.getResult(LayerViolationDetector.ID);
 
-        if (thresholdADPViolations < checkResults.numOfADPViolations()
-                || thresholdLayerViolations < checkResults.numOfLayerViolations()) {
+        if (thresholdADPViolations < apdResult.numberOfViolations()
+                || thresholdLayerViolations < layerViolationsResult.numberOfViolations()) {
 
             throw new MojoFailureException("\nProblems!");
         }

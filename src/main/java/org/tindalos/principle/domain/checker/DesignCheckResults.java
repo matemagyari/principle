@@ -26,15 +26,13 @@ public class DesignCheckResults {
 		}
     }
 
-    public int numOfLayerViolations() {
-        return getLayerViolations().size();
-    }
-    public int numOfADPViolations() {
-        return getCycles().size();
-    }
-
     public boolean hasErrors() {
-        return !getCycles().isEmpty() || !getLayerViolations().isEmpty();
+        for (CheckResult checkResult : checkResults.values()) {
+            if (checkResult.violationsDetected()) {
+                return true;
+            }
+        }
+        return false;
     }
     
 
@@ -49,12 +47,17 @@ public class DesignCheckResults {
         return sb.toString();
     }
     
+    @SuppressWarnings("unchecked")
+    public <T extends CheckResult> T getResult(String id) {
+        return (T) checkResults.get(id);
+    }
+    
     private String apdViolationErrorMessage() {
         return new APDViolationsReporter().report(getCycles());
     }
 
     private List<Cycle> getCycles() {
-    	APDResult checkResult = (APDResult) checkResults.get(CycleDetectorvn.ID);
+    	APDResult checkResult = (APDResult) checkResults.get(CycleDetector.ID);
 		return checkResult.getCycles();
 	}
 
@@ -66,8 +69,5 @@ public class DesignCheckResults {
 		LayerViolationsResult layerViolationsResult = (LayerViolationsResult) checkResults.get(LayerViolationDetector.ID);
 		return layerViolationsResult.getViolations();
 	}
-
-    
-    
 
 }

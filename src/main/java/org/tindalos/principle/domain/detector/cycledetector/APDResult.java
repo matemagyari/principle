@@ -22,4 +22,12 @@ public class APDResult implements CheckResult {
 		return CycleDetector.ID;
 	}
 
+    public boolean violationsDetected() {
+        return !cycles.isEmpty();
+    }
+
+    public int numberOfViolations() {
+        return cycles.size();
+    }
+
 }
