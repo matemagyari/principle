@@ -53,23 +53,23 @@
 			<!-- <plugin> <groupId>org.tindalos.principle</groupId> <artifactId>principle</artifactId> <version>0.1</version> <configuration> <basePackage>org.tindalos.principle</basePackage> 
 				<layers> <param>infrastructure</param> <param>app</param> <param>domain</param> </layers> <thresholdLayerViolations>10</thresholdLayerViolations> <thresholdADPViolations>20</thresholdADPViolations> 
 				</configuration> <executions> <execution> <phase>compile</phase> <goals> <goal>designcheck</goal> </goals> </execution> </executions> </plugin> -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-gpg-plugin</artifactId>
-					<version>1.4</version>
-					<configuration>
-						<passphrase>${gpg.passphrase}</passphrase>
-					</configuration>
-					<executions>
-						<execution>
-							<id>sign-artifacts</id>
-							<phase>verify</phase>
-							<goals>
-								<goal>sign</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.4</version>
+				<configuration>
+					<passphrase>${gpg.passphrase}</passphrase>
+				</configuration>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -107,9 +107,15 @@
 		</license>
 	</licenses>
 
-	<!-- <distributionManagement> <repository> <id>sonatype-nexus-snapshot</id> <name>Nexus Snapshot Repository</name> <url>https://oss.sonatype.org/service/local/snapshot/deploy/maven2/</url> 
-		</repository> </distributionManagement> -->
-
+	<!-- 
+	<distributionManagement>
+		<repository>
+			<id>sonatype-nexus-snapshot</id>
+			<name>Nexus Snapshot Repository</name>
+			<url>https://oss.sonatype.org/service/local/snapshot/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
+-->
 	<scm>
 		<connection>scm:git:https://matemagyari@github.com/matemagyari/principle.git</connection>
 		<developerConnection>scm:git:https://matemagyari@github.com/matemagyari/principle.git</developerConnection>
