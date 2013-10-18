@@ -50,9 +50,29 @@
 
 	<build>
 		<plugins>
-			<!-- <plugin> <groupId>org.tindalos.principle</groupId> <artifactId>principle</artifactId> <version>0.1</version> <configuration> <basePackage>org.tindalos.principle</basePackage> 
-				<layers> <param>infrastructure</param> <param>app</param> <param>domain</param> </layers> <thresholdLayerViolations>10</thresholdLayerViolations> <thresholdADPViolations>20</thresholdADPViolations> 
-				</configuration> <executions> <execution> <phase>compile</phase> <goals> <goal>designcheck</goal> </goals> </execution> </executions> </plugin> -->
+			<plugin>
+				<groupId>org.tindalos.principle</groupId>
+				<artifactId>principle</artifactId>
+				<version>0.6</version>
+				<configuration>
+					<basePackage>org.tindalos.principle</basePackage>
+					<layers>
+						<param>infrastructure</param>
+						<param>app</param>
+						<param>domain</param>
+					</layers>
+					<thresholdLayerViolations>10</thresholdLayerViolations>
+					<thresholdADPViolations>20</thresholdADPViolations>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>designcheck</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
