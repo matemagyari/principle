@@ -3,13 +3,11 @@ package org.tindalos.principle.domain.detector.layerviolationdetector;
 import java.util.List;
 
 import org.tindalos.principle.domain.reporting.ViolationsReporter;
-import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 
-public class LayerViolationsReporter implements ViolationsReporter {
+public class LayerViolationsReporter implements ViolationsReporter<LayerViolationsResult> {
     
-    PoorMansDIContainer c;
-    
-    public String report(List<LayerReference> layerReferences) {
+    public String report(LayerViolationsResult result) {
+        List<LayerReference> layerReferences = result.getViolations();
         String sectionLine = "==============================================================";
         StringBuffer sb = new StringBuffer("\n" + sectionLine + "\n");
         sb.append("\tLayering violations\t");
@@ -21,5 +19,7 @@ public class LayerViolationsReporter implements ViolationsReporter {
         return sb.toString();
     }
     
-
+    public Class<LayerViolationsResult> getType() {
+        return LayerViolationsResult.class;
+    }
 }

@@ -15,7 +15,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-public class LayerViolationDetector implements Detector {
+public class LayerViolationDetector implements Detector<LayerViolationsResult> {
 	
 	public static final String ID = "LayerViolationDetector";
     
@@ -24,7 +24,7 @@ public class LayerViolationDetector implements Detector {
         return new LayerViolationsResult(layerReferences);
     }
 
-    public List<LayerReference> findViolations(List<Package> packages, DesignCheckerParameters parameters) {
+    private List<LayerReference> findViolations(List<Package> packages, DesignCheckerParameters parameters) {
 
         List<LayerReference> violations = Lists.newArrayList();
 

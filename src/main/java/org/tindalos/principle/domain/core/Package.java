@@ -9,7 +9,6 @@ import java.util.Set;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.tindalos.principle.domain.detector.cycledetector.Cycle;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

@@ -11,8 +11,6 @@ import org.tindalos.principle.app.service.DesignCheckService;
 import org.tindalos.principle.domain.checker.DesignCheckResults;
 import org.tindalos.principle.domain.core.DesignCheckerParameters;
 import org.tindalos.principle.domain.detector.cycledetector.APDResult;
-import org.tindalos.principle.domain.detector.cycledetector.CycleDetector;
-import org.tindalos.principle.domain.detector.layerviolationdetector.LayerViolationDetector;
 import org.tindalos.principle.domain.detector.layerviolationdetector.LayerViolationsResult;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 
@@ -32,7 +30,7 @@ public class DesignCheckerMojo extends AbstractMojo {
     private List<String> layers;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-
+        
         DesignCheckService designCheckService = PoorMansDIContainer.getDesignCheckService();
 
         DesignCheckerParameters parameters = buildParameters();
@@ -52,8 +50,8 @@ public class DesignCheckerMojo extends AbstractMojo {
 
     private void checkThresholds(DesignCheckResults checkResults) throws MojoFailureException {
         
-        APDResult apdResult = checkResults.getResult(CycleDetector.ID);
-        LayerViolationsResult layerViolationsResult = checkResults.getResult(LayerViolationDetector.ID);
+        APDResult apdResult = checkResults.getResult(APDResult.class);
+        LayerViolationsResult layerViolationsResult = checkResults.getResult(LayerViolationsResult.class);
 
         if (thresholdADPViolations < apdResult.numberOfViolations()
                 || thresholdLayerViolations < layerViolationsResult.numberOfViolations()) {

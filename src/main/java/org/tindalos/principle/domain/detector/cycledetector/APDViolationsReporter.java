@@ -2,15 +2,14 @@ package org.tindalos.principle.domain.detector.cycledetector;
 
 import java.util.List;
 
+import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.reporting.ViolationsReporter;
-import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 
-public class APDViolationsReporter implements ViolationsReporter {
+public class APDViolationsReporter implements ViolationsReporter<APDResult> {
     
-    PoorMansDIContainer c;
-    
-    public String report(List<Cycle> cycles) {
+    public String report(APDResult result) {
+        List<Cycle> cycles = result.getCycles();
         String sectionLine = "==============================================================";
         StringBuffer sb = new StringBuffer("\n" + sectionLine + "\n");
         sb.append("\tAcyclic Package Dependency violations\t");
@@ -30,6 +29,10 @@ public class APDViolationsReporter implements ViolationsReporter {
             sb.append(reference + arrow);
         }
         return sb.append("*"). toString();
+    }
+
+    public Class<APDResult> getType() {
+        return APDResult.class;
     }
     
 

@@ -12,12 +12,12 @@ import com.google.common.collect.Lists;
 
 public class DesignChecker {
 
-    private final List<Detector> detectors;
+    private final List<Detector<? extends CheckResult>> detectors;
 
-    public DesignChecker(List<Detector> detectors) {
+    public DesignChecker(List<Detector<? extends CheckResult>> detectors) {
         this.detectors = Lists.newArrayList(detectors);
     }
-    public DesignChecker(Detector... detectors) {
+    public DesignChecker(Detector<? extends CheckResult>... detectors) {
         this.detectors = Lists.newArrayList(detectors);
     }
 
@@ -25,7 +25,7 @@ public class DesignChecker {
 
         List<CheckResult> checkResults = Lists.newArrayList();
         CheckInput checkInput = new CheckInput(packages, parameters);
-        for (Detector detector : detectors) {
+        for (Detector<? extends CheckResult> detector : detectors) {
             CheckResult checkResult = detector.analyze(checkInput);
             checkResults.add(checkResult);
         }
