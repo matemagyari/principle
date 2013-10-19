@@ -12,9 +12,14 @@ public class LayerViolationsReporter implements ViolationsReporter<LayerViolatio
         StringBuffer sb = new StringBuffer("\n" + sectionLine + "\n");
         sb.append("\tLayering violations\t");
         sb.append("\n" + sectionLine + "\n");
-        for (LayerReference layerReference : layerReferences) {
-            sb.append(layerReference + "\n");
-        }
+        
+		if (layerReferences.isEmpty()) {
+			sb.append("No violations.\n");
+		} else {
+			for (LayerReference layerReference : layerReferences) {
+				sb.append(layerReference + "\n");
+			}
+		}
         sb.append(sectionLine + "\n");
         return sb.toString();
     }

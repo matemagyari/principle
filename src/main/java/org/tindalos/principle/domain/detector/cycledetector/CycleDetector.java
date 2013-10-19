@@ -11,7 +11,7 @@ import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.detector.core.CheckInput;
 import org.tindalos.principle.domain.detector.core.Detector;
 
-public class CycleDetector implements Detector<APDResult> {
+public class CycleDetector implements Detector {
 	
 	public static final String ID = "APDDetector";
     

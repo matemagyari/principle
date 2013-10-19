@@ -15,7 +15,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-public class LayerViolationDetector implements Detector<LayerViolationsResult> {
+public class LayerViolationDetector implements Detector {
 	
 	public static final String ID = "LayerViolationDetector";
     
