@@ -20,7 +20,7 @@ public class DesignCheckerTest {
 
 		DesignCheckResultsReporter reporter = PoorMansDIContainer.getDesignCheckResultsReporter(new ConsolePrinter());
 		
-		reporter.report(results);
+		//reporter.report(results);
 
 	}
 
