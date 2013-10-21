@@ -8,6 +8,7 @@ import org.tindalos.principle.app.service.impl.Printer;
 import org.tindalos.principle.domain.checker.DesignChecker;
 import org.tindalos.principle.domain.checker.PackageAnalyzer;
 import org.tindalos.principle.domain.detector.core.CheckResult;
+import org.tindalos.principle.domain.detector.core.ViolationsReporter;
 import org.tindalos.principle.domain.detector.cycledetector.APDResult;
 import org.tindalos.principle.domain.detector.cycledetector.APDViolationsReporter;
 import org.tindalos.principle.domain.detector.cycledetector.CycleDetector;
@@ -15,7 +16,6 @@ import org.tindalos.principle.domain.detector.cycledetector.PackageStructureBuil
 import org.tindalos.principle.domain.detector.layerviolationdetector.LayerViolationDetector;
 import org.tindalos.principle.domain.detector.layerviolationdetector.LayerViolationsReporter;
 import org.tindalos.principle.domain.detector.layerviolationdetector.LayerViolationsResult;
-import org.tindalos.principle.domain.reporting.ViolationsReporter;
 import org.tindalos.principle.infrastructure.service.jdepend.JDependPackageAnalyzer;
 import org.tindalos.principle.infrastructure.service.jdepend.JDependRunner;
 import org.tindalos.principle.infrastructure.service.jdepend.PackageBuilder;

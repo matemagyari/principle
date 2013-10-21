@@ -1,6 +1,5 @@
-package org.tindalos.principle.domain.reporting;
+package org.tindalos.principle.domain.detector.core;
 
-import org.tindalos.principle.domain.detector.core.CheckResult;
 
 public interface ViolationsReporter<T extends CheckResult> {
     

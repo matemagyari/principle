@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.detector.layerviolationdetector;
 
 import java.util.List;
 
-import org.tindalos.principle.domain.reporting.ViolationsReporter;
+import org.tindalos.principle.domain.detector.core.ViolationsReporter;
 
 public class LayerViolationsReporter implements ViolationsReporter<LayerViolationsResult> {
     

@@ -5,7 +5,7 @@ import java.util.Map;
 import org.tindalos.principle.app.service.impl.Printer;
 import org.tindalos.principle.domain.checker.DesignCheckResults;
 import org.tindalos.principle.domain.detector.core.CheckResult;
-import org.tindalos.principle.domain.reporting.ViolationsReporter;
+import org.tindalos.principle.domain.detector.core.ViolationsReporter;
 
 import com.google.common.collect.Maps;
 
