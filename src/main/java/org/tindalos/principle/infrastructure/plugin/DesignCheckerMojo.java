@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.tindalos.principle.app.service.DesignCheckResultsReporter;
@@ -19,19 +18,19 @@ import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 
 import com.google.common.base.Optional;
 
-@Mojo(name = "designcheck")
+@Mojo(name = "check")
 public class DesignCheckerMojo extends AbstractMojo {
 
-	@Parameter(property = "designcheck.basePackage", defaultValue = "")
+	@Parameter(property = "check.basePackage", defaultValue = "")
 	private String basePackage;
 
-	@Parameter(property = "designcheck.thresholdLayerViolations", defaultValue = "0")
+	@Parameter(property = "check.thresholdLayerViolations", defaultValue = "0")
 	private int thresholdLayerViolations;
 
-	@Parameter(property = "designcheck.thresholdADPViolations", defaultValue = "0")
+	@Parameter(property = "check.thresholdADPViolations", defaultValue = "0")
 	private int thresholdADPViolations;
 
-	@Parameter(property = "designcheck.layers")
+	@Parameter(property = "check.layers")
 	private List<String> layers;
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
