@@ -62,7 +62,7 @@
 						<param>domain</param>
 					</layers>
 					<thresholdLayerViolations>0</thresholdLayerViolations>
-					<thresholdADPViolations>10</thresholdADPViolations>
+					<thresholdADPViolations>9</thresholdADPViolations>
 				</configuration>
 				<executions>
 					<execution>
