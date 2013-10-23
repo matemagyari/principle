@@ -53,7 +53,7 @@
 			<plugin>
 				<groupId>org.tindalos.principle</groupId>
 				<artifactId>principle</artifactId>
-				<version>0.6</version>
+				<version>0.8</version>
 				<configuration>
 					<basePackage>org.tindalos.principle</basePackage>
 					<layers>
@@ -68,7 +68,7 @@
 					<execution>
 						<phase>compile</phase>
 						<goals>
-							<goal>designcheck</goal>
+							<goal>check</goal>
 						</goals>
 					</execution>
 				</executions>

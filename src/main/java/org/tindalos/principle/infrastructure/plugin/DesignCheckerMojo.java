@@ -15,56 +15,66 @@ import org.tindalos.principle.domain.core.DesignCheckerParameters;
 import org.tindalos.principle.domain.detector.cycledetector.APDResult;
 import org.tindalos.principle.domain.detector.layerviolationdetector.LayerViolationsResult;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
+import org.tindalos.principle.infrastructure.service.jdepend.ClassesToAnalyzeNotFoundException;
 
 import com.google.common.base.Optional;
 
 @Mojo(name = "check")
 public class DesignCheckerMojo extends AbstractMojo {
 
-	@Parameter(property = "check.basePackage", defaultValue = "")
-	private String basePackage;
+    @Parameter(property = "check.basePackage", defaultValue = "")
+    private String basePackage;
 
-	@Parameter(property = "check.thresholdLayerViolations", defaultValue = "0")
-	private int thresholdLayerViolations;
+    @Parameter(property = "check.thresholdLayerViolations", defaultValue = "0")
+    private int thresholdLayerViolations;
 
-	@Parameter(property = "check.thresholdADPViolations", defaultValue = "0")
-	private int thresholdADPViolations;
+    @Parameter(property = "check.thresholdADPViolations", defaultValue = "0")
+    private int thresholdADPViolations;
 
-	@Parameter(property = "check.layers")
-	private List<String> layers;
+    @Parameter(property = "check.layers")
+    private List<String> layers;
 
-	public void execute() throws MojoExecutionException, MojoFailureException {
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        try {
+            doTheJob();
+        } catch (ClassesToAnalyzeNotFoundException ex) {
+            getLog().warn(ex.getMessage());
+        }
 
-		DesignCheckService designCheckService = PoorMansDIContainer.getDesignCheckService();
+    }
 
-		DesignCheckerParameters parameters = buildParameters();
-		DesignCheckResults checkResults = designCheckService.analyze(parameters);
+    private void doTheJob() throws MojoFailureException {
+        DesignCheckService designCheckService = PoorMansDIContainer.getDesignCheckService();
+        
+        DesignCheckerParameters parameters = buildParameters();
 
-		Printer printer = new LogPrinter(getLog());
-		DesignCheckResultsReporter designCheckResultsReporter = PoorMansDIContainer.getDesignCheckResultsReporter(printer);
+        DesignCheckResults checkResults = designCheckService.analyze(parameters);
 
-		designCheckResultsReporter.report(checkResults);
+        Printer printer = new LogPrinter(getLog());
+        DesignCheckResultsReporter designCheckResultsReporter = PoorMansDIContainer
+                .getDesignCheckResultsReporter(printer);
 
-		checkThresholds(checkResults);
+        designCheckResultsReporter.report(checkResults);
 
-	}
+        checkThresholds(checkResults);
+    }
 
-	private void checkThresholds(DesignCheckResults checkResults) throws MojoFailureException {
+    private void checkThresholds(DesignCheckResults checkResults) throws MojoFailureException {
 
-		Optional<APDResult> apdResult = checkResults.getResult(APDResult.class);
-		Optional<LayerViolationsResult> layerViolationsResult = checkResults.getResult(LayerViolationsResult.class);
+        Optional<APDResult> apdResult = checkResults.getResult(APDResult.class);
+        Optional<LayerViolationsResult> layerViolationsResult = checkResults.getResult(LayerViolationsResult.class);
 
-		if (thresholdADPViolations < apdResult.get().numberOfViolations() 
-				|| thresholdLayerViolations < layerViolationsResult.get().numberOfViolations()) {
+        if (thresholdADPViolations < apdResult.get().numberOfViolations()
+                || thresholdLayerViolations < layerViolationsResult.get().numberOfViolations()) {
 
-			throw new MojoFailureException("\nNumber of violations exceeds allowed limits!");
-		}
-	}
+            throw new MojoFailureException("\nNumber of violations exceeds allowed limits!");
+        }
+    }
 
-	private DesignCheckerParameters buildParameters() {
-		DesignCheckerParameters parameters = new DesignCheckerParameters(basePackage);
-		parameters.setLayers(layers);
-		return parameters;
-	}
+    private DesignCheckerParameters buildParameters() {
+        DesignCheckerParameters parameters = new DesignCheckerParameters(basePackage);
+        parameters.setLayers(layers);
+        return parameters;
+    }
 
 }

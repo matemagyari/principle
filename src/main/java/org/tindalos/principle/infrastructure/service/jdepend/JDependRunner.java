@@ -19,7 +19,7 @@ public class JDependRunner {
             return jDepend.analyze();
             
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ClassesToAnalyzeNotFoundException(e);
         }
     }
 
