@@ -43,7 +43,7 @@ public class JDependBasedPackage extends Package {
     }
 
     @Override
-    protected Metrics getMetrics() {
+    public Metrics getMetrics() {
         return metrics;
     }
 

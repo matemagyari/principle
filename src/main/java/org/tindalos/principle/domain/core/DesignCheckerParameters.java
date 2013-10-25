@@ -47,4 +47,8 @@ public class DesignCheckerParameters {
         }
     }
 
+    public Metrics getMetricThresholds() {
+        throw new org.apache.commons.lang.NotImplementedException("TODO mmagyari");
+    }
+
 }

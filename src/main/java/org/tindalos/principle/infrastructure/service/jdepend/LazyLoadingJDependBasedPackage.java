@@ -42,7 +42,7 @@ public class LazyLoadingJDependBasedPackage extends Package {
     }
 
     @Override
-    protected Metrics getMetrics() {
+    public Metrics getMetrics() {
         return metrics;
     }
 

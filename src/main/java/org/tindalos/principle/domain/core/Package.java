@@ -77,7 +77,7 @@ public abstract class Package {
             }
 
             @Override
-            protected Metrics getMetrics() {
+            public Metrics getMetrics() {
                 return Metrics.undefined();
             }
             
@@ -141,7 +141,7 @@ public abstract class Package {
     }
 
     public abstract Set<PackageReference> getOwnPackageReferences();
-    protected abstract Metrics getMetrics();
+    public abstract Metrics getMetrics();
 
     @Override
     public boolean equals(Object other) {
