@@ -138,18 +138,6 @@
 		</license>
 	</licenses>
 
-	<distributionManagement>
-		<repository>
-			<id>sonatype-nexus-staging</id>
-			<name>Nexus Staging Repository</name>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-		<snapshotRepository>
-			<id>sonatype-nexus-snapshot</id>
-			<name>Nexus Snapshot Repository</name>
-			<url>https://oss.sonatype.org/service/local/snapshot/deploy/maven2/</url>
-		</snapshotRepository>
-	</distributionManagement>
 	<scm>
 		<connection>scm:git:https://matemagyari@github.com/matemagyari/principle.git</connection>
 		<developerConnection>scm:git:https://matemagyari@github.com/matemagyari/principle.git</developerConnection>
