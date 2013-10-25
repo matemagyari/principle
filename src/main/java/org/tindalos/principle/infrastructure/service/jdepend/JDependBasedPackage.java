@@ -5,6 +5,7 @@ import java.util.Set;
 
 import jdepend.framework.JavaPackage;
 
+import org.tindalos.principle.domain.core.Metrics;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageReference;
 
@@ -13,9 +14,11 @@ import com.google.common.collect.Sets;
 public class JDependBasedPackage extends Package {
 	
     private Set<PackageReference> ownPackageReferences;
+    private final Metrics metrics;
 
-	public JDependBasedPackage(JavaPackage javaPackage, String basePackage) {
+	public JDependBasedPackage(JavaPackage javaPackage, String basePackage, Metrics metrics) {
         super(javaPackage.getName());
+        this.metrics = metrics;
         this.ownPackageReferences =  createOwnPackageReferences(javaPackage, basePackage);
     }
 	
@@ -25,7 +28,7 @@ public class JDependBasedPackage extends Package {
 	}
 
     @SuppressWarnings("unchecked")
-    protected static Set<PackageReference> createOwnPackageReferences(JavaPackage theJavaPackage, String basePackage) {
+    protected Set<PackageReference> createOwnPackageReferences(JavaPackage theJavaPackage, String basePackage) {
 
         Set<PackageReference> packages = Sets.newHashSet();
 
@@ -37,6 +40,11 @@ public class JDependBasedPackage extends Package {
         }
 
         return packages;
+    }
+
+    @Override
+    protected Metrics getMetrics() {
+        return metrics;
     }
 
 }

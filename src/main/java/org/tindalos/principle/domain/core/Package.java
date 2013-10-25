@@ -75,6 +75,11 @@ public abstract class Package {
             public Set<PackageReference> getOwnPackageReferences() {
                 return Sets.newHashSet();
             }
+
+            @Override
+            protected Metrics getMetrics() {
+                return Metrics.undefined();
+            }
             
         };
     }
@@ -136,6 +141,7 @@ public abstract class Package {
     }
 
     public abstract Set<PackageReference> getOwnPackageReferences();
+    protected abstract Metrics getMetrics();
 
     @Override
     public boolean equals(Object other) {

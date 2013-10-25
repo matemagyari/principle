@@ -18,7 +18,9 @@ import org.tindalos.principle.domain.detector.layerviolationdetector.LayerViolat
 import org.tindalos.principle.domain.detector.layerviolationdetector.LayerViolationsResult;
 import org.tindalos.principle.infrastructure.service.jdepend.JDependPackageAnalyzer;
 import org.tindalos.principle.infrastructure.service.jdepend.JDependRunner;
+import org.tindalos.principle.infrastructure.service.jdepend.MetricsCalculator;
 import org.tindalos.principle.infrastructure.service.jdepend.PackageBuilder;
+import org.tindalos.principle.infrastructure.service.jdepend.PackageTransformer;
 
 import com.google.common.collect.Maps;
 
@@ -27,7 +29,8 @@ public class PoorMansDIContainer {
     
     public static DesignCheckService getDesignCheckService() {
         JDependRunner jDependRunner = new JDependRunner();
-        PackageBuilder packageBuilder = new PackageBuilder();
+        PackageTransformer packageTransformer = new PackageTransformer(new MetricsCalculator());
+        PackageBuilder packageBuilder = new PackageBuilder(packageTransformer);
         PackageAnalyzer packageAnalyzer = new JDependPackageAnalyzer(jDependRunner, packageBuilder);
         
         LayerViolationDetector layerViolationDetector = new LayerViolationDetector();
