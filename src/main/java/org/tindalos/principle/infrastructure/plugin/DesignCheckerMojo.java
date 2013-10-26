@@ -17,6 +17,8 @@ import org.tindalos.principle.domain.detector.layering.LayerViolationsResult;
 import org.tindalos.principle.domain.detector.sap.SAPResult;
 import org.tindalos.principle.domain.detector.sdp.SDPResult;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
+import org.tindalos.principle.infrastructure.plugin.parameter.Checks;
+import org.tindalos.principle.infrastructure.plugin.parameter.PackageCoupling;
 import org.tindalos.principle.infrastructure.service.jdepend.ClassesToAnalyzeNotFoundException;
 
 import com.google.common.base.Optional;
@@ -26,24 +28,9 @@ public class DesignCheckerMojo extends AbstractMojo {
 
     @Parameter(property = "check.basePackage", defaultValue = "")
     private String basePackage;
-
-    @Parameter(property = "check.thresholdLayerViolations", defaultValue = "0")
-    private int thresholdLayerViolations;
-
-    @Parameter(property = "check.thresholdADPViolations", defaultValue = "0")
-    private int thresholdADPViolations;
-
-    @Parameter(property = "check.thresholdSAPViolations", defaultValue = "0")
-    private int thresholdSAPViolations;
-
-    @Parameter(property = "check.thresholdSAPViolations", defaultValue = "1")
-    private Float maxDistance;
     
-    @Parameter(property = "check.thresholdSDPViolations", defaultValue = "0")
-    private int thresholdSDPViolations;
-    
-    @Parameter(property = "check.layers")
-    private List<String> layers;
+    @Parameter(property = "check.checks")
+    private Checks checks;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
@@ -79,11 +66,12 @@ public class DesignCheckerMojo extends AbstractMojo {
         Optional<SDPResult> sdpResult = checkResults.getResult(SDPResult.class);
         Optional<SAPResult> sapResult = checkResults.getResult(SAPResult.class);
 
+        PackageCoupling packageCoupling = checks.getPackageCoupling();
         boolean breakNecessary = 
-        			thresholdADPViolations < apdResult.get().numberOfViolations()
-        		 || thresholdLayerViolations < layerViolationsResult.get().numberOfViolations()
-        		 || thresholdSDPViolations < sdpResult.get().numberOfViolations()
-        		 || thresholdSAPViolations < sapResult.get().numberOfViolations();
+        			packageCoupling.getADP().getViolationsThreshold() < apdResult.get().numberOfViolations()
+        			|| packageCoupling.getSDP().getViolationsThreshold() < sdpResult.get().numberOfViolations()
+        			|| packageCoupling.getSAP().getViolationsThreshold() < sapResult.get().numberOfViolations()
+        		 	|| checks.getLayering().getViolationsThreshold() < layerViolationsResult.get().numberOfViolations();
         		
         if (breakNecessary) {
             throw new MojoFailureException("\nNumber of violations exceeds allowed limits!");
@@ -91,8 +79,8 @@ public class DesignCheckerMojo extends AbstractMojo {
     }
 
     private DesignQualityCheckParameters buildParameters() {
-        DesignQualityCheckParameters parameters = new DesignQualityCheckParameters(basePackage, layers);
-        parameters.setMaxSAPDistance(maxDistance);
+        DesignQualityCheckParameters parameters = new DesignQualityCheckParameters(basePackage, checks.getLayering().getLayers());
+        parameters.setMaxSAPDistance(checks.getPackageCoupling().getSAP().getMaxDistance());
         return parameters;
     }
 

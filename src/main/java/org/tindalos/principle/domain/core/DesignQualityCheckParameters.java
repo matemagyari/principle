@@ -10,7 +10,7 @@ public class DesignQualityCheckParameters {
     
     private final String basePackage;
     private List<String> layers;
-    private Float maxSAPDistance;
+    private Double maxSAPDistance;
 
     public DesignQualityCheckParameters(String basePackage, String... layers) {
         this(basePackage, Lists.newArrayList(layers));
@@ -48,11 +48,11 @@ public class DesignQualityCheckParameters {
         }
     }
 
-	public Float getMaxSAPDistance() {
+	public Double getMaxSAPDistance() {
 		return maxSAPDistance;
 	}
 
-	public void setMaxSAPDistance(Float maxSAPDistance) {
+	public void setMaxSAPDistance(Double maxSAPDistance) {
 		this.maxSAPDistance = maxSAPDistance;
 	}
 

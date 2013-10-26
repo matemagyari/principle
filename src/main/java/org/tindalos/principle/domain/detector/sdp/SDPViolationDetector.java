@@ -23,7 +23,6 @@ public class SDPViolationDetector implements Detector {
         for (Package aPackage : packages) {
 			
         	for (Package aReferredPackage : referredPackages(aPackage, references)) {
-        		System.err.println( aPackage + "["+aPackage.instability()+"] --> " + aReferredPackage + "["+aReferredPackage.instability()+"]");
 				if (aReferredPackage.instability() > aPackage.instability()) {
 					sdpViolations.add(new SDPViolation(aPackage, aReferredPackage));
 				}

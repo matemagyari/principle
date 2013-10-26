@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -50,19 +51,35 @@
 
 	<build>
 		<plugins>
+		<!--  -->
 			<plugin>
 				<groupId>org.tindalos.principle</groupId>
 				<artifactId>principle</artifactId>
-				<version>0.9</version>
+				<version>0.11-SNAPSHOT</version>
 				<configuration>
 					<basePackage>org.tindalos.principle</basePackage>
-					<layers>
-						<param>infrastructure</param>
-						<param>app</param>
-						<param>domain</param>
-					</layers>
-					<thresholdLayerViolations>0</thresholdLayerViolations>
-					<thresholdADPViolations>9</thresholdADPViolations>
+					<checks implementation="org.tindalos.principle.infrastructure.plugin.parameter.Checks">
+						<layering>
+							<layers>
+								<param>infrastructure</param>
+								<param>app</param>
+								<param>domain</param>
+							</layers>
+							<violationsThreshold>0</violationsThreshold>
+						</layering>
+						<packageCoupling>
+							<adp>
+								<violationsThreshold>6</violationsThreshold>
+							</adp>
+							<sdp>
+								<violationsThreshold>10</violationsThreshold>
+							</sdp>
+							<sap>
+								<maxDistance>0.5</maxDistance>
+								<violationsThreshold>1</violationsThreshold>
+							</sap>
+						</packageCoupling>
+					</checks>
 				</configuration>
 				<executions>
 					<execution>
@@ -73,6 +90,8 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+		
 		</plugins>
 		<pluginManagement>
 			<plugins>

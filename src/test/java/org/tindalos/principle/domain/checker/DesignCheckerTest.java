@@ -13,7 +13,7 @@ public class DesignCheckerTest {
 	public void checkItself() {
 		String basePackage = "org.tindalos.principle";
 		DesignQualityCheckParameters parameters = new DesignQualityCheckParameters(basePackage, "infrastructure", "app", "domain");
-		parameters.setMaxSAPDistance(0.3f);
+		parameters.setMaxSAPDistance(0.3d);
 
 		DesignCheckService designCheckService = PoorMansDIContainer.getDesignCheckService(basePackage);
 
