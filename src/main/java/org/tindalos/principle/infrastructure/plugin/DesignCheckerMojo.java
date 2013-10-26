@@ -12,8 +12,10 @@ import org.tindalos.principle.app.service.DesignCheckService;
 import org.tindalos.principle.app.service.impl.Printer;
 import org.tindalos.principle.domain.checker.DesignCheckResults;
 import org.tindalos.principle.domain.core.DesignCheckerParameters;
-import org.tindalos.principle.domain.detector.cycledetector.APDResult;
-import org.tindalos.principle.domain.detector.layerviolationdetector.LayerViolationsResult;
+import org.tindalos.principle.domain.detector.adp.APDResult;
+import org.tindalos.principle.domain.detector.layering.LayerViolationsResult;
+import org.tindalos.principle.domain.detector.sap.SAPResult;
+import org.tindalos.principle.domain.detector.sdp.SDPResult;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 import org.tindalos.principle.infrastructure.service.jdepend.ClassesToAnalyzeNotFoundException;
 
@@ -31,6 +33,15 @@ public class DesignCheckerMojo extends AbstractMojo {
     @Parameter(property = "check.thresholdADPViolations", defaultValue = "0")
     private int thresholdADPViolations;
 
+    @Parameter(property = "check.thresholdSAPViolations", defaultValue = "0")
+    private int thresholdSAPViolations;
+
+    @Parameter(property = "check.thresholdSAPViolations", defaultValue = "1")
+    private Float maxDistance;
+    
+    @Parameter(property = "check.thresholdSDPViolations", defaultValue = "0")
+    private int thresholdSDPViolations;
+    
     @Parameter(property = "check.layers")
     private List<String> layers;
 
@@ -44,9 +55,11 @@ public class DesignCheckerMojo extends AbstractMojo {
     }
 
     private void doTheJob() throws MojoFailureException {
-        DesignCheckService designCheckService = PoorMansDIContainer.getDesignCheckService();
+    	
+    	DesignCheckerParameters parameters = buildParameters();
+    	
+        DesignCheckService designCheckService = PoorMansDIContainer.getDesignCheckService(parameters.getBasePackage());
         
-        DesignCheckerParameters parameters = buildParameters();
 
         DesignCheckResults checkResults = designCheckService.analyze(parameters);
 
@@ -63,17 +76,23 @@ public class DesignCheckerMojo extends AbstractMojo {
 
         Optional<APDResult> apdResult = checkResults.getResult(APDResult.class);
         Optional<LayerViolationsResult> layerViolationsResult = checkResults.getResult(LayerViolationsResult.class);
+        Optional<SDPResult> sdpResult = checkResults.getResult(SDPResult.class);
+        Optional<SAPResult> sapResult = checkResults.getResult(SAPResult.class);
 
-        if (thresholdADPViolations < apdResult.get().numberOfViolations()
-                || thresholdLayerViolations < layerViolationsResult.get().numberOfViolations()) {
-
+        boolean breakNecessary = 
+        			thresholdADPViolations < apdResult.get().numberOfViolations()
+        		 || thresholdLayerViolations < layerViolationsResult.get().numberOfViolations()
+        		 || thresholdSDPViolations < sdpResult.get().numberOfViolations()
+        		 || thresholdSAPViolations < sapResult.get().numberOfViolations();
+        		
+        if (breakNecessary) {
             throw new MojoFailureException("\nNumber of violations exceeds allowed limits!");
         }
     }
 
     private DesignCheckerParameters buildParameters() {
-        DesignCheckerParameters parameters = new DesignCheckerParameters(basePackage);
-        parameters.setLayers(layers);
+        DesignCheckerParameters parameters = new DesignCheckerParameters(basePackage, layers);
+        parameters.setMaxSAPDistance(maxDistance);
         return parameters;
     }
 

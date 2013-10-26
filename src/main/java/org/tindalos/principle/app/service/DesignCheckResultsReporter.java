@@ -18,7 +18,11 @@ public class DesignCheckResultsReporter {
 	public DesignCheckResultsReporter(Printer printer) {
 		this.printer = printer;
 	}
-
+	public DesignCheckResultsReporter(Printer printer, Map<Class<? extends CheckResult>, ViolationsReporter<? extends CheckResult>> reporters) {
+		this(printer);
+		this.reporters = Maps.newHashMap(reporters);
+	}
+	
 	public void report(DesignCheckResults results) {
 
 		for (CheckResult checkResult : results.resultList()) {

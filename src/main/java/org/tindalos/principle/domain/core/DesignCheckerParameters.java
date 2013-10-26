@@ -8,16 +8,20 @@ import com.google.common.collect.Lists;
 
 public class DesignCheckerParameters {
     
-    private String basePackage;
-    
+    private final String basePackage;
     private List<String> layers;
+    private Float maxSAPDistance;
 
     public DesignCheckerParameters(String basePackage, String... layers) {
+        this(basePackage, Lists.newArrayList(layers));
+    }
+
+    public DesignCheckerParameters(String basePackage, List<String> layers) {
         checkNotEmpy("basePackage", basePackage);
         this.basePackage = basePackage;
         setLayers(layers);
     }
-
+    
     public String getBasePackage() {
         return basePackage;
     }
@@ -26,14 +30,11 @@ public class DesignCheckerParameters {
         return layers;
     }
 
-    public void setLayers(List<String> layers) {
+    private void setLayers(List<String> layers) {
         this.layers = Lists.newArrayList();
         for (String layer : layers) {
             this.layers.add(basePackage + "." + layer);
         }
-    }
-    public void setLayers(String... layers) {
-        setLayers(Lists.newArrayList(layers));
     }
 
     public List<String> getOuterLayers(String layer) {
@@ -47,8 +48,14 @@ public class DesignCheckerParameters {
         }
     }
 
-    public Metrics getMetricThresholds() {
-        throw new org.apache.commons.lang.NotImplementedException("TODO mmagyari");
-    }
+	public Float getMaxSAPDistance() {
+		return maxSAPDistance;
+	}
+
+	public void setMaxSAPDistance(Float maxSAPDistance) {
+		this.maxSAPDistance = maxSAPDistance;
+	}
+
+
 
 }

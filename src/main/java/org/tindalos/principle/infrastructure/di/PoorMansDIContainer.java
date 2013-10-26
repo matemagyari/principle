@@ -7,36 +7,48 @@ import org.tindalos.principle.app.service.DesignCheckService;
 import org.tindalos.principle.app.service.impl.Printer;
 import org.tindalos.principle.domain.checker.DesignChecker;
 import org.tindalos.principle.domain.checker.PackageAnalyzer;
+import org.tindalos.principle.domain.detector.adp.APDResult;
+import org.tindalos.principle.domain.detector.adp.APDViolationsReporter;
+import org.tindalos.principle.domain.detector.adp.CycleDetector;
+import org.tindalos.principle.domain.detector.adp.PackageStructureBuilder;
 import org.tindalos.principle.domain.detector.core.CheckResult;
+import org.tindalos.principle.domain.detector.core.PackageSorter;
 import org.tindalos.principle.domain.detector.core.ViolationsReporter;
-import org.tindalos.principle.domain.detector.cycledetector.APDResult;
-import org.tindalos.principle.domain.detector.cycledetector.APDViolationsReporter;
-import org.tindalos.principle.domain.detector.cycledetector.CycleDetector;
-import org.tindalos.principle.domain.detector.cycledetector.PackageStructureBuilder;
-import org.tindalos.principle.domain.detector.layerviolationdetector.LayerViolationDetector;
-import org.tindalos.principle.domain.detector.layerviolationdetector.LayerViolationsReporter;
-import org.tindalos.principle.domain.detector.layerviolationdetector.LayerViolationsResult;
+import org.tindalos.principle.domain.detector.layering.LayerViolationDetector;
+import org.tindalos.principle.domain.detector.layering.LayerViolationsReporter;
+import org.tindalos.principle.domain.detector.layering.LayerViolationsResult;
+import org.tindalos.principle.domain.detector.sap.SAPResult;
+import org.tindalos.principle.domain.detector.sap.SAPViolationDetector;
+import org.tindalos.principle.domain.detector.sap.SAPViolationsReporter;
+import org.tindalos.principle.domain.detector.sdp.SDPResult;
+import org.tindalos.principle.domain.detector.sdp.SDPViolationDetector;
+import org.tindalos.principle.domain.detector.sdp.SDPViolationsReporter;
 import org.tindalos.principle.infrastructure.service.jdepend.JDependPackageAnalyzer;
 import org.tindalos.principle.infrastructure.service.jdepend.JDependRunner;
 import org.tindalos.principle.infrastructure.service.jdepend.MetricsCalculator;
-import org.tindalos.principle.infrastructure.service.jdepend.PackageBuilder;
-import org.tindalos.principle.infrastructure.service.jdepend.PackageTransformer;
+import org.tindalos.principle.infrastructure.service.jdepend.PackageFactory;
+import org.tindalos.principle.infrastructure.service.jdepend.PackageListFactory;
 
 import com.google.common.collect.Maps;
 
 public class PoorMansDIContainer {
     
     
-    public static DesignCheckService getDesignCheckService() {
+    public static DesignCheckService getDesignCheckService(String basePackage) {
         JDependRunner jDependRunner = new JDependRunner();
-        PackageTransformer packageTransformer = new PackageTransformer(new MetricsCalculator());
-        PackageBuilder packageBuilder = new PackageBuilder(packageTransformer);
-        PackageAnalyzer packageAnalyzer = new JDependPackageAnalyzer(jDependRunner, packageBuilder);
+        PackageFactory packageFactory = new PackageFactory(new MetricsCalculator(),basePackage);
+        PackageSorter packageSorter = new PackageSorter();
+		PackageListFactory packageListFactory = new PackageListFactory(packageFactory, packageSorter);
+        PackageAnalyzer packageAnalyzer = new JDependPackageAnalyzer(jDependRunner, packageListFactory);
         
-        LayerViolationDetector layerViolationDetector = new LayerViolationDetector();
-        PackageStructureBuilder packageStructureBuilder = new PackageStructureBuilder();
+        PackageStructureBuilder packageStructureBuilder = new PackageStructureBuilder(packageSorter);
+        
         CycleDetector cycleDetector = new CycleDetector(packageStructureBuilder);
-        DesignChecker designChecker = new DesignChecker(layerViolationDetector, cycleDetector);
+        SDPViolationDetector sdpViolationDetector = new SDPViolationDetector();
+        SAPViolationDetector sapViolationDetector = new SAPViolationDetector();
+        LayerViolationDetector layerViolationDetector = new LayerViolationDetector();
+
+        DesignChecker designChecker = new DesignChecker(layerViolationDetector, cycleDetector, sdpViolationDetector, sapViolationDetector);
         return new DesignCheckService(packageAnalyzer, designChecker);
     }
 
@@ -46,9 +58,9 @@ public class PoorMansDIContainer {
 		
 		reporters.put(APDResult.class, new APDViolationsReporter());
 		reporters.put(LayerViolationsResult.class, new LayerViolationsReporter());
+		reporters.put(SDPResult.class, new SDPViolationsReporter());
+		reporters.put(SAPResult.class, new SAPViolationsReporter());
 		
-		DesignCheckResultsReporter resultsReporter = new DesignCheckResultsReporter(printer);
-		resultsReporter.setReporters(reporters);
-		return resultsReporter;
+		return new DesignCheckResultsReporter(printer, reporters);
 	}
 }

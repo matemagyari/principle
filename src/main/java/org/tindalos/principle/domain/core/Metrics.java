@@ -49,5 +49,14 @@ public class Metrics {
     public boolean isCalculated() {
         return true;
     }
+
+
+	@Override
+	public String toString() {
+		return "Metrics [afferentCoupling=" + afferentCoupling + ", efferentCoupling=" + efferentCoupling + ", abstractness=" + abstractness + ", instability="
+				+ instability + ", distance=" + distance + "]";
+	}
+    
+    
     
 }

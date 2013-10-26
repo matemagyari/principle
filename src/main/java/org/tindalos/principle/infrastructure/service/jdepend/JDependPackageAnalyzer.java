@@ -12,16 +12,16 @@ import org.tindalos.principle.domain.core.Package;
 public class JDependPackageAnalyzer implements PackageAnalyzer {
     
     private final JDependRunner jDependRunner;
-    private final PackageBuilder packageBuilder;
+    private final PackageListFactory packageListFactory;
 
-    public JDependPackageAnalyzer(JDependRunner jDependRunner, PackageBuilder packageBuilder) {
+    public JDependPackageAnalyzer(JDependRunner jDependRunner, PackageListFactory packageListFactory) {
         this.jDependRunner = jDependRunner;
-        this.packageBuilder = packageBuilder;
+        this.packageListFactory = packageListFactory;
     }
 
     public List<Package> analyze(DesignCheckerParameters parameters) {
         Collection<JavaPackage> analyzedPackages = jDependRunner.getAnalyzedPackages(parameters.getBasePackage());
-        return packageBuilder.build(analyzedPackages, parameters.getBasePackage());
+        return packageListFactory.build(analyzedPackages);
     }
 
 }

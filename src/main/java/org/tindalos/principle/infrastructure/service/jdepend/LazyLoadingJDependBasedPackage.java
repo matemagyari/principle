@@ -14,16 +14,15 @@ import com.google.common.collect.Sets;
 public class LazyLoadingJDependBasedPackage extends Package {
 	
     private final JavaPackage javaPackage;
-    private final String basePackage;
-    private final PackageTransformer packageTransformer;
+    private final PackageFactory packageFactory;
     private final Metrics metrics;
 
-	public LazyLoadingJDependBasedPackage(JavaPackage javaPackage, String basePackage, Metrics metrics, PackageTransformer packageTransformer) {
+	public LazyLoadingJDependBasedPackage(JavaPackage javaPackage, Metrics metrics, PackageFactory packageFactory) {
         super(javaPackage.getName());
 		this.javaPackage = javaPackage;
-        this.basePackage = basePackage;
         this.metrics = metrics;
-        this.packageTransformer = packageTransformer;
+        this.packageFactory = packageFactory;
+        //System.err.println(javaPackage.getName() + " " + metrics);
     }
 
     @SuppressWarnings("unchecked")
@@ -33,8 +32,8 @@ public class LazyLoadingJDependBasedPackage extends Package {
 
         Collection<JavaPackage> efferents = javaPackage.getEfferents();
         for (JavaPackage javaPackage : efferents) {
-            if (javaPackage.getName().startsWith(basePackage)) {
-                packages.add(packageTransformer.transform(basePackage, javaPackage).getReference());
+            if (packageFactory.isRelevant(javaPackage)) {
+                packages.add(packageFactory.transform(javaPackage).getReference());
             }
         }
 

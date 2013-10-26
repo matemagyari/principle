@@ -139,7 +139,15 @@ public abstract class Package {
         }
         return accumulatingMap;
     }
+    
+    public Float instability() {
+    	return getMetrics().getInstability();
+    }
 
+	public Float distance() {
+		return getMetrics().getDistance();
+	}
+	
     public abstract Set<PackageReference> getOwnPackageReferences();
     public abstract Metrics getMetrics();
 
@@ -161,5 +169,6 @@ public abstract class Package {
     public String toString() {
         return this.reference.toString();
     }
+
 
 }

@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.detector.cycledetector;
+package org.tindalos.principle.domain.detector.adp;
 
 import java.util.List;
 

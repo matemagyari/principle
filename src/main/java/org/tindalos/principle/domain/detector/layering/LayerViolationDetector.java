@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.detector.layerviolationdetector;
+package org.tindalos.principle.domain.detector.layering;
 
 import java.util.Collection;
 import java.util.List;

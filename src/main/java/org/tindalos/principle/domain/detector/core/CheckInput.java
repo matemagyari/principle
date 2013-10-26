@@ -18,7 +18,7 @@ public class CheckInput {
     }
     
     public List<Package> getPackages() {
-        return packages;
+        return Lists.newArrayList(packages);
     }
     public DesignCheckerParameters getParameters() {
         return parameters;

@@ -13,14 +13,15 @@ public class DesignCheckerTest {
 	public void checkItself() {
 		String basePackage = "org.tindalos.principle";
 		DesignCheckerParameters parameters = new DesignCheckerParameters(basePackage, "infrastructure", "app", "domain");
+		parameters.setMaxSAPDistance(0.3f);
 
-		DesignCheckService designCheckService = PoorMansDIContainer.getDesignCheckService();
+		DesignCheckService designCheckService = PoorMansDIContainer.getDesignCheckService(basePackage);
 
 		DesignCheckResults results = designCheckService.analyze(parameters);
 
 		DesignCheckResultsReporter reporter = PoorMansDIContainer.getDesignCheckResultsReporter(new ConsolePrinter());
 		
-		//reporter.report(results);
+		reporter.report(results);
 
 	}
 
