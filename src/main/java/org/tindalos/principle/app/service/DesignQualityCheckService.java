@@ -8,12 +8,12 @@ import org.tindalos.principle.domain.checker.PackageAnalyzer;
 import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
 import org.tindalos.principle.domain.core.Package;
 
-public class DesignCheckService {
+public class DesignQualityCheckService {
 
     private final PackageAnalyzer packageAnalyzer;
     private final DesignQualityChecker designQualityChecker;
 
-    public DesignCheckService(PackageAnalyzer packageAnalyzer, DesignQualityChecker designQualityChecker) {
+    public DesignQualityCheckService(PackageAnalyzer packageAnalyzer, DesignQualityChecker designQualityChecker) {
         this.packageAnalyzer = packageAnalyzer;
         this.designQualityChecker = designQualityChecker;
     }

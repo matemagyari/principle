@@ -2,8 +2,8 @@ package org.tindalos.principle.infrastructure.di;
 
 import java.util.Map;
 
-import org.tindalos.principle.app.service.DesignCheckResultsReporter;
-import org.tindalos.principle.app.service.DesignCheckService;
+import org.tindalos.principle.app.service.DesignQualityCheckResultsReporter;
+import org.tindalos.principle.app.service.DesignQualityCheckService;
 import org.tindalos.principle.app.service.impl.Printer;
 import org.tindalos.principle.domain.checker.DesignQualityChecker;
 import org.tindalos.principle.domain.checker.PackageAnalyzer;
@@ -34,7 +34,7 @@ import com.google.common.collect.Maps;
 public class PoorMansDIContainer {
     
     
-    public static DesignCheckService getDesignCheckService(String basePackage) {
+    public static DesignQualityCheckService getDesignCheckService(String basePackage) {
         JDependRunner jDependRunner = new JDependRunner();
         PackageFactory packageFactory = new PackageFactory(new MetricsCalculator(),basePackage);
         PackageSorter packageSorter = new PackageSorter();
@@ -49,10 +49,10 @@ public class PoorMansDIContainer {
         LayerViolationDetector layerViolationDetector = new LayerViolationDetector();
 
         DesignQualityChecker designQualityChecker = new DesignQualityChecker(layerViolationDetector, cycleDetector, sdpViolationDetector, sapViolationDetector);
-        return new DesignCheckService(packageAnalyzer, designQualityChecker);
+        return new DesignQualityCheckService(packageAnalyzer, designQualityChecker);
     }
 
-	public static DesignCheckResultsReporter getDesignCheckResultsReporter(Printer printer) {
+	public static DesignQualityCheckResultsReporter getDesignCheckResultsReporter(Printer printer) {
 		
 		Map<Class<? extends CheckResult>, ViolationsReporter<? extends CheckResult>> reporters = Maps.newHashMap();
 		
@@ -61,6 +61,6 @@ public class PoorMansDIContainer {
 		reporters.put(SDPResult.class, new SDPViolationsReporter());
 		reporters.put(SAPResult.class, new SAPViolationsReporter());
 		
-		return new DesignCheckResultsReporter(printer, reporters);
+		return new DesignQualityCheckResultsReporter(printer, reporters);
 	}
 }

@@ -9,16 +9,16 @@ import org.tindalos.principle.domain.detector.core.ViolationsReporter;
 
 import com.google.common.collect.Maps;
 
-public class DesignCheckResultsReporter {
+public class DesignQualityCheckResultsReporter {
 
 	private Map<Class<? extends CheckResult>, ViolationsReporter<? extends CheckResult>> reporters;
 
 	private final Printer printer;
 
-	public DesignCheckResultsReporter(Printer printer) {
+	public DesignQualityCheckResultsReporter(Printer printer) {
 		this.printer = printer;
 	}
-	public DesignCheckResultsReporter(Printer printer, Map<Class<? extends CheckResult>, ViolationsReporter<? extends CheckResult>> reporters) {
+	public DesignQualityCheckResultsReporter(Printer printer, Map<Class<? extends CheckResult>, ViolationsReporter<? extends CheckResult>> reporters) {
 		this(printer);
 		this.reporters = Maps.newHashMap(reporters);
 	}

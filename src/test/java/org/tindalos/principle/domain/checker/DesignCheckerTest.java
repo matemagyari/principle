@@ -1,8 +1,8 @@
 package org.tindalos.principle.domain.checker;
 
 import org.junit.Test;
-import org.tindalos.principle.app.service.DesignCheckResultsReporter;
-import org.tindalos.principle.app.service.DesignCheckService;
+import org.tindalos.principle.app.service.DesignQualityCheckResultsReporter;
+import org.tindalos.principle.app.service.DesignQualityCheckService;
 import org.tindalos.principle.app.service.impl.Printer;
 import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
@@ -15,11 +15,11 @@ public class DesignCheckerTest {
 		DesignQualityCheckParameters parameters = new DesignQualityCheckParameters(basePackage, "infrastructure", "app", "domain");
 		parameters.setMaxSAPDistance(0.3d);
 
-		DesignCheckService designCheckService = PoorMansDIContainer.getDesignCheckService(basePackage);
+		DesignQualityCheckService designQualityCheckService = PoorMansDIContainer.getDesignCheckService(basePackage);
 
-		DesignQualityCheckResults results = designCheckService.analyze(parameters);
+		DesignQualityCheckResults results = designQualityCheckService.analyze(parameters);
 
-		DesignCheckResultsReporter reporter = PoorMansDIContainer.getDesignCheckResultsReporter(new ConsolePrinter());
+		DesignQualityCheckResultsReporter reporter = PoorMansDIContainer.getDesignCheckResultsReporter(new ConsolePrinter());
 		
 		reporter.report(results);
 

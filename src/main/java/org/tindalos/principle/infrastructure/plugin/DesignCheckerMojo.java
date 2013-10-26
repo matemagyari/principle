@@ -1,14 +1,12 @@
 package org.tindalos.principle.infrastructure.plugin;
 
-import java.util.List;
-
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.tindalos.principle.app.service.DesignCheckResultsReporter;
-import org.tindalos.principle.app.service.DesignCheckService;
+import org.tindalos.principle.app.service.DesignQualityCheckResultsReporter;
+import org.tindalos.principle.app.service.DesignQualityCheckService;
 import org.tindalos.principle.app.service.impl.Printer;
 import org.tindalos.principle.domain.checker.DesignQualityCheckResults;
 import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
@@ -45,16 +43,16 @@ public class DesignCheckerMojo extends AbstractMojo {
     	
     	DesignQualityCheckParameters parameters = buildParameters();
     	
-        DesignCheckService designCheckService = PoorMansDIContainer.getDesignCheckService(parameters.getBasePackage());
+        DesignQualityCheckService designQualityCheckService = PoorMansDIContainer.getDesignCheckService(parameters.getBasePackage());
         
 
-        DesignQualityCheckResults checkResults = designCheckService.analyze(parameters);
+        DesignQualityCheckResults checkResults = designQualityCheckService.analyze(parameters);
 
         Printer printer = new LogPrinter(getLog());
-        DesignCheckResultsReporter designCheckResultsReporter = PoorMansDIContainer
+        DesignQualityCheckResultsReporter designQualityCheckResultsReporter = PoorMansDIContainer
                 .getDesignCheckResultsReporter(printer);
 
-        designCheckResultsReporter.report(checkResults);
+        designQualityCheckResultsReporter.report(checkResults);
 
         checkThresholds(checkResults);
     }
