@@ -3,7 +3,7 @@ package org.tindalos.principle.app.service;
 import java.util.Map;
 
 import org.tindalos.principle.app.service.impl.Printer;
-import org.tindalos.principle.domain.checker.DesignCheckResults;
+import org.tindalos.principle.domain.checker.DesignQualityCheckResults;
 import org.tindalos.principle.domain.detector.core.CheckResult;
 import org.tindalos.principle.domain.detector.core.ViolationsReporter;
 
@@ -23,7 +23,7 @@ public class DesignCheckResultsReporter {
 		this.reporters = Maps.newHashMap(reporters);
 	}
 	
-	public void report(DesignCheckResults results) {
+	public void report(DesignQualityCheckResults results) {
 
 		for (CheckResult checkResult : results.resultList()) {
 			ViolationsReporter reporter = reporters.get(checkResult.getClass());

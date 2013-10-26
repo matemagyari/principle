@@ -6,7 +6,7 @@ import java.util.List;
 import jdepend.framework.JavaPackage;
 
 import org.tindalos.principle.domain.core.Package;
-import org.tindalos.principle.domain.detector.core.PackageSorter;
+import org.tindalos.principle.domain.core.PackageSorter;
 
 import com.google.common.collect.Lists;
 

@@ -9,11 +9,11 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-public class DesignCheckResults {
+public class DesignQualityCheckResults {
 
 	private final Map<Class<? extends CheckResult>, CheckResult> checkResults;
 
-	public DesignCheckResults(List<CheckResult> checkResults) {
+	public DesignQualityCheckResults(List<CheckResult> checkResults) {
 		this.checkResults = Maps.newHashMap();
 		for (CheckResult checkResult : checkResults) {
 			this.checkResults.put(checkResult.getClass(), checkResult);

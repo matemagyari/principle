@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.checker;
 
 import java.util.List;
 
-import org.tindalos.principle.domain.core.DesignCheckerParameters;
+import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.detector.core.CheckInput;
 import org.tindalos.principle.domain.detector.core.CheckResult;
@@ -10,18 +10,18 @@ import org.tindalos.principle.domain.detector.core.Detector;
 
 import com.google.common.collect.Lists;
 
-public class DesignChecker {
+public class DesignQualityChecker {
 
     private final List<Detector> detectors;
 
-    public DesignChecker(List<Detector> detectors) {
+    public DesignQualityChecker(List<Detector> detectors) {
         this.detectors = Lists.newArrayList(detectors);
     }
-    public DesignChecker(Detector... detectors) {
+    public DesignQualityChecker(Detector... detectors) {
         this.detectors = Lists.newArrayList(detectors);
     }
 
-    public DesignCheckResults execute(List<Package> packages, DesignCheckerParameters parameters) {
+    public DesignQualityCheckResults execute(List<Package> packages, DesignQualityCheckParameters parameters) {
 
         List<CheckResult> checkResults = Lists.newArrayList();
         CheckInput checkInput = new CheckInput(packages, parameters);
@@ -29,7 +29,7 @@ public class DesignChecker {
             CheckResult checkResult = detector.analyze(checkInput);
             checkResults.add(checkResult);
         }
-        return new DesignCheckResults(checkResults);
+        return new DesignQualityCheckResults(checkResults);
     }
 
 }

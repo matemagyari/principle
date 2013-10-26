@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.tindalos.principle.domain.core.DesignCheckerParameters;
+import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.detector.core.CheckInput;
@@ -24,7 +24,7 @@ public class LayerViolationDetector implements Detector {
         return new LayerViolationsResult(layerReferences);
     }
 
-    private List<LayerReference> findViolations(List<Package> packages, DesignCheckerParameters parameters) {
+    private List<LayerReference> findViolations(List<Package> packages, DesignQualityCheckParameters parameters) {
 
         List<LayerReference> violations = Lists.newArrayList();
 
@@ -39,7 +39,7 @@ public class LayerViolationDetector implements Detector {
         return violations;
     }
 
-    private Optional<String> getLayer(Package aPackage, DesignCheckerParameters parameters) {
+    private Optional<String> getLayer(Package aPackage, DesignQualityCheckParameters parameters) {
         for (String layer : parameters.getLayers()) {
             if (aPackage.getReference().startsWith(layer)) {
                 return Optional.of(layer);

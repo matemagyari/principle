@@ -6,17 +6,17 @@ import org.codehaus.plexus.util.StringUtils;
 
 import com.google.common.collect.Lists;
 
-public class DesignCheckerParameters {
+public class DesignQualityCheckParameters {
     
     private final String basePackage;
     private List<String> layers;
     private Float maxSAPDistance;
 
-    public DesignCheckerParameters(String basePackage, String... layers) {
+    public DesignQualityCheckParameters(String basePackage, String... layers) {
         this(basePackage, Lists.newArrayList(layers));
     }
 
-    public DesignCheckerParameters(String basePackage, List<String> layers) {
+    public DesignQualityCheckParameters(String basePackage, List<String> layers) {
         checkNotEmpy("basePackage", basePackage);
         this.basePackage = basePackage;
         setLayers(layers);

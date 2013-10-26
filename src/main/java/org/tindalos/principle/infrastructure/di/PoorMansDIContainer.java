@@ -5,14 +5,14 @@ import java.util.Map;
 import org.tindalos.principle.app.service.DesignCheckResultsReporter;
 import org.tindalos.principle.app.service.DesignCheckService;
 import org.tindalos.principle.app.service.impl.Printer;
-import org.tindalos.principle.domain.checker.DesignChecker;
+import org.tindalos.principle.domain.checker.DesignQualityChecker;
 import org.tindalos.principle.domain.checker.PackageAnalyzer;
+import org.tindalos.principle.domain.core.PackageSorter;
 import org.tindalos.principle.domain.detector.adp.APDResult;
 import org.tindalos.principle.domain.detector.adp.APDViolationsReporter;
 import org.tindalos.principle.domain.detector.adp.CycleDetector;
 import org.tindalos.principle.domain.detector.adp.PackageStructureBuilder;
 import org.tindalos.principle.domain.detector.core.CheckResult;
-import org.tindalos.principle.domain.detector.core.PackageSorter;
 import org.tindalos.principle.domain.detector.core.ViolationsReporter;
 import org.tindalos.principle.domain.detector.layering.LayerViolationDetector;
 import org.tindalos.principle.domain.detector.layering.LayerViolationsReporter;
@@ -48,8 +48,8 @@ public class PoorMansDIContainer {
         SAPViolationDetector sapViolationDetector = new SAPViolationDetector();
         LayerViolationDetector layerViolationDetector = new LayerViolationDetector();
 
-        DesignChecker designChecker = new DesignChecker(layerViolationDetector, cycleDetector, sdpViolationDetector, sapViolationDetector);
-        return new DesignCheckService(packageAnalyzer, designChecker);
+        DesignQualityChecker designQualityChecker = new DesignQualityChecker(layerViolationDetector, cycleDetector, sdpViolationDetector, sapViolationDetector);
+        return new DesignCheckService(packageAnalyzer, designQualityChecker);
     }
 
 	public static DesignCheckResultsReporter getDesignCheckResultsReporter(Printer printer) {

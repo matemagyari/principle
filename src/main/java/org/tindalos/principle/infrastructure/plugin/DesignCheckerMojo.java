@@ -10,8 +10,8 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.tindalos.principle.app.service.DesignCheckResultsReporter;
 import org.tindalos.principle.app.service.DesignCheckService;
 import org.tindalos.principle.app.service.impl.Printer;
-import org.tindalos.principle.domain.checker.DesignCheckResults;
-import org.tindalos.principle.domain.core.DesignCheckerParameters;
+import org.tindalos.principle.domain.checker.DesignQualityCheckResults;
+import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
 import org.tindalos.principle.domain.detector.adp.APDResult;
 import org.tindalos.principle.domain.detector.layering.LayerViolationsResult;
 import org.tindalos.principle.domain.detector.sap.SAPResult;
@@ -56,12 +56,12 @@ public class DesignCheckerMojo extends AbstractMojo {
 
     private void doTheJob() throws MojoFailureException {
     	
-    	DesignCheckerParameters parameters = buildParameters();
+    	DesignQualityCheckParameters parameters = buildParameters();
     	
         DesignCheckService designCheckService = PoorMansDIContainer.getDesignCheckService(parameters.getBasePackage());
         
 
-        DesignCheckResults checkResults = designCheckService.analyze(parameters);
+        DesignQualityCheckResults checkResults = designCheckService.analyze(parameters);
 
         Printer printer = new LogPrinter(getLog());
         DesignCheckResultsReporter designCheckResultsReporter = PoorMansDIContainer
@@ -72,7 +72,7 @@ public class DesignCheckerMojo extends AbstractMojo {
         checkThresholds(checkResults);
     }
 
-    private void checkThresholds(DesignCheckResults checkResults) throws MojoFailureException {
+    private void checkThresholds(DesignQualityCheckResults checkResults) throws MojoFailureException {
 
         Optional<APDResult> apdResult = checkResults.getResult(APDResult.class);
         Optional<LayerViolationsResult> layerViolationsResult = checkResults.getResult(LayerViolationsResult.class);
@@ -90,8 +90,8 @@ public class DesignCheckerMojo extends AbstractMojo {
         }
     }
 
-    private DesignCheckerParameters buildParameters() {
-        DesignCheckerParameters parameters = new DesignCheckerParameters(basePackage, layers);
+    private DesignQualityCheckParameters buildParameters() {
+        DesignQualityCheckParameters parameters = new DesignQualityCheckParameters(basePackage, layers);
         parameters.setMaxSAPDistance(maxDistance);
         return parameters;
     }

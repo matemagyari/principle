@@ -2,25 +2,25 @@ package org.tindalos.principle.app.service;
 
 import java.util.List;
 
-import org.tindalos.principle.domain.checker.DesignCheckResults;
-import org.tindalos.principle.domain.checker.DesignChecker;
+import org.tindalos.principle.domain.checker.DesignQualityCheckResults;
+import org.tindalos.principle.domain.checker.DesignQualityChecker;
 import org.tindalos.principle.domain.checker.PackageAnalyzer;
-import org.tindalos.principle.domain.core.DesignCheckerParameters;
+import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
 import org.tindalos.principle.domain.core.Package;
 
 public class DesignCheckService {
 
     private final PackageAnalyzer packageAnalyzer;
-    private final DesignChecker designChecker;
+    private final DesignQualityChecker designQualityChecker;
 
-    public DesignCheckService(PackageAnalyzer packageAnalyzer, DesignChecker designChecker) {
+    public DesignCheckService(PackageAnalyzer packageAnalyzer, DesignQualityChecker designQualityChecker) {
         this.packageAnalyzer = packageAnalyzer;
-        this.designChecker = designChecker;
+        this.designQualityChecker = designQualityChecker;
     }
 
-    public DesignCheckResults analyze(DesignCheckerParameters parameters) {
+    public DesignQualityCheckResults analyze(DesignQualityCheckParameters parameters) {
         List<Package> packages = packageAnalyzer.analyze(parameters);
-        return designChecker.execute(packages, parameters);
+        return designQualityChecker.execute(packages, parameters);
     }
 
 }
