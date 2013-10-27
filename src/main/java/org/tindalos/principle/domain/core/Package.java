@@ -10,6 +10,8 @@ import java.util.Set;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -42,7 +44,14 @@ public abstract class Package {
     }
     
     public int calculateNumberOfCumulatedDependees() {
-    	return this.accumulatedPackageReferences().size() + 1;
+    	Set<PackageReference> accumulatedPackageReferences = this.accumulatedPackageReferences();
+    	final PackageReference reference = this.reference;
+    	Predicate<PackageReference> filter = new Predicate<PackageReference>() {
+			public boolean apply(PackageReference input) {
+				return reference.isNotAnAncestorOf(input);
+			}
+		};
+		return Sets.newHashSet(Iterables.filter(accumulatedPackageReferences, filter)).size() + 1;
     }
     
     public CCDValue calculateCCD(Map<PackageReference, Package> packageReferenceMap) {

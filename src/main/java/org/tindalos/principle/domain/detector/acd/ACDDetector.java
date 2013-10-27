@@ -25,7 +25,7 @@ public class ACDDetector implements Detector {
 		System.err.println("NPAC 1 " + packages.size() + " NPAC 2 " + numOfPackages);
 		
 		int cumulatedComponentDependency = 0;
-		for (Package aPackage : packages) {
+		for (Package aPackage : basePackage.toMap().values()) {
 			int calculateNumberOfCumulatedDependees = aPackage.calculateNumberOfCumulatedDependees();
 			System.err.println(aPackage + " " + calculateNumberOfCumulatedDependees);
 			cumulatedComponentDependency += calculateNumberOfCumulatedDependees;

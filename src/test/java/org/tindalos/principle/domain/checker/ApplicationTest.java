@@ -16,8 +16,8 @@ public class ApplicationTest {
 
 	@Test
 	public void checkItself() {
-		String basePackage = "org.tindalos.principle";
-		//String basePackage = "org.tindalos.principle.test";
+		//String basePackage = "org.tindalos.principle";
+		String basePackage = "org.tindalos.principle.test";
 
 		Application application = PoorMansDIContainer.getApplication(basePackage);
 
