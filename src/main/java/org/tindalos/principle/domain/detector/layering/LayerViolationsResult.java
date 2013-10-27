@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.detector.layering;
 
 import java.util.List;
 
-import org.tindalos.principle.domain.detector.core.CheckResult;
+import org.tindalos.principle.domain.coredetector.CheckResult;
 
 import com.google.common.collect.Lists;
 

@@ -1,4 +1,4 @@
-package org.tindalos.principle.app.service.impl;
+package org.tindalos.principle.domain.resultprocessing.reporter;
 
 public interface Printer {
 	

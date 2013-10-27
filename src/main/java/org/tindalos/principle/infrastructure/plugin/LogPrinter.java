@@ -1,7 +1,7 @@
 package org.tindalos.principle.infrastructure.plugin;
 
 import org.apache.maven.plugin.logging.Log;
-import org.tindalos.principle.app.service.impl.Printer;
+import org.tindalos.principle.domain.resultprocessing.reporter.Printer;
 
 public class LogPrinter implements Printer {
 

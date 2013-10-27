@@ -5,10 +5,10 @@ import java.util.Map;
 
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageReference;
+import org.tindalos.principle.domain.coredetector.CheckInput;
+import org.tindalos.principle.domain.coredetector.CheckResult;
+import org.tindalos.principle.domain.coredetector.Detector;
 import org.tindalos.principle.domain.detector.adp.PackageStructureBuilder;
-import org.tindalos.principle.domain.detector.core.CheckInput;
-import org.tindalos.principle.domain.detector.core.CheckResult;
-import org.tindalos.principle.domain.detector.core.Detector;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;

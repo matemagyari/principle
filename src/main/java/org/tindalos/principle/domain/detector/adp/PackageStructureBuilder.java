@@ -2,9 +2,9 @@ package org.tindalos.principle.domain.detector.adp;
 
 import java.util.List;
 
-import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageSorter;
+import org.tindalos.principle.domain.coredetector.DesignQualityCheckParameters;
 
 public class PackageStructureBuilder {
 	

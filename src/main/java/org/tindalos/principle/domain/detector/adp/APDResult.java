@@ -3,7 +3,7 @@ package org.tindalos.principle.domain.detector.adp;
 import java.util.List;
 
 import org.tindalos.principle.domain.core.Cycle;
-import org.tindalos.principle.domain.detector.core.CheckResult;
+import org.tindalos.principle.domain.coredetector.CheckResult;
 
 import com.google.common.collect.Lists;
 

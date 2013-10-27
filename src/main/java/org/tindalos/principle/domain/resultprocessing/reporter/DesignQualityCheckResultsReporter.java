@@ -1,11 +1,10 @@
-package org.tindalos.principle.app.service;
+package org.tindalos.principle.domain.resultprocessing.reporter;
 
 import java.util.Map;
 
-import org.tindalos.principle.app.service.impl.Printer;
 import org.tindalos.principle.domain.checker.DesignQualityCheckResults;
-import org.tindalos.principle.domain.detector.core.CheckResult;
-import org.tindalos.principle.domain.detector.core.ViolationsReporter;
+import org.tindalos.principle.domain.coredetector.CheckResult;
+import org.tindalos.principle.domain.coredetector.ViolationsReporter;
 
 import com.google.common.collect.Maps;
 
@@ -13,17 +12,11 @@ public class DesignQualityCheckResultsReporter {
 
 	private Map<Class<? extends CheckResult>, ViolationsReporter<? extends CheckResult>> reporters;
 
-	private final Printer printer;
-
-	public DesignQualityCheckResultsReporter(Printer printer) {
-		this.printer = printer;
-	}
-	public DesignQualityCheckResultsReporter(Printer printer, Map<Class<? extends CheckResult>, ViolationsReporter<? extends CheckResult>> reporters) {
-		this(printer);
+	public DesignQualityCheckResultsReporter( Map<Class<? extends CheckResult>, ViolationsReporter<? extends CheckResult>> reporters) {
 		this.reporters = Maps.newHashMap(reporters);
 	}
 	
-	public void report(DesignQualityCheckResults results) {
+	public void report(DesignQualityCheckResults results, Printer printer) {
 
 		for (CheckResult checkResult : results.resultList()) {
 			ViolationsReporter reporter = reporters.get(checkResult.getClass());

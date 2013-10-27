@@ -58,7 +58,7 @@
 				<version>0.11-SNAPSHOT</version>
 				<configuration>
 					<basePackage>org.tindalos.principle</basePackage>
-					<checks implementation="org.tindalos.principle.infrastructure.plugin.parameter.Checks">
+					<checks implementation="org.tindalos.principle.domain.checkerparameter.Checks">
 						<layering>
 							<layers>
 								<param>infrastructure</param>
@@ -69,14 +69,14 @@
 						</layering>
 						<packageCoupling>
 							<adp>
-								<violationsThreshold>6</violationsThreshold>
+								<violationsThreshold>116</violationsThreshold>
 							</adp>
 							<sdp>
-								<violationsThreshold>10</violationsThreshold>
+								<violationsThreshold>1110</violationsThreshold>
 							</sdp>
 							<sap>
 								<maxDistance>0.5</maxDistance>
-								<violationsThreshold>1</violationsThreshold>
+								<violationsThreshold>11</violationsThreshold>
 							</sap>
 						</packageCoupling>
 					</checks>

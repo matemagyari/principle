@@ -2,22 +2,22 @@ package org.tindalos.principle.domain.checker;
 
 import java.util.List;
 
-import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
 import org.tindalos.principle.domain.core.Package;
-import org.tindalos.principle.domain.detector.core.CheckInput;
-import org.tindalos.principle.domain.detector.core.CheckResult;
-import org.tindalos.principle.domain.detector.core.Detector;
+import org.tindalos.principle.domain.coredetector.CheckInput;
+import org.tindalos.principle.domain.coredetector.CheckResult;
+import org.tindalos.principle.domain.coredetector.DesignQualityCheckParameters;
+import org.tindalos.principle.domain.coredetector.Detector;
 
 import com.google.common.collect.Lists;
 
-public class DesignQualityChecker {
+public class DesignQualityDetectorsRunner {
 
     private final List<Detector> detectors;
 
-    public DesignQualityChecker(List<Detector> detectors) {
+    public DesignQualityDetectorsRunner(List<Detector> detectors) {
         this.detectors = Lists.newArrayList(detectors);
     }
-    public DesignQualityChecker(Detector... detectors) {
+    public DesignQualityDetectorsRunner(Detector... detectors) {
         this.detectors = Lists.newArrayList(detectors);
     }
 

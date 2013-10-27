@@ -6,8 +6,8 @@ import java.util.List;
 import jdepend.framework.JavaPackage;
 
 import org.tindalos.principle.domain.checker.PackageAnalyzer;
-import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
 import org.tindalos.principle.domain.core.Package;
+import org.tindalos.principle.domain.coredetector.DesignQualityCheckParameters;
 
 public class JDependPackageAnalyzer implements PackageAnalyzer {
     

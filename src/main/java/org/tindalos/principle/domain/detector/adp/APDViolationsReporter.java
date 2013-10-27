@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.PackageReference;
-import org.tindalos.principle.domain.detector.core.ViolationsReporter;
+import org.tindalos.principle.domain.coredetector.ViolationsReporter;
 
 public class APDViolationsReporter implements ViolationsReporter<APDResult> {
 

@@ -3,7 +3,7 @@ package org.tindalos.principle.domain.checker;
 import java.util.List;
 import java.util.Map;
 
-import org.tindalos.principle.domain.detector.core.CheckResult;
+import org.tindalos.principle.domain.coredetector.CheckResult;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;

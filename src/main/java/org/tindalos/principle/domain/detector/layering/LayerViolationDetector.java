@@ -4,11 +4,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageReference;
-import org.tindalos.principle.domain.detector.core.CheckInput;
-import org.tindalos.principle.domain.detector.core.Detector;
+import org.tindalos.principle.domain.coredetector.CheckInput;
+import org.tindalos.principle.domain.coredetector.DesignQualityCheckParameters;
+import org.tindalos.principle.domain.coredetector.Detector;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;

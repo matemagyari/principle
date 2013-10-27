@@ -2,18 +2,17 @@ package org.tindalos.principle.infrastructure.di;
 
 import java.util.Map;
 
-import org.tindalos.principle.app.service.DesignQualityCheckResultsReporter;
-import org.tindalos.principle.app.service.DesignQualityCheckService;
-import org.tindalos.principle.app.service.impl.Printer;
-import org.tindalos.principle.domain.checker.DesignQualityChecker;
+import org.tindalos.principle.app.service.Application;
+import org.tindalos.principle.domain.checker.DesignQualityCheckService;
+import org.tindalos.principle.domain.checker.DesignQualityDetectorsRunner;
 import org.tindalos.principle.domain.checker.PackageAnalyzer;
 import org.tindalos.principle.domain.core.PackageSorter;
+import org.tindalos.principle.domain.coredetector.CheckResult;
+import org.tindalos.principle.domain.coredetector.ViolationsReporter;
 import org.tindalos.principle.domain.detector.adp.APDResult;
 import org.tindalos.principle.domain.detector.adp.APDViolationsReporter;
 import org.tindalos.principle.domain.detector.adp.CycleDetector;
 import org.tindalos.principle.domain.detector.adp.PackageStructureBuilder;
-import org.tindalos.principle.domain.detector.core.CheckResult;
-import org.tindalos.principle.domain.detector.core.ViolationsReporter;
 import org.tindalos.principle.domain.detector.layering.LayerViolationDetector;
 import org.tindalos.principle.domain.detector.layering.LayerViolationsReporter;
 import org.tindalos.principle.domain.detector.layering.LayerViolationsResult;
@@ -23,6 +22,8 @@ import org.tindalos.principle.domain.detector.sap.SAPViolationsReporter;
 import org.tindalos.principle.domain.detector.sdp.SDPResult;
 import org.tindalos.principle.domain.detector.sdp.SDPViolationDetector;
 import org.tindalos.principle.domain.detector.sdp.SDPViolationsReporter;
+import org.tindalos.principle.domain.resultprocessing.reporter.DesignQualityCheckResultsReporter;
+import org.tindalos.principle.domain.resultprocessing.thresholdchecker.ThresholdChecker;
 import org.tindalos.principle.infrastructure.service.jdepend.JDependPackageAnalyzer;
 import org.tindalos.principle.infrastructure.service.jdepend.JDependRunner;
 import org.tindalos.principle.infrastructure.service.jdepend.MetricsCalculator;
@@ -34,7 +35,7 @@ import com.google.common.collect.Maps;
 public class PoorMansDIContainer {
     
     
-    public static DesignQualityCheckService getDesignCheckService(String basePackage) {
+	private static DesignQualityCheckService getDesignCheckService(String basePackage) {
         JDependRunner jDependRunner = new JDependRunner();
         PackageFactory packageFactory = new PackageFactory(new MetricsCalculator(),basePackage);
         PackageSorter packageSorter = new PackageSorter();
@@ -48,11 +49,11 @@ public class PoorMansDIContainer {
         SAPViolationDetector sapViolationDetector = new SAPViolationDetector();
         LayerViolationDetector layerViolationDetector = new LayerViolationDetector();
 
-        DesignQualityChecker designQualityChecker = new DesignQualityChecker(layerViolationDetector, cycleDetector, sdpViolationDetector, sapViolationDetector);
-        return new DesignQualityCheckService(packageAnalyzer, designQualityChecker);
+        DesignQualityDetectorsRunner designQualityDetectorsRunner = new DesignQualityDetectorsRunner(layerViolationDetector, cycleDetector, sdpViolationDetector, sapViolationDetector);
+        return new DesignQualityCheckService(packageAnalyzer, designQualityDetectorsRunner);
     }
 
-	public static DesignQualityCheckResultsReporter getDesignCheckResultsReporter(Printer printer) {
+	private static DesignQualityCheckResultsReporter getDesignCheckResultsReporter() {
 		
 		Map<Class<? extends CheckResult>, ViolationsReporter<? extends CheckResult>> reporters = Maps.newHashMap();
 		
@@ -61,6 +62,11 @@ public class PoorMansDIContainer {
 		reporters.put(SDPResult.class, new SDPViolationsReporter());
 		reporters.put(SAPResult.class, new SAPViolationsReporter());
 		
-		return new DesignQualityCheckResultsReporter(printer, reporters);
+		return new DesignQualityCheckResultsReporter(reporters);
+	}
+	
+	public static Application getApplication(String basePackage) {
+		ThresholdChecker thresholdChecker = new ThresholdChecker();
+		return new Application(getDesignCheckService(basePackage), getDesignCheckResultsReporter(), thresholdChecker );
 	}
 }

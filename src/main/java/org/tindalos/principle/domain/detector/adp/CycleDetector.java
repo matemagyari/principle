@@ -6,8 +6,8 @@ import java.util.Map;
 import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageReference;
-import org.tindalos.principle.domain.detector.core.CheckInput;
-import org.tindalos.principle.domain.detector.core.Detector;
+import org.tindalos.principle.domain.coredetector.CheckInput;
+import org.tindalos.principle.domain.coredetector.Detector;
 
 public class CycleDetector implements Detector {
 	

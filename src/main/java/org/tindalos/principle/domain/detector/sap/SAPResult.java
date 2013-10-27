@@ -2,9 +2,8 @@ package org.tindalos.principle.domain.detector.sap;
 
 import java.util.List;
 
-import org.tindalos.principle.domain.detector.core.CheckResult;
-
 import org.tindalos.principle.domain.core.Package;
+import org.tindalos.principle.domain.coredetector.CheckResult;
 
 import com.google.common.collect.Lists;
 
