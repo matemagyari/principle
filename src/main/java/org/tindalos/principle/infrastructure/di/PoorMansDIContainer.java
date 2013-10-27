@@ -9,6 +9,9 @@ import org.tindalos.principle.domain.checker.PackageAnalyzer;
 import org.tindalos.principle.domain.core.PackageSorter;
 import org.tindalos.principle.domain.coredetector.CheckResult;
 import org.tindalos.principle.domain.coredetector.ViolationsReporter;
+import org.tindalos.principle.domain.detector.acd.ACDDetector;
+import org.tindalos.principle.domain.detector.acd.ACDResult;
+import org.tindalos.principle.domain.detector.acd.ACDViolationsReporter;
 import org.tindalos.principle.domain.detector.adp.APDResult;
 import org.tindalos.principle.domain.detector.adp.APDViolationsReporter;
 import org.tindalos.principle.domain.detector.adp.CycleDetector;
@@ -47,9 +50,10 @@ public class PoorMansDIContainer {
         CycleDetector cycleDetector = new CycleDetector(packageStructureBuilder);
         SDPViolationDetector sdpViolationDetector = new SDPViolationDetector();
         SAPViolationDetector sapViolationDetector = new SAPViolationDetector();
+        ACDDetector acdDetector = new ACDDetector(packageStructureBuilder);
         LayerViolationDetector layerViolationDetector = new LayerViolationDetector();
 
-        DesignQualityDetectorsRunner designQualityDetectorsRunner = new DesignQualityDetectorsRunner(layerViolationDetector, cycleDetector, sdpViolationDetector, sapViolationDetector);
+        DesignQualityDetectorsRunner designQualityDetectorsRunner = new DesignQualityDetectorsRunner(layerViolationDetector, cycleDetector, sdpViolationDetector, sapViolationDetector, acdDetector);
         return new DesignQualityCheckService(packageAnalyzer, designQualityDetectorsRunner);
     }
 
@@ -61,6 +65,7 @@ public class PoorMansDIContainer {
 		reporters.put(LayerViolationsResult.class, new LayerViolationsReporter());
 		reporters.put(SDPResult.class, new SDPViolationsReporter());
 		reporters.put(SAPResult.class, new SAPViolationsReporter());
+		reporters.put(ACDResult.class, new ACDViolationsReporter());
 		
 		return new DesignQualityCheckResultsReporter(reporters);
 	}

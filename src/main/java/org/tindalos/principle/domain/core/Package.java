@@ -41,6 +41,26 @@ public abstract class Package {
 
     }
     
+    public int calculateNumberOfCumulatedDependees() {
+    	return this.accumulatedPackageReferences().size() + 1;
+    }
+    
+    public CCDValue calculateCCD(Map<PackageReference, Package> packageReferenceMap) {
+    	
+    	Set<PackageReference> accumulatedPackageReferences = accumulatedPackageReferences();
+		
+    	int componentDependency = accumulatedPackageReferences.size() + 1;
+    	int cumulatedComponentDependency = componentDependency;
+		
+		for (PackageReference packageReference : accumulatedPackageReferences) {
+			Package dependee = packageReferenceMap.get(packageReference);
+			CCDValue dependeeCCD = dependee.calculateCCD(packageReferenceMap);
+			cumulatedComponentDependency += dependeeCCD.getCumulatedComponentDependency();
+		}
+		CCDValue result = new CCDValue(componentDependency, cumulatedComponentDependency);
+		System.err.println(this + "  " + result);
+		return result;
+    }
 
     public List<Cycle> detectCycles(Map<PackageReference, Package> packageReferences) {
         Set<Cycle> cycles = detectCycles(new ArrayList<PackageReference>(), new HashSet<Cycle>(), packageReferences);
