@@ -10,8 +10,6 @@ import java.util.Set;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -43,20 +41,36 @@ public abstract class Package {
 
     }
     
-    public int calculateNumberOfCumulatedDependees() {
-    	Set<PackageReference> accumulatedPackageReferences = this.accumulatedPackageReferences();
-    	final PackageReference reference = this.reference;
-    	Predicate<PackageReference> filter = new Predicate<PackageReference>() {
-			public boolean apply(PackageReference input) {
-				return reference.isNotAnAncestorOf(input);
-			}
-		};
-		return Sets.newHashSet(Iterables.filter(accumulatedPackageReferences, filter)).size() + 1;
+    // it dies if there are cycles
+    //through references, not through children. transaitive too
+    public Set<PackageReference> cumulatedDependencies(Map<PackageReference, Package> packageReferenceMap) {
+    	
+    	Set<PackageReference> result = Sets.newHashSet();
+    			
+    	Set<PackageReference> accumulatedPackageReferences = this.accumulatedDirectPackageReferences();
+    	result.addAll(accumulatedPackageReferences);
+    	for (PackageReference packageReference : accumulatedPackageReferences) {
+			Package aPackage = packageReferenceMap.get(packageReference);
+			result.addAll( aPackage.cumulatedDependencies(packageReferenceMap) );
+		}
+    	return result;
+    }
+    
+
+    //all the references going out from this package
+    public Set<PackageReference> accumulatedDirectPackageReferences() {
+        Set<PackageReference> packageReferences = Sets.newHashSet();
+        for (Package child : children) {
+            packageReferences.addAll(child.accumulatedDirectPackageReferences());
+        }
+        packageReferences.addAll(getOwnPackageReferences());
+
+        return packageReferences;
     }
     
     public CCDValue calculateCCD(Map<PackageReference, Package> packageReferenceMap) {
     	
-    	Set<PackageReference> accumulatedPackageReferences = accumulatedPackageReferences();
+    	Set<PackageReference> accumulatedPackageReferences = accumulatedDirectPackageReferences();
 		
     	int componentDependency = accumulatedPackageReferences.size() + 1;
     	int cumulatedComponentDependency = componentDependency;
@@ -129,7 +143,7 @@ public abstract class Package {
             return foundCycles;
         }
         //otherwise loop through accumulated references
-        for (PackageReference referencedPackageRef : this.accumulatedPackageReferences()) {
+        for (PackageReference referencedPackageRef : this.accumulatedDirectPackageReferences()) {
 
             List<PackageReference> updatedTraversedPackages = Lists.newArrayList(traversedPackages);
             updatedTraversedPackages.add(this.getReference());
@@ -139,16 +153,6 @@ public abstract class Package {
             foundCycles.addAll(cycles);
         }
         return foundCycles;
-    }
-
-    public Set<PackageReference> accumulatedPackageReferences() {
-        Set<PackageReference> packageReferences = Sets.newHashSet();
-        for (Package child : children) {
-            packageReferences.addAll(child.accumulatedPackageReferences());
-        }
-        packageReferences.addAll(getOwnPackageReferences());
-
-        return packageReferences;
     }
 
     private Package getChild(String relativeName) {

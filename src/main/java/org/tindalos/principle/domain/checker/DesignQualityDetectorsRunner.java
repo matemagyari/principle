@@ -5,7 +5,7 @@ import java.util.List;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.coredetector.CheckInput;
 import org.tindalos.principle.domain.coredetector.CheckResult;
-import org.tindalos.principle.domain.coredetector.DesignQualityCheckParameters;
+import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
 import org.tindalos.principle.domain.coredetector.Detector;
 
 import com.google.common.collect.Lists;

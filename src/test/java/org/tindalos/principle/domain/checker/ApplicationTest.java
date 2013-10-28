@@ -2,12 +2,14 @@ package org.tindalos.principle.domain.checker;
 
 import org.junit.Test;
 import org.tindalos.principle.app.service.Application;
-import org.tindalos.principle.domain.checkerparameter.ADP;
-import org.tindalos.principle.domain.checkerparameter.Checks;
-import org.tindalos.principle.domain.checkerparameter.Layering;
-import org.tindalos.principle.domain.checkerparameter.PackageCoupling;
-import org.tindalos.principle.domain.checkerparameter.SAP;
-import org.tindalos.principle.domain.checkerparameter.SDP;
+import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
+import org.tindalos.principle.domain.core.checkerparameter.ACD;
+import org.tindalos.principle.domain.core.checkerparameter.ADP;
+import org.tindalos.principle.domain.core.checkerparameter.Checks;
+import org.tindalos.principle.domain.core.checkerparameter.Layering;
+import org.tindalos.principle.domain.core.checkerparameter.PackageCoupling;
+import org.tindalos.principle.domain.core.checkerparameter.SAP;
+import org.tindalos.principle.domain.core.checkerparameter.SDP;
 import org.tindalos.principle.domain.resultprocessing.reporter.Printer;
 import org.tindalos.principle.domain.resultprocessing.thresholdchecker.ThresholdTrespassedException;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
@@ -16,15 +18,15 @@ public class ApplicationTest {
 
 	@Test
 	public void checkItself() {
-		//String basePackage = "org.tindalos.principle";
-		String basePackage = "org.tindalos.principle.test";
+		String basePackage = "org.tindalos.principle";
+		//String basePackage = "org.tindalos.principle.test";
 
 		Application application = PoorMansDIContainer.getApplication(basePackage);
 
 		Checks checks = prepareChecks();
 
 		try {
-			application.doIt(checks, basePackage, new ConsolePrinter());
+			application.doIt(new DesignQualityCheckParameters(checks, basePackage), new ConsolePrinter());
 		} catch (ThresholdTrespassedException ex) {
 
 		}
@@ -50,9 +52,10 @@ public class ApplicationTest {
 		PackageCoupling packageCoupling = new PackageCoupling();
 		SAP sap = new SAP();
 		sap.setMaxDistance(0.3d);
-		packageCoupling.setSap(sap);
-		packageCoupling.setAdp(new ADP());
-		packageCoupling.setSdp(new SDP());
+		packageCoupling.setSAP(sap);
+		packageCoupling.setADP(new ADP());
+		packageCoupling.setSDP(new SDP());
+		packageCoupling.setACD(new ACD());
 		return packageCoupling;
 	}
 

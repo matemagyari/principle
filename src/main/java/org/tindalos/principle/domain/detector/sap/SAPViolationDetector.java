@@ -14,7 +14,7 @@ public class SAPViolationDetector implements Detector {
 
 	public CheckResult analyze(CheckInput checkInput) {
 		List<Package> outlierPackages = Lists.newArrayList();
-		Double maxDistance = checkInput.getParameters().getMaxSAPDistance();
+		Double maxDistance = checkInput.getParameters().getChecks().getPackageCoupling().getSAP().getMaxDistance();
 		
 		List<Package> packages = checkInput.getPackages();
 		removeRootPackageIfEmpty(packages);

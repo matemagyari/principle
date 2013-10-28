@@ -1,6 +1,6 @@
-package org.tindalos.principle.domain.checkerparameter;
+package org.tindalos.principle.domain.core.checkerparameter;
 
-
+//DesignQualityCheckParameters
 public class Checks {
 	
 	private Layering layering;

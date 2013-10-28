@@ -7,7 +7,7 @@ import java.util.Set;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.coredetector.CheckInput;
-import org.tindalos.principle.domain.coredetector.DesignQualityCheckParameters;
+import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
 import org.tindalos.principle.domain.coredetector.Detector;
 
 import com.google.common.base.Optional;
@@ -29,9 +29,10 @@ public class LayerViolationDetector implements Detector {
         List<LayerReference> violations = Lists.newArrayList();
 
         for (Package aPackage : filterToRelevantPackages(packages, parameters.getBasePackage())) {
-            Optional<String> layer = getLayer(aPackage, parameters);
+        	List<String> layers = parameters.getChecks().getLayering().getLayers();
+            Optional<String> layer = getLayer(aPackage, layers);
             if (layer.isPresent()) {
-                List<String> outerLayers = parameters.getOuterLayers(layer.get());
+                List<String> outerLayers = outerLayers(parameters.getChecks().getLayering().getLayers(), layer.get());
                 violations.addAll(getReferencesToLayers(aPackage, outerLayers, parameters.getBasePackage()));
             }
         }
@@ -39,8 +40,12 @@ public class LayerViolationDetector implements Detector {
         return violations;
     }
 
-    private Optional<String> getLayer(Package aPackage, DesignQualityCheckParameters parameters) {
-        for (String layer : parameters.getLayers()) {
+    private static List<String> outerLayers(List<String> layers, String layer) {
+		return layers.subList(0, layers.indexOf(layer));
+	}
+
+	private static Optional<String> getLayer(Package aPackage, List<String> layers) {
+        for (String layer : layers) {
             if (aPackage.getReference().startsWith(layer)) {
                 return Optional.of(layer);
             }

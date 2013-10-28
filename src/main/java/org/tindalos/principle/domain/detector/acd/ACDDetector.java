@@ -1,8 +1,10 @@
 package org.tindalos.principle.domain.detector.acd;
 
 import java.util.List;
+import java.util.Map;
 
 import org.tindalos.principle.domain.core.Package;
+import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.coredetector.CheckInput;
 import org.tindalos.principle.domain.coredetector.CheckResult;
 import org.tindalos.principle.domain.coredetector.Detector;
@@ -20,19 +22,19 @@ public class ACDDetector implements Detector {
 		List<Package> packages = checkInput.getPackages();
 		Package basePackage = packageStructureBuilder.build(packages, checkInput.getParameters());
 		
-		int numOfPackages = basePackage.toMap().size();
+		Map<PackageReference, Package> referenceMap = basePackage.toMap();
+		referenceMap.remove(basePackage.getReference());
 		
-		System.err.println("NPAC 1 " + packages.size() + " NPAC 2 " + numOfPackages);
+		System.err.println("NPAC 1 " + packages.size() + " NPAC 2 " + referenceMap.size());
 		
 		int cumulatedComponentDependency = 0;
-		for (Package aPackage : basePackage.toMap().values()) {
-			int calculateNumberOfCumulatedDependees = aPackage.calculateNumberOfCumulatedDependees();
+		for (Package aPackage : referenceMap.values()) {
+			int calculateNumberOfCumulatedDependees = aPackage.cumulatedDependencies(referenceMap).size() + 1;
 			System.err.println(aPackage + " " + calculateNumberOfCumulatedDependees);
 			cumulatedComponentDependency += calculateNumberOfCumulatedDependees;
 		}
 		
-		Double acd = (double) cumulatedComponentDependency / (double) packages.size();
-		System.err.println(acd);
+		Double acd = (double) cumulatedComponentDependency / (double) referenceMap.size();
 		return new ACDResult(acd);
 	}
 

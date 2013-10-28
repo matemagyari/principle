@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.checkerparameter;
+package org.tindalos.principle.domain.core.checkerparameter;
 
 public abstract class Thresholders {
 
