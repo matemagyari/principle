@@ -11,7 +11,7 @@ import org.tindalos.principle.domain.coredetector.Detector;
 import org.tindalos.principle.domain.detector.adp.PackageStructureBuilder;
 
 public class ACDDetector implements Detector {
-
+	
 	private final PackageStructureBuilder packageStructureBuilder;
 
 	public ACDDetector(PackageStructureBuilder packageStructureBuilder) {
@@ -29,7 +29,7 @@ public class ACDDetector implements Detector {
 		
 		int cumulatedComponentDependency = 0;
 		for (Package aPackage : referenceMap.values()) {
-			int calculateNumberOfCumulatedDependees = aPackage.cumulatedDependencies(referenceMap).size() + 1;
+			int calculateNumberOfCumulatedDependees = aPackage.cumulatedDependencies2(referenceMap).size() + 1;
 			System.err.println(aPackage + " " + calculateNumberOfCumulatedDependees);
 			cumulatedComponentDependency += calculateNumberOfCumulatedDependees;
 		}
@@ -37,5 +37,6 @@ public class ACDDetector implements Detector {
 		Double acd = (double) cumulatedComponentDependency / (double) referenceMap.size();
 		return new ACDResult(acd);
 	}
+	
 
 }

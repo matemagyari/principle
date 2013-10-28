@@ -79,7 +79,7 @@
 								<violationsThreshold>11</violationsThreshold>
 							</sap>
 							<acd>
-								<threshold>7</threshold>
+								<threshold>8</threshold>
 							</acd>
 						</packageCoupling>
 					</checks>

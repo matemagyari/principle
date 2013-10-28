@@ -43,18 +43,30 @@ public abstract class Package {
     
     // it dies if there are cycles
     //through references, not through children. transaitive too
-    public Set<PackageReference> cumulatedDependencies(Map<PackageReference, Package> packageReferenceMap) {
+    public Set<PackageReference> cumulatedDependencies2(Map<PackageReference, Package> packageReferenceMap) {
+    	return cumulatedDependencies(packageReferenceMap, new HashSet<PackageReference>());
+    }
+    
+    private Set<PackageReference> cumulatedDependencies(Map<PackageReference, Package> packageReferenceMap, Set<PackageReference> dependencies) {
     	
-    	Set<PackageReference> result = Sets.newHashSet();
     			
     	Set<PackageReference> accumulatedPackageReferences = this.accumulatedDirectPackageReferences();
-    	result.addAll(accumulatedPackageReferences);
-    	for (PackageReference packageReference : accumulatedPackageReferences) {
-			Package aPackage = packageReferenceMap.get(packageReference);
-			result.addAll( aPackage.cumulatedDependencies(packageReferenceMap) );
-		}
-    	return result;
-    }
+    	
+    	accumulatedPackageReferences.removeAll(dependencies);
+    	
+    	if (accumulatedPackageReferences.isEmpty()) {
+    		return dependencies;
+    	} else {
+    		Set<PackageReference> result = Sets.newHashSet(accumulatedPackageReferences);
+    		for (PackageReference packageReference : accumulatedPackageReferences) {
+    			Package aPackage = packageReferenceMap.get(packageReference);
+    			
+    			dependencies.add(packageReference);
+    			result.addAll( aPackage.cumulatedDependencies(packageReferenceMap, dependencies) );
+    		}
+    		return result;
+    	}
+    }    
     
 
     //all the references going out from this package

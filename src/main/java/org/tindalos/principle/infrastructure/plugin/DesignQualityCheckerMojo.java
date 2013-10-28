@@ -13,7 +13,7 @@ import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 import org.tindalos.principle.infrastructure.service.jdepend.ClassesToAnalyzeNotFoundException;
 
 @Mojo(name = "check")
-public class DesignCheckerMojo extends AbstractMojo {
+public class DesignQualityCheckerMojo extends AbstractMojo {
 
     @Parameter(property = "check.basePackage", defaultValue = "")
     private String basePackage;
