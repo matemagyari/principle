@@ -25,12 +25,12 @@ public class ACDDetector implements Detector {
 		Map<PackageReference, Package> referenceMap = basePackage.toMap();
 		referenceMap.remove(basePackage.getReference());
 		
-		System.err.println("NPAC 1 " + packages.size() + " NPAC 2 " + referenceMap.size());
+		//System.err.println("NPAC 1 " + packages.size() + " NPAC 2 " + referenceMap.size());
 		
 		int cumulatedComponentDependency = 0;
 		for (Package aPackage : referenceMap.values()) {
 			int calculateNumberOfCumulatedDependees = aPackage.cumulatedDependencies2(referenceMap).size() + 1;
-			System.err.println(aPackage + " " + calculateNumberOfCumulatedDependees);
+			//System.err.println(aPackage + " " + calculateNumberOfCumulatedDependees);
 			cumulatedComponentDependency += calculateNumberOfCumulatedDependees;
 		}
 		
