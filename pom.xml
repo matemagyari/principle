@@ -50,11 +50,11 @@
 
 	<build>
 		<plugins>
-		<!--  
+		<!--  -->
 			<plugin>
 				<groupId>org.tindalos.principle</groupId>
 				<artifactId>principle</artifactId>
-				<version>0.11-SNAPSHOT</version>
+				<version>0.11</version>
 				<configuration>
 					<basePackage>org.tindalos.principle</basePackage>
 					<checks implementation="org.tindalos.principle.domain.core.checkerparameter.Checks">
@@ -92,7 +92,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			-->
+			
 		
 		</plugins>
 		<pluginManagement>
