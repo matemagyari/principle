@@ -3,6 +3,7 @@ package org.tindalos.principle.domain.resultprocessing.thresholdchecker;
 import org.tindalos.principle.domain.checker.DesignQualityCheckResults;
 import org.tindalos.principle.domain.core.checkerparameter.Checks;
 import org.tindalos.principle.domain.core.checkerparameter.PackageCoupling;
+import org.tindalos.principle.domain.core.checkerparameter.cumulativedependency.DoubleThresholders;
 import org.tindalos.principle.domain.detector.acd.ACDResult;
 import org.tindalos.principle.domain.detector.adp.APDResult;
 import org.tindalos.principle.domain.detector.layering.LayerViolationsResult;
@@ -22,11 +23,16 @@ public class ThresholdChecker {
         Optional<ACDResult> acdResult = checkResults.getResult(ACDResult.class);
 
         PackageCoupling packageCoupling = checks.getPackageCoupling();
+        
+        boolean cdThresholdsViolated = violates(packageCoupling.getACD(), acdResult.get().getACD())
+        		|| violates(packageCoupling.getRACD(), acdResult.get().getRACD())
+        		|| violates(packageCoupling.getNCCD(), acdResult.get().getNCCD());
+        
         boolean thresholdViolated =  
         			packageCoupling.getADP().getViolationsThreshold() < apdResult.get().numberOfViolations()
         			|| packageCoupling.getSDP().getViolationsThreshold() < sdpResult.get().numberOfViolations()
         			|| packageCoupling.getSAP().getViolationsThreshold() < sapResult.get().numberOfViolations()
-        			|| packageCoupling.getACD().getThreshold() < acdResult.get().getACD()
+        			|| cdThresholdsViolated
         		 	|| checks.getLayering().getViolationsThreshold() < layerViolationsResult.get().numberOfViolations();
         
         if (thresholdViolated) {
@@ -34,5 +40,12 @@ public class ThresholdChecker {
         }
         		
     }
+
+	private boolean violates(DoubleThresholders threshold, Double value) {
+		if (threshold == null || threshold.getThreshold() == null) {
+			return false;
+		}
+		return threshold.getThreshold() < value;
+	}
 
 }

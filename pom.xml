@@ -54,7 +54,7 @@
 			<plugin>
 				<groupId>org.tindalos.principle</groupId>
 				<artifactId>principle</artifactId>
-				<version>0.11</version>
+				<version>0.12-SNAPSHOT</version>
 				<configuration>
 					<basePackage>org.tindalos.principle</basePackage>
 					<checks implementation="org.tindalos.principle.domain.core.checkerparameter.Checks">
@@ -68,18 +68,18 @@
 						</layering>
 						<packageCoupling>
 							<adp>
-								<violationsThreshold>116</violationsThreshold>
+								<violationsThreshold>5</violationsThreshold>
 							</adp>
 							<sdp>
-								<violationsThreshold>1110</violationsThreshold>
+								<violationsThreshold>5</violationsThreshold>
 							</sdp>
 							<sap>
 								<maxDistance>0.5</maxDistance>
-								<violationsThreshold>11</violationsThreshold>
+								<violationsThreshold>5</violationsThreshold>
 							</sap>
-							<acd>
-								<threshold>8</threshold>
-							</acd>
+							<racd>
+								<threshold>0.25</threshold>
+							</racd>
 						</packageCoupling>
 					</checks>
 				</configuration>

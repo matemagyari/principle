@@ -15,11 +15,6 @@ public class SAPResult implements CheckResult {
 		this.outlierPackages = Lists.newArrayList(outlierPackages);
 	}
 
-	public String detectorId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public boolean violationsDetected() {
 		return !outlierPackages.isEmpty();
 	}

@@ -1,28 +1,18 @@
 package org.tindalos.principle.domain.detector.acd;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.tindalos.principle.domain.coredetector.CheckResult;
-
-import com.google.common.collect.Lists;
 
 public class ACDResult implements CheckResult {
 
-    private final List<Package> outlierPackages;
     private final Double acd;
+    private final Double rAcd;
+    private final Double nCcd;
 
-    public ACDResult(List<Package> outlierPackages, Double acd) {
-        this.acd = acd;
-		this.outlierPackages = Lists.newArrayList(outlierPackages);
+    public ACDResult(int cumulatedComponentDependency, int numOfComponents) {
+        this.acd = (double) cumulatedComponentDependency / (double) numOfComponents;
+        this.rAcd = this.acd / (double) numOfComponents;
+        this.nCcd = this.acd / (double) numOfComponents;
     }
-    public ACDResult( Double acd) {
-        this(new ArrayList<Package>(), acd);
-    }    
-
-	public String detectorId() {
-		return "";
-	}
 
     public boolean violationsDetected() {
         return false;
@@ -34,6 +24,14 @@ public class ACDResult implements CheckResult {
     
     public Double getACD() {
 		return acd;
+	}
+    
+    public Double getRACD() {
+		return rAcd;
+	}
+    
+    public Double getNCCD() {
+		return nCcd;
 	}
 
 }

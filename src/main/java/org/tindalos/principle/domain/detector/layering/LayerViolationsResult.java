@@ -18,10 +18,6 @@ public class LayerViolationsResult implements CheckResult {
         return references;
     }
     
-	public String detectorId() {
-		return LayerViolationDetector.ID;
-	}
-	
     public boolean violationsDetected() {
         return !references.isEmpty();
     }

@@ -1,5 +1,9 @@
 package org.tindalos.principle.domain.core.checkerparameter;
 
+import org.tindalos.principle.domain.core.checkerparameter.cumulativedependency.ACD;
+import org.tindalos.principle.domain.core.checkerparameter.cumulativedependency.NCCD;
+import org.tindalos.principle.domain.core.checkerparameter.cumulativedependency.RACD;
+
 public class PackageCoupling {
 	
 	private ADP adp;
@@ -7,6 +11,8 @@ public class PackageCoupling {
 	private SAP sap;
 	
 	private ACD acd;
+	private RACD racd;
+	private NCCD nccd;
 	
 	public void setSAP(SAP sap) {
 		this.sap = sap;
@@ -38,6 +44,21 @@ public class PackageCoupling {
 
 	public void setACD(ACD acd) {
 		this.acd = acd;
+	}
+	public RACD getRACD() {
+		return racd;
+	}
+
+	public void setRACD(RACD racd) {
+		this.racd = racd;
+	}
+
+	public NCCD getNCCD() {
+		return nccd;
+	}
+
+	public void setNCCD(NCCD nccd) {
+		this.nccd = nccd;
 	}
 	
 	

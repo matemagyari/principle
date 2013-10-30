@@ -19,10 +19,6 @@ public class APDResult implements CheckResult {
         return cycles;
     }
 
-	public String detectorId() {
-		return CycleDetector.ID;
-	}
-
     public boolean violationsDetected() {
         return !cycles.isEmpty();
     }

@@ -7,9 +7,10 @@ public class ACDViolationsReporter implements ViolationsReporter<ACDResult> {
 	public String report(ACDResult result) {
 		String sectionLine = "==============================================================";
 		StringBuffer sb = new StringBuffer("\n" + sectionLine + "\n");
-		sb.append("\nAverage Component Dependency\t");
+		sb.append("\nComponent Dependency Metrics\t");
 		sb.append("\n" + sectionLine + "\n");
-		sb.append(result.getACD() + "\n");
+		sb.append("Average Component Dependency:		" + result.getACD() + "\n");
+		sb.append("Relative Average Component Dependency:	" + result.getRACD() + "\n");
 		sb.append(sectionLine + "\n");
 		return sb.toString();
 	}

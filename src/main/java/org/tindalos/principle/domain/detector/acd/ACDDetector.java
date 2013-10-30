@@ -34,8 +34,7 @@ public class ACDDetector implements Detector {
 			cumulatedComponentDependency += calculateNumberOfCumulatedDependees;
 		}
 		
-		Double acd = (double) cumulatedComponentDependency / (double) referenceMap.size();
-		return new ACDResult(acd);
+		return new ACDResult(cumulatedComponentDependency,referenceMap.size() );
 	}
 	
 

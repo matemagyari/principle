@@ -1,6 +1,6 @@
-package org.tindalos.principle.domain.core.checkerparameter;
+package org.tindalos.principle.domain.core.checkerparameter.cumulativedependency;
 
-public class ACD {
+public abstract class DoubleThresholders {
 	
 	private Double threshold;
 
@@ -11,6 +11,6 @@ public class ACD {
 	public void setThreshold(Double threshold) {
 		this.threshold = threshold;
 	}
-	
+
 
 }

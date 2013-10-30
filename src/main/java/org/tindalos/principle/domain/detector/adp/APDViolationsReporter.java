@@ -12,7 +12,7 @@ public class APDViolationsReporter implements ViolationsReporter<APDResult> {
 		List<Cycle> cycles = result.getCycles();
 		String sectionLine = "==============================================================";
 		StringBuffer sb = new StringBuffer("\n" + sectionLine + "\n");
-		sb.append("\tAcyclic Package Dependency violations\t");
+		sb.append("\tAcyclic Package Dependency Principle violations\t");
 		sb.append("\n" + sectionLine + "\n");
 
 		if (cycles.isEmpty()) {

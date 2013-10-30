@@ -14,10 +14,6 @@ public class SDPResult implements CheckResult {
 		this.violations = Lists.newArrayList(violations);
 	}
 
-	public String detectorId() {
-		return null;
-	}
-
 	public boolean violationsDetected() {
 		return !violations.isEmpty();
 	}

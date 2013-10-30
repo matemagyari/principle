@@ -1,5 +1,6 @@
 package org.tindalos.principle.domain.core.checkerparameter;
 
+
 public class SAP extends Thresholders {
 	
 	private Double maxDistance;
