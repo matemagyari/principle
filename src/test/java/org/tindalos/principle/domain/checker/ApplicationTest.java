@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.tindalos.principle.app.service.Application;
 import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
 import org.tindalos.principle.domain.core.checkerparameter.ADP;
-import org.tindalos.principle.domain.core.checkerparameter.Checks;
+import org.tindalos.principle.domain.core.checkerparameter.DesingQualityCheckParameters;
 import org.tindalos.principle.domain.core.checkerparameter.Layering;
 import org.tindalos.principle.domain.core.checkerparameter.PackageCoupling;
 import org.tindalos.principle.domain.core.checkerparameter.SAP;
@@ -13,6 +13,7 @@ import org.tindalos.principle.domain.core.checkerparameter.cumulativedependency.
 import org.tindalos.principle.domain.resultprocessing.reporter.Printer;
 import org.tindalos.principle.domain.resultprocessing.thresholdchecker.ThresholdTrespassedException;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
+import org.tindalos.principle.infrastructure.plugin.Checks;
 
 public class ApplicationTest {
 
@@ -23,7 +24,7 @@ public class ApplicationTest {
 
 		Application application = PoorMansDIContainer.getApplication(basePackage);
 
-		Checks checks = prepareChecks();
+		DesingQualityCheckParameters checks = prepareChecks();
 
 		try {
 			application.doIt(new DesignQualityCheckParameters(checks, basePackage), new ConsolePrinter());
@@ -33,7 +34,7 @@ public class ApplicationTest {
 
 	}
 
-	private Checks prepareChecks() {
+	private DesingQualityCheckParameters prepareChecks() {
 		Checks checks = new Checks();
 
 		checks.setLayering(layering());

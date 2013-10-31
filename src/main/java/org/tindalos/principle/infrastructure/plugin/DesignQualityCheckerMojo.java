@@ -1,5 +1,6 @@
 package org.tindalos.principle.infrastructure.plugin;
 
+import org.apache.commons.lang3.Validate;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -7,7 +8,6 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.tindalos.principle.app.service.Application;
 import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
-import org.tindalos.principle.domain.core.checkerparameter.Checks;
 import org.tindalos.principle.domain.resultprocessing.thresholdchecker.ThresholdTrespassedException;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 import org.tindalos.principle.infrastructure.service.jdepend.ClassesToAnalyzeNotFoundException;
@@ -22,6 +22,10 @@ public class DesignQualityCheckerMojo extends AbstractMojo {
     private Checks checks;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
+    	
+    	System.err.println("checks " + checks);
+    	Validate.notNull(checks,"Missing <checks> tag!");
+    	Validate.notBlank(basePackage,"Missing <basePackage> tag!");
     	
     	Application application = PoorMansDIContainer.getApplication(basePackage);
         try {

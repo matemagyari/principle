@@ -1,7 +1,7 @@
 package org.tindalos.principle.domain.resultprocessing.thresholdchecker;
 
 import org.tindalos.principle.domain.checker.DesignQualityCheckResults;
-import org.tindalos.principle.domain.core.checkerparameter.Checks;
+import org.tindalos.principle.domain.core.checkerparameter.DesingQualityCheckParameters;
 import org.tindalos.principle.domain.core.checkerparameter.PackageCoupling;
 import org.tindalos.principle.domain.core.checkerparameter.cumulativedependency.DoubleThresholders;
 import org.tindalos.principle.domain.detector.acd.ACDResult;
@@ -14,7 +14,7 @@ import com.google.common.base.Optional;
 
 public class ThresholdChecker {
 	
-    public void trespassed(DesignQualityCheckResults checkResults, Checks checks) {
+    public void trespassed(DesignQualityCheckResults checkResults, DesingQualityCheckParameters checks) {
 
     	Optional<LayerViolationsResult> layerViolationsResult = checkResults.getResult(LayerViolationsResult.class);
         Optional<APDResult> apdResult = checkResults.getResult(APDResult.class);

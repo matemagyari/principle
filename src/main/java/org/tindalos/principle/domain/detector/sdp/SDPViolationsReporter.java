@@ -30,7 +30,7 @@ public class SDPViolationsReporter implements ViolationsReporter<SDPResult> {
 	private String print(SDPViolation violation) {
 
 		String arrow = "-->";
-		StringBuffer sb = new StringBuffer("\n-------------------------------");
+		StringBuffer sb = new StringBuffer("");
 		Package depender = violation.getDepender();
 		Package dependee = violation.getDependee();
 		sb.append("\n " + depender.getReference() + "["+ depender.instability()+"] ");

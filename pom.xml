@@ -50,14 +50,15 @@
 
 	<build>
 		<plugins>
-		<!--  -->
+		<!-- 	
+		-->
 			<plugin>
 				<groupId>org.tindalos.principle</groupId>
 				<artifactId>principle</artifactId>
-				<version>0.12</version>
+				<version>0.13-SNAPSHOT</version>
 				<configuration>
 					<basePackage>org.tindalos.principle</basePackage>
-					<checks implementation="org.tindalos.principle.domain.core.checkerparameter.Checks">
+					<checks>
 						<layering>
 							<layers>
 								<param>infrastructure</param>
@@ -93,7 +94,7 @@
 				</executions>
 			</plugin>
 			
-		
+ 	
 		</plugins>
 		<pluginManagement>
 			<plugins>

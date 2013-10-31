@@ -1,18 +1,18 @@
 package org.tindalos.principle.domain.core;
 
-import org.tindalos.principle.domain.core.checkerparameter.Checks;
+import org.tindalos.principle.domain.core.checkerparameter.DesingQualityCheckParameters;
 
 public class DesignQualityCheckParameters {
 	
-	private final Checks checks;
+	private final DesingQualityCheckParameters checks;
 	private final String basePackage;
 	
-	public DesignQualityCheckParameters(Checks checks, String basePackage) {
+	public DesignQualityCheckParameters(DesingQualityCheckParameters checks, String basePackage) {
 		this.checks = checks;
 		this.basePackage = basePackage;
 	}
 	
-	public Checks getChecks() {
+	public DesingQualityCheckParameters getChecks() {
 		return checks;
 	}
 	

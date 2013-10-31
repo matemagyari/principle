@@ -1,7 +1,10 @@
-package org.tindalos.principle.domain.core.checkerparameter;
+package org.tindalos.principle.infrastructure.plugin;
 
-//DesignQualityCheckParameters
-public class Checks {
+import org.tindalos.principle.domain.core.checkerparameter.DesingQualityCheckParameters;
+import org.tindalos.principle.domain.core.checkerparameter.Layering;
+import org.tindalos.principle.domain.core.checkerparameter.PackageCoupling;
+
+public class Checks implements DesingQualityCheckParameters {
 	
 	private Layering layering;
 	private PackageCoupling packageCoupling;
