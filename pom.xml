@@ -54,7 +54,7 @@
 			<plugin>
 				<groupId>org.tindalos.principle</groupId>
 				<artifactId>principle</artifactId>
-				<version>0.11</version>
+				<version>0.12</version>
 				<configuration>
 					<basePackage>org.tindalos.principle</basePackage>
 					<checks implementation="org.tindalos.principle.domain.core.checkerparameter.Checks">
@@ -78,7 +78,7 @@
 								<violationsThreshold>5</violationsThreshold>
 							</sap>
 							<acd>
-								<threshold>25</threshold>
+								<threshold>7</threshold>
 							</acd>
 						</packageCoupling>
 					</checks>
