@@ -3,6 +3,7 @@ package org.tindalos.principle.domain.core;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -118,6 +119,11 @@ public abstract class Package {
             public Metrics getMetrics() {
                 return Metrics.undefined();
             }
+
+			@Override
+			public boolean isUnreferred() {
+				return true;
+			}
             
         };
     }
@@ -127,9 +133,13 @@ public abstract class Package {
     }
 
     private Set<Cycle> detectCycles(List<PackageReference> traversedPackages, Set<Cycle> foundCycles, Map<PackageReference, Package> packageReferences) {
+    	
+        Set<PackageReference> accumulatedDirectPackageReferences = this.accumulatedDirectPackageReferences();
+        //System.err.println(this+" :: " + accumulatedDirectPackageReferences);
+        //System.err.println(this+" -- " + traversedPackages);
 
         //if we just closed a cycle, add it to the found list then return
-        int indexOfThisPackage = traversedPackages.indexOf(this.getReference());
+        int indexOfThisPackage = indexInTraversedPath(traversedPackages);
         if (indexOfThisPackage > -1) {
             Cycle cycleEndingWithThisPackage = new Cycle(traversedPackages.subList(indexOfThisPackage, traversedPackages.size()));
             if (cycleEndingWithThisPackage.notSingleNode()) {
@@ -138,8 +148,6 @@ public abstract class Package {
             return foundCycles;
         }
         //otherwise loop through accumulated references
-        Set<PackageReference> accumulatedDirectPackageReferences = this.accumulatedDirectPackageReferences();
-        System.err.println(this+" " + accumulatedDirectPackageReferences);
         for (PackageReference referencedPackageRef : this.accumulatedDirectPackageReferences()) {
 
             List<PackageReference> updatedTraversedPackages = Lists.newArrayList(traversedPackages);
@@ -151,6 +159,19 @@ public abstract class Package {
         }
         return foundCycles;
     }
+
+	private int indexInTraversedPath(List<PackageReference> traversedPackages) {
+		for(int index = 0;index<traversedPackages.size() ; index++) {
+			PackageReference stationInPath = traversedPackages.get(index);
+			if (this.getReference().equals(stationInPath)
+					|| this.getReference().isDescendantOf(traversedPackages.get(index))
+					) {
+				return index;
+			}
+			
+		}
+		return -1;
+	}
 
     private Package getChild(String relativeName) {
         for (Package child : children) {
@@ -180,6 +201,7 @@ public abstract class Package {
 	
     public abstract Set<PackageReference> getOwnPackageReferences();
     public abstract Metrics getMetrics();
+    public abstract boolean isUnreferred();
 
     @Override
     public boolean equals(Object other) {

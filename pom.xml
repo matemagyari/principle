@@ -77,6 +77,8 @@
 							<adp>
 								<violationsThreshold>5</violationsThreshold>
 							</adp>
+							<!-- 
+							 -->
 							<sdp>
 								<violationsThreshold>5</violationsThreshold>
 							</sdp>

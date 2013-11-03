@@ -15,10 +15,12 @@ public class JDependBasedPackage extends Package {
 	
     private Set<PackageReference> ownPackageReferences;
     private final Metrics metrics;
+	private final boolean isUnreferred;
 
 	public JDependBasedPackage(JavaPackage javaPackage, String basePackage, Metrics metrics) {
         super(javaPackage.getName());
         this.metrics = metrics;
+        this.isUnreferred = metrics.getAfferentCoupling() == 0;
         this.ownPackageReferences =  createOwnPackageReferences(javaPackage, basePackage);
     }
 	
@@ -46,5 +48,10 @@ public class JDependBasedPackage extends Package {
     public Metrics getMetrics() {
         return metrics;
     }
+
+	@Override
+	public boolean isUnreferred() {
+		return this.isUnreferred;
+	}
 
 }
