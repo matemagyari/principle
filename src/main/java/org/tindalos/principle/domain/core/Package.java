@@ -79,23 +79,6 @@ public abstract class Package {
 
         return packageReferences;
     }
-    
-    public CCDValue calculateCCD(Map<PackageReference, Package> packageReferenceMap) {
-    	
-    	Set<PackageReference> accumulatedPackageReferences = accumulatedDirectPackageReferences();
-		
-    	int componentDependency = accumulatedPackageReferences.size() + 1;
-    	int cumulatedComponentDependency = componentDependency;
-		
-		for (PackageReference packageReference : accumulatedPackageReferences) {
-			Package dependee = packageReferenceMap.get(packageReference);
-			CCDValue dependeeCCD = dependee.calculateCCD(packageReferenceMap);
-			cumulatedComponentDependency += dependeeCCD.getCumulatedComponentDependency();
-		}
-		CCDValue result = new CCDValue(componentDependency, cumulatedComponentDependency);
-		System.err.println(this + "  " + result);
-		return result;
-    }
 
     public List<Cycle> detectCycles(Map<PackageReference, Package> packageReferences) {
         Set<Cycle> cycles = detectCycles(new ArrayList<PackageReference>(), new HashSet<Cycle>(), packageReferences);
@@ -155,6 +138,8 @@ public abstract class Package {
             return foundCycles;
         }
         //otherwise loop through accumulated references
+        Set<PackageReference> accumulatedDirectPackageReferences = this.accumulatedDirectPackageReferences();
+        System.err.println(this+" " + accumulatedDirectPackageReferences);
         for (PackageReference referencedPackageRef : this.accumulatedDirectPackageReferences()) {
 
             List<PackageReference> updatedTraversedPackages = Lists.newArrayList(traversedPackages);

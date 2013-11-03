@@ -20,15 +20,6 @@ public class DesignQualityCheckResults {
 		}
 	}
 
-	public boolean hasErrors() {
-		for (CheckResult checkResult : checkResults.values()) {
-			if (checkResult.violationsDetected()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	@SuppressWarnings("unchecked")
 	public <T extends CheckResult> Optional<T> getResult(Class<T> clazz) {
 		T result = (T) checkResults.get(clazz);
@@ -42,6 +33,15 @@ public class DesignQualityCheckResults {
 	
 	public List<CheckResult> resultList() {
 		return Lists.newArrayList(checkResults.values());
+	}
+
+	public boolean failExpectations() {
+		for (CheckResult checkResult : checkResults.values()) {
+			if (checkResult.expectationsFailed()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

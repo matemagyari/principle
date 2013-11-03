@@ -1,8 +1,8 @@
-package org.tindalos.principle.domain.core.checkerparameter;
+package org.tindalos.principle.domain.expectations;
 
-import org.tindalos.principle.domain.core.checkerparameter.cumulativedependency.ACD;
-import org.tindalos.principle.domain.core.checkerparameter.cumulativedependency.NCCD;
-import org.tindalos.principle.domain.core.checkerparameter.cumulativedependency.RACD;
+import org.tindalos.principle.domain.expectations.cumulativedependency.ACD;
+import org.tindalos.principle.domain.expectations.cumulativedependency.NCCD;
+import org.tindalos.principle.domain.expectations.cumulativedependency.RACD;
 
 public class PackageCoupling {
 	

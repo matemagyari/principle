@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.checker;
 
 import java.util.List;
 
-import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
+import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration;
 import org.tindalos.principle.domain.core.Package;
 
 public class DesignQualityCheckService {
@@ -15,7 +15,7 @@ public class DesignQualityCheckService {
         this.designQualityDetectorsRunner = designQualityDetectorsRunner;
     }
 
-    public DesignQualityCheckResults analyze(DesignQualityCheckParameters parameters) {
+    public DesignQualityCheckResults analyze(DesignQualityCheckConfiguration parameters) {
         List<Package> packages = packageAnalyzer.analyze(parameters);
         return designQualityDetectorsRunner.execute(packages, parameters);
     }

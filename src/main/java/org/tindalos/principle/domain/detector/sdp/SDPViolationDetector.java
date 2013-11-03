@@ -8,7 +8,8 @@ import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.coredetector.CheckInput;
 import org.tindalos.principle.domain.coredetector.CheckResult;
 import org.tindalos.principle.domain.coredetector.Detector;
-import org.tindalos.principle.domain.detector.adp.PackageStructureBuilder;
+import org.tindalos.principle.domain.expectations.DesignQualityExpectations;
+import org.tindalos.principle.domain.expectations.PackageCoupling;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -28,7 +29,7 @@ public class SDPViolationDetector implements Detector {
 				}
 			}
 		}
-		return new SDPResult(sdpViolations);
+		return new SDPResult(sdpViolations, checkInput.getPackageCouplingExpectations().getSDP());
 	}
 
 	private Map<PackageReference, Package> buildReferenceMap(List<Package> packages) {
@@ -45,6 +46,14 @@ public class SDPViolationDetector implements Detector {
 			results.add(references.get(reference));
 		}
 		return results;
+	}
+	
+	public boolean isWanted(DesignQualityExpectations expectations) {
+		PackageCoupling packageCoupling = expectations.getPackageCoupling();
+		if (packageCoupling == null) {
+			return false;
+		}
+		return packageCoupling.getSDP() != null;
 	}
 
 }
