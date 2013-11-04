@@ -43,11 +43,11 @@ public abstract class Package {
     
     // it dies if there are cycles
     //through references, not through children. transaitive too
-    public Set<PackageReference> cumulatedDependencies2(Map<PackageReference, Package> packageReferenceMap) {
-    	return cumulatedDependencies(packageReferenceMap, new HashSet<PackageReference>());
+    public Set<PackageReference> cumulatedDependencies(Map<PackageReference, Package> packageReferenceMap) {
+    	return cumulatedDependenciesAcc(packageReferenceMap, new HashSet<PackageReference>());
     }
     
-    private Set<PackageReference> cumulatedDependencies(Map<PackageReference, Package> packageReferenceMap, Set<PackageReference> dependencies) {
+    private Set<PackageReference> cumulatedDependenciesAcc(Map<PackageReference, Package> packageReferenceMap, Set<PackageReference> dependencies) {
     	
     			
     	Set<PackageReference> accumulatedPackageReferences = this.accumulatedDirectPackageReferences();
@@ -62,7 +62,7 @@ public abstract class Package {
     			Package aPackage = packageReferenceMap.get(packageReference);
     			
     			dependencies.add(packageReference);
-    			result.addAll( aPackage.cumulatedDependencies(packageReferenceMap, dependencies) );
+    			result.addAll( aPackage.cumulatedDependenciesAcc(packageReferenceMap, dependencies) );
     		}
     		return result;
     	}
@@ -78,23 +78,6 @@ public abstract class Package {
         packageReferences.addAll(getOwnPackageReferences());
 
         return packageReferences;
-    }
-    
-    public CCDValue calculateCCD(Map<PackageReference, Package> packageReferenceMap) {
-    	
-    	Set<PackageReference> accumulatedPackageReferences = accumulatedDirectPackageReferences();
-		
-    	int componentDependency = accumulatedPackageReferences.size() + 1;
-    	int cumulatedComponentDependency = componentDependency;
-		
-		for (PackageReference packageReference : accumulatedPackageReferences) {
-			Package dependee = packageReferenceMap.get(packageReference);
-			CCDValue dependeeCCD = dependee.calculateCCD(packageReferenceMap);
-			cumulatedComponentDependency += dependeeCCD.getCumulatedComponentDependency();
-		}
-		CCDValue result = new CCDValue(componentDependency, cumulatedComponentDependency);
-		System.err.println(this + "  " + result);
-		return result;
     }
 
     public List<Cycle> detectCycles(Map<PackageReference, Package> packageReferences) {
@@ -135,6 +118,11 @@ public abstract class Package {
             public Metrics getMetrics() {
                 return Metrics.undefined();
             }
+
+			@Override
+			public boolean isUnreferred() {
+				return true;
+			}
             
         };
     }
@@ -144,9 +132,9 @@ public abstract class Package {
     }
 
     private Set<Cycle> detectCycles(List<PackageReference> traversedPackages, Set<Cycle> foundCycles, Map<PackageReference, Package> packageReferences) {
-
+    	
         //if we just closed a cycle, add it to the found list then return
-        int indexOfThisPackage = traversedPackages.indexOf(this.getReference());
+        int indexOfThisPackage = indexInTraversedPath(traversedPackages);
         if (indexOfThisPackage > -1) {
             Cycle cycleEndingWithThisPackage = new Cycle(traversedPackages.subList(indexOfThisPackage, traversedPackages.size()));
             if (cycleEndingWithThisPackage.notSingleNode()) {
@@ -166,6 +154,28 @@ public abstract class Package {
         }
         return foundCycles;
     }
+
+	private int indexInTraversedPath(List<PackageReference> traversedPackages) {
+	    int index = traversedPackages.indexOf(this.getReference());
+	    if (index!=-1) {
+	        //simple case
+	        return index;
+	    }
+	    
+	    if (traversedPackages.size() < 3) {
+	        return -1;
+	    }
+	    
+		for(index = 0;index<traversedPackages.size()-1 ; index++) {
+			if (this.getReference().isDescendantOf(traversedPackages.get(index))
+			        
+			        && !this.getReference().isDescendantOf(traversedPackages.get(index+1))) {
+				return index;
+			}
+			
+		}
+		return -1;
+	}
 
     private Package getChild(String relativeName) {
         for (Package child : children) {
@@ -195,6 +205,7 @@ public abstract class Package {
 	
     public abstract Set<PackageReference> getOwnPackageReferences();
     public abstract Metrics getMetrics();
+    public abstract boolean isUnreferred();
 
     @Override
     public boolean equals(Object other) {

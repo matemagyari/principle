@@ -4,27 +4,26 @@ import java.util.List;
 
 import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.coredetector.CheckResult;
+import org.tindalos.principle.domain.expectations.ADP;
 
 import com.google.common.collect.Lists;
 
 public class APDResult implements CheckResult {
 
     private final List<Cycle> cycles;
+	private final ADP expectation;
 
-    public APDResult(List<Cycle> cycles) {
-        this.cycles = Lists.newArrayList(cycles);
+    public APDResult(List<Cycle> cycles, ADP adpExpectation) {
+        this.expectation = adpExpectation;
+		this.cycles = Lists.newArrayList(cycles);
     }
     
     public List<Cycle> getCycles() {
         return cycles;
     }
 
-    public boolean violationsDetected() {
-        return !cycles.isEmpty();
-    }
-
-    public int numberOfViolations() {
-        return cycles.size();
-    }
+	public boolean expectationsFailed() {
+		return cycles.size() > expectation.getViolationsThreshold();
+	}
 
 }

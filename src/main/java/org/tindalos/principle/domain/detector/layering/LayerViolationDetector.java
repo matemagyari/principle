@@ -4,11 +4,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.coredetector.CheckInput;
-import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
 import org.tindalos.principle.domain.coredetector.Detector;
+import org.tindalos.principle.domain.expectations.DesignQualityExpectations;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
@@ -17,23 +18,25 @@ import com.google.common.collect.Lists;
 
 public class LayerViolationDetector implements Detector {
 	
-	public static final String ID = "LayerViolationDetector";
-    
     public LayerViolationsResult analyze(CheckInput checkInput) {
-        List<LayerReference> layerReferences = findViolations(checkInput.getPackages(), checkInput.getParameters());
-        return new LayerViolationsResult(layerReferences);
+        List<LayerReference> layerReferences = findViolations(checkInput.getPackages(), checkInput.getConfiguration());
+        return new LayerViolationsResult(layerReferences, checkInput.getLayeringExpectations());
     }
+    
+	public boolean isWanted(DesignQualityExpectations expectations) {
+		return expectations.getLayering() != null;
+	}
 
-    private List<LayerReference> findViolations(List<Package> packages, DesignQualityCheckParameters parameters) {
+    private List<LayerReference> findViolations(List<Package> packages, DesignQualityCheckConfiguration configuration) {
 
         List<LayerReference> violations = Lists.newArrayList();
 
-        for (Package aPackage : filterToRelevantPackages(packages, parameters.getBasePackage())) {
-        	List<String> layers = parameters.getChecks().getLayering().getLayers();
+        for (Package aPackage : filterToRelevantPackages(packages, configuration.getBasePackage())) {
+        	List<String> layers = configuration.getExpectations().getLayering().getLayers();
             Optional<String> layer = getLayer(aPackage, layers);
             if (layer.isPresent()) {
-                List<String> outerLayers = outerLayers(parameters.getChecks().getLayering().getLayers(), layer.get());
-                violations.addAll(getReferencesToLayers(aPackage, outerLayers, parameters.getBasePackage()));
+                List<String> outerLayers = outerLayers(layers, layer.get());
+                violations.addAll(getReferencesToLayers(aPackage, outerLayers, configuration.getBasePackage()));
             }
         }
 

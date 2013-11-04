@@ -26,7 +26,6 @@ import org.tindalos.principle.domain.detector.sdp.SDPResult;
 import org.tindalos.principle.domain.detector.sdp.SDPViolationDetector;
 import org.tindalos.principle.domain.detector.sdp.SDPViolationsReporter;
 import org.tindalos.principle.domain.resultprocessing.reporter.DesignQualityCheckResultsReporter;
-import org.tindalos.principle.domain.resultprocessing.thresholdchecker.ThresholdChecker;
 import org.tindalos.principle.infrastructure.service.jdepend.JDependPackageAnalyzer;
 import org.tindalos.principle.infrastructure.service.jdepend.JDependRunner;
 import org.tindalos.principle.infrastructure.service.jdepend.MetricsCalculator;
@@ -71,7 +70,6 @@ public class PoorMansDIContainer {
 	}
 	
 	public static Application getApplication(String basePackage) {
-		ThresholdChecker thresholdChecker = new ThresholdChecker();
-		return new Application(getDesignCheckService(basePackage), getDesignCheckResultsReporter(), thresholdChecker );
+		return new Application(getDesignCheckService(basePackage), getDesignCheckResultsReporter() );
 	}
 }

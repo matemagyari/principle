@@ -22,7 +22,7 @@ public class DesignQualityCheckResultsReporter {
 			ViolationsReporter reporter = reporters.get(checkResult.getClass());
 			String report = reporter.report(checkResult);
 
-			if (checkResult.violationsDetected()) {
+			if (checkResult.expectationsFailed()) {
 				printer.printWarning(report);
 			} else {
 				printer.printInfo(report);

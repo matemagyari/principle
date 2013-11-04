@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageSorter;
-import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
 
 public class PackageStructureBuilder {
 	
@@ -14,8 +13,8 @@ public class PackageStructureBuilder {
 		this.packageSorter = packageSorter;
 	}
 
-	public Package build(List<Package> packages, DesignQualityCheckParameters parameters) {
-		List<Package> sortedPackages = packageSorter.sortByName(packages, parameters.getBasePackage());
+	public Package build(List<Package> packages, String basePackageName) {
+		List<Package> sortedPackages = packageSorter.sortByName(packages, basePackageName);
 		Package basePackage = sortedPackages.remove(0);
 		for (Package aPackage : sortedPackages) {
 			basePackage.insert(aPackage);

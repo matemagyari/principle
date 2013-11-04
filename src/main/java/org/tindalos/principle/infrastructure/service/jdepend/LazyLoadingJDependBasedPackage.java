@@ -16,12 +16,14 @@ public class LazyLoadingJDependBasedPackage extends Package {
     private final JavaPackage javaPackage;
     private final PackageFactory packageFactory;
     private final Metrics metrics;
+	private final boolean isUnreferred;
 
 	public LazyLoadingJDependBasedPackage(JavaPackage javaPackage, Metrics metrics, PackageFactory packageFactory) {
         super(javaPackage.getName());
 		this.javaPackage = javaPackage;
         this.metrics = metrics;
         this.packageFactory = packageFactory;
+        this.isUnreferred = metrics.getAfferentCoupling() == 0;
         //System.err.println(javaPackage.getName() + " " + metrics);
     }
 
@@ -44,5 +46,10 @@ public class LazyLoadingJDependBasedPackage extends Package {
     public Metrics getMetrics() {
         return metrics;
     }
+
+	@Override
+	public boolean isUnreferred() {
+		return this.isUnreferred;
+	}
 
 }

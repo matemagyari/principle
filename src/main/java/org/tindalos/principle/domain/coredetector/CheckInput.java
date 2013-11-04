@@ -2,26 +2,41 @@ package org.tindalos.principle.domain.coredetector;
 
 import java.util.List;
 
-import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
+import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration;
 import org.tindalos.principle.domain.core.Package;
+import org.tindalos.principle.domain.expectations.DesignQualityExpectations;
+import org.tindalos.principle.domain.expectations.Layering;
+import org.tindalos.principle.domain.expectations.PackageCoupling;
 
 import com.google.common.collect.Lists;
 
 public class CheckInput {
 	
     private final List<Package> packages;
-    private final DesignQualityCheckParameters parameters;
+    private final DesignQualityCheckConfiguration designQualityCheckConfiguration;
     
-    public CheckInput(List<Package> packages, DesignQualityCheckParameters parameters) {
+    public CheckInput(List<Package> packages, DesignQualityCheckConfiguration designQualityCheckConfiguration) {
         this.packages = Lists.newArrayList(packages);
-        this.parameters = parameters;
+        this.designQualityCheckConfiguration = designQualityCheckConfiguration;
     }
     
     public List<Package> getPackages() {
         return Lists.newArrayList(packages);
     }
-    public DesignQualityCheckParameters getParameters() {
-        return parameters;
+    public DesignQualityCheckConfiguration getConfiguration() {
+        return designQualityCheckConfiguration;
+    }
+    
+    public PackageCoupling getPackageCouplingExpectations() {
+    	return getExpectations().getPackageCoupling();
+    }
+    
+    public Layering getLayeringExpectations() {
+    	return getExpectations().getLayering();
+    }
+    
+    private DesignQualityExpectations getExpectations() {
+    	return this.designQualityCheckConfiguration.getExpectations();
     }
     
 

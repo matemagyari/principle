@@ -7,6 +7,9 @@ import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.coredetector.CheckInput;
 import org.tindalos.principle.domain.coredetector.CheckResult;
 import org.tindalos.principle.domain.coredetector.Detector;
+import org.tindalos.principle.domain.expectations.DesignQualityExpectations;
+import org.tindalos.principle.domain.expectations.PackageCoupling;
+import org.tindalos.principle.domain.expectations.SAP;
 
 import com.google.common.collect.Lists;
 
@@ -14,7 +17,8 @@ public class SAPViolationDetector implements Detector {
 
 	public CheckResult analyze(CheckInput checkInput) {
 		List<Package> outlierPackages = Lists.newArrayList();
-		Double maxDistance = checkInput.getParameters().getChecks().getPackageCoupling().getSAP().getMaxDistance();
+		SAP sapExpectation = checkInput.getPackageCouplingExpectations().getSAP();
+		Double maxDistance = sapExpectation.getMaxDistance();
 		
 		List<Package> packages = checkInput.getPackages();
 		removeRootPackageIfEmpty(packages);
@@ -25,7 +29,7 @@ public class SAPViolationDetector implements Detector {
 				outlierPackages.add(aPackage);
 			}
 		}
-		return new SAPResult(outlierPackages);
+		return new SAPResult(outlierPackages, sapExpectation);
 	}
 
 	private static void removeRootPackageIfEmpty(List<Package> packages) {
@@ -34,6 +38,14 @@ public class SAPViolationDetector implements Detector {
 		if (metrics.getAbstractness() == 0 && metrics.getInstability() == 0) {
 			packages.remove(rootPackage);
 		}
+	}
+	
+	public boolean isWanted(DesignQualityExpectations expectations) {
+		PackageCoupling packageCoupling = expectations.getPackageCoupling();
+		if (packageCoupling == null) {
+			return false;
+		}
+		return packageCoupling.getSAP() != null;
 	}
 
 }

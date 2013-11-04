@@ -7,7 +7,7 @@ import jdepend.framework.JavaPackage;
 
 import org.tindalos.principle.domain.checker.PackageAnalyzer;
 import org.tindalos.principle.domain.core.Package;
-import org.tindalos.principle.domain.core.DesignQualityCheckParameters;
+import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration;
 
 public class JDependPackageAnalyzer implements PackageAnalyzer {
     
@@ -19,7 +19,7 @@ public class JDependPackageAnalyzer implements PackageAnalyzer {
         this.packageListFactory = packageListFactory;
     }
 
-    public List<Package> analyze(DesignQualityCheckParameters parameters) {
+    public List<Package> analyze(DesignQualityCheckConfiguration parameters) {
         Collection<JavaPackage> analyzedPackages = jDependRunner.getAnalyzedPackages(parameters.getBasePackage());
         return packageListFactory.build(analyzedPackages);
     }
