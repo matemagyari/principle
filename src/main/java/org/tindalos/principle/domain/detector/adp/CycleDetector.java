@@ -60,10 +60,11 @@ public class CycleDetector implements Detector {
         /*
          */
         List<Package> sortedByAfferents = orderByAfferents(checkInput.getPackages());
-
         sortedByAfferents.remove(basePackage);
+        //sortedByAfferents.add(basePackage); //add to the end
 
         while (!sortedByAfferents.isEmpty()) {
+           // while (!sortedByAfferents.isEmpty() || sortedByAfferents.equals(Lists.newArrayList(basePackage))) {
             Package aPackage = sortedByAfferents.get(0);
             cycleSet.addAll(aPackage.detectCycles(references));
             Set<PackageReference> cumulatedDependencies = aPackage.cumulatedDependencies(references);

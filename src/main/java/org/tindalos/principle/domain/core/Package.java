@@ -162,20 +162,35 @@ public abstract class Package {
 	        return index;
 	    }
 	    
-	    if (traversedPackages.size() < 3) {
-	        return -1;
-	    }
-	    
 		for(index = 0;index<traversedPackages.size()-1 ; index++) {
-			if (this.getReference().isDescendantOf(traversedPackages.get(index))
-			        
-			        && !this.getReference().isDescendantOf(traversedPackages.get(index+1))) {
+		    
+			PackageReference possibleMatch = traversedPackages.get(index);
+			if (possibleMatch.equals(this.getReference())) {
+			    System.err.println("Found? " + traversedPackages + " " + this);
+			    return index;
+			} else if (this.getReference().isDescendantOf(possibleMatch)
+		        //&& !this.getReference().isDescendantOf(traversedPackages.get(index+1))
+		        && notAllAreDescendantsOf(traversedPackages.subList(index+1, traversedPackages.size()),possibleMatch)
+			        ) 
+			
+			{
+			    System.err.println("Found " + traversedPackages + " " + this +" " + index);
 				return index;
 			}
 			
 		}
+		//System.err.println("Failed " + traversedPackages + " " + this);
 		return -1;
 	}
+
+    private boolean notAllAreDescendantsOf(List<PackageReference> packages, PackageReference possibleAncestor) {
+        for (PackageReference packageReference : packages) {
+            if (!packageReference.isDescendantOf(possibleAncestor)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private Package getChild(String relativeName) {
         for (Package child : children) {

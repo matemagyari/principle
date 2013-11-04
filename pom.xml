@@ -76,7 +76,7 @@
 						</layering>
 						<packageCoupling>
 							<adp>
-								<violationsThreshold>5</violationsThreshold>
+								<violationsThreshold>10</violationsThreshold>
 							</adp>
 							<!-- 
 							 -->
