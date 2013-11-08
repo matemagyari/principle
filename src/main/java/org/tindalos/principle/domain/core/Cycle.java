@@ -8,7 +8,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 
-public class Cycle {
+public class Cycle implements Comparable<Cycle> {
     
     private final List<PackageReference> references;
     
@@ -60,6 +60,9 @@ public class Cycle {
         return new HashCodeBuilder()
                         .append(references.size())
                         .hashCode();
+    }
+    public int compareTo(Cycle that) {
+        return this.toString().compareTo(that.toString());
     }
 
 }

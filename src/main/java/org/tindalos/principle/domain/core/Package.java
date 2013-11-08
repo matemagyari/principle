@@ -79,9 +79,8 @@ public abstract class Package {
         return packageReferences;
     }
 
-    public List<Cycle> detectCycles(Map<PackageReference, Package> packageReferences) {
-        Set<Cycle> cycles = detectCycles(new ArrayList<PackageReference>(), new HashSet<Cycle>(), packageReferences);
-        return Lists.newArrayList(cycles);
+    public CyclesInSubgraph detectCycles(Map<PackageReference, Package> packageReferences) {
+        return detectCycles(new ArrayList<PackageReference>(), new CyclesInSubgraph(), packageReferences);
     }
 
     public Map<PackageReference, Package> toMap() {
@@ -130,9 +129,10 @@ public abstract class Package {
         return this.getReference().firstPartOfRelativeNameTo(parentPackage.getReference());
     }
 
-    private Set<Cycle> detectCycles(List<PackageReference> traversedPackages, Set<Cycle> foundCycles,
+    private CyclesInSubgraph detectCycles(List<PackageReference> traversedPackages, CyclesInSubgraph foundCycles,
             Map<PackageReference, Package> packageReferences) {
 
+        foundCycles.add(this);
         // if we just closed a cycle, add it to the found list then return
         int indexOfThisPackage = indexInTraversedPath(traversedPackages);
         if (indexOfThisPackage > -1) {
@@ -154,9 +154,11 @@ public abstract class Package {
             updatedTraversedPackages.add(this.getReference());
 
             Package referencedPackage = packageReferences.get(referencedPackageRef);
-            Set<Cycle> cycles = referencedPackage
+
+            CyclesInSubgraph cyclesInSubgraph = referencedPackage
                     .detectCycles(updatedTraversedPackages, foundCycles, packageReferences);
-            foundCycles.addAll(cycles);
+
+            foundCycles.mergeIn(cyclesInSubgraph);
         }
         return foundCycles;
     }

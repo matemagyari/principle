@@ -3,6 +3,7 @@ package org.tindalos.principle.domain.core;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class PackageReference implements Comparable<PackageReference> {
+    //DesignQualityCheckerMojo checkerMojo;
 
     private final String name;
 

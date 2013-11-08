@@ -1,5 +1,6 @@
 package org.tindalos.principle.domain.detector.adp;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.tindalos.principle.domain.core.Cycle;
+import org.tindalos.principle.domain.core.CyclesInSubgraph;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.coredetector.CheckInput;
@@ -14,8 +16,6 @@ import org.tindalos.principle.domain.coredetector.Detector;
 import org.tindalos.principle.domain.expectations.DesignQualityExpectations;
 import org.tindalos.principle.domain.expectations.PackageCoupling;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -37,51 +37,20 @@ public class CycleDetector implements Detector {
         
         Set<Cycle> cycleSet = Sets.newHashSet();
 
-        /*
-        List<Package> unreferredPackages = findUnreferred(checkInput.getPackages(), basePackage);
-        List<Package> uncheckedPackages = Lists.newArrayList(checkInput.getPackages());
-        uncheckedPackages.remove(basePackage);
-        
-
-        
-        for (Package anUnreferredPackage : unreferredPackages) {
-            cycleSet.addAll(anUnreferredPackage.detectCycles(references));
-            Set<PackageReference> cumulatedDependencies = anUnreferredPackage.cumulatedDependencies(references);
-            remove(uncheckedPackages, cumulatedDependencies);
-            uncheckedPackages.remove(anUnreferredPackage);
+        List<Package> sortedByAfferents = orderByAfferents(references.values());
+        if (basePackage.getMetrics().getAfferentCoupling() == 0) {
+            sortedByAfferents.remove(basePackage);
         }
-        
-        if (!uncheckedPackages.isEmpty()) {
-            cycleSet.addAll(basePackage.detectCycles(references));
-        }
-        */
-        
-        
-        /*
-         */
-        List<Package> sortedByAfferents = orderByAfferents(checkInput.getPackages());
-        sortedByAfferents.remove(basePackage);
         //sortedByAfferents.add(basePackage); //add to the end
 
         while (!sortedByAfferents.isEmpty()) {
            // while (!sortedByAfferents.isEmpty() || sortedByAfferents.equals(Lists.newArrayList(basePackage))) {
-            Package aPackage = sortedByAfferents.get(0);
-            cycleSet.addAll(aPackage.detectCycles(references));
-            Set<PackageReference> cumulatedDependencies = aPackage.cumulatedDependencies(references);
-            remove(sortedByAfferents, cumulatedDependencies);
-            sortedByAfferents.remove(aPackage);
+            CyclesInSubgraph cyclesInSubgraph = sortedByAfferents.get(0).detectCycles(references);
+            cycleSet.addAll(cyclesInSubgraph.getCycles());
+            sortedByAfferents.removeAll(cyclesInSubgraph.getInvestigatedPackages());
         }
         return new APDResult(Lists.newArrayList(cycleSet), checkInput.getConfiguration().getExpectations()
                 .getPackageCoupling().getADP());
-    }
-
-    private void remove(List<Package> sortedByAfferents, Set<PackageReference> cumulatedDependencies) {
-        List<Package> temp = Lists.newArrayList(sortedByAfferents);
-        for (Package aPackage : temp) {
-            if (cumulatedDependencies.contains(aPackage.getReference())) {
-                sortedByAfferents.remove(aPackage);
-            }
-        }
     }
 
     public boolean isWanted(DesignQualityExpectations expectations) {
@@ -92,16 +61,7 @@ public class CycleDetector implements Detector {
         return packageCoupling.getADP() != null;
     }
 
-    private static List<Package> findUnreferred(List<Package> packages, final Package basePackage) {
-        Predicate<Package> filter = new Predicate<Package>() {
-            public boolean apply(Package input) {
-                return input.isUnreferred() && !input.equals(basePackage);
-            }
-        };
-        return Lists.newArrayList(Iterables.filter(packages, filter));
-    }
-
-    private static List<Package> orderByAfferents(List<Package> packages) {
+    private static List<Package> orderByAfferents(Collection<Package> packages) {
         List<Package> temp = Lists.newArrayList(packages);
         Comparator<Package> comp = new Comparator<Package>() {
 

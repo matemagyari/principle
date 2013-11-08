@@ -1,5 +1,6 @@
 package org.tindalos.principle.domain.detector.adp;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.tindalos.principle.domain.core.Cycle;
@@ -16,6 +17,7 @@ public class APDResult implements CheckResult {
     public APDResult(List<Cycle> cycles, ADP adpExpectation) {
         this.expectation = adpExpectation;
 		this.cycles = Lists.newArrayList(cycles);
+		Collections.sort(this.cycles);
     }
     
     public List<Cycle> getCycles() {
