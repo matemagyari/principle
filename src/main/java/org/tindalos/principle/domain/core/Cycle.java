@@ -19,10 +19,6 @@ public class Cycle {
         this(Lists.newArrayList(references));
     }
     
-    public boolean notSingleNode() {
-        return references.size() > 1;
-    }
-    
     public List<PackageReference> getReferences() {
         return references;
     }
@@ -65,4 +61,5 @@ public class Cycle {
                         .append(references.size())
                         .hashCode();
     }
+
 }
