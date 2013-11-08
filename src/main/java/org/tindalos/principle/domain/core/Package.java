@@ -10,6 +10,7 @@ import java.util.Set;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -80,7 +81,7 @@ public abstract class Package {
     }
 
     public CyclesInSubgraph detectCycles(Map<PackageReference, Package> packageReferences) {
-        return detectCycles(new ArrayList<PackageReference>(), new CyclesInSubgraph(), packageReferences);
+        return detectCyclesOnThePathFromHere(new ArrayList<PackageReference>(), new CyclesInSubgraph(), packageReferences);
     }
 
     public Map<PackageReference, Package> toMap() {
@@ -122,6 +123,11 @@ public abstract class Package {
                 return true;
             }
 
+            @Override
+            public boolean containsNoClasses() {
+                return true;
+            }
+
         };
     }
 
@@ -129,38 +135,33 @@ public abstract class Package {
         return this.getReference().firstPartOfRelativeNameTo(parentPackage.getReference());
     }
 
-    private CyclesInSubgraph detectCycles(List<PackageReference> traversedPackages, CyclesInSubgraph foundCycles,
+    private CyclesInSubgraph detectCyclesOnThePathFromHere(List<PackageReference> traversedPackages, CyclesInSubgraph foundCycles,
             Map<PackageReference, Package> packageReferences) {
 
-        foundCycles.add(this);
+        foundCycles.rememberPackageAsInvestigated(this);
         // if we just closed a cycle, add it to the found list then return
-        int indexOfThisPackage = indexInTraversedPath(traversedPackages);
-        if (indexOfThisPackage > -1) {
+        Optional<List<PackageReference>> cycleCandidateEndingHere = findCycleCandidate(traversedPackages);
+        if (cycleCandidateEndingHere.isPresent()) {
+            if (isValid(cycleCandidateEndingHere.get())) {
+                foundCycles.add(new Cycle(cycleCandidateEndingHere.get()));
+            }
+            return foundCycles;
+        } else {
+            // otherwise loop through accumulated references
+            for (PackageReference referencedPackageRef : this.accumulatedDirectPackageReferences()) {
 
-            List<PackageReference> cycleCandidate = traversedPackages.subList(indexOfThisPackage,
-                    traversedPackages.size());
+                List<PackageReference> updatedTraversedPackages = Lists.newArrayList(traversedPackages);
+                updatedTraversedPackages.add(this.getReference());
 
-            if (isValid(cycleCandidate)) {
-                Cycle cycleEndingWithThisPackage = new Cycle(cycleCandidate);
+                Package referencedPackage = packageReferences.get(referencedPackageRef);
 
-                foundCycles.add(cycleEndingWithThisPackage);
+                CyclesInSubgraph cyclesInSubgraph = referencedPackage.detectCyclesOnThePathFromHere(updatedTraversedPackages,
+                        foundCycles, packageReferences);
+
+                foundCycles.mergeIn(cyclesInSubgraph);
             }
             return foundCycles;
         }
-        // otherwise loop through accumulated references
-        for (PackageReference referencedPackageRef : this.accumulatedDirectPackageReferences()) {
-
-            List<PackageReference> updatedTraversedPackages = Lists.newArrayList(traversedPackages);
-            updatedTraversedPackages.add(this.getReference());
-
-            Package referencedPackage = packageReferences.get(referencedPackageRef);
-
-            CyclesInSubgraph cyclesInSubgraph = referencedPackage
-                    .detectCycles(updatedTraversedPackages, foundCycles, packageReferences);
-
-            foundCycles.mergeIn(cyclesInSubgraph);
-        }
-        return foundCycles;
     }
 
     private boolean notEveryNodeUnderFirst(List<PackageReference> cycleCandidate) {
@@ -178,6 +179,21 @@ public abstract class Package {
             return false;
         }
         return notEveryNodeUnderFirst(cycleCandidate);
+    }
+
+    private Optional<List<PackageReference>> findCycleCandidate(List<PackageReference> traversedPackages) {
+
+        int indexOfThisPackage = indexInTraversedPath(traversedPackages);
+        if (indexOfThisPackage > -1) {
+
+            List<PackageReference> cycleCandidate = traversedPackages.subList(indexOfThisPackage,
+                    traversedPackages.size());
+
+            return Optional.of(cycleCandidate);
+        } else {
+            return Optional.absent();
+        }
+
     }
 
     private int indexInTraversedPath(List<PackageReference> traversedPackages) {
@@ -248,6 +264,10 @@ public abstract class Package {
     public abstract Metrics getMetrics();
 
     public abstract boolean isUnreferred();
+
+    public boolean containsNoClasses() {
+        return false;
+    }
 
     @Override
     public boolean equals(Object other) {

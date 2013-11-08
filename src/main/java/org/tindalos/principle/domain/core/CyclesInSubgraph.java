@@ -31,7 +31,7 @@ public class CyclesInSubgraph {
         cycles.add(cycle);
     }
 
-    public void add(Package aPackage) {
+    public void rememberPackageAsInvestigated(Package aPackage) {
         investigatedPackages.add(aPackage);
     }
 
