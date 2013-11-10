@@ -29,10 +29,10 @@ public abstract class Package {
 
     public void insert(Package aPackage) {
         if (this.equals(aPackage)) {
-            throw new RuntimeException("Attempted to insert into itself " + this);
+            throw new PackageStructureBuildingException("Attempted to insert into itself " + this);
         }
         if (this.isNotAnAncestorOf(aPackage)) {
-            throw new RuntimeException(aPackage + " is not under " + this);
+            throw new PackageStructureBuildingException("Attempted to insert " + aPackage + " into " + this);
         }
         if (this.isDirectParentOf(aPackage)) {
             children.add(aPackage);
@@ -99,7 +99,7 @@ public abstract class Package {
     private void insertIndirectChild(Package aPackage) {
         String relativeNameOfDirectChild = aPackage.firstPartOfRelativeNameTo(this);
         Package directChild = getChild(relativeNameOfDirectChild);
-        if (directChild == null) {
+        if (directChild == null) {//TODO
             directChild = createNew(this.getReference().toString() + "." + relativeNameOfDirectChild);
             children.add(directChild);
         }
