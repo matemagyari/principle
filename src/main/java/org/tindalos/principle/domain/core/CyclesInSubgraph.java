@@ -10,15 +10,15 @@ public class CyclesInSubgraph {
     private final Set<Cycle> cycles;
     private final Set<Package> investigatedPackages;
     
-    public CyclesInSubgraph(Set<Cycle> cycles, Set<Package> investigatedPackages) {
-        this.cycles = Sets.newHashSet(cycles);
-        this.investigatedPackages = Sets.newHashSet(investigatedPackages);
-    }
-
-    public CyclesInSubgraph() {
-        this(new HashSet<Cycle>(), new HashSet<Package>());
+    private CyclesInSubgraph() {
+        this.cycles = Sets.newHashSet();
+        this.investigatedPackages = Sets.newHashSet();
     }
     
+    public static CyclesInSubgraph empty() {
+    	return new CyclesInSubgraph();
+    }
+
     public Set<Cycle> getCycles() {
         return cycles;
     }

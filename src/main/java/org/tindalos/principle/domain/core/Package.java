@@ -16,276 +16,290 @@ import com.google.common.collect.Sets;
 
 public abstract class Package {
 
-    private final List<Package> children = Lists.newArrayList();
-    private final PackageReference reference;
+	private final List<Package> subPackages = Lists.newArrayList();
+	private final PackageReference reference;
 
-    public Package(String name) {
-        this.reference = new PackageReference(name);
-    }
+	public Package(String name) {
+		this.reference = new PackageReference(name);
+	}
 
-    public PackageReference getReference() {
-        return reference;
-    }
+	public PackageReference getReference() {
+		return reference;
+	}
 
-    public void insert(Package aPackage) {
-        if (this.equals(aPackage)) {
-            throw new PackageStructureBuildingException("Attempted to insert into itself " + this);
-        }
-        if (this.isNotAnAncestorOf(aPackage)) {
-            throw new PackageStructureBuildingException("Attempted to insert " + aPackage + " into " + this);
-        }
-        if (this.isDirectParentOf(aPackage)) {
-            children.add(aPackage);
-        } else {
-            insertIndirectChild(aPackage);
-        }
+	public void insert(Package aPackage) {
+		if (this.equals(aPackage)) {
+			throw new PackageStructureBuildingException("Attempted to insert into itself " + this);
+		}
+		if (this.doesNotContain(aPackage)) {
+			throw new PackageStructureBuildingException("Attempted to insert " + aPackage + " into " + this);
+		}
+		if (this.isDirectSuperPackageOf(aPackage)) {
+			subPackages.add(aPackage);
+		} else {
+			insertIndirectSubPackage(aPackage);
+		}
 
-    }
+	}
 
-    // it dies if there are cycles
-    // through references, not through children. transaitive too
-    public Set<PackageReference> cumulatedDependencies(Map<PackageReference, Package> packageReferenceMap) {
-        return cumulatedDependenciesAcc(packageReferenceMap, new HashSet<PackageReference>());
-    }
+	// it dies if there are cycles
+	// through references, not through subPackages. transaitive too
+	public Set<PackageReference> cumulatedDependencies(Map<PackageReference, Package> packageReferenceMap) {
+		return cumulatedDependenciesAcc(packageReferenceMap, new HashSet<PackageReference>());
+	}
 
-    private Set<PackageReference> cumulatedDependenciesAcc(Map<PackageReference, Package> packageReferenceMap,
-            Set<PackageReference> dependencies) {
+	private Set<PackageReference> cumulatedDependenciesAcc(Map<PackageReference, Package> packageReferenceMap, Set<PackageReference> dependencies) {
 
-        Set<PackageReference> accumulatedPackageReferences = this.accumulatedDirectPackageReferences();
+		Set<PackageReference> accumulatedPackageReferences = this.accumulatedDirectPackageReferences();
 
-        accumulatedPackageReferences.removeAll(dependencies);
+		accumulatedPackageReferences.removeAll(dependencies);
 
-        if (accumulatedPackageReferences.isEmpty()) {
-            return dependencies;
-        } else {
-            Set<PackageReference> result = Sets.newHashSet(accumulatedPackageReferences);
-            for (PackageReference packageReference : accumulatedPackageReferences) {
-                Package aPackage = packageReferenceMap.get(packageReference);
+		if (accumulatedPackageReferences.isEmpty()) {
+			return dependencies;
+		} else {
+			Set<PackageReference> result = Sets.newHashSet(accumulatedPackageReferences);
+			for (PackageReference packageReference : accumulatedPackageReferences) {
+				Package aPackage = packageReferenceMap.get(packageReference);
 
-                dependencies.add(packageReference);
-                result.addAll(aPackage.cumulatedDependenciesAcc(packageReferenceMap, dependencies));
-            }
-            return result;
-        }
-    }
+				dependencies.add(packageReference);
+				result.addAll(aPackage.cumulatedDependenciesAcc(packageReferenceMap, dependencies));
+			}
+			return result;
+		}
+	}
 
-    // all the references going out from this package
-    public Set<PackageReference> accumulatedDirectPackageReferences() {
-        Set<PackageReference> packageReferences = Sets.newHashSet();
-        for (Package child : children) {
-            packageReferences.addAll(child.accumulatedDirectPackageReferences());
-        }
-        packageReferences.addAll(getOwnPackageReferences());
+	// all the references going out from this package
+	private Set<PackageReference> accumulatedDirectPackageReferences() {
+		Set<PackageReference> packageReferences = Sets.newHashSet();
+		for (Package child : subPackages) {
+			packageReferences.addAll(child.accumulatedDirectPackageReferences());
+		}
+		packageReferences.addAll(getOwnPackageReferences());
 
-        return packageReferences;
-    }
+		return packageReferences;
+	}
 
-    public CyclesInSubgraph detectCycles(Map<PackageReference, Package> packageReferences) {
-        return detectCyclesOnThePathFromHere(new ArrayList<PackageReference>(), new CyclesInSubgraph(), packageReferences);
-    }
+	private Set<Package> accumulatedDirectlyReferredPackages(Map<PackageReference, Package> packageReferenceMap) {
+		Set<PackageReference> packageReferences = accumulatedDirectPackageReferences();
+		Set<Package> packages = Sets.newHashSet();
+		for (PackageReference reference : packageReferences) {
+			packages.add(packageReferenceMap.get(reference));
+		}
+		return packages;
+	}
+	
+	public CyclesInSubgraph detectCycles(Map<PackageReference, Package> packageReferences) {
+		return detectCyclesOnThePathFromHere(new ArrayList<PackageReference>(), CyclesInSubgraph.empty(), packageReferences);
+	}
 
-    public Map<PackageReference, Package> toMap() {
-        return toMap(new HashMap<PackageReference, Package>());
-    }
+	public Map<PackageReference, Package> toMap() {
+		return toMap(new HashMap<PackageReference, Package>());
+	}
 
-    private boolean isDirectParentOf(Package aPackage) {
-        return this.getReference().isDirectParentOf(aPackage.getReference());
-    }
+	private boolean isDirectSuperPackageOf(Package aPackage) {
+		return this.getReference().isDirectParentOf(aPackage.getReference());
+	}
 
-    private boolean isNotAnAncestorOf(Package aPackage) {
-        return this.getReference().isNotAnAncestorOf(aPackage.getReference());
-    }
+	private boolean doesNotContain(Package aPackage) {
+		return this.getReference().isNotAnAncestorOf(aPackage.getReference());
+	}
 
-    private void insertIndirectChild(Package aPackage) {
-        String relativeNameOfDirectChild = aPackage.firstPartOfRelativeNameTo(this);
-        Package directChild = getChild(relativeNameOfDirectChild);
-        if (directChild == null) {//TODO
-            directChild = createNew(this.getReference().toString() + "." + relativeNameOfDirectChild);
-            children.add(directChild);
-        }
-        directChild.insert(aPackage);
-    }
+	private void insertIndirectSubPackage(Package aPackage) {
+		String relativeNameOfDirectSubPackage = aPackage.firstPartOfRelativeNameTo(this);
+		getSubPackageByRelativeName(relativeNameOfDirectSubPackage).insert(aPackage);
+	}
 
-    protected Package createNew(String name) {
-        return new Package(name) {
-            @Override
-            public Set<PackageReference> getOwnPackageReferences() {
-                return Sets.newHashSet();
-            }
+	protected Package createNew(String name) {
+		return new Package(name) {
+			@Override
+			public Set<PackageReference> getOwnPackageReferences() {
+				return Sets.newHashSet();
+			}
 
-            @Override
-            public Metrics getMetrics() {
-                return Metrics.undefined();
-            }
+			@Override
+			public Metrics getMetrics() {
+				return Metrics.undefined();
+			}
 
-            @Override
-            public boolean isUnreferred() {
-                return true;
-            }
+			@Override
+			public boolean isUnreferred() {
+				return true;
+			}
 
-            @Override
-            public boolean containsNoClasses() {
-                return true;
-            }
+			@Override
+			public boolean containsNoClasses() {
+				return true;
+			}
 
-        };
-    }
+		};
+	}
 
-    private String firstPartOfRelativeNameTo(Package parentPackage) {
-        return this.getReference().firstPartOfRelativeNameTo(parentPackage.getReference());
-    }
+	private String firstPartOfRelativeNameTo(Package parentPackage) {
+		return this.getReference().firstPartOfRelativeNameTo(parentPackage.getReference());
+	}
 
-    private CyclesInSubgraph detectCyclesOnThePathFromHere(List<PackageReference> traversedPackages, CyclesInSubgraph foundCycles,
-            Map<PackageReference, Package> packageReferences) {
+	private CyclesInSubgraph detectCyclesOnThePathFromHere(
+			List<PackageReference> traversedPackages, 
+			CyclesInSubgraph foundCycles,
+			Map<PackageReference, Package> packageReferences) {
 
-        foundCycles.rememberPackageAsInvestigated(this);
-        // if we just closed a cycle, add it to the found list then return
-        Optional<List<PackageReference>> cycleCandidateEndingHere = findCycleCandidate(traversedPackages);
-        if (cycleCandidateEndingHere.isPresent()) {
-            if (isValid(cycleCandidateEndingHere.get())) {
-                foundCycles.add(new Cycle(cycleCandidateEndingHere.get()));
-            }
-            return foundCycles;
-        } else {
-            // otherwise loop through accumulated references
-            for (PackageReference referencedPackageRef : this.accumulatedDirectPackageReferences()) {
+		foundCycles.rememberPackageAsInvestigated(this);
+		
+		// if we just closed a cycle, add it to the found list then return
+		Optional<List<PackageReference>> cycleCandidateEndingHere = findCycleCandidateEndingHere(traversedPackages);
+		if (cycleCandidateEndingHere.isPresent()) {
+			if (isValid(cycleCandidateEndingHere.get())) {
+				foundCycles.add(new Cycle(cycleCandidateEndingHere.get()));
+			}
+			return foundCycles;
+		} else {
+			for (Package referencedPackage : this.accumulatedDirectlyReferredPackages(packageReferences)) {
 
-                List<PackageReference> updatedTraversedPackages = Lists.newArrayList(traversedPackages);
-                updatedTraversedPackages.add(this.getReference());
+				List<PackageReference> updatedTraversedPackages = Lists.newArrayList(traversedPackages);
+				updatedTraversedPackages.add(this.getReference());
+				CyclesInSubgraph cyclesInSubgraph = referencedPackage.detectCyclesOnThePathFromHere(updatedTraversedPackages, foundCycles, packageReferences);
 
-                Package referencedPackage = packageReferences.get(referencedPackageRef);
+				foundCycles.mergeIn(cyclesInSubgraph);
+			}
+			return foundCycles;
+		}
+	}
 
-                CyclesInSubgraph cyclesInSubgraph = referencedPackage.detectCyclesOnThePathFromHere(updatedTraversedPackages,
-                        foundCycles, packageReferences);
+	private boolean notEveryNodeUnderFirst(List<PackageReference> cycleCandidate) {
+		PackageReference first = cycleCandidate.get(0);
+		for (int i = 1; i < cycleCandidate.size(); i++) {
+			if (!cycleCandidate.get(i).isDescendantOf(first)) {
+				return true;
+			}
+		}
+		return first.equals(this.getReference());
+	}
 
-                foundCycles.mergeIn(cyclesInSubgraph);
-            }
-            return foundCycles;
-        }
-    }
+	private boolean isValid(List<PackageReference> cycleCandidate) {
+		if (cycleCandidate.size() < 2) {
+			return false;
+		}
+		return notEveryNodeUnderFirst(cycleCandidate);
+	}
 
-    private boolean notEveryNodeUnderFirst(List<PackageReference> cycleCandidate) {
-        PackageReference first = cycleCandidate.get(0);
-        for (int i = 1; i < cycleCandidate.size(); i++) {
-            if (!cycleCandidate.get(i).isDescendantOf(first)) {
-                return true;
-            }
-        }
-        return first.equals(this.getReference());
-    }
+	private Optional<List<PackageReference>> findCycleCandidateEndingHere(List<PackageReference> traversedPackages) {
 
-    private boolean isValid(List<PackageReference> cycleCandidate) {
-        if (cycleCandidate.size() < 2) {
-            return false;
-        }
-        return notEveryNodeUnderFirst(cycleCandidate);
-    }
+		int indexOfThisPackage = indexInTraversedPath(traversedPackages);
+		if (indexOfThisPackage > -1) {
 
-    private Optional<List<PackageReference>> findCycleCandidate(List<PackageReference> traversedPackages) {
+			List<PackageReference> cycleCandidate = traversedPackages.subList(indexOfThisPackage, traversedPackages.size());
 
-        int indexOfThisPackage = indexInTraversedPath(traversedPackages);
-        if (indexOfThisPackage > -1) {
+			return Optional.of(cycleCandidate);
+		} else {
+			return Optional.absent();
+		}
 
-            List<PackageReference> cycleCandidate = traversedPackages.subList(indexOfThisPackage,
-                    traversedPackages.size());
+	}
 
-            return Optional.of(cycleCandidate);
-        } else {
-            return Optional.absent();
-        }
+	private int indexInTraversedPath(List<PackageReference> traversedPackages) {
+		int index = traversedPackages.indexOf(this.getReference());
+		if (index != -1) {
+			// simple case
+			return index;
+		}
 
-    }
+		for (index = 0; index < traversedPackages.size() - 1; index++) {
 
-    private int indexInTraversedPath(List<PackageReference> traversedPackages) {
-        int index = traversedPackages.indexOf(this.getReference());
-        if (index != -1) {
-            // simple case
-            return index;
-        }
+			PackageReference possibleMatch = traversedPackages.get(index);
+			if (possibleMatch.equals(this.getReference())) {
+				return index;
+			} else if (this.getReference().isDescendantOf(possibleMatch)
+			// &&
+			// !this.getReference().isDescendantOf(traversedPackages.get(index+1))
+					&& notAllAreDescendantsOf(traversedPackages.subList(index + 1, traversedPackages.size()), possibleMatch))
 
-        for (index = 0; index < traversedPackages.size() - 1; index++) {
+			{
+				return index;
+			}
 
-            PackageReference possibleMatch = traversedPackages.get(index);
-            if (possibleMatch.equals(this.getReference())) {
-                return index;
-            } else if (this.getReference().isDescendantOf(possibleMatch)
-            // &&
-            // !this.getReference().isDescendantOf(traversedPackages.get(index+1))
-                    && notAllAreDescendantsOf(traversedPackages.subList(index + 1, traversedPackages.size()),
-                            possibleMatch))
+		}
+		// System.err.println("Failed " + traversedPackages + " " + this);
+		return -1;
+	}
 
-            {
-                System.err.println("Found " + traversedPackages + " " + this + " " + index);
-                return index;
-            }
+	private boolean notAllAreDescendantsOf(List<PackageReference> packages, PackageReference possibleAncestor) {
+		for (PackageReference packageReference : packages) {
+			if (!packageReference.isDescendantOf(possibleAncestor)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-        }
-        // System.err.println("Failed " + traversedPackages + " " + this);
-        return -1;
-    }
+	private Package getSubPackageByRelativeName(String relativeName) {
+		for (Package subPackage : subPackages) {
+			if (subPackage.getReference().equals(this.getReference().child(relativeName))) {
+				return subPackage;
+			}
+		}
+		Package directSubPackage = createNew(this.getReference().createChild(relativeName));
+		subPackages.add(directSubPackage);
+		return directSubPackage;
+	}
 
-    private boolean notAllAreDescendantsOf(List<PackageReference> packages, PackageReference possibleAncestor) {
-        for (PackageReference packageReference : packages) {
-            if (!packageReference.isDescendantOf(possibleAncestor)) {
-                return true;
-            }
-        }
-        return false;
-    }
+	private Map<PackageReference, Package> toMap(Map<PackageReference, Package> accumulatingMap) {
 
-    private Package getChild(String relativeName) {
-        for (Package child : children) {
-            if (child.getReference().equals(this.getReference().child(relativeName))) {
-                return child;
-            }
-        }
-        return null;
-    }
+		accumulatingMap.put(this.getReference(), this);
+		for (Package child : this.subPackages) {
+			child.toMap(accumulatingMap);
+		}
+		return accumulatingMap;
+	}
 
-    private Map<PackageReference, Package> toMap(Map<PackageReference, Package> accumulatingMap) {
+	public Float instability() {
+		return getMetrics().getInstability();
+	}
 
-        accumulatingMap.put(this.getReference(), this);
-        for (Package child : this.children) {
-            child.toMap(accumulatingMap);
-        }
-        return accumulatingMap;
-    }
+	public Float distance() {
+		return getMetrics().getDistance();
+	}
 
-    public Float instability() {
-        return getMetrics().getInstability();
-    }
+	public abstract Set<PackageReference> getOwnPackageReferences();
 
-    public Float distance() {
-        return getMetrics().getDistance();
-    }
+	public abstract Metrics getMetrics();
 
-    public abstract Set<PackageReference> getOwnPackageReferences();
+	public abstract boolean isUnreferred();
 
-    public abstract Metrics getMetrics();
+	public boolean containsNoClasses() {
+		return false;
+	}
 
-    public abstract boolean isUnreferred();
+	@Override
+	public boolean equals(Object other) {
+		if (!(other instanceof Package)) {
+			return false;
+		}
+		Package castOther = (Package) other;
+		return new EqualsBuilder().append(reference, castOther.reference).isEquals();
+	}
 
-    public boolean containsNoClasses() {
-        return false;
-    }
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().append(reference).hashCode();
+	}
 
-    @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof Package)) {
-            return false;
-        }
-        Package castOther = (Package) other;
-        return new EqualsBuilder().append(reference, castOther.reference).isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder().append(reference).hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return this.reference.toString();
-    }
+	@Override
+	public String toString() {
+		return this.reference.toString();
+	}
+	
+	private static class CycleDetectionParameters {
+		List<PackageReference> traversedPackages;
+		CyclesInSubgraph foundCycles;
+		Map<PackageReference, Package> packageReferences;
+		
+		CycleDetectionParameters(Map<PackageReference, Package> packageReferences) {
+			this.traversedPackages = Lists.newArrayList();
+			this.foundCycles = CyclesInSubgraph.empty();
+			this.packageReferences = packageReferences;
+		}
+		
+		
+	}
 
 }

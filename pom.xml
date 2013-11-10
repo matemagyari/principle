@@ -55,7 +55,7 @@
 
 	<build>
 		<plugins>
-		
+		<!-- 
 			<plugin>
 				<groupId>org.tindalos.principle</groupId>
 				<artifactId>principle</artifactId>
@@ -64,8 +64,6 @@
 					<basePackage>org.tindalos.principle</basePackage>
 					<checks>
 						<layering>
-							<!--  
-							 -->
 							<layers>
 								<param>infrastructure</param>
 								<param>app</param>
@@ -77,8 +75,6 @@
 							<adp>
 								<violationsThreshold>10</violationsThreshold>
 							</adp>
-							<!-- 
-							 -->
 							<sdp>
 								<violationsThreshold>5</violationsThreshold>
 							</sdp>
@@ -101,6 +97,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			 -->
 		</plugins>
 		<pluginManagement>
 			<plugins>

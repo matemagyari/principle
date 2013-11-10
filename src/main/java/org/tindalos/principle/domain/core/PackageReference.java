@@ -14,6 +14,10 @@ public class PackageReference implements Comparable<PackageReference> {
     public boolean startsWith(String str) {
         return name.startsWith(str);
     }
+    
+	public String createChild(String relativeNameOfDirectSubPackage) {
+		return name + "." + relativeNameOfDirectSubPackage;
+	}
 
     public boolean isDirectParentOf(PackageReference reference) {
         return !reference.relativeNameTo(this).contains(".");
@@ -72,6 +76,7 @@ public class PackageReference implements Comparable<PackageReference> {
     public int compareTo(PackageReference that) {
         return name.compareTo(that.name);
     }
+
 
 
 
