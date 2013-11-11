@@ -28,4 +28,8 @@ public class SAPResult implements CheckResult {
 		return outlierPackages.size() > sapExpectation.getViolationsThreshold();
 	}
 
+    public Integer getThreshold() {
+        return sapExpectation.getViolationsThreshold();
+    }
+
 }

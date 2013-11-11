@@ -1,9 +1,10 @@
-package org.tindalos.principle.domain.detector.sap;
+package org.tindalos.principle.infrastructure.reporters;
 
 import java.util.List;
 
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.coredetector.ViolationsReporter;
+import org.tindalos.principle.domain.detector.sap.SAPResult;
 
 public class SAPViolationsReporter implements ViolationsReporter<SAPResult> {
 
@@ -11,7 +12,7 @@ public class SAPViolationsReporter implements ViolationsReporter<SAPResult> {
 		List<Package> outlierPackages = result.getOutlierPackages();
 		String sectionLine = "==============================================================";
 		StringBuffer sb = new StringBuffer("\n" + sectionLine + "\n");
-		sb.append("\tStable Abstractions Principle violations\t");
+		sb.append("\tStable Abstractions Principle violations ("+outlierPackages.size()+" of allowed "+result.getThreshold()+" )\t");
 		sb.append("\n" + sectionLine + "\n");
 
 		if (outlierPackages.isEmpty()) {

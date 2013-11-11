@@ -1,11 +1,11 @@
-package org.tindalos.principle.domain.detector.sdp;
+package org.tindalos.principle.infrastructure.reporters;
 
 import java.util.List;
 
-import org.tindalos.principle.domain.core.Cycle;
-import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.coredetector.ViolationsReporter;
+import org.tindalos.principle.domain.detector.sdp.SDPResult;
+import org.tindalos.principle.domain.detector.sdp.SDPViolation;
 
 public class SDPViolationsReporter implements ViolationsReporter<SDPResult> {
 
@@ -13,7 +13,7 @@ public class SDPViolationsReporter implements ViolationsReporter<SDPResult> {
 		List<SDPViolation> violations = result.getViolations();
 		String sectionLine = "==============================================================";
 		StringBuffer sb = new StringBuffer("\n" + sectionLine + "\n");
-		sb.append("\tStable Dependencies Principle violations\t");
+		sb.append("\tStable Dependencies Principle violations ("+violations.size()+" of allowed "+result.getThreshold()+" )\t");
 		sb.append("\n" + sectionLine + "\n");
 
 		if (violations.isEmpty()) {

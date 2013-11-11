@@ -28,4 +28,8 @@ public class APDResult implements CheckResult {
 		return cycles.size() > expectation.getViolationsThreshold();
 	}
 
+    public Integer getThreshold() {
+        return expectation.getViolationsThreshold();
+    }
+
 }

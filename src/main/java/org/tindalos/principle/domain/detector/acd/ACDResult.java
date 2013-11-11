@@ -43,6 +43,20 @@ public class ACDResult implements CheckResult {
 		return actual > expectation.getThreshold();
 	}
 
+    public Double getACDThreshold() {
+        if (packageCouplingExpectation.getACD() == null) {
+            return 999d;
+        }
+        return packageCouplingExpectation.getACD().getThreshold();
+    }
+
+    public Double getRACDThreshold() {
+        if (packageCouplingExpectation.getRACD() == null) {
+            return 999d;
+        }
+        return packageCouplingExpectation.getRACD().getThreshold();
+    }
+
 
 
 }

@@ -1,8 +1,10 @@
-package org.tindalos.principle.domain.detector.layering;
+package org.tindalos.principle.infrastructure.reporters;
 
 import java.util.List;
 
 import org.tindalos.principle.domain.coredetector.ViolationsReporter;
+import org.tindalos.principle.domain.detector.layering.LayerReference;
+import org.tindalos.principle.domain.detector.layering.LayerViolationsResult;
 
 public class LayerViolationsReporter implements ViolationsReporter<LayerViolationsResult> {
     
@@ -10,7 +12,7 @@ public class LayerViolationsReporter implements ViolationsReporter<LayerViolatio
         List<LayerReference> layerReferences = result.getViolations();
         String sectionLine = "==============================================================";
         StringBuffer sb = new StringBuffer("\n" + sectionLine + "\n");
-        sb.append("\tLayering violations\t");
+        sb.append("\tLayering violations ("+layerReferences.size()+" of allowed "+result.getThreshold()+" )\t");
         sb.append("\n" + sectionLine + "\n");
         
 		if (layerReferences.isEmpty()) {

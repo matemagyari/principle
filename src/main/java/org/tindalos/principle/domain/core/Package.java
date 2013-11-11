@@ -27,20 +27,17 @@ public abstract class Package {
 		return reference;
 	}
 
-	public void insert(Package aPackage) {
-		if (this.equals(aPackage)) {
-			throw new PackageStructureBuildingException("Attempted to insert into itself " + this);
-		}
-		if (this.doesNotContain(aPackage)) {
-			throw new PackageStructureBuildingException("Attempted to insert " + aPackage + " into " + this);
-		}
-		if (this.isDirectSuperPackageOf(aPackage)) {
-			subPackages.add(aPackage);
-		} else {
-			insertIndirectSubPackage(aPackage);
-		}
-
-	}
+    public void insert(Package aPackage) {
+        if (this.equals(aPackage)) {
+            throw new PackageStructureBuildingException("Attempted to insert into itself " + this);
+        } else if (this.doesNotContain(aPackage)) {
+            throw new PackageStructureBuildingException("Attempted to insert " + aPackage + " into " + this);
+        } else if (this.isDirectSuperPackageOf(aPackage)) {
+            subPackages.add(aPackage);
+        } else {
+            insertIndirectSubPackage(aPackage);
+        }
+    }
 
 	// it dies if there are cycles
 	// through references, not through subPackages. transaitive too
@@ -68,6 +65,12 @@ public abstract class Package {
 		}
 	}
 
+
+    private void insertIndirectSubPackage(Package aPackage) {
+        String relativeNameOfDirectSubPackage = aPackage.firstPartOfRelativeNameTo(this);
+        getSubPackageByRelativeName(relativeNameOfDirectSubPackage).insert(aPackage);
+    }
+    
 	// all the references going out from this package
 	private Set<PackageReference> accumulatedDirectPackageReferences() {
 		Set<PackageReference> packageReferences = Sets.newHashSet();
@@ -89,7 +92,7 @@ public abstract class Package {
 	}
 	
 	public CyclesInSubgraph detectCycles(Map<PackageReference, Package> packageReferences) {
-		return detectCyclesOnThePathFromHere(new ArrayList<PackageReference>(), CyclesInSubgraph.empty(), packageReferences);
+		return detectCyclesOnThePathFromHere(TraversedPackages.empty(), CyclesInSubgraph.empty(), packageReferences);
 	}
 
 	public Map<PackageReference, Package> toMap() {
@@ -104,10 +107,6 @@ public abstract class Package {
 		return this.getReference().isNotAnAncestorOf(aPackage.getReference());
 	}
 
-	private void insertIndirectSubPackage(Package aPackage) {
-		String relativeNameOfDirectSubPackage = aPackage.firstPartOfRelativeNameTo(this);
-		getSubPackageByRelativeName(relativeNameOfDirectSubPackage).insert(aPackage);
-	}
 
 	protected Package createNew(String name) {
 		return new Package(name) {
@@ -139,7 +138,7 @@ public abstract class Package {
 	}
 
 	private CyclesInSubgraph detectCyclesOnThePathFromHere(
-			List<PackageReference> traversedPackages, 
+			TraversedPackages traversedPackages, 
 			CyclesInSubgraph foundCycles,
 			Map<PackageReference, Package> packageReferences) {
 
@@ -151,18 +150,15 @@ public abstract class Package {
 			if (isValid(cycleCandidateEndingHere.get())) {
 				foundCycles.add(new Cycle(cycleCandidateEndingHere.get()));
 			}
-			return foundCycles;
 		} else {
 			for (Package referencedPackage : this.accumulatedDirectlyReferredPackages(packageReferences)) {
 
-				List<PackageReference> updatedTraversedPackages = Lists.newArrayList(traversedPackages);
-				updatedTraversedPackages.add(this.getReference());
-				CyclesInSubgraph cyclesInSubgraph = referencedPackage.detectCyclesOnThePathFromHere(updatedTraversedPackages, foundCycles, packageReferences);
+				CyclesInSubgraph cyclesInSubgraph = referencedPackage.detectCyclesOnThePathFromHere(traversedPackages.add(this.getReference()), foundCycles, packageReferences);
 
 				foundCycles.mergeIn(cyclesInSubgraph);
 			}
-			return foundCycles;
 		}
+		return foundCycles;
 	}
 
 	private boolean notEveryNodeUnderFirst(List<PackageReference> cycleCandidate) {
@@ -182,12 +178,12 @@ public abstract class Package {
 		return notEveryNodeUnderFirst(cycleCandidate);
 	}
 
-	private Optional<List<PackageReference>> findCycleCandidateEndingHere(List<PackageReference> traversedPackages) {
+	private Optional<List<PackageReference>> findCycleCandidateEndingHere(TraversedPackages traversedPackages) {
 
-		int indexOfThisPackage = indexInTraversedPath(traversedPackages);
+		int indexOfThisPackage = indexInTraversedPath(traversedPackages.toList());
 		if (indexOfThisPackage > -1) {
 
-			List<PackageReference> cycleCandidate = traversedPackages.subList(indexOfThisPackage, traversedPackages.size());
+			List<PackageReference> cycleCandidate = traversedPackages.from(indexOfThisPackage);
 
 			return Optional.of(cycleCandidate);
 		} else {
@@ -288,6 +284,27 @@ public abstract class Package {
 		return this.reference.toString();
 	}
 	
+	private static class TraversedPackages {
+	    private List<PackageReference> packages;
+	    static TraversedPackages empty() {
+	        return new TraversedPackages(new ArrayList<PackageReference>());
+	    }
+        List<PackageReference> toList() {
+            return Lists.newArrayList(packages);
+        }
+        TraversedPackages add(PackageReference reference) {
+            List<PackageReference> copy = toList();
+            copy.add(reference);
+            return new TraversedPackages(copy);
+        }
+        List<PackageReference> from(int index) {
+            return packages.subList(index, packages.size());
+        }
+        private TraversedPackages(List<PackageReference> sofar) {
+            this.packages = Lists.newArrayList(sofar);
+        }
+	    
+	}
 	private static class CycleDetectionParameters {
 		List<PackageReference> traversedPackages;
 		CyclesInSubgraph foundCycles;

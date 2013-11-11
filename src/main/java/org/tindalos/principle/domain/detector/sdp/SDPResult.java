@@ -24,5 +24,10 @@ public class SDPResult implements CheckResult {
 	public boolean expectationsFailed() {
 		return violations.size() > expectation.getViolationsThreshold();
 	}
+	
+
+    public Integer getThreshold() {
+        return expectation.getViolationsThreshold();
+    }
 
 }

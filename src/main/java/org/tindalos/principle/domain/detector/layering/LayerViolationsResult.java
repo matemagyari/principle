@@ -25,4 +25,8 @@ public class LayerViolationsResult implements CheckResult {
 		return references.size() > layeringExpectations.getViolationsThreshold();
 	}
 
+    public Integer getThreshold() {
+        return layeringExpectations.getViolationsThreshold();
+    }
+
 }
