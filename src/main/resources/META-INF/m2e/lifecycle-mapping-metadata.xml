@@ -7,8 +7,7 @@
 				</goals>
 			</pluginExecutionFilter>
 			<action>
-				<runOnIncremental>true</runOnIncremental>
-				<runOnConfiguration>true</runOnConfiguration>
+				<ignore />
 			</action>
 		</pluginExecution>
 	</pluginExecutions>
