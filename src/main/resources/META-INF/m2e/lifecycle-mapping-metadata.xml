@@ -1,0 +1,15 @@
+<lifecycleMappingMetadata>
+	<pluginExecutions>
+		<pluginExecution>
+			<pluginExecutionFilter>
+				<goals>
+					<goal>check</goal>
+				</goals>
+			</pluginExecutionFilter>
+			<action>
+				<runOnIncremental>true</runOnIncremental>
+				<runOnConfiguration>true</runOnConfiguration>
+			</action>
+		</pluginExecution>
+	</pluginExecutions>
+</lifecycleMappingMetadata>
