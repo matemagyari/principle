@@ -1,0 +1,14 @@
+<lifecycleMappingMetadata>
+	<pluginExecutions>
+		<pluginExecution>
+			<pluginExecutionFilter>
+				<goals>
+					<goal>check</goal>
+				</goals>
+			</pluginExecutionFilter>
+			<action>
+				<ignore />
+			</action>
+		</pluginExecution>
+	</pluginExecutions>
+</lifecycleMappingMetadata>
