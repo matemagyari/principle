@@ -55,11 +55,10 @@
 
 	<build>
 		<plugins>
-		<!-- 
 			<plugin>
 				<groupId>org.tindalos.principle</groupId>
 				<artifactId>principle</artifactId>
-				<version>0.13</version>
+				<version>0.15</version>
 				<configuration>
 					<basePackage>org.tindalos.principle</basePackage>
 					<checks>
@@ -97,7 +96,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			 -->
 		</plugins>
 		<pluginManagement>
 			<plugins>

@@ -5,5 +5,7 @@ public interface DesignQualityExpectations {
 	Layering getLayering();
 
 	PackageCoupling getPackageCoupling();
+	
+	SubmodulesDefinitionLocation getSubmodulesDefinitionLocation();
 
 }
