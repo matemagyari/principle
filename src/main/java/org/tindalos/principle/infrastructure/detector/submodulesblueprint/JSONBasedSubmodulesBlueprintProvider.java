@@ -3,7 +3,6 @@ package org.tindalos.principle.infrastructure.detector.submodulesblueprint;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,7 +18,6 @@ import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefin
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleId;
 import org.tindalos.principle.domain.expectations.SubmodulesDefinitionLocation;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
@@ -34,40 +32,49 @@ public class JSONBasedSubmodulesBlueprintProvider implements SubmoduleDefinition
 		try {
 			JSONObject jsonObject = new JSONObject(json);
 			
-			Map<SubmoduleId, SubmoduleDefinition> submoduleDefinitionMap = Maps.newHashMap();
-
-			JSONArray definitions = jsonObject.getJSONArray("subdmoduledefinitions");
-			for (int i = 0; i < definitions.length(); i++) {
-				JSONObject definition = (JSONObject) definitions.get(i);
-				
-				SubmoduleId submoduleId = getSubmoduleId(definition);
-				
-				Set<PackageReference> packages = transformToPackageReferences(definition.getJSONArray(submoduleId.value()));
-				SubmoduleDefinition submoduleDefinition = new SubmoduleDefinition(submoduleId, packages);
-				
-				submoduleDefinitionMap.put(submoduleId, submoduleDefinition);
-			}
+			Map<SubmoduleId, SubmoduleDefinition> submoduleDefinitionMap = builSubmoduleDefinitions(jsonObject);
 			
-			JSONArray dependencies = jsonObject.getJSONArray("subdmoduledependencies");
-			for (int i = 0; i < dependencies.length(); i++) {
-				JSONObject dependency = (JSONObject) dependencies.get(i);
-				
-				SubmoduleId submoduleId = getSubmoduleId(dependency);
-				
-				Collection<SubmoduleId> plannedDependencies = transformToSubmoduleIds(dependency.getJSONArray(submoduleId.value()));
-				SubmoduleDefinition submoduleDefinition = submoduleDefinitionMap.get(submoduleId);
-				
-				if (submoduleDefinition == null) {
-					throw new InvalidBlueprintDefinitionException("Submodule not defined: " + submoduleId);
-				}
-				submoduleDefinition.addPlannedDependencies(plannedDependencies);
-			}
+			addDependencies(jsonObject, submoduleDefinitionMap);
 			
 			return new SubmoduleDefinitions(submoduleDefinitionMap);
 
 		} catch (JSONException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private static void addDependencies(JSONObject jsonObject, Map<SubmoduleId, SubmoduleDefinition> submoduleDefinitionMap) throws JSONException {
+		JSONArray dependencies = jsonObject.getJSONArray("subdmoduledependencies");
+		for (int i = 0; i < dependencies.length(); i++) {
+			JSONObject dependency = (JSONObject) dependencies.get(i);
+			
+			SubmoduleId submoduleId = getSubmoduleId(dependency);
+			
+			Collection<SubmoduleId> plannedDependencies = transformToSubmoduleIds(dependency.getJSONArray(submoduleId.value()));
+			SubmoduleDefinition submoduleDefinition = submoduleDefinitionMap.get(submoduleId);
+			
+			if (submoduleDefinition == null) {
+				throw new InvalidBlueprintDefinitionException("Submodule not defined: " + submoduleId);
+			}
+			submoduleDefinition.addPlannedDependencies(plannedDependencies);
+		}
+	}
+
+	private static Map<SubmoduleId, SubmoduleDefinition> builSubmoduleDefinitions(JSONObject jsonObject) throws JSONException {
+		Map<SubmoduleId, SubmoduleDefinition> submoduleDefinitionMap = Maps.newHashMap();
+
+		JSONArray definitions = jsonObject.getJSONArray("subdmoduledefinitions");
+		for (int i = 0; i < definitions.length(); i++) {
+			JSONObject definition = (JSONObject) definitions.get(i);
+			
+			SubmoduleId submoduleId = getSubmoduleId(definition);
+			
+			Set<PackageReference> packages = transformToPackageReferences(definition.getJSONArray(submoduleId.value()));
+			SubmoduleDefinition submoduleDefinition = new SubmoduleDefinition(submoduleId, packages);
+			
+			submoduleDefinitionMap.put(submoduleId, submoduleDefinition);
+		}
+		return submoduleDefinitionMap;
 	}
 
 	private static SubmoduleId getSubmoduleId(JSONObject jsonObject) {
