@@ -3,7 +3,6 @@ package org.tindalos.principle.domain.core;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class PackageReference implements Comparable<PackageReference> {
-    //DesignQualityCheckerMojo checkerMojo;
 
     private final String name;
 
@@ -33,8 +32,13 @@ public class PackageReference implements Comparable<PackageReference> {
     }
     
     public boolean pointsInside(PackageReference reference) {
-        return reference.startsWith(this.name + ".");
+        return this.startsWith(reference.name + ".");
     }
+
+    public boolean pointsToThatOrInside(PackageReference reference) {
+        return this.equals(reference) || this.pointsInside(reference);
+    }
+    
     public boolean isDescendantOf(PackageReference reference) {
         return this.startsWith(reference.name + ".");
     }

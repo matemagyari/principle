@@ -1,7 +1,7 @@
 package org.tindalos.principle.domain.expectations;
 
 
-public class ADP extends Thresholders {
+public class ADP extends Thresholder {
 
 	public ADP() {
 	}

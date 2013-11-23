@@ -7,7 +7,7 @@ import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.expectations.DesignQualityExpectations;
 import org.tindalos.principle.domain.expectations.Layering;
 import org.tindalos.principle.domain.expectations.PackageCoupling;
-import org.tindalos.principle.domain.expectations.SubmodulesDefinitionLocation;
+import org.tindalos.principle.domain.expectations.SubmodulesBlueprint;
 
 import com.google.common.collect.Lists;
 
@@ -38,8 +38,8 @@ public class CheckInput {
     public Layering getLayeringExpectations() {
     	return getExpectations().getLayering();
     }
-    public SubmodulesDefinitionLocation getSubmodulesDefinitionLocation() {
-        return getExpectations().getSubmodulesDefinitionLocation();
+    public SubmodulesBlueprint getSubmodulesBlueprint() {
+        return getExpectations().getSubmodulesBlueprint();
     }
     
     private DesignQualityExpectations getExpectations() {

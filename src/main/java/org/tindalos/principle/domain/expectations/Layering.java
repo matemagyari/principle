@@ -6,7 +6,7 @@ import org.tindalos.principle.domain.expectations.exception.InvalidConfiguration
 
 import com.google.common.collect.Lists;
 
-public class Layering extends Thresholders {
+public class Layering extends Thresholder {
 
 	private List<String> layers;
 

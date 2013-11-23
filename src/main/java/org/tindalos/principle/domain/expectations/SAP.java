@@ -1,7 +1,7 @@
 package org.tindalos.principle.domain.expectations;
 
 
-public class SAP extends Thresholders {
+public class SAP extends Thresholder {
 	
 	private Double maxDistance;
 	

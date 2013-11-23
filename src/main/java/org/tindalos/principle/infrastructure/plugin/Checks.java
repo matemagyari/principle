@@ -3,13 +3,13 @@ package org.tindalos.principle.infrastructure.plugin;
 import org.tindalos.principle.domain.expectations.DesignQualityExpectations;
 import org.tindalos.principle.domain.expectations.Layering;
 import org.tindalos.principle.domain.expectations.PackageCoupling;
-import org.tindalos.principle.domain.expectations.SubmodulesDefinitionLocation;
+import org.tindalos.principle.domain.expectations.SubmodulesBlueprint;
 
 public class Checks implements DesignQualityExpectations {
 	
 	private Layering layering;
 	private PackageCoupling packageCoupling;
-	private SubmodulesDefinitionLocation submodulesDefinitionLocation;
+	private SubmodulesBlueprint submodulesBlueprint;
 	
 	public Layering getLayering() {
 		return layering;
@@ -27,11 +27,11 @@ public class Checks implements DesignQualityExpectations {
 		this.packageCoupling = packageCoupling;
 	}
 
-    public SubmodulesDefinitionLocation getSubmodulesDefinitionLocation() {
-        return this.submodulesDefinitionLocation;
+    public SubmodulesBlueprint getSubmodulesBlueprint() {
+        return this.submodulesBlueprint;
     }
     
-    public void setSubmodulesDefinitionLocation(SubmodulesDefinitionLocation submodulesDefinitionLocation) {
-        this.submodulesDefinitionLocation = submodulesDefinitionLocation;
+    public void setSubmodulesBlueprint(SubmodulesBlueprint submodulesBlueprint) {
+        this.submodulesBlueprint = submodulesBlueprint;
     }
 }

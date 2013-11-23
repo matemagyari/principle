@@ -1,0 +1,108 @@
+package org.tindalos.principle.infrastructure.detector.submodulesblueprint;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.tindalos.principle.domain.core.PackageReference;
+import org.tindalos.principle.domain.detector.submodulesblueprint.InvalidBlueprintDefinitionException;
+import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefinition;
+import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefinitions;
+import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefinitionsProvider;
+import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleId;
+import org.tindalos.principle.domain.expectations.SubmodulesDefinitionLocation;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+
+public class JSONBasedSubmodulesBlueprintProvider implements SubmoduleDefinitionsProvider {
+
+	public SubmoduleDefinitions readSubmoduleDefinitions(SubmodulesDefinitionLocation submodulesDefinitionLocation) {
+		String json = getJSON(submodulesDefinitionLocation);
+		return processJSON(json);
+	}
+
+	private static SubmoduleDefinitions processJSON(String json) {
+		try {
+			JSONObject jsonObject = new JSONObject(json);
+			
+			Map<SubmoduleId, SubmoduleDefinition> submoduleDefinitionMap = Maps.newHashMap();
+
+			JSONArray definitions = jsonObject.getJSONArray("subdmoduledefinitions");
+			for (int i = 0; i < definitions.length(); i++) {
+				JSONObject definition = (JSONObject) definitions.get(i);
+				
+				SubmoduleId submoduleId = getSubmoduleId(definition);
+				
+				Set<PackageReference> packages = transformToPackageReferences(definition.getJSONArray(submoduleId.value()));
+				SubmoduleDefinition submoduleDefinition = new SubmoduleDefinition(submoduleId, packages);
+				
+				submoduleDefinitionMap.put(submoduleId, submoduleDefinition);
+			}
+			
+			JSONArray dependencies = jsonObject.getJSONArray("subdmoduledependencies");
+			for (int i = 0; i < dependencies.length(); i++) {
+				JSONObject dependency = (JSONObject) dependencies.get(i);
+				
+				SubmoduleId submoduleId = getSubmoduleId(dependency);
+				
+				Collection<SubmoduleId> plannedDependencies = transformToSubmoduleIds(dependency.getJSONArray(submoduleId.value()));
+				SubmoduleDefinition submoduleDefinition = submoduleDefinitionMap.get(submoduleId);
+				
+				if (submoduleDefinition == null) {
+					throw new InvalidBlueprintDefinitionException("Submodule not defined: " + submoduleId);
+				}
+				submoduleDefinition.addPlannedDependencies(plannedDependencies);
+			}
+			
+			return new SubmoduleDefinitions(submoduleDefinitionMap);
+
+		} catch (JSONException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static SubmoduleId getSubmoduleId(JSONObject jsonObject) {
+		
+		String submoduleName = (String) jsonObject.keys().next();
+		/*
+		if (jsonObject.keys().hasNext()) {
+			throw new InvalidBlueprintDefinitionException(submoduleName + " - something is wrong with: " + jsonObject+ ". Should not have new key " + jsonObject.keys().next());
+		}
+		*/
+		return new SubmoduleId(submoduleName);
+	}
+
+	private static Collection<SubmoduleId> transformToSubmoduleIds(JSONArray dependencies) throws JSONException {
+		Set<SubmoduleId> submodules = Sets.newHashSet();
+		for (int i = 0; i < dependencies.length(); i++) {
+			submodules.add(new SubmoduleId(dependencies.getString(i)));
+		}
+		return submodules;
+	}
+
+	private static Set<PackageReference> transformToPackageReferences(JSONArray packageNames) throws JSONException {
+		Set<PackageReference> packages = Sets.newHashSet();
+		for (int i = 0; i < packageNames.length(); i++) {
+			packages.add(new PackageReference(packageNames.getString(i)));
+		}
+		return packages;
+	}
+
+	private static String getJSON(SubmodulesDefinitionLocation submodulesDefinitionLocation) {
+		try {
+			return FileUtils.readFileToString(new File(submodulesDefinitionLocation.filePath()));
+		} catch (IOException e) {
+			throw new InvalidBlueprintDefinitionException("problem with reading file from " + submodulesDefinitionLocation.filePath());
+		}
+	}
+
+}

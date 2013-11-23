@@ -5,12 +5,10 @@ import java.util.List;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.coredetector.CheckResult;
 import org.tindalos.principle.domain.expectations.SAP;
-import org.tindalos.principle.infrastructure.service.jdepend.PackageFactory;
 
 import com.google.common.collect.Lists;
 
 public class SAPResult implements CheckResult {
-	PackageFactory ccc;
 	
 	private final List<Package> outlierPackages;
 	private final SAP sapExpectation;

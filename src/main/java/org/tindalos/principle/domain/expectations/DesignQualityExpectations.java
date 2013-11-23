@@ -6,6 +6,6 @@ public interface DesignQualityExpectations {
 
 	PackageCoupling getPackageCoupling();
 	
-	SubmodulesDefinitionLocation getSubmodulesDefinitionLocation();
+	SubmodulesBlueprint getSubmodulesBlueprint();
 
 }

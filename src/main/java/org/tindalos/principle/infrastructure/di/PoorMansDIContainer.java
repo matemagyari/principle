@@ -20,12 +20,20 @@ import org.tindalos.principle.domain.detector.sap.SAPResult;
 import org.tindalos.principle.domain.detector.sap.SAPViolationDetector;
 import org.tindalos.principle.domain.detector.sdp.SDPResult;
 import org.tindalos.principle.domain.detector.sdp.SDPViolationDetector;
+import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefinitionsProvider;
+import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleFactory;
+import org.tindalos.principle.domain.detector.submodulesblueprint.SubmodulesBlueprintCheckResult;
+import org.tindalos.principle.domain.detector.submodulesblueprint.SubmodulesBlueprintViolationDetector;
+import org.tindalos.principle.domain.detector.submodulesblueprint.SubmodulesFactory;
 import org.tindalos.principle.domain.resultprocessing.reporter.DesignQualityCheckResultsReporter;
+import org.tindalos.principle.infrastructure.detector.submodulesblueprint.JSONBasedSubmodulesBlueprintProvider;
+import org.tindalos.principle.infrastructure.detector.submodulesblueprint.JSONBasedSubmodulesBlueprintProvider;
 import org.tindalos.principle.infrastructure.reporters.ACDViolationsReporter;
 import org.tindalos.principle.infrastructure.reporters.APDViolationsReporter;
 import org.tindalos.principle.infrastructure.reporters.LayerViolationsReporter;
 import org.tindalos.principle.infrastructure.reporters.SAPViolationsReporter;
 import org.tindalos.principle.infrastructure.reporters.SDPViolationsReporter;
+import org.tindalos.principle.infrastructure.reporters.SubmodulesBlueprintViolationsReporter;
 import org.tindalos.principle.infrastructure.service.jdepend.JDependPackageAnalyzer;
 import org.tindalos.principle.infrastructure.service.jdepend.JDependRunner;
 import org.tindalos.principle.infrastructure.service.jdepend.MetricsCalculator;
@@ -51,8 +59,13 @@ public class PoorMansDIContainer {
         SAPViolationDetector sapViolationDetector = new SAPViolationDetector();
         ACDDetector acdDetector = new ACDDetector(packageStructureBuilder);
         LayerViolationDetector layerViolationDetector = new LayerViolationDetector();
+        
+        SubmoduleDefinitionsProvider submoduleDefinitionsProvider = new JSONBasedSubmodulesBlueprintProvider();
+		SubmoduleFactory submoduleFactory = new SubmoduleFactory();
+		SubmodulesFactory submodulesFactory = new SubmodulesFactory(packageStructureBuilder, submoduleDefinitionsProvider, submoduleFactory);
+		SubmodulesBlueprintViolationDetector submodulesBlueprintViolationDetector = new SubmodulesBlueprintViolationDetector(submodulesFactory );
 
-        DesignQualityDetectorsRunner designQualityDetectorsRunner = new DesignQualityDetectorsRunner(layerViolationDetector, cycleDetector, sdpViolationDetector, sapViolationDetector, acdDetector);
+        DesignQualityDetectorsRunner designQualityDetectorsRunner = new DesignQualityDetectorsRunner(layerViolationDetector, cycleDetector, sdpViolationDetector, sapViolationDetector, acdDetector, submodulesBlueprintViolationDetector);
         return new DesignQualityCheckService(packageAnalyzer, designQualityDetectorsRunner);
     }
 
@@ -65,6 +78,7 @@ public class PoorMansDIContainer {
 		reporters.put(SDPResult.class, new SDPViolationsReporter());
 		reporters.put(SAPResult.class, new SAPViolationsReporter());
 		reporters.put(ACDResult.class, new ACDViolationsReporter());
+		reporters.put(SubmodulesBlueprintCheckResult.class, new SubmodulesBlueprintViolationsReporter());
 		
 		return new DesignQualityCheckResultsReporter(reporters);
 	}

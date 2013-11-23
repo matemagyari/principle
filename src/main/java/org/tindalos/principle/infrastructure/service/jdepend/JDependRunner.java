@@ -13,7 +13,8 @@ public class JDependRunner {
         
         try {
             JDepend jDepend = new JDepend();
-            jDepend.addDirectory("./target/classes");
+            String directory = "./target/classes/"+basePackage.replaceAll("\\.", "/");
+			jDepend.addDirectory(directory);
             
             jDepend.addPackage(basePackage);
             return jDepend.analyze();

@@ -104,7 +104,7 @@ public abstract class Package {
 	}
 
 	private boolean doesNotContain(Package aPackage) {
-		return this.getReference().isNotAnAncestorOf(aPackage.getReference());
+		return !aPackage.getReference().pointsInside(this.getReference());
 	}
 
 
