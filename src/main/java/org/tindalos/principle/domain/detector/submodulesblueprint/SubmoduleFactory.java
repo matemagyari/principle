@@ -27,7 +27,7 @@ public class SubmoduleFactory {
 		
 		Set<Package> packages = resolve(packageMap, submoduleDefinition.getPackages());
 		Submodule submodule = new Submodule(submoduleDefinition.getId(), packages);
-		submodule.setPlannedDependencies(submoduleDefinition.getPlannedDependencies());
+		submodule.defineDependencies(submoduleDefinition.getPlannedDependencies());
 		return submodule;
 	}
 

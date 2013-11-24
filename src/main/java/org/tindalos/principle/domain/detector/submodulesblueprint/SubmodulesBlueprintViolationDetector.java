@@ -33,7 +33,7 @@ public class SubmodulesBlueprintViolationDetector implements Detector {
 		for (Submodule submodule : submodules) {
 			Set<Submodule> otherSubmodules = allBut(submodules, submodule);
 			Set<Submodule> illegalDependencies = submodule.findIllegalDependencies(otherSubmodules);
-			Set<Submodule> missingDependencies = submodule.findMissingDependencies(otherSubmodules);
+			Set<Submodule> missingDependencies = submodule.findMissingPredefinedDependencies(otherSubmodules);
 			if (!illegalDependencies.isEmpty())
 				allIllegalDependencies.put(submodule, illegalDependencies);
 			if (!missingDependencies.isEmpty())
