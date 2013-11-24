@@ -51,9 +51,10 @@ public class Submodule {
     	
     	Set<Submodule> legalDependencies = filterLegalDependencies(otherSubmodules);
     	
-    	otherSubmodules.removeAll(legalDependencies);
+    	Set<Submodule> otherSubmodulesCopy = Sets.newHashSet(otherSubmodules);
+    	otherSubmodulesCopy.removeAll(legalDependencies);
     	
-    	if (otherSubmodules.isEmpty()) {
+    	if (otherSubmodulesCopy.isEmpty()) {
     		return Sets.newHashSet();
     	}
     	
@@ -64,7 +65,7 @@ public class Submodule {
                 return dependsOnBy(aSubmodule, extraReferences);
             }
         };
-        return Sets.newHashSet(Iterables.filter(otherSubmodules, illegalDependenciesPredicate));
+        return Sets.newHashSet(Iterables.filter(otherSubmodulesCopy, illegalDependenciesPredicate));
     }
 
 	private Set<Submodule> filterLegalDependencies(Set<Submodule> others) {

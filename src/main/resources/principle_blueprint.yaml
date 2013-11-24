@@ -1,0 +1,19 @@
+# Map submodules to packages 
+
+  subdmodule-definitions: 
+  
+    EXPECTATIONS: [domain.expectations]
+    CORE: [domain.core]
+    COREDETECTOR: [domain.coredetector]
+    DETECTOR: [domain.detector, infrastructure.reporters]
+    CHECKER: [domain.checker]
+
+# Define dependencies between submodules
+
+  subdmodule-dependencies: 
+
+    EXPECTATIONS: []
+    CORE: [EXPECTATIONS]
+    COREDETECTOR: [CORE, EXPECTATIONS]
+    DETECTOR: [CORE,COREDETECTOR,EXPECTATIONS]
+    CHECKER: [CORE, COREDETECTOR]

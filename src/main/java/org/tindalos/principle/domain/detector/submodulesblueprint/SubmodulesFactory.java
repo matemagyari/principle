@@ -23,7 +23,7 @@ public class SubmodulesFactory {
     public List<Submodule> buildSubmodules(SubmodulesDefinitionLocation submodulesDefinitionLocation,
             List<Package> packages, String basePackageName) {
        
-        SubmoduleDefinitions submoduleDefinitions = submoduleDefinitionsProvider.readSubmoduleDefinitions(submodulesDefinitionLocation);
+        SubmoduleDefinitions submoduleDefinitions = submoduleDefinitionsProvider.readSubmoduleDefinitions(submodulesDefinitionLocation, basePackageName);
         Package basePackage = packageStructureBuilder.build(packages, basePackageName);
 
         return submoduleFactory.buildModules(submoduleDefinitions, basePackage.toMap());

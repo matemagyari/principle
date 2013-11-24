@@ -1,13 +1,13 @@
 {
    "subdmoduledefinitions": {
-      "EXPECTATIONS": [ "org.tindalos.principle.domain.expectations"],
-      "CORE": [ "org.tindalos.principle.domain.core"],      
-      "COREDETECTOR": [ "org.tindalos.principle.domain.coredetector"],
+      "EXPECTATIONS": [ "domain.expectations"],
+      "CORE": [ "domain.core"],      
+      "COREDETECTOR": [ "domain.coredetector"],
       "DETECTOR": [
-            "org.tindalos.principle.domain.detector",
-            "org.tindalos.principle.infrastructure.reporters"
+            "domain.detector",
+            "infrastructure.reporters"
          ],
-      "CHECKER": [ "org.tindalos.principle.domain.checker"]
+      "CHECKER": [ "domain.checker"]
    },
    "subdmoduledependencies": {
       "EXPECTATIONS": [],

@@ -24,16 +24,16 @@ import com.google.common.collect.Sets;
 
 public class JSONBasedSubmodulesBlueprintProvider implements SubmoduleDefinitionsProvider {
 
-	public SubmoduleDefinitions readSubmoduleDefinitions(SubmodulesDefinitionLocation submodulesDefinitionLocation) {
+	public SubmoduleDefinitions readSubmoduleDefinitions(SubmodulesDefinitionLocation submodulesDefinitionLocation, String basePackageName) {
 		String json = getJSON(submodulesDefinitionLocation);
-		return processJSON(json);
+		return processJSON(json, basePackageName);
 	}
 
-	private static SubmoduleDefinitions processJSON(String json) {
+	private static SubmoduleDefinitions processJSON(String json, String basePackageName) {
 		try {
 			JSONObject jsonObject = new JSONObject(json);
 			
-			Map<SubmoduleId, SubmoduleDefinition> submoduleDefinitionMap = builSubmoduleDefinitions(jsonObject);
+			Map<SubmoduleId, SubmoduleDefinition> submoduleDefinitionMap = buildSubmoduleDefinitions(jsonObject,basePackageName);
 			
 			addDependencies(jsonObject, submoduleDefinitionMap);
 			
@@ -66,7 +66,7 @@ public class JSONBasedSubmodulesBlueprintProvider implements SubmoduleDefinition
 	}
 
 	@SuppressWarnings("unchecked")
-	private static Map<SubmoduleId, SubmoduleDefinition> builSubmoduleDefinitions(JSONObject jsonObject) throws JSONException {
+	private static Map<SubmoduleId, SubmoduleDefinition> buildSubmoduleDefinitions(JSONObject jsonObject, String basePackageName) throws JSONException {
 		Map<SubmoduleId, SubmoduleDefinition> submoduleDefinitionMap = Maps.newHashMap();
 		
 		JSONObject definitions = jsonObject.getJSONObject("subdmoduledefinitions");
@@ -77,7 +77,7 @@ public class JSONBasedSubmodulesBlueprintProvider implements SubmoduleDefinition
 		while(keys.hasNext()) {
 			SubmoduleId submoduleId = new SubmoduleId(keys.next());
 			
-			Set<PackageReference> packages = transformToPackageReferences(definitions.getJSONArray(submoduleId.value()));
+			Set<PackageReference> packages = transformToPackageReferences(definitions.getJSONArray(submoduleId.value()),basePackageName);
 			SubmoduleDefinition submoduleDefinition = new SubmoduleDefinition(submoduleId, packages);
 			
 			submoduleDefinitionMap.put(submoduleId, submoduleDefinition);
@@ -96,10 +96,10 @@ public class JSONBasedSubmodulesBlueprintProvider implements SubmoduleDefinition
 		return submodules;
 	}
 
-	private static Set<PackageReference> transformToPackageReferences(JSONArray packageNames) throws JSONException {
+	private static Set<PackageReference> transformToPackageReferences(JSONArray packageNames, String basePackageName) throws JSONException {
 		Set<PackageReference> packages = Sets.newHashSet();
 		for (int i = 0; i < packageNames.length(); i++) {
-			packages.add(new PackageReference(packageNames.getString(i)));
+			packages.add(new PackageReference(basePackageName + "." + packageNames.getString(i)));
 		}
 		return packages;
 	}

@@ -28,6 +28,7 @@ import org.tindalos.principle.domain.detector.submodulesblueprint.SubmodulesFact
 import org.tindalos.principle.domain.resultprocessing.reporter.DesignQualityCheckResultsReporter;
 import org.tindalos.principle.infrastructure.detector.submodulesblueprint.JSONBasedSubmodulesBlueprintProvider;
 import org.tindalos.principle.infrastructure.detector.submodulesblueprint.JSONBasedSubmodulesBlueprintProvider;
+import org.tindalos.principle.infrastructure.detector.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider;
 import org.tindalos.principle.infrastructure.reporters.ACDViolationsReporter;
 import org.tindalos.principle.infrastructure.reporters.APDViolationsReporter;
 import org.tindalos.principle.infrastructure.reporters.LayerViolationsReporter;
@@ -60,7 +61,8 @@ public class PoorMansDIContainer {
         ACDDetector acdDetector = new ACDDetector(packageStructureBuilder);
         LayerViolationDetector layerViolationDetector = new LayerViolationDetector();
         
-        SubmoduleDefinitionsProvider submoduleDefinitionsProvider = new JSONBasedSubmodulesBlueprintProvider();
+       // SubmoduleDefinitionsProvider submoduleDefinitionsProvider = new JSONBasedSubmodulesBlueprintProvider();
+        SubmoduleDefinitionsProvider submoduleDefinitionsProvider = new YAMLBasedSubmodulesBlueprintProvider();
 		SubmoduleFactory submoduleFactory = new SubmoduleFactory();
 		SubmodulesFactory submodulesFactory = new SubmodulesFactory(packageStructureBuilder, submoduleDefinitionsProvider, submoduleFactory);
 		SubmodulesBlueprintViolationDetector submodulesBlueprintViolationDetector = new SubmodulesBlueprintViolationDetector(submodulesFactory );

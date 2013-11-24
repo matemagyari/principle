@@ -4,6 +4,6 @@ import org.tindalos.principle.domain.expectations.SubmodulesDefinitionLocation;
 
 public interface SubmoduleDefinitionsProvider {
     
-    SubmoduleDefinitions readSubmoduleDefinitions(SubmodulesDefinitionLocation submodulesDefinitionLocation);
+    SubmoduleDefinitions readSubmoduleDefinitions(SubmodulesDefinitionLocation submodulesDefinitionLocation, String basePackageName);
 
 }

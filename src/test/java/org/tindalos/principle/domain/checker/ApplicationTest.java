@@ -54,7 +54,7 @@ public class ApplicationTest {
 	}
 
 	private SubmodulesDefinitionLocation submodulesDefinitionLocation() {
-		return new SubmodulesDefinitionLocation("src/main/resources/principle_blueprint.json");
+		return new SubmodulesDefinitionLocation("src/main/resources/principle_blueprint.yaml");
 	}
 
 	private Layering layering() {
