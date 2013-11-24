@@ -72,7 +72,7 @@ public abstract class Package {
     }
     
 	// all the references going out from this package
-	private Set<PackageReference> accumulatedDirectPackageReferences() {
+	public Set<PackageReference> accumulatedDirectPackageReferences() {
 		Set<PackageReference> packageReferences = Sets.newHashSet();
 		for (Package child : subPackages) {
 			packageReferences.addAll(child.accumulatedDirectPackageReferences());

@@ -26,7 +26,7 @@ public class SubmoduleFactory {
 	private Submodule convert(Map<PackageReference, Package> packageMap, SubmoduleDefinition submoduleDefinition) {
 		
 		Set<Package> packages = resolve(packageMap, submoduleDefinition.getPackages());
-		Submodule submodule = new Submodule(submoduleDefinition.getId(), packages, packageMap);
+		Submodule submodule = new Submodule(submoduleDefinition.getId(), packages);
 		submodule.setPlannedDependencies(submoduleDefinition.getPlannedDependencies());
 		return submodule;
 	}

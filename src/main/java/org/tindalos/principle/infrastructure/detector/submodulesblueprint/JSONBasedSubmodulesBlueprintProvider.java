@@ -3,6 +3,7 @@ package org.tindalos.principle.infrastructure.detector.submodulesblueprint;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -43,14 +44,18 @@ public class JSONBasedSubmodulesBlueprintProvider implements SubmoduleDefinition
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static void addDependencies(JSONObject jsonObject, Map<SubmoduleId, SubmoduleDefinition> submoduleDefinitionMap) throws JSONException {
-		JSONArray dependencies = jsonObject.getJSONArray("subdmoduledependencies");
-		for (int i = 0; i < dependencies.length(); i++) {
-			JSONObject dependency = (JSONObject) dependencies.get(i);
+		JSONObject dependencies = jsonObject.getJSONObject("subdmoduledependencies");
+		if (dependencies == null) {
+			throw new InvalidBlueprintDefinitionException("Submodule dependencies not defined! ");
+		}
+		Iterator<String> keys = dependencies.keys();
+		while(keys.hasNext()) {
 			
-			SubmoduleId submoduleId = getSubmoduleId(dependency);
+			SubmoduleId submoduleId = new SubmoduleId(keys.next());
 			
-			Collection<SubmoduleId> plannedDependencies = transformToSubmoduleIds(dependency.getJSONArray(submoduleId.value()));
+			Collection<SubmoduleId> plannedDependencies = transformToSubmoduleIds(dependencies.getJSONArray(submoduleId.value()));
 			SubmoduleDefinition submoduleDefinition = submoduleDefinitionMap.get(submoduleId);
 			
 			if (submoduleDefinition == null) {
@@ -60,32 +65,25 @@ public class JSONBasedSubmodulesBlueprintProvider implements SubmoduleDefinition
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static Map<SubmoduleId, SubmoduleDefinition> builSubmoduleDefinitions(JSONObject jsonObject) throws JSONException {
 		Map<SubmoduleId, SubmoduleDefinition> submoduleDefinitionMap = Maps.newHashMap();
-
-		JSONArray definitions = jsonObject.getJSONArray("subdmoduledefinitions");
-		for (int i = 0; i < definitions.length(); i++) {
-			JSONObject definition = (JSONObject) definitions.get(i);
+		
+		JSONObject definitions = jsonObject.getJSONObject("subdmoduledefinitions");
+		if (definitions == null) {
+			throw new InvalidBlueprintDefinitionException("Submodules not defined! ");
+		}
+		Iterator<String> keys = definitions.keys();
+		while(keys.hasNext()) {
+			SubmoduleId submoduleId = new SubmoduleId(keys.next());
 			
-			SubmoduleId submoduleId = getSubmoduleId(definition);
-			
-			Set<PackageReference> packages = transformToPackageReferences(definition.getJSONArray(submoduleId.value()));
+			Set<PackageReference> packages = transformToPackageReferences(definitions.getJSONArray(submoduleId.value()));
 			SubmoduleDefinition submoduleDefinition = new SubmoduleDefinition(submoduleId, packages);
 			
 			submoduleDefinitionMap.put(submoduleId, submoduleDefinition);
 		}
-		return submoduleDefinitionMap;
-	}
 
-	private static SubmoduleId getSubmoduleId(JSONObject jsonObject) {
-		
-		String submoduleName = (String) jsonObject.keys().next();
-		/*
-		if (jsonObject.keys().hasNext()) {
-			throw new InvalidBlueprintDefinitionException(submoduleName + " - something is wrong with: " + jsonObject+ ". Should not have new key " + jsonObject.keys().next());
-		}
-		*/
-		return new SubmoduleId(submoduleName);
+		return submoduleDefinitionMap;
 	}
 
 	private static Collection<SubmoduleId> transformToSubmoduleIds(JSONArray dependencies) throws JSONException {

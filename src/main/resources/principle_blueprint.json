@@ -1,61 +1,19 @@
 {
-   "subdmoduledefinitions": [
-      {
-         "EXPECTATIONS": [
-            "org.tindalos.principle.domain.expectations"
-         ]
-      },
-      {
-         "CORE": [
-            "org.tindalos.principle.domain.core"
-         ]
-      },      
-      {
-         "COREDETECTOR": [
-            "org.tindalos.principle.domain.coredetector"
-         ]
-      },
-      {
-         "DETECTOR": [
+   "subdmoduledefinitions": {
+      "EXPECTATIONS": [ "org.tindalos.principle.domain.expectations"],
+      "CORE": [ "org.tindalos.principle.domain.core"],      
+      "COREDETECTOR": [ "org.tindalos.principle.domain.coredetector"],
+      "DETECTOR": [
             "org.tindalos.principle.domain.detector",
             "org.tindalos.principle.infrastructure.reporters"
-         ]
-      }
-      ,
-      {
-         "CHECKER": [
-            "org.tindalos.principle.domain.checker"
-         ]
-      }
-   ],
-   "subdmoduledependencies": [
-      {
-         "EXPECTATIONS": []
-      },
-      {
-         "CORE": [
-            "EXPECTATIONS"
-         ]
-      },
-      {
-         "COREDETECTOR": [
-            "CORE",
-            "EXPECTATIONS"
-         ]
-      },
-      {
-         "DETECTOR": [
-            "CORE",
-            "COREDETECTOR"
-            ,"EXPECTATIONS"
-         ]
-      },
-      {
-         "CHECKER": [
-            "CORE",
-            "COREDETECTOR"
-            ,"EXPECTATIONS"
-         ]
-      }
-   ]
+         ],
+      "CHECKER": [ "org.tindalos.principle.domain.checker"]
+   },
+   "subdmoduledependencies": {
+      "EXPECTATIONS": [],
+      "CORE": [ "EXPECTATIONS" ],
+      "COREDETECTOR": [ "CORE", "EXPECTATIONS"],
+      "DETECTOR": [ "CORE", "COREDETECTOR", "EXPECTATIONS"],
+      "CHECKER": [ "CORE", "COREDETECTOR" ]
+   }
 }

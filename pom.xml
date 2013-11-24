@@ -101,10 +101,12 @@
 								<threshold>0.45</threshold>
 							</racd>
 						</packageCoupling>
+						<!-- 
 						<submodulesBlueprint>
 							<location>src/main/resources/principle_blueprint.json</location>
 							<violationsThreshold>0</violationsThreshold>
 						</submodulesBlueprint>
+						 -->
 					</checks>
 				</configuration>
 				<executions>

@@ -19,37 +19,67 @@ public class Submodule {
     private final Set<Package> packagesUnderModule;
     private final Set<PackageReference> outgoingReferences;
 
-    public Submodule(SubmoduleId id, Set<Package> packages, Map<PackageReference, Package> packageReferences) {
+    public Submodule(SubmoduleId id, Set<Package> packagesUnderModule) {
         this.id = id;
         this.plannedDependencies = Sets.newHashSet();
-        this.packagesUnderModule = Sets.newHashSet(packages);
-        this.outgoingReferences = collectOutgoingDependenies(packageReferences);
+        this.packagesUnderModule = Sets.newHashSet(packagesUnderModule);
+        this.outgoingReferences = collectOutgoingDependenies();
     }
     
-    private Set<PackageReference> collectOutgoingDependenies(Map<PackageReference, Package> packageReferences) {
+    private Set<PackageReference> collectOutgoingDependenies() {
         Set<PackageReference> allOutgoingReferences = Sets.newHashSet();
         for (Package aPackage : packagesUnderModule) {
-            Set<PackageReference> outgoingReferences = aPackage.cumulatedDependencies(packageReferences);
+            Set<PackageReference> outgoingReferences = aPackage.accumulatedDirectPackageReferences();
             allOutgoingReferences.addAll(outgoingReferences);
         }
         return allOutgoingReferences;
     }
 
-    public Set<Submodule> findUnAllowedDependencies(List<Submodule> otherSubmodules) {
+    public Set<Submodule> findIllegalDependencies(Set<Submodule> otherSubmodules) {
     	assert !otherSubmodules.contains(this);
-        Predicate<Submodule> predicate = new Predicate<Submodule>() {
+    	
+    	Set<Submodule> legalDependencies = filterLegalDependencies(otherSubmodules);
+    	
+    	otherSubmodules.removeAll(legalDependencies);
+    	
+    	if (otherSubmodules.isEmpty()) {
+    		return Sets.newHashSet();
+    	}
+    	
+    	final Set<PackageReference> potentiallyIllegalReferences = findPotentiallyIllegalReferences(legalDependencies);
+    	
+        Predicate<Submodule> unallowedDependenciesPredicate = new Predicate<Submodule>() {
             public boolean apply(Submodule aSubmodule) {
-                return  !plannedDependencies.contains(aSubmodule.getId()) 
-                		&& dependsOn(aSubmodule);
+                return dependsOnBy(aSubmodule, potentiallyIllegalReferences);
             }
         };
-        return Sets.newHashSet(Iterables.filter(otherSubmodules, predicate));
+        return Sets.newHashSet(Iterables.filter(otherSubmodules, unallowedDependenciesPredicate));
     }
+
+	private Set<Submodule> filterLegalDependencies(Set<Submodule> others) {
+        Predicate<Submodule> predicate = new Predicate<Submodule>() {
+            public boolean apply(Submodule other) {
+                return plannedDependencies.contains(other.getId());
+            }
+        };
+        return Sets.newHashSet(Iterables.filter(others, predicate));
+	}
+
+	private Set<PackageReference> findPotentiallyIllegalReferences(Set<Submodule> legalDependencies) {
+		final Set<PackageReference> potentiallyIllegalReferences = Sets.newHashSet(outgoingReferences);
+    	for (Submodule legalDependency : legalDependencies) {
+    		legalDependency.removeOutsideReferences(potentiallyIllegalReferences);
+		}
+		return potentiallyIllegalReferences;
+	}
     
 	private boolean dependsOn(Submodule that) {
 		return that.isReferredBy(outgoingReferences);
 	}
 
+	private boolean dependsOnBy(Submodule that, Set<PackageReference> references) {
+		return that.isReferredBy(references);
+	}
     private boolean isReferredBy(Set<PackageReference> references) {
         for (PackageReference packageReference : references) {
             for (Package aPackage : packagesUnderModule) {
@@ -59,6 +89,17 @@ public class Submodule {
             }
         }
         return false;
+    }
+
+    private void removeOutsideReferences(Set<PackageReference> references) {
+    	Set<PackageReference> referencesCopy = Sets.newHashSet(references);
+        for (PackageReference packageReference : referencesCopy) {
+            for (Package aPackage : packagesUnderModule) {
+                if (packageReference.pointsToThatOrInside(aPackage.getReference())) {
+                	references.remove(packageReference);
+                }
+            }
+        }
     }
     
     public Set<SubmoduleId> getPlannedDependencies() {
