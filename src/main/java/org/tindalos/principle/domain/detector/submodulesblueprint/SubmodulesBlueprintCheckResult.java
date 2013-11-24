@@ -10,25 +10,35 @@ import com.google.common.collect.Maps;
 
 public class SubmodulesBlueprintCheckResult implements CheckResult {
 
-	private final Map<Submodule, Set<Submodule>> violations;
+	private final Map<Submodule, Set<Submodule>> illegalDependencies;
+	private final Map<Submodule, Set<Submodule>> missingDependencies;
 	private final Integer threshold;
 
-    public SubmodulesBlueprintCheckResult(SubmodulesBlueprint submodulesBlueprint, Map<Submodule, Set<Submodule>> violations) {
-        this.violations = Maps.newHashMap(violations);
-        this.threshold = submodulesBlueprint.getViolationsThreshold();
-    }
-
-    public boolean expectationsFailed() {
-		return !violations.isEmpty();
-	}
-    
-    public Map<Submodule, Set<Submodule>> getViolations() {
-		return Maps.newHashMap(violations);
+	public SubmodulesBlueprintCheckResult(SubmodulesBlueprint submodulesBlueprint, Map<Submodule, Set<Submodule>> illegalDependencies,
+			Map<Submodule, Set<Submodule>> missingDependencies) {
+		this.illegalDependencies = Maps.newHashMap(illegalDependencies);
+		this.missingDependencies = Maps.newHashMap(missingDependencies);
+		this.threshold = submodulesBlueprint.getViolationsThreshold();
 	}
 
+	public boolean expectationsFailed() {
+		return violationsNumber() > 0;
+	}
 
-    public Integer getThreshold() {
-        return threshold;
-    }
+	public Map<Submodule, Set<Submodule>> illegalDependencies() {
+		return Maps.newHashMap(illegalDependencies);
+	}
+
+	public Map<Submodule, Set<Submodule>> missingDependencies() {
+		return Maps.newHashMap(missingDependencies);
+	}
+	
+	public int violationsNumber() {
+		return illegalDependencies.size() + missingDependencies.size();
+	}
+
+	public Integer getThreshold() {
+		return threshold;
+	}
 
 }

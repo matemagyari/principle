@@ -38,6 +38,10 @@ public class PackageReference implements Comparable<PackageReference> {
     public boolean pointsToThatOrInside(PackageReference reference) {
         return this.equals(reference) || this.pointsInside(reference);
     }
+
+	public boolean oneContainsAnother(PackageReference that) {
+		return this.pointsToThatOrInside(that) || that.pointsToThatOrInside(this);
+	}
     
     public boolean isDescendantOf(PackageReference reference) {
         return this.startsWith(reference.name + ".");
@@ -80,10 +84,5 @@ public class PackageReference implements Comparable<PackageReference> {
     public int compareTo(PackageReference that) {
         return name.compareTo(that.name);
     }
-
-
-
-
-
 
 }

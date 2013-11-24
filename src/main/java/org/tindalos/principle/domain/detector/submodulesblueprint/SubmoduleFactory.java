@@ -23,7 +23,7 @@ public class SubmoduleFactory {
 		return submodules;
 	}
 
-	private Submodule convert(Map<PackageReference, Package> packageMap, SubmoduleDefinition submoduleDefinition) {
+	private static Submodule convert(Map<PackageReference, Package> packageMap, SubmoduleDefinition submoduleDefinition) {
 		
 		Set<Package> packages = resolve(packageMap, submoduleDefinition.getPackages());
 		Submodule submodule = new Submodule(submoduleDefinition.getId(), packages);
@@ -35,7 +35,11 @@ public class SubmoduleFactory {
         Function<PackageReference, Package> function = new Function<PackageReference, Package>() {
             
             public Package apply(PackageReference input) {
-                return packageMap.get(input);
+                Package thePackage = packageMap.get(input);
+                if (thePackage == null) {
+                	throw new InvalidBlueprintDefinitionException("Package does not exist: " + input);
+                }
+				return thePackage;
             }
         };
         return Sets.newHashSet(Iterables.transform(packageReferences, function));

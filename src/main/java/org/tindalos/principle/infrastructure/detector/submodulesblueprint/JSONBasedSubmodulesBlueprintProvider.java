@@ -55,7 +55,7 @@ public class JSONBasedSubmodulesBlueprintProvider implements SubmoduleDefinition
 			
 			SubmoduleId submoduleId = new SubmoduleId(keys.next());
 			
-			Collection<SubmoduleId> plannedDependencies = transformToSubmoduleIds(dependencies.getJSONArray(submoduleId.value()));
+			Collection<SubmoduleId> plannedDependencies = transformToSubmoduleIds(dependencies.getJSONArray(submoduleId.value()),submoduleDefinitionMap.keySet());
 			SubmoduleDefinition submoduleDefinition = submoduleDefinitionMap.get(submoduleId);
 			
 			if (submoduleDefinition == null) {
@@ -86,10 +86,12 @@ public class JSONBasedSubmodulesBlueprintProvider implements SubmoduleDefinition
 		return submoduleDefinitionMap;
 	}
 
-	private static Collection<SubmoduleId> transformToSubmoduleIds(JSONArray dependencies) throws JSONException {
+	private static Collection<SubmoduleId> transformToSubmoduleIds(JSONArray dependencies, Set<SubmoduleId> validSubmodules) throws JSONException {
 		Set<SubmoduleId> submodules = Sets.newHashSet();
 		for (int i = 0; i < dependencies.length(); i++) {
-			submodules.add(new SubmoduleId(dependencies.getString(i)));
+			SubmoduleId submoduleId = new SubmoduleId(dependencies.getString(i));
+			if (!validSubmodules.contains(submoduleId)) throw new InvalidBlueprintDefinitionException("No submodules defined with id " + submoduleId);
+			submodules.add(submoduleId);
 		}
 		return submodules;
 	}

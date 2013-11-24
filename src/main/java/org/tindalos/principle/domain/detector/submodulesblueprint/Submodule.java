@@ -1,7 +1,5 @@
 package org.tindalos.principle.domain.detector.submodulesblueprint;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -34,6 +32,19 @@ public class Submodule {
         }
         return allOutgoingReferences;
     }
+    
+	public Set<Submodule> findMissingDependencies(Set<Submodule> otherSubmodules) {
+		assert !otherSubmodules.contains(this);
+		
+		Set<Submodule> legalDependencies = filterLegalDependencies(otherSubmodules);
+		
+        Predicate<Submodule> missingDependenciesPredicate = new Predicate<Submodule>() {
+            public boolean apply(Submodule aSubmodule) {
+                return !dependsOnBy(aSubmodule, outgoingReferences);
+            }
+        };
+        return Sets.newHashSet(Iterables.filter(legalDependencies, missingDependenciesPredicate));
+	}
 
     public Set<Submodule> findIllegalDependencies(Set<Submodule> otherSubmodules) {
     	assert !otherSubmodules.contains(this);
@@ -46,14 +57,14 @@ public class Submodule {
     		return Sets.newHashSet();
     	}
     	
-    	final Set<PackageReference> potentiallyIllegalReferences = findPotentiallyIllegalReferences(legalDependencies);
+    	final Set<PackageReference> extraReferences = extraReferences(legalDependencies);
     	
-        Predicate<Submodule> unallowedDependenciesPredicate = new Predicate<Submodule>() {
+        Predicate<Submodule> illegalDependenciesPredicate = new Predicate<Submodule>() {
             public boolean apply(Submodule aSubmodule) {
-                return dependsOnBy(aSubmodule, potentiallyIllegalReferences);
+                return dependsOnBy(aSubmodule, extraReferences);
             }
         };
-        return Sets.newHashSet(Iterables.filter(otherSubmodules, unallowedDependenciesPredicate));
+        return Sets.newHashSet(Iterables.filter(otherSubmodules, illegalDependenciesPredicate));
     }
 
 	private Set<Submodule> filterLegalDependencies(Set<Submodule> others) {
@@ -65,7 +76,7 @@ public class Submodule {
         return Sets.newHashSet(Iterables.filter(others, predicate));
 	}
 
-	private Set<PackageReference> findPotentiallyIllegalReferences(Set<Submodule> legalDependencies) {
+	private Set<PackageReference> extraReferences(Set<Submodule> legalDependencies) {
 		final Set<PackageReference> potentiallyIllegalReferences = Sets.newHashSet(outgoingReferences);
     	for (Submodule legalDependency : legalDependencies) {
     		legalDependency.removeOutsideReferences(potentiallyIllegalReferences);
@@ -133,9 +144,5 @@ public class Submodule {
 	public String toString() {
 		return id.toString();
 	}
-    
-    
-
-    
 
 }
