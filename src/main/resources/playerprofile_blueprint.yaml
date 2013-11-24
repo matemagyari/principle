@@ -1,0 +1,21 @@
+# Map submodules to packages 
+
+  subdmodule-definitions: 
+  
+    CORE: [domain.core]
+    VOUCHER: [domain.voucher]
+    JOURNEY: [domain.journey]
+    GIFTING: [domain.gifting]
+    BONUS: [domain.bonus]
+    PURCHASE: [domain.purchase]
+
+# Define dependencies between submodules
+
+  subdmodule-dependencies: 
+
+    CORE: []
+    VOUCHER: [CORE]
+    JOURNEY: [CORE, VOUCHER]
+    GIFTING: [CORE, VOUCHER]
+    BONUS: [CORE, JOURNEY]
+    PURCHASE: [CORE, JOURNEY]
