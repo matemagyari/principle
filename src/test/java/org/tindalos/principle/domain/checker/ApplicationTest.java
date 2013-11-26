@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.tindalos.principle.app.service.Application;
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration;
+import org.tindalos.principle.domain.core.logging.Logger;
+import org.tindalos.principle.domain.core.logging.TheLogger;
 import org.tindalos.principle.domain.expectations.ADP;
 import org.tindalos.principle.domain.expectations.DesignQualityExpectations;
 import org.tindalos.principle.domain.expectations.Layering;
@@ -24,6 +26,12 @@ public class ApplicationTest {
 	public void checkItself() {
 		String basePackage = "org.tindalos.principle";
 		//basePackage = "org.tindalos.principletest.adp";
+		
+		TheLogger.setLogger(new Logger() {
+            public void info(String msg) {
+                System.out.println(msg);
+            }
+        });
 
 		Application application = PoorMansDIContainer.getApplication(basePackage);
 

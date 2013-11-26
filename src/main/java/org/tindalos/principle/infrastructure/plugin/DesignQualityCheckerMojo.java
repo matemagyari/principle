@@ -8,6 +8,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.tindalos.principle.app.service.Application;
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration;
+import org.tindalos.principle.domain.core.logging.Logger;
+import org.tindalos.principle.domain.core.logging.TheLogger;
 import org.tindalos.principle.domain.expectations.exception.InvalidConfigurationException;
 import org.tindalos.principle.domain.resultprocessing.thresholdchecker.ThresholdTrespassedException;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
@@ -27,6 +29,12 @@ public class DesignQualityCheckerMojo extends AbstractMojo {
     	System.err.println("checks " + checks);
     	Validate.notNull(checks,"Missing <checks> tag!");
     	Validate.notBlank(basePackage,"Missing <basePackage> tag!");
+    	
+    	TheLogger.setLogger(new Logger() {
+            public void info(String msg) {
+                getLog().info(msg);
+            }
+        });
     	
     	Application application = PoorMansDIContainer.getApplication(basePackage);
         try {

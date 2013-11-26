@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration;
 import org.tindalos.principle.domain.core.Package;
+import org.tindalos.principle.domain.core.logging.TheLogger;
 import org.tindalos.principle.domain.coredetector.CheckInput;
 import org.tindalos.principle.domain.coredetector.CheckResult;
 import org.tindalos.principle.domain.coredetector.Detector;
@@ -28,6 +29,7 @@ public class DesignQualityDetectorsRunner {
 		CheckInput checkInput = new CheckInput(packages, designQualityCheckConfiguration);
 		for (Detector detector : detectors) {
 			if (detector.isWanted(designQualityCheckConfiguration.getExpectations())) {
+			    TheLogger.info(detector + " is running");
 				CheckResult checkResult = detector.analyze(checkInput);
 				checkResults.add(checkResult);
 			}

@@ -75,11 +75,10 @@
 
 	<build>
 		<plugins>
-		<!--
 			<plugin>
 				<groupId>org.tindalos.principle</groupId>
 				<artifactId>principle</artifactId>
-				<version>0.15</version>
+				<version>0.16</version>
 				<configuration>
 					<basePackage>org.tindalos.principle</basePackage>
 					<checks>
@@ -106,8 +105,10 @@
 								<threshold>0.45</threshold>
 							</racd>
 						</packageCoupling>
-						 <submodulesBlueprint> <location>src/main/resources/principle_blueprint.json</location> 
-							<violationsThreshold>0</violationsThreshold> </submodulesBlueprint>
+						<submodulesBlueprint>
+							<location>src/main/resources/principle_blueprint.yaml</location>
+							<violationsThreshold>0</violationsThreshold>
+						</submodulesBlueprint>
 					</checks>
 				</configuration>
 				<executions>
@@ -119,8 +120,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			 -->
-			<!-- -->
 		</plugins>
 		<pluginManagement>
 			<plugins>
