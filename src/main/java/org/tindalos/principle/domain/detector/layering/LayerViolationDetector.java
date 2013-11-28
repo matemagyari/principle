@@ -11,29 +11,30 @@ import org.tindalos.principle.domain.coredetector.CheckInput;
 import org.tindalos.principle.domain.coredetector.Detector;
 import org.tindalos.principle.domain.expectations.DesignQualityExpectations;
 
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 public class LayerViolationDetector implements Detector {
-	
+
     public LayerViolationsResult analyze(CheckInput checkInput) {
         List<LayerReference> layerReferences = findViolations(checkInput.getPackages(), checkInput.getConfiguration());
         return new LayerViolationsResult(layerReferences, checkInput.getLayeringExpectations());
     }
-    
-	public boolean isWanted(DesignQualityExpectations expectations) {
-		return expectations.getLayering() != null;
-	}
+
+    public boolean isWanted(DesignQualityExpectations expectations) {
+        return expectations.getLayering() != null;
+    }
 
     private List<LayerReference> findViolations(List<Package> packages, DesignQualityCheckConfiguration configuration) {
 
         List<LayerReference> violations = Lists.newArrayList();
 
         for (Package aPackage : filterToRelevantPackages(packages, configuration.getBasePackage())) {
-        	List<String> layers = configuration.getExpectations().getLayering().getLayers();
-            Optional<String> layer = getLayer(aPackage, layers);
+            List<String> layers = layers(configuration);
+            Optional<String> layer = getLayer(aPackage, layers, configuration.getBasePackage());
             if (layer.isPresent()) {
                 List<String> outerLayers = outerLayers(layers, layer.get());
                 violations.addAll(getReferencesToLayers(aPackage, outerLayers, configuration.getBasePackage()));
@@ -43,11 +44,21 @@ public class LayerViolationDetector implements Detector {
         return violations;
     }
 
-    private static List<String> outerLayers(List<String> layers, String layer) {
-		return layers.subList(0, layers.indexOf(layer));
-	}
+    private List<String> layers(final DesignQualityCheckConfiguration configuration) {
+        Function<String, String> function = new Function<String, String>() {
+            public String apply(String input) {
+                return configuration.getBasePackage() + "." + input;
+            }
+        };
+        return Lists.newArrayList(Iterables.transform(configuration.getExpectations().getLayering().getLayers(),
+                function));
+    }
 
-	private static Optional<String> getLayer(Package aPackage, List<String> layers) {
+    private static List<String> outerLayers(List<String> layers, String layer) {
+        return layers.subList(0, layers.indexOf(layer));
+    }
+
+    private static Optional<String> getLayer(Package aPackage, List<String> layers, String basePackageName) {
         for (String layer : layers) {
             if (aPackage.getReference().startsWith(layer)) {
                 return Optional.of(layer);
@@ -61,7 +72,8 @@ public class LayerViolationDetector implements Detector {
 
         Set<PackageReference> allReferencedPackages = aPackage.getOwnPackageReferences();
 
-        List<PackageReference> referencedPackages = filterToRelevantPackageReferences(allReferencedPackages, basePackage);
+        List<PackageReference> referencedPackages = filterToRelevantPackageReferences(allReferencedPackages,
+                basePackage);
 
         for (PackageReference referencedPackage : referencedPackages) {
             for (String layer : layers) {
@@ -73,7 +85,8 @@ public class LayerViolationDetector implements Detector {
         return references;
     }
 
-    private List<PackageReference> filterToRelevantPackageReferences(Set<PackageReference> packages, final String basePackage) {
+    private List<PackageReference> filterToRelevantPackageReferences(Set<PackageReference> packages,
+            final String basePackage) {
 
         Predicate<PackageReference> filter = new Predicate<PackageReference>() {
 
@@ -84,15 +97,15 @@ public class LayerViolationDetector implements Detector {
         };
         return Lists.newArrayList(Iterables.filter(packages, filter));
     }
-    
+
     private List<Package> filterToRelevantPackages(Collection<Package> packages, final String basePackage) {
-        
+
         Predicate<Package> filter = new Predicate<Package>() {
-            
+
             public boolean apply(Package input) {
                 return input.getReference().startsWith(basePackage);
             }
-            
+
         };
         return Lists.newArrayList(Iterables.filter(packages, filter));
     }

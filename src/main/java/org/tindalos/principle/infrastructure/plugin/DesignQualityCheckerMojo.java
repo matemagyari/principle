@@ -26,7 +26,6 @@ public class DesignQualityCheckerMojo extends AbstractMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
     	
-    	System.err.println("checks " + checks);
     	Validate.notNull(checks,"Missing <checks> tag!");
     	Validate.notBlank(basePackage,"Missing <basePackage> tag!");
     	

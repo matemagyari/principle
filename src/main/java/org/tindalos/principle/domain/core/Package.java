@@ -88,6 +88,7 @@ public abstract class Package {
 		for (PackageReference reference : packageReferences) {
 			packages.add(packageReferenceMap.get(reference));
 		}
+		assert !packages.contains(this) : "self-references should be excluded";
 		return packages;
 	}
 	
@@ -142,7 +143,7 @@ public abstract class Package {
 			CyclesInSubgraph foundCycles,
 			Map<PackageReference, Package> packageReferences) {
 
-		foundCycles.rememberPackageAsInvestigated(this);
+	    foundCycles.rememberPackageAsInvestigated(this);
 		
 		// if we just closed a cycle, add it to the found list then return
 		Optional<List<PackageReference>> cycleCandidateEndingHere = findCycleCandidateEndingHere(traversedPackages);
@@ -158,6 +159,7 @@ public abstract class Package {
 				foundCycles.mergeIn(cyclesInSubgraph);
 			}
 		}
+		//System.err.println("Cycles found so far: " + foundCycles.getCycles().size());
 		return foundCycles;
 	}
 
