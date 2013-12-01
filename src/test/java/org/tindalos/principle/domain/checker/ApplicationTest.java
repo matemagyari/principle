@@ -25,11 +25,14 @@ public class ApplicationTest {
 	@Test
 	public void checkItself() {
 		String basePackage = "org.tindalos.principle";
-		//basePackage = "org.tindalos.principletest.adp";
+		basePackage = "org.tindalos.principletest";
 		
 		TheLogger.setLogger(new Logger() {
             public void info(String msg) {
                 System.out.println(msg);
+            }
+            public void error(String msg) {
+                System.err.println(msg);
             }
         });
 
@@ -42,6 +45,7 @@ public class ApplicationTest {
 		} catch (ThresholdTrespassedException ex) {
 
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			Assert.fail(ex.getMessage());
 		}
 
@@ -52,7 +56,7 @@ public class ApplicationTest {
 
 		checks.setLayering(layering());
 		checks.setPackageCoupling(packageCoupling());
-		checks.setSubmodulesBlueprint(submodulesBlueprint());
+		//checks.setSubmodulesBlueprint(submodulesBlueprint());
 
 		return checks;
 	}

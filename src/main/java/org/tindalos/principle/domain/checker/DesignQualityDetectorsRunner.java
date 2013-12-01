@@ -29,12 +29,20 @@ public class DesignQualityDetectorsRunner {
 		CheckInput checkInput = new CheckInput(packages, designQualityCheckConfiguration);
 		for (Detector detector : detectors) {
 			if (detector.isWanted(designQualityCheckConfiguration.getExpectations())) {
-			    TheLogger.info(detector + " is running");
-				CheckResult checkResult = detector.analyze(checkInput);
-				checkResults.add(checkResult);
+				runDetector(checkResults, checkInput, detector);
 			}
 		}
 		return new DesignQualityCheckResults(checkResults);
+	}
+
+	private void runDetector(List<CheckResult> checkResults, CheckInput checkInput, Detector detector) {
+		try {
+			TheLogger.info(detector + " is running");
+			CheckResult checkResult = detector.analyze(checkInput);
+			checkResults.add(checkResult);
+		} catch (RuntimeException unwantedException) {
+			TheLogger.error(unwantedException.getMessage());
+		}
 	}
 
 }

@@ -57,7 +57,7 @@ public abstract class Package {
 			Set<PackageReference> result = Sets.newHashSet(accumulatedPackageReferences);
 			for (PackageReference packageReference : accumulatedPackageReferences) {
 				Package aPackage = packageReferenceMap.get(packageReference);
-
+				assert aPackage != null : packageReference + " does not exist!";
 				dependencies.add(packageReference);
 				result.addAll(aPackage.cumulatedDependenciesAcc(packageReferenceMap, dependencies));
 			}
@@ -78,7 +78,7 @@ public abstract class Package {
 			packageReferences.addAll(child.accumulatedDirectPackageReferences());
 		}
 		packageReferences.addAll(getOwnPackageReferences());
-
+		packageReferences.remove(this.reference);
 		return packageReferences;
 	}
 

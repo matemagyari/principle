@@ -11,5 +11,9 @@ public class TheLogger {
     public static void info(String msg) {
         logger.info(msg);
     }
+    
+    public static void error(String msg) {
+        logger.error(msg);
+    }
 
 }

@@ -33,6 +33,9 @@ public class DesignQualityCheckerMojo extends AbstractMojo {
             public void info(String msg) {
                 getLog().info(msg);
             }
+            public void error(String msg) {
+                getLog().error(msg);
+            }
         });
     	
     	Application application = PoorMansDIContainer.getApplication(basePackage);

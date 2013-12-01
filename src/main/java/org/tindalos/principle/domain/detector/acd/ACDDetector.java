@@ -26,7 +26,7 @@ public class ACDDetector implements Detector {
 		Package basePackage = packageStructureBuilder.build(packages, checkInput.getConfiguration().getBasePackage());
 		
 		Map<PackageReference, Package> referenceMap = basePackage.toMap();
-		referenceMap.remove(basePackage.getReference());
+		//referenceMap.remove(basePackage.getReference());
 		
 		//System.err.println("NPAC 1 " + packages.size() + " NPAC 2 " + referenceMap.size());
 		
