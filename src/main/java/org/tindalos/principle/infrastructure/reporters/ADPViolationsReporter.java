@@ -7,7 +7,7 @@ import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.coredetector.ViolationsReporter;
 import org.tindalos.principle.domain.detector.adp.ADPResult;
 
-public class APDViolationsReporter implements ViolationsReporter<ADPResult> {
+public class ADPViolationsReporter implements ViolationsReporter<ADPResult> {
 
 	public String report(ADPResult result) {
 		List<Cycle> cycles = result.getCycles();
@@ -30,7 +30,7 @@ public class APDViolationsReporter implements ViolationsReporter<ADPResult> {
 	private String print(Cycle cycle) {
 
 		String arrow = "-->";
-		StringBuffer sb = new StringBuffer("\n-------------------------------");
+		StringBuffer sb = new StringBuffer();
 		for (PackageReference reference : cycle.getReferences()) {
 			sb.append("\n" + reference + " " + arrow);
 		}

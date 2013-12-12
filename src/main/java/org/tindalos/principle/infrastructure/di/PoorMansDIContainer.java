@@ -28,7 +28,7 @@ import org.tindalos.principle.domain.detector.submodulesblueprint.SubmodulesFact
 import org.tindalos.principle.domain.resultprocessing.reporter.DesignQualityCheckResultsReporter;
 import org.tindalos.principle.infrastructure.detector.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider;
 import org.tindalos.principle.infrastructure.reporters.ACDViolationsReporter;
-import org.tindalos.principle.infrastructure.reporters.APDViolationsReporter;
+import org.tindalos.principle.infrastructure.reporters.ADPViolationsReporter;
 import org.tindalos.principle.infrastructure.reporters.LayerViolationsReporter;
 import org.tindalos.principle.infrastructure.reporters.SAPViolationsReporter;
 import org.tindalos.principle.infrastructure.reporters.SDPViolationsReporter;
@@ -73,7 +73,7 @@ public class PoorMansDIContainer {
 		
 		Map<Class<? extends CheckResult>, ViolationsReporter<? extends CheckResult>> reporters = Maps.newHashMap();
 		
-		reporters.put(ADPResult.class, new APDViolationsReporter());
+		reporters.put(ADPResult.class, new ADPViolationsReporter());
 		reporters.put(LayerViolationsResult.class, new LayerViolationsReporter());
 		reporters.put(SDPResult.class, new SDPViolationsReporter());
 		reporters.put(SAPResult.class, new SAPViolationsReporter());

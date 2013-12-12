@@ -36,7 +36,6 @@ public class SDPViolationsReporter implements ViolationsReporter<SDPResult> {
 		sb.append("\n " + depender.getReference() + "["+ depender.instability()+"] ");
 		sb.append(arrow);
 		sb.append(" " + dependee.getReference() + "["+ dependee.instability()+"] ");
-		sb.append("\n-------------------------------");
 		return sb.toString();
 	}
 
