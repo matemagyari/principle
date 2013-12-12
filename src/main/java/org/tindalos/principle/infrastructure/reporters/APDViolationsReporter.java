@@ -5,11 +5,11 @@ import java.util.List;
 import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.coredetector.ViolationsReporter;
-import org.tindalos.principle.domain.detector.adp.APDResult;
+import org.tindalos.principle.domain.detector.adp.ADPResult;
 
-public class APDViolationsReporter implements ViolationsReporter<APDResult> {
+public class APDViolationsReporter implements ViolationsReporter<ADPResult> {
 
-	public String report(APDResult result) {
+	public String report(ADPResult result) {
 		List<Cycle> cycles = result.getCycles();
 		String sectionLine = "==============================================================";
 		StringBuffer sb = new StringBuffer("\n" + sectionLine + "\n");
@@ -38,8 +38,8 @@ public class APDViolationsReporter implements ViolationsReporter<APDResult> {
 		return sb.toString();
 	}
 
-	public Class<APDResult> getType() {
-		return APDResult.class;
+	public Class<ADPResult> getType() {
+		return ADPResult.class;
 	}
 
 }

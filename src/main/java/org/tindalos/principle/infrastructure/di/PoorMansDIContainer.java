@@ -11,7 +11,7 @@ import org.tindalos.principle.domain.coredetector.CheckResult;
 import org.tindalos.principle.domain.coredetector.ViolationsReporter;
 import org.tindalos.principle.domain.detector.acd.ACDDetector;
 import org.tindalos.principle.domain.detector.acd.ACDResult;
-import org.tindalos.principle.domain.detector.adp.APDResult;
+import org.tindalos.principle.domain.detector.adp.ADPResult;
 import org.tindalos.principle.domain.detector.adp.CycleDetector;
 import org.tindalos.principle.domain.detector.adp.PackageStructureBuilder;
 import org.tindalos.principle.domain.detector.layering.LayerViolationDetector;
@@ -26,8 +26,6 @@ import org.tindalos.principle.domain.detector.submodulesblueprint.SubmodulesBlue
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmodulesBlueprintViolationDetector;
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmodulesFactory;
 import org.tindalos.principle.domain.resultprocessing.reporter.DesignQualityCheckResultsReporter;
-import org.tindalos.principle.infrastructure.detector.submodulesblueprint.JSONBasedSubmodulesBlueprintProvider;
-import org.tindalos.principle.infrastructure.detector.submodulesblueprint.JSONBasedSubmodulesBlueprintProvider;
 import org.tindalos.principle.infrastructure.detector.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider;
 import org.tindalos.principle.infrastructure.reporters.ACDViolationsReporter;
 import org.tindalos.principle.infrastructure.reporters.APDViolationsReporter;
@@ -46,7 +44,7 @@ import com.google.common.collect.Maps;
 public class PoorMansDIContainer {
     
     
-	private static DesignQualityCheckService getDesignCheckService(String basePackage) {
+	public static DesignQualityCheckService getDesignCheckService(String basePackage) {
         JDependRunner jDependRunner = new JDependRunner();
         PackageFactory packageFactory = new PackageFactory(new MetricsCalculator(),basePackage);
         PackageSorter packageSorter = new PackageSorter();
@@ -75,7 +73,7 @@ public class PoorMansDIContainer {
 		
 		Map<Class<? extends CheckResult>, ViolationsReporter<? extends CheckResult>> reporters = Maps.newHashMap();
 		
-		reporters.put(APDResult.class, new APDViolationsReporter());
+		reporters.put(ADPResult.class, new APDViolationsReporter());
 		reporters.put(LayerViolationsResult.class, new LayerViolationsReporter());
 		reporters.put(SDPResult.class, new SDPViolationsReporter());
 		reporters.put(SAPResult.class, new SAPViolationsReporter());
@@ -88,4 +86,5 @@ public class PoorMansDIContainer {
 	public static Application getApplication(String basePackage) {
 		return new Application(getDesignCheckService(basePackage), getDesignCheckResultsReporter() );
 	}
+
 }

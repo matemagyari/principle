@@ -17,13 +17,14 @@ public class Application {
 		this.designQualityCheckResultsReporter = designQualityCheckResultsReporter;
 	}
 
-	public void doIt(DesignQualityCheckConfiguration designQualityCheckConfiguration, Printer printer) {
+	public DesignQualityCheckResults doIt(DesignQualityCheckConfiguration designQualityCheckConfiguration, Printer printer) {
         DesignQualityCheckResults checkResults = designQualityCheckService.analyze(designQualityCheckConfiguration);
         designQualityCheckResultsReporter.report(checkResults, printer);
         
         if (checkResults.failExpectations()) {
         	throw new ThresholdTrespassedException();
         }
+        return checkResults;
 	}
 
 }

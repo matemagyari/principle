@@ -9,12 +9,12 @@ import org.tindalos.principle.domain.expectations.ADP;
 
 import com.google.common.collect.Lists;
 
-public class APDResult implements CheckResult {
+public class ADPResult implements CheckResult {
 
     private final List<Cycle> cycles;
 	private final ADP expectation;
 
-    public APDResult(List<Cycle> cycles, ADP adpExpectation) {
+    public ADPResult(List<Cycle> cycles, ADP adpExpectation) {
         this.expectation = adpExpectation;
 		this.cycles = Lists.newArrayList(cycles);
 		Collections.sort(this.cycles);

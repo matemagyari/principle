@@ -11,6 +11,7 @@ import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.CyclesInSubgraph;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageReference;
+import org.tindalos.principle.domain.core.ReachedCyclesLimitException;
 import org.tindalos.principle.domain.coredetector.CheckInput;
 import org.tindalos.principle.domain.coredetector.Detector;
 import org.tindalos.principle.domain.expectations.DesignQualityExpectations;
@@ -29,27 +30,31 @@ public class CycleDetector implements Detector {
         this.packageStructureBuilder = packageStructureBuilder;
     }
 
-    public APDResult analyze(CheckInput checkInput) {
-        
+    public ADPResult analyze(CheckInput checkInput) {
+
         Package basePackage = packageStructureBuilder.build(checkInput.getPackages(), checkInput.getConfiguration()
                 .getBasePackage());
         Map<PackageReference, Package> references = basePackage.toMap();
-        
+
         Set<Cycle> cycleSet = Sets.newHashSet();
 
         List<Package> sortedByAfferents = orderByAfferents(references.values());
         if (basePackage.getMetrics().getAfferentCoupling() == 0) {
             sortedByAfferents.remove(basePackage);
         }
-        //sortedByAfferents.add(basePackage); //add to the end
-
-        while (!sortedByAfferents.isEmpty()) {
-           // while (!sortedByAfferents.isEmpty() || sortedByAfferents.equals(Lists.newArrayList(basePackage))) {
-            CyclesInSubgraph cyclesInSubgraph = sortedByAfferents.get(0).detectCycles(references);
-            cycleSet.addAll(cyclesInSubgraph.getCycles());
-            sortedByAfferents.removeAll(cyclesInSubgraph.getInvestigatedPackages());
+        // sortedByAfferents.add(basePackage); //add to the end
+        try {
+            while (!sortedByAfferents.isEmpty()) {
+                // while (!sortedByAfferents.isEmpty() ||
+                // sortedByAfferents.equals(Lists.newArrayList(basePackage))) {
+                CyclesInSubgraph cyclesInSubgraph = sortedByAfferents.get(0).detectCycles(references);
+                cycleSet.addAll(cyclesInSubgraph.getCycles());
+                sortedByAfferents.removeAll(cyclesInSubgraph.getInvestigatedPackages());
+            }
+        } catch (ReachedCyclesLimitException ex) {
+            cycleSet.addAll(ex.getCycles());
         }
-        return new APDResult(Lists.newArrayList(cycleSet), checkInput.getConfiguration().getExpectations()
+        return new ADPResult(Lists.newArrayList(cycleSet), checkInput.getConfiguration().getExpectations()
                 .getPackageCoupling().getADP());
     }
 

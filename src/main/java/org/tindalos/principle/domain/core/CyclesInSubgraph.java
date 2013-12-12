@@ -1,11 +1,12 @@
 package org.tindalos.principle.domain.core;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
 
 public class CyclesInSubgraph {
+    
+    public static int LIMIT = 20;
     
     private final Set<Cycle> cycles;
     private final Set<Package> investigatedPackages;
@@ -29,7 +30,9 @@ public class CyclesInSubgraph {
 
     public void add(Cycle cycle) {
         cycles.add(cycle);
+        checkCycleLimit();
     }
+
 
     public void rememberPackageAsInvestigated(Package aPackage) {
         investigatedPackages.add(aPackage);
@@ -38,8 +41,14 @@ public class CyclesInSubgraph {
     public void mergeIn(CyclesInSubgraph that) {
         this.cycles.addAll(that.cycles);
         this.investigatedPackages.addAll(that.investigatedPackages);
+        checkCycleLimit();
     }
 
+    private void checkCycleLimit() {
+        if (cycles.size() > LIMIT) {
+            throw new ReachedCyclesLimitException(cycles);
+        }
+    }
     @Override
     public String toString() {
         return "CyclesInSubgraph [cycles=" + cycles + ", investigatedPackages=" + investigatedPackages + "]";
