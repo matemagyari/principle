@@ -11,8 +11,6 @@ import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.CyclesInSubgraph;
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration;
 import org.tindalos.principle.domain.core.PackageReference;
-import org.tindalos.principle.domain.core.logging.Logger;
-import org.tindalos.principle.domain.core.logging.TheLogger;
 import org.tindalos.principle.domain.coredetector.CheckResult;
 import org.tindalos.principle.domain.detector.adp.ADPResult;
 import org.tindalos.principle.domain.expectations.ADP;
@@ -29,7 +27,7 @@ public class CycleTest {
 
     @BeforeClass
     public static void setup() {
-        setLogger();
+        TestFixture.setLogger();
     }
 
     private void init(String basePackage) {
@@ -136,18 +134,6 @@ public class CycleTest {
         PackageCoupling packageCoupling = new PackageCoupling();
         packageCoupling.setADP(new ADP(0));
         return packageCoupling;
-    }
-
-    private static void setLogger() {
-        TheLogger.setLogger(new Logger() {
-            public void info(String msg) {
-                System.out.println(msg);
-            }
-
-            public void error(String msg) {
-                System.err.println(msg);
-            }
-        });
     }
 
 }
