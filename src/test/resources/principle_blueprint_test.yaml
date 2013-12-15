@@ -1,0 +1,17 @@
+# Map submodules to packages 
+
+  subdmodule-definitions: 
+  
+    MOD1: [domain.mod1, app.mod1]
+    MOD2: [domain.mod2, app.mod2]
+    MOD3: [domain.mod3, app.mod3]
+
+# Define dependencies between submodules
+
+  subdmodule-dependencies: 
+    
+    #this will be missing 
+    MOD1: [MOD2]
+    MOD2: [MOD1]
+    #this will be violated, since MOD3 will depend on MOD2 
+    MOD3: [MOD1]

@@ -19,7 +19,7 @@ import org.tindalos.principle.domain.expectations.PackageCoupling;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 import org.tindalos.principle.infrastructure.plugin.Checks;
 
-public class CycleTest {
+public class ADPTest {
 
     private DesignQualityCheckConfiguration designQualityCheckConfiguration;
     private DesignQualityCheckService designQualityCheckService;

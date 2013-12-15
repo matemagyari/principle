@@ -25,7 +25,7 @@ public class ApplicationTest {
 	@Test
 	public void checkItself() {
 		String basePackage = "org.tindalos.principle";
-		basePackage = "org.tindalos.principletest";
+		//basePackage = "org.tindalos.principletest";
 		
 		TheLogger.setLogger(new Logger() {
             public void info(String msg) {
