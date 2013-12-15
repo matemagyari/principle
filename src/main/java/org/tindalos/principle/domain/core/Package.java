@@ -52,6 +52,7 @@ public abstract class Package {
 		accumulatedPackageReferences.removeAll(dependencies);
 
 		if (accumulatedPackageReferences.isEmpty()) {
+			dependencies.remove(this.reference);
 			return dependencies;
 		} else {
 			Set<PackageReference> result = Sets.newHashSet(accumulatedPackageReferences);
@@ -60,6 +61,7 @@ public abstract class Package {
 				assert aPackage != null : packageReference + " does not exist!";
 				dependencies.add(packageReference);
 				result.addAll(aPackage.cumulatedDependenciesAcc(packageReferenceMap, dependencies));
+				result.remove(this.reference);
 			}
 			return result;
 		}
@@ -127,7 +129,7 @@ public abstract class Package {
 			}
 
 			@Override
-			public boolean containsNoClasses() {
+			public boolean isIsolated() {
 				return true;
 			}
 
@@ -263,8 +265,8 @@ public abstract class Package {
 
 	public abstract boolean isUnreferred();
 
-	public boolean containsNoClasses() {
-		return false;
+	public boolean isIsolated() {
+		return getMetrics().getAfferentCoupling() == 0 && getMetrics().getEfferentCoupling() == 0;
 	}
 
 	@Override
@@ -307,18 +309,6 @@ public abstract class Package {
         }
 	    
 	}
-	private static class CycleDetectionParameters {
-		List<PackageReference> traversedPackages;
-		CyclesInSubgraph foundCycles;
-		Map<PackageReference, Package> packageReferences;
-		
-		CycleDetectionParameters(Map<PackageReference, Package> packageReferences) {
-			this.traversedPackages = Lists.newArrayList();
-			this.foundCycles = CyclesInSubgraph.empty();
-			this.packageReferences = packageReferences;
-		}
-		
-		
-	}
+
 
 }

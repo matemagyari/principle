@@ -47,13 +47,25 @@ public class LayeringTest {
         assertEquals(expected, Sets.newHashSet(result));
     }
     
+    @Test
+    public void deeper() {
+        
+        List<LayerReference> result = run("org.tindalos.principletest.layering.deeper");
+        
+        Set<LayerReference> expected = Sets.newHashSet(
+                new LayerReference("org.tindalos.principletest.layering.deeper.domain.aaa", "org.tindalos.principletest.layering.deeper.app.bbb.ccc")
+                );
+        assertEquals(expected, Sets.newHashSet(result));
+    }
+
+    
     private List<LayerReference> run(String basePackage) {
         init(basePackage);
         DesignQualityCheckResults checkResults = designQualityCheckService.analyze(designQualityCheckConfiguration);
         List<CheckResult> resultList = checkResults.resultList();
         assertEquals(1, resultList.size());
-        LayerViolationsResult adpResult = (LayerViolationsResult) resultList.get(0);
-        return adpResult.getViolations();
+        LayerViolationsResult result = (LayerViolationsResult) resultList.get(0);
+        return result.getViolations();
     }
 
     private static DesignQualityExpectations prepareChecks() {

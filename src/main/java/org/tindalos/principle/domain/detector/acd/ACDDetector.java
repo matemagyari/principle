@@ -13,6 +13,8 @@ import org.tindalos.principle.domain.detector.adp.PackageStructureBuilder;
 import org.tindalos.principle.domain.expectations.DesignQualityExpectations;
 import org.tindalos.principle.domain.expectations.PackageCoupling;
 
+import com.google.common.collect.Lists;
+
 public class ACDDetector implements Detector {
 	
 	private final PackageStructureBuilder packageStructureBuilder;
@@ -26,12 +28,11 @@ public class ACDDetector implements Detector {
 		Package basePackage = packageStructureBuilder.build(packages, checkInput.getConfiguration().getBasePackage());
 		
 		Map<PackageReference, Package> referenceMap = basePackage.toMap();
-		//referenceMap.remove(basePackage.getReference());
 		
-		//System.err.println("NPAC 1 " + packages.size() + " NPAC 2 " + referenceMap.size());
-		
-		//either the packages that actually have their own references, or all the packages
-		Collection<Package> relevantPackages = packages;
+		Collection<Package> relevantPackages = Lists.newArrayList(packages);
+		if (basePackage.isIsolated()) {
+			relevantPackages.remove(basePackage);
+		}
 		
 		int cumulatedComponentDependency = 0;
 		for (Package aPackage : relevantPackages) {

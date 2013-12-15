@@ -9,6 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration;
 import org.tindalos.principle.domain.coredetector.CheckResult;
+import org.tindalos.principle.domain.detector.acd.ACDResult;
 import org.tindalos.principle.domain.detector.layering.LayerReference;
 import org.tindalos.principle.domain.detector.layering.LayerViolationsResult;
 import org.tindalos.principle.domain.expectations.DesignQualityExpectations;
@@ -36,25 +37,53 @@ public class ACDTest {
     }
 
     @Test
-    public void simple() {
+    public void simple1() {
         
-        List<LayerReference> result = run("org.tindalos.principletest.layering.simple");
+        Double result = run("org.tindalos.principletest.acd.simple1");
         
-        Set<LayerReference> expected = Sets.newHashSet(
-                new LayerReference("org.tindalos.principletest.layering.simple.domain", "org.tindalos.principletest.layering.simple.app")
-                ,new LayerReference("org.tindalos.principletest.layering.simple.domain", "org.tindalos.principletest.layering.simple.infrastructure")
-                ,new LayerReference("org.tindalos.principletest.layering.simple.app", "org.tindalos.principletest.layering.simple.infrastructure")
-                );
-        assertEquals(expected, Sets.newHashSet(result));
+        assertEquals(1, result,0.01);
     }
     
-    private List<LayerReference> run(String basePackage) {
+
+    @Test
+    public void simple11() {
+        
+        Double result = run("org.tindalos.principletest.acd.simple11");
+        
+        assertEquals(1.5, result,0.01);
+    }
+    
+    @Test
+    public void simple() {
+        
+        Double result = run("org.tindalos.principletest.acd.simple");
+        
+        assertEquals(2.5, result,0.01);
+    }
+    
+    @Test
+    public void cyclic3() {
+        
+        Double result = run("org.tindalos.principletest.acd.cyclic3");
+        
+        assertEquals(3, result,0.01);
+    }
+    
+    @Test
+    public void cyclic6() {
+        
+        Double result = run("org.tindalos.principletest.acd.cyclic6");
+        
+        assertEquals(4.33, result,0.01);
+    }
+    
+    private Double run(String basePackage) {
         init(basePackage);
         DesignQualityCheckResults checkResults = designQualityCheckService.analyze(designQualityCheckConfiguration);
         List<CheckResult> resultList = checkResults.resultList();
         assertEquals(1, resultList.size());
-        LayerViolationsResult adpResult = (LayerViolationsResult) resultList.get(0);
-        return adpResult.getViolations();
+        ACDResult result = (ACDResult) resultList.get(0);
+        return result.getACD();
     }
 
     private DesignQualityExpectations prepareChecks() {
