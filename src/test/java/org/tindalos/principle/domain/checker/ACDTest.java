@@ -72,9 +72,17 @@ public class ACDTest {
     @Test
     public void cyclic6() {
         
-        Double result = run("org.tindalos.principletest.acd.cyclic6");
+        Double result = run("org.tindalos.principletest.acd.cycle6");
         
         assertEquals(4.33, result,0.01);
+    }
+    
+    @Test
+    public void cyclic62() {
+        
+        Double result = run("org.tindalos.principletest.acd.cycle6_2");
+        
+        assertEquals(2, result,0.01);
     }
     
     private Double run(String basePackage) {
