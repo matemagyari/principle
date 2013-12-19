@@ -9,14 +9,10 @@ import com.google.common.collect.Sets;
 
 public class CyclesInSubgraph {
     
-    public static int LIMIT = 500;
-    
-    private final Set<Cycle> cycles;
     private final Set<Package> investigatedPackages;
     private final Map<PackageReference, Set<Cycle>> breakingPoints = Maps.newHashMap();
 
     private CyclesInSubgraph() {
-        this.cycles = Sets.newHashSet();
         this.investigatedPackages = Sets.newHashSet();
     }
     
@@ -24,22 +20,11 @@ public class CyclesInSubgraph {
     	return new CyclesInSubgraph();
     }
 
-    public Set<Cycle> getCycles() {
-        return cycles;
-    }
-    
     public Set<Package> getInvestigatedPackages() {
         return investigatedPackages;
     }
 
     public void add(Cycle cycle) {
-        updateBreakingPoints(cycle);
-        cycles.add(cycle);
-        checkCycleLimit();
-    }
-
-
-    private void updateBreakingPoints(Cycle cycle) {
         PackageReference last =  cycle.getLast();
         Set<Cycle> cyclesForThisBreakingPoint = breakingPoints.get(last);
         if (cyclesForThisBreakingPoint == null) {
@@ -54,10 +39,8 @@ public class CyclesInSubgraph {
     }
 
     public void mergeIn(CyclesInSubgraph that) {
-        this.cycles.addAll(that.cycles);
         mergeBreakingPoints(that.breakingPoints);
         this.investigatedPackages.addAll(that.investigatedPackages);
-        checkCycleLimit();
     }
 
     private void mergeBreakingPoints(Map<PackageReference, Set<Cycle>> breakingPointsInOther) {
@@ -71,12 +54,6 @@ public class CyclesInSubgraph {
         }
     }
 
-    private void checkCycleLimit() {
-        if (cycles.size() > LIMIT) {
-            throw new ReachedCyclesLimitException(cycles, breakingPoints);
-        }
-    }
-    
     public boolean isBreakingPoint(Package aPackage) {
         Set<Cycle> cyclesForThisBreakingPoint = breakingPoints.get(aPackage.getReference());
         return cyclesForThisBreakingPoint != null && cyclesForThisBreakingPoint.size() > 20;
@@ -88,6 +65,6 @@ public class CyclesInSubgraph {
     
     @Override
     public String toString() {
-        return "CyclesInSubgraph [cycles=" + cycles + ", investigatedPackages=" + investigatedPackages + "]";
+        return "CyclesInSubgraph [cycles=" + breakingPoints + ", investigatedPackages=" + investigatedPackages + "]";
     }
 }

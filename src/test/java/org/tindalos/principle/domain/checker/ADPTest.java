@@ -3,12 +3,13 @@ package org.tindalos.principle.domain.checker;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.tindalos.principle.domain.core.Cycle;
-import org.tindalos.principle.domain.core.CyclesInSubgraph;
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration;
 import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.coredetector.CheckResult;
@@ -18,6 +19,9 @@ import org.tindalos.principle.domain.expectations.DesignQualityExpectations;
 import org.tindalos.principle.domain.expectations.PackageCoupling;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 import org.tindalos.principle.infrastructure.plugin.Checks;
+
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 public class ADPTest {
 
@@ -38,74 +42,85 @@ public class ADPTest {
     @Test
     public void simple() {
         
-        List<Cycle> cycles = run("org.tindalos.principletest.cycle.simple");
+        Map<PackageReference, Set<Cycle>> result = run("org.tindalos.principletest.cycle.simple");
         
         Cycle expectedCycle = new Cycle(new PackageReference("org.tindalos.principletest.cycle.simple.left"),new PackageReference("org.tindalos.principletest.cycle.simple.right"));
-        assertEquals(expectedCycle, cycles.get(0));
-        assertEquals(1, cycles.size());
+        Map<PackageReference, Set<Cycle>> expected = Maps.newHashMap();
+        expected.put(new PackageReference("org.tindalos.principletest.cycle.simple.right"), Sets.newHashSet(expectedCycle));
+        
+        assertEquals(expected, result);
     }
     
     @Test
     public void transitive() {
         
         
-        List<Cycle> cycles = run("org.tindalos.principletest.cycle.transitive");
+        Map<PackageReference, Set<Cycle>> result = run("org.tindalos.principletest.cycle.transitive");
         
         Cycle expectedCycle = new Cycle(
                 new PackageReference("org.tindalos.principletest.cycle.transitive.a"),
                 new PackageReference("org.tindalos.principletest.cycle.transitive.b"),
                 new PackageReference("org.tindalos.principletest.cycle.transitive.c")
                 );
-        assertEquals(expectedCycle, cycles.get(0));
-        assertEquals(1, cycles.size());
+        
+        Map<PackageReference, Set<Cycle>> expected = Maps.newHashMap();
+        expected.put(new PackageReference("org.tindalos.principletest.cycle.transitive.c"), Sets.newHashSet(expectedCycle));
+        
+        assertEquals(expected, result);
     }
 
     @Test
     public void btwParentAndChild() {
         
         
-        List<Cycle> cycles = run("org.tindalos.principletest.cycle.btwparentandchild");
+        Map<PackageReference, Set<Cycle>> result = run("org.tindalos.principletest.cycle.btwparentandchild");
         
         Cycle expectedCycle = new Cycle(
                 new PackageReference("org.tindalos.principletest.cycle.btwparentandchild"),
                 new PackageReference("org.tindalos.principletest.cycle.btwparentandchild.child")
                 );
-        assertEquals(expectedCycle, cycles.get(0));
-        assertEquals(1, cycles.size());
+
+        Map<PackageReference, Set<Cycle>> expected = Maps.newHashMap();
+        expected.put(new PackageReference("org.tindalos.principletest.cycle.btwparentandchild"), Sets.newHashSet(expectedCycle));
+        
+        assertEquals(expected, result);
     }
     
     @Test
     public void complex1() {
         
-        List<Cycle> cycles = run("org.tindalos.principletest.cycle.complex1");
+        Map<PackageReference, Set<Cycle>> result = run("org.tindalos.principletest.cycle.complex1");
         
         Cycle expectedCycle = new Cycle(
                 new PackageReference("org.tindalos.principletest.cycle.complex1.left"),
                 new PackageReference("org.tindalos.principletest.cycle.complex1.right")
                 );
-        assertEquals(expectedCycle, cycles.get(0));
-        assertEquals(1, cycles.size());
+        Map<PackageReference, Set<Cycle>> expected = Maps.newHashMap();
+        expected.put(new PackageReference("org.tindalos.principletest.cycle.complex1.right"), Sets.newHashSet(expectedCycle));
+        
+        assertEquals(expected, result);
     }
     
     @Test
     public void complex2() {
         
-        List<Cycle> cycles = run("org.tindalos.principletest.cycle.complex2");
+        Map<PackageReference, Set<Cycle>> result = run("org.tindalos.principletest.cycle.complex2");
         
         Cycle expectedCycle = new Cycle(
                 new PackageReference("org.tindalos.principletest.cycle.complex2.left"),
                 new PackageReference("org.tindalos.principletest.cycle.complex2.right.right")
                 );
-        assertEquals(expectedCycle, cycles.get(0));
-        assertEquals(1, cycles.size());
+        Map<PackageReference, Set<Cycle>> expected = Maps.newHashMap();
+        expected.put(new PackageReference("org.tindalos.principletest.cycle.complex2.right.right"), Sets.newHashSet(expectedCycle));
+        
+        assertEquals(expected, result);
     }
     
     @Ignore
     @Test
     public void toomanycycles() {
         
-        CyclesInSubgraph.LIMIT = 1;
-        List<Cycle> cycles = run("org.tindalos.principletest.cycle.toomanycycles");
+        Map<PackageReference, Set<Cycle>> cycles = run("org.tindalos.principletest.cycle.toomanycycles");
         
         Cycle expectedCycle = new Cycle(
                 new PackageReference("org.tindalos.principletest.cycle.complex2.left"),
@@ -115,13 +130,13 @@ public class ADPTest {
         assertEquals(1, cycles.size());
     }
     
-    private List<Cycle> run(String basePackage) {
+    private Map<PackageReference, Set<Cycle>> run(String basePackage) {
         init(basePackage);
         DesignQualityCheckResults checkResults = designQualityCheckService.analyze(designQualityCheckConfiguration);
         List<CheckResult> resultList = checkResults.resultList();
         assertEquals(1, resultList.size());
         ADPResult adpResult = (ADPResult) resultList.get(0);
-        return adpResult.getCycles();
+        return adpResult.getCyclesByBreakingPoints();
     }
 
     private static DesignQualityExpectations prepareChecks() {

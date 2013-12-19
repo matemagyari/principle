@@ -1,5 +1,7 @@
 package org.tindalos.principle.infrastructure.reporters;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -8,6 +10,8 @@ import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.coredetector.ViolationsReporter;
 import org.tindalos.principle.domain.detector.adp.ADPResult;
+
+import com.google.common.collect.Lists;
 
 public class ADPViolationsReporter implements ViolationsReporter<ADPResult> {
 
@@ -31,7 +35,9 @@ public class ADPViolationsReporter implements ViolationsReporter<ADPResult> {
 
             for (Entry<PackageReference, Set<Cycle>> entry : cyclesByBreakingPoints.entrySet()) {
                 sb.append("\nExample cycles caused by " + entry.getKey() + "\n");
-                for (Cycle cycle : entry.getValue()) {
+                List<Cycle> cycleList = Lists.newArrayList( entry.getValue());
+                Collections.sort(cycleList);
+                for (Cycle cycle : cycleList) {
                     sb.append(print(cycle) + "\n");
                 }
             }
