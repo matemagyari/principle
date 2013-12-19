@@ -1,6 +1,8 @@
 package org.tindalos.principle.infrastructure.reporters;
 
-import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.PackageReference;
@@ -9,37 +11,49 @@ import org.tindalos.principle.domain.detector.adp.ADPResult;
 
 public class ADPViolationsReporter implements ViolationsReporter<ADPResult> {
 
-	public String report(ADPResult result) {
-		List<Cycle> cycles = result.getCycles();
-		String sectionLine = "==============================================================";
-		StringBuffer sb = new StringBuffer("\n" + sectionLine + "\n");
-		sb.append("\tAcyclic Package Dependency Principle violations ("+cycles.size()+" of the allowed "+result.getThreshold()+")\t");
-		sb.append("\n" + sectionLine + "\n");
+    public String report(ADPResult result) {
+        Map<PackageReference, Set<Cycle>> cyclesByBreakingPoints = result.getCyclesByBreakingPoints();
+        String sectionLine = "==============================================================";
+        StringBuffer sb = new StringBuffer("\n" + sectionLine + "\n");
+        sb.append("\tAcyclic Package Dependency Principle violations (" + cyclesByBreakingPoints.size() + " of the allowed "
+                + result.getThreshold() + ")\t");
+        sb.append("\n" + sectionLine + "\n");
 
-		if (cycles.isEmpty()) {
-			sb.append("No violations.\n");
-		} else {
-			for (Cycle cycle : cycles) {
-				sb.append(print(cycle) + "\n");
-			}
-		}
-		sb.append(sectionLine + "\n");
-		return sb.toString();
-	}
+        sb.append(sectionLine + "\n");
 
-	private String print(Cycle cycle) {
+        if (cyclesByBreakingPoints.isEmpty()) {
+            sb.append("No violations.\n");
+        } else {
+            sb.append("The cycles could be broken up refactoring the following packages: \n\n");
+            for (Entry<PackageReference, Set<Cycle>> entry : cyclesByBreakingPoints.entrySet()) {
+                sb.append(entry.getKey() + " ("+entry.getValue().size()+")\n");
+            }
 
-		String arrow = "-->";
-		StringBuffer sb = new StringBuffer();
-		for (PackageReference reference : cycle.getReferences()) {
-			sb.append("\n" + reference + " " + arrow);
-		}
-		sb.append("\n-------------------------------");
-		return sb.toString();
-	}
+            for (Entry<PackageReference, Set<Cycle>> entry : cyclesByBreakingPoints.entrySet()) {
+                sb.append("\nExample cycles caused by " + entry.getKey() + "\n");
+                for (Cycle cycle : entry.getValue()) {
+                    sb.append(print(cycle) + "\n");
+                }
+            }
+        }
 
-	public Class<ADPResult> getType() {
-		return ADPResult.class;
-	}
+        sb.append(sectionLine + "\n");
+        return sb.toString();
+    }
+
+    private String print(Cycle cycle) {
+
+        String arrow = "-->";
+        StringBuffer sb = new StringBuffer();
+        for (PackageReference reference : cycle.getReferences()) {
+            sb.append("\n" + reference + " " + arrow);
+        }
+        sb.append("\n-------------------------------");
+        return sb.toString();
+    }
+
+    public Class<ADPResult> getType() {
+        return ADPResult.class;
+    }
 
 }

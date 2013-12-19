@@ -18,6 +18,7 @@ import org.tindalos.principle.domain.expectations.DesignQualityExpectations;
 import org.tindalos.principle.domain.expectations.PackageCoupling;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 public class CycleDetector implements Detector {
@@ -37,6 +38,7 @@ public class CycleDetector implements Detector {
         Map<PackageReference, Package> references = basePackage.toMap();
 
         Set<Cycle> cycleSet = Sets.newHashSet();
+        Map<PackageReference, Set<Cycle>> cyclesByBreakingPoints = Maps.newHashMap();
 
         List<Package> sortedByAfferents = orderByAfferents(references.values());
         if (basePackage.getMetrics().getAfferentCoupling() == 0) {
@@ -49,12 +51,14 @@ public class CycleDetector implements Detector {
                 // sortedByAfferents.equals(Lists.newArrayList(basePackage))) {
                 CyclesInSubgraph cyclesInSubgraph = sortedByAfferents.get(0).detectCycles(references);
                 cycleSet.addAll(cyclesInSubgraph.getCycles());
+                cyclesByBreakingPoints.putAll(cyclesInSubgraph.getBreakingPoints());
                 sortedByAfferents.removeAll(cyclesInSubgraph.getInvestigatedPackages());
             }
         } catch (ReachedCyclesLimitException ex) {
             cycleSet.addAll(ex.getCycles());
+            cyclesByBreakingPoints.putAll(ex.getCyclesByBreakingPoints());
         }
-        return new ADPResult(Lists.newArrayList(cycleSet), checkInput.getConfiguration().getExpectations()
+        return new ADPResult(Lists.newArrayList(cycleSet), cyclesByBreakingPoints, checkInput.getConfiguration().getExpectations()
                 .getPackageCoupling().getADP());
     }
 

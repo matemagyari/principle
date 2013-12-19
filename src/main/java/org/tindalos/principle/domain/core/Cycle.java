@@ -13,6 +13,9 @@ public class Cycle implements Comparable<Cycle> {
     private final List<PackageReference> references;
     
     public Cycle(List<PackageReference> references) {
+        if (references == null || references.size() < 2) {
+            throw new DomainException("Invalid cycle " + references);
+        }
         this.references = Lists.newArrayList(references);
     }
     public Cycle(PackageReference... references) {
@@ -21,6 +24,10 @@ public class Cycle implements Comparable<Cycle> {
     
     public List<PackageReference> getReferences() {
         return references;
+    }
+    
+    public PackageReference getLast() {
+        return references.get(references.size()-1);
     }
     
     @Override
@@ -64,5 +71,6 @@ public class Cycle implements Comparable<Cycle> {
     public int compareTo(Cycle that) {
         return this.toString().compareTo(that.toString());
     }
+
 
 }

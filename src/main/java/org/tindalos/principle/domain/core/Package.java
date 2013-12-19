@@ -145,6 +145,9 @@ public abstract class Package {
 			CyclesInSubgraph foundCycles,
 			Map<PackageReference, Package> packageReferences) {
 
+	    if (foundCycles.isBreakingPoint(this)) {
+	        return foundCycles;
+	    }
 	    foundCycles.rememberPackageAsInvestigated(this);
 		
 		// if we just closed a cycle, add it to the found list then return
