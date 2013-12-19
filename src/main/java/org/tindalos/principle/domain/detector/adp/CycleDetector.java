@@ -11,7 +11,6 @@ import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.CyclesInSubgraph;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageReference;
-import org.tindalos.principle.domain.core.ReachedCyclesLimitException;
 import org.tindalos.principle.domain.coredetector.CheckInput;
 import org.tindalos.principle.domain.coredetector.Detector;
 import org.tindalos.principle.domain.expectations.DesignQualityExpectations;
@@ -36,26 +35,21 @@ public class CycleDetector implements Detector {
                 .getBasePackage());
         Map<PackageReference, Package> references = basePackage.toMap();
 
-        Map<PackageReference, Set<Cycle>> cyclesByBreakingPoints = Maps.newHashMap();
+        Map<PackageReference, Set<Cycle>> cycles = Maps.newHashMap();
 
         List<Package> sortedByAfferents = orderByAfferents(references.values());
         if (basePackage.getMetrics().getAfferentCoupling() == 0) {
             sortedByAfferents.remove(basePackage);
         }
         // sortedByAfferents.add(basePackage); //add to the end
-        try {
-            while (!sortedByAfferents.isEmpty()) {
-                // while (!sortedByAfferents.isEmpty() ||
-                // sortedByAfferents.equals(Lists.newArrayList(basePackage))) {
-                CyclesInSubgraph cyclesInSubgraph = sortedByAfferents.get(0).detectCycles(references);
-                cyclesByBreakingPoints.putAll(cyclesInSubgraph.getBreakingPoints());
-                sortedByAfferents.removeAll(cyclesInSubgraph.getInvestigatedPackages());
-            }
-        } catch (ReachedCyclesLimitException ex) {
-            cyclesByBreakingPoints.putAll(ex.getCyclesByBreakingPoints());
+        while (!sortedByAfferents.isEmpty()) {
+            // while (!sortedByAfferents.isEmpty() ||
+            // sortedByAfferents.equals(Lists.newArrayList(basePackage))) {
+            CyclesInSubgraph cyclesInSubgraph = sortedByAfferents.get(0).detectCycles(references);
+            cycles.putAll(cyclesInSubgraph.cycles());
+            sortedByAfferents.removeAll(cyclesInSubgraph.investigatedPackages());
         }
-        return new ADPResult(cyclesByBreakingPoints, checkInput.getConfiguration().getExpectations()
-                .getPackageCoupling().getADP());
+        return new ADPResult(cycles, checkInput.getConfiguration().getExpectations().getPackageCoupling().getADP());
     }
 
     public boolean isWanted(DesignQualityExpectations expectations) {

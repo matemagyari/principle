@@ -145,6 +145,7 @@ public abstract class Package {
 			CyclesInSubgraph foundCycles,
 			Map<PackageReference, Package> packageReferences) {
 
+	    //enough cycles have been found already with this package
 	    if (foundCycles.isBreakingPoint(this)) {
 	        return foundCycles;
 	    }

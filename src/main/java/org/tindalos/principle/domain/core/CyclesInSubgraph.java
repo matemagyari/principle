@@ -9,22 +9,23 @@ import com.google.common.collect.Sets;
 
 public class CyclesInSubgraph {
     
-    private final Set<Package> investigatedPackages;
+    private static final int LIMIT = 25;
+    private final Set<Package> investigatedPackages = Sets.newHashSet();
     private final Map<PackageReference, Set<Cycle>> breakingPoints = Maps.newHashMap();
 
-    private CyclesInSubgraph() {
-        this.investigatedPackages = Sets.newHashSet();
-    }
-    
     public static CyclesInSubgraph empty() {
     	return new CyclesInSubgraph();
     }
 
-    public Set<Package> getInvestigatedPackages() {
-        return investigatedPackages;
+    public Set<Package> investigatedPackages() {
+        return Sets.newHashSet(investigatedPackages);
+    }
+    
+    public Map<PackageReference, Set<Cycle>> cycles() {
+        return Maps.newHashMap(breakingPoints);
     }
 
-    public void add(Cycle cycle) {
+    void add(Cycle cycle) {
         PackageReference last =  cycle.getLast();
         Set<Cycle> cyclesForThisBreakingPoint = breakingPoints.get(last);
         if (cyclesForThisBreakingPoint == null) {
@@ -34,11 +35,11 @@ public class CyclesInSubgraph {
         cyclesForThisBreakingPoint.add(cycle);
     }
 
-    public void rememberPackageAsInvestigated(Package aPackage) {
+    void rememberPackageAsInvestigated(Package aPackage) {
         investigatedPackages.add(aPackage);
     }
 
-    public void mergeIn(CyclesInSubgraph that) {
+    void mergeIn(CyclesInSubgraph that) {
         mergeBreakingPoints(that.breakingPoints);
         this.investigatedPackages.addAll(that.investigatedPackages);
     }
@@ -54,14 +55,12 @@ public class CyclesInSubgraph {
         }
     }
 
-    public boolean isBreakingPoint(Package aPackage) {
+    boolean isBreakingPoint(Package aPackage) {
         Set<Cycle> cyclesForThisBreakingPoint = breakingPoints.get(aPackage.getReference());
-        return cyclesForThisBreakingPoint != null && cyclesForThisBreakingPoint.size() > 20;
+        return cyclesForThisBreakingPoint != null && cyclesForThisBreakingPoint.size() > LIMIT;
     }
 
-    public Map<PackageReference, Set<Cycle>> getBreakingPoints() {
-        return Maps.newHashMap(breakingPoints);
-    }
+
     
     @Override
     public String toString() {
