@@ -4,14 +4,14 @@ import org.tindalos.principle.domain.coredetector.CheckResult;
 import org.tindalos.principle.domain.expectations.PackageCoupling;
 import org.tindalos.principle.domain.expectations.cumulativedependency.DoubleThresholder;
 
-public class ACDResult implements CheckResult {
+public class ACDResultOld implements CheckResult {
 
     private final Double acd;
     private final Double rAcd;
     private final Double nCcd;
 	private final PackageCoupling packageCouplingExpectation;
 
-    public ACDResult(int cumulatedComponentDependency, int numOfComponents, PackageCoupling packageCoupling) {
+    public ACDResultOld(int cumulatedComponentDependency, int numOfComponents, PackageCoupling packageCoupling) {
         this.packageCouplingExpectation = packageCoupling;
 		this.acd = (double) cumulatedComponentDependency / (double) numOfComponents;
         this.rAcd = this.acd / (double) numOfComponents;

@@ -3,22 +3,17 @@ package org.tindalos.principle.domain.checker;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
-import java.util.Set;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration;
 import org.tindalos.principle.domain.coredetector.CheckResult;
 import org.tindalos.principle.domain.detector.acd.ACDResult;
-import org.tindalos.principle.domain.detector.layering.LayerReference;
-import org.tindalos.principle.domain.detector.layering.LayerViolationsResult;
 import org.tindalos.principle.domain.expectations.DesignQualityExpectations;
 import org.tindalos.principle.domain.expectations.PackageCoupling;
 import org.tindalos.principle.domain.expectations.cumulativedependency.ACD;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 import org.tindalos.principle.infrastructure.plugin.Checks;
-
-import com.google.common.collect.Sets;
 
 public class ACDTest {
 
@@ -91,7 +86,7 @@ public class ACDTest {
         List<CheckResult> resultList = checkResults.resultList();
         assertEquals(1, resultList.size());
         ACDResult result = (ACDResult) resultList.get(0);
-        return result.getACD();
+        return result.acd();
     }
 
     private DesignQualityExpectations prepareChecks() {
