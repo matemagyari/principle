@@ -6,12 +6,12 @@ import org.tindalos.principle.domain.core.ListConverter
 
 class CheckInput(val packages: List[Package], val designQualityCheckConfiguration: DesignQualityCheckConfiguration) {
 
-  def getBasePackage() = designQualityCheckConfiguration.getBasePackage()
+  def getBasePackage() = designQualityCheckConfiguration.basePackage
   def getPackageCouplingExpectations() = getExpectations.getPackageCoupling()
   def getLayeringExpectations() = getExpectations.getLayering()
   def getSubmodulesBlueprint() = getExpectations.getSubmodulesBlueprint()
   
-  private def getExpectations = designQualityCheckConfiguration.getExpectations()
+  private def getExpectations = designQualityCheckConfiguration.expectations
   
   def getPackages():java.util.List[Package] = ListConverter.convert(packages)
 

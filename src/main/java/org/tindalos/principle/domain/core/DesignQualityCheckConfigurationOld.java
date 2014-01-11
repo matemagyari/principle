@@ -3,12 +3,12 @@ package org.tindalos.principle.domain.core;
 import org.tindalos.principle.domain.expectations.DesignQualityExpectations;
 import org.tindalos.principle.domain.expectations.Layering;
 
-public class DesignQualityCheckConfiguration {
+public class DesignQualityCheckConfigurationOld {
 	
 	private final DesignQualityExpectations expectations;
 	private final String basePackage;
 	
-	public DesignQualityCheckConfiguration(DesignQualityExpectations expectations, String basePackage) {
+	public DesignQualityCheckConfigurationOld(DesignQualityExpectations expectations, String basePackage) {
 		this.expectations = expectations;
 		this.basePackage = basePackage;
 	}

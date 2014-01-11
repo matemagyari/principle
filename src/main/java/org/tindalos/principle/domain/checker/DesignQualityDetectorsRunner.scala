@@ -16,7 +16,7 @@ class DesignQualityDetectorsRunner(val detectors: java.util.List[Detector]) {
 
     val checkResults = scala.collection.mutable.ListBuffer[CheckResult]()
     val checkInput = new CheckInput(packages, designQualityCheckConfiguration)
-    detectors.filter(_.isWanted(designQualityCheckConfiguration.getExpectations()))
+    detectors.filter(_.isWanted(designQualityCheckConfiguration.expectations))
       .foreach(detector => {
         runDetector(checkResults, checkInput, detector)
       })

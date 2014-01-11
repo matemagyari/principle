@@ -32,12 +32,12 @@ public class LayerViolationDetector implements Detector {
 
         List<LayerReference> violations = Lists.newArrayList();
 
-        for (Package aPackage : filterToRelevantPackages(packages, configuration.getBasePackage())) {
+        for (Package aPackage : filterToRelevantPackages(packages, configuration.basePackage())) {
             List<String> layers = layers(configuration);
-            Optional<String> layer = getLayer(aPackage, layers, configuration.getBasePackage());
+            Optional<String> layer = getLayer(aPackage, layers, configuration.basePackage());
             if (layer.isPresent()) {
                 List<String> outerLayers = outerLayers(layers, layer.get());
-                violations.addAll(getReferencesToLayers(aPackage, outerLayers, configuration.getBasePackage()));
+                violations.addAll(getReferencesToLayers(aPackage, outerLayers, configuration.basePackage()));
             }
         }
 
@@ -47,10 +47,10 @@ public class LayerViolationDetector implements Detector {
     private List<String> layers(final DesignQualityCheckConfiguration configuration) {
         Function<String, String> function = new Function<String, String>() {
             public String apply(String input) {
-                return configuration.getBasePackage() + "." + input;
+                return configuration.basePackage() + "." + input;
             }
         };
-        return Lists.newArrayList(Iterables.transform(configuration.getExpectations().getLayering().getLayers(),
+        return Lists.newArrayList(Iterables.transform(configuration.getLayeringExpectations().getLayers(),
                 function));
     }
 

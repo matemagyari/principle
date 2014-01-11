@@ -32,7 +32,7 @@ public class CycleDetector implements Detector {
     public ADPResult analyze(CheckInput checkInput) {
 
         Package basePackage = packageStructureBuilder.build(checkInput.getPackages(), checkInput.designQualityCheckConfiguration()
-                .getBasePackage());
+                .basePackage());
         Map<PackageReference, Package> references = basePackage.toMap();
 
         Map<PackageReference, Set<Cycle>> cycles = Maps.newHashMap();

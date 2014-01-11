@@ -25,7 +25,7 @@ public class ACDDetector implements Detector {
 
 	public CheckResult analyze(CheckInput checkInput) {
 		List<Package> packages = checkInput.getPackages();
-		Package basePackage = packageStructureBuilder.build(packages, checkInput.designQualityCheckConfiguration().getBasePackage());
+		Package basePackage = packageStructureBuilder.build(packages, checkInput.designQualityCheckConfiguration().basePackage());
 		
 		Map<PackageReference, Package> referenceMap = basePackage.toMap();
 		
