@@ -1,5 +1,6 @@
 package org.tindalos.principle.infrastructure.di;
 
+import java.util.List;
 import java.util.Map;
 
 import org.tindalos.principle.app.service.Application;
@@ -8,6 +9,7 @@ import org.tindalos.principle.domain.checker.DesignQualityDetectorsRunner;
 import org.tindalos.principle.domain.checker.PackageAnalyzer;
 import org.tindalos.principle.domain.core.PackageSorter;
 import org.tindalos.principle.domain.coredetector.CheckResult;
+import org.tindalos.principle.domain.coredetector.Detector;
 import org.tindalos.principle.domain.coredetector.ViolationsReporter;
 import org.tindalos.principle.domain.detector.acd.ACDDetector;
 import org.tindalos.principle.domain.detector.acd.ACDResult;
@@ -39,6 +41,7 @@ import org.tindalos.principle.infrastructure.service.jdepend.MetricsCalculator;
 import org.tindalos.principle.infrastructure.service.jdepend.PackageFactory;
 import org.tindalos.principle.infrastructure.service.jdepend.PackageListFactory;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 public class PoorMansDIContainer {
@@ -65,7 +68,8 @@ public class PoorMansDIContainer {
 		SubmodulesFactory submodulesFactory = new SubmodulesFactory(packageStructureBuilder, submoduleDefinitionsProvider, submoduleFactory);
 		SubmodulesBlueprintViolationDetector submodulesBlueprintViolationDetector = new SubmodulesBlueprintViolationDetector(submodulesFactory );
 
-        DesignQualityDetectorsRunner designQualityDetectorsRunner = new DesignQualityDetectorsRunner(layerViolationDetector, cycleDetector, sdpViolationDetector, sapViolationDetector, acdDetector, submodulesBlueprintViolationDetector);
+        List<Detector> detectors = Lists.newArrayList(layerViolationDetector, cycleDetector, sdpViolationDetector, sapViolationDetector, acdDetector, submodulesBlueprintViolationDetector);
+		DesignQualityDetectorsRunner designQualityDetectorsRunner = new DesignQualityDetectorsRunner(detectors);
         return new DesignQualityCheckService(packageAnalyzer, designQualityDetectorsRunner);
     }
 

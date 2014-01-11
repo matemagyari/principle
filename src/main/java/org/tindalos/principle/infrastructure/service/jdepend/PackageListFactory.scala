@@ -7,6 +7,8 @@ import scala.collection.immutable.List
 import org.tindalos.principle.domain.core.Package
 import java.util.ArrayList
 
+import scala.collection.JavaConversions._
+
 //eliminate java.util.List
 class PackageListFactory(val packageFactory:PackageFactory, val packageSorter:PackageSorter) {
 
@@ -17,11 +19,6 @@ class PackageListFactory(val packageFactory:PackageFactory, val packageSorter:Pa
     val unsortedList:List[Package] = analyzedPackages
     					.filter(packageFactory.isRelevant(_))
     					.map(packageFactory.transform(_))
-    val unsortedListJava = new ArrayList[Package]()
-    
-    for (element <- unsortedList) {
-      unsortedListJava.add(element);
-    }
-    packageSorter.sortByName(unsortedListJava)					
+    packageSorter.sortByName(unsortedList)					
   }
 }
