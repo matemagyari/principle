@@ -8,11 +8,11 @@ import org.tindalos.principle.domain.coredetector.ViolationsReporter;
 
 import com.google.common.collect.Maps;
 
-public class DesignQualityCheckResultsReporter {
+public class DesignQualityCheckResultsReporterOld {
 
 	private Map<Class<? extends CheckResult>, ViolationsReporter<? extends CheckResult>> reporters;
 
-	public DesignQualityCheckResultsReporter( Map<Class<? extends CheckResult>, ViolationsReporter<? extends CheckResult>> reporters) {
+	public DesignQualityCheckResultsReporterOld( Map<Class<? extends CheckResult>, ViolationsReporter<? extends CheckResult>> reporters) {
 		this.reporters = Maps.newHashMap(reporters);
 	}
 	
