@@ -8,8 +8,7 @@ class DesignQualityCheckService(val packageAnalyzer:PackageAnalyzer
 								, val designQualityDetectorsRunner: DesignQualityDetectorsRunner) {
   
     def analyze(parameters: DesignQualityCheckConfiguration) = {
-    	println("we are using Scala !!!")
-        val packages:List[Package] = packageAnalyzer.analyze(parameters)
+        val packages = packageAnalyzer.analyze(parameters)
         designQualityDetectorsRunner.execute(packages, parameters)
     }
 

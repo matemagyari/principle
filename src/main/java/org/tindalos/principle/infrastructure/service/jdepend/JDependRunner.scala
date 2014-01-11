@@ -9,7 +9,7 @@ import java.util.Collection
 
 class JDependRunner {
 
-  def getAnalyzedPackages(basePackage:String):List[JavaPackage] = {
+  def getAnalyzedPackages(basePackage:String) = {
         
         try {
             val jDepend = new JDepend();
@@ -20,7 +20,7 @@ class JDependRunner {
             jDepend.setFilter(filter);
 			
             jDepend.addPackage(basePackage);
-            val packageCollection:Collection[JavaPackage] = jDepend.analyze().asInstanceOf[Collection[JavaPackage]]
+            val packageCollection = jDepend.analyze().asInstanceOf[Collection[JavaPackage]]
             ListConverter.convert(packageCollection)
         } catch {
           case ex : IOException => throw new ClassesToAnalyzeNotFoundException(ex)
