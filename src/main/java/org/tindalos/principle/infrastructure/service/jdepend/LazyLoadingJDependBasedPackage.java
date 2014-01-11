@@ -23,7 +23,7 @@ public class LazyLoadingJDependBasedPackage extends Package {
 		this.javaPackage = javaPackage;
         this.metrics = metrics;
         this.packageFactory = packageFactory;
-        this.isUnreferred = metrics.getAfferentCoupling() == 0;
+        this.isUnreferred = metrics.afferentCoupling() == 0;
         //System.err.println(javaPackage.getName() + " " + metrics);
     }
 

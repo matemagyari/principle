@@ -25,6 +25,8 @@ object ListConverter extends App {
     mut.toList
   }
   
+  def convert[T](scalaList:scala.collection.immutable.List[T]):java.util.List[T] = scalaList
+  
   val javaL = Lists.newArrayList(1, 2, 3)
   val scalaL = convert(javaL)
   println(scalaL)

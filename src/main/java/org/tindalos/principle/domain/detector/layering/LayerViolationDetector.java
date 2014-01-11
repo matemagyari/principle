@@ -20,7 +20,7 @@ import com.google.common.collect.Lists;
 public class LayerViolationDetector implements Detector {
 
     public LayerViolationsResult analyze(CheckInput checkInput) {
-        List<LayerReference> layerReferences = findViolations(checkInput.getPackages(), checkInput.getConfiguration());
+        List<LayerReference> layerReferences = findViolations(checkInput.getPackages(), checkInput.designQualityCheckConfiguration());
         return new LayerViolationsResult(layerReferences, checkInput.getLayeringExpectations());
     }
 

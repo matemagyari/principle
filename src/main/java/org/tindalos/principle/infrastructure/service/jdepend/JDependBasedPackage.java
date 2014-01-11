@@ -20,7 +20,7 @@ public class JDependBasedPackage extends Package {
 	public JDependBasedPackage(JavaPackage javaPackage, String basePackage, Metrics metrics) {
         super(javaPackage.getName());
         this.metrics = metrics;
-        this.isUnreferred = metrics.getAfferentCoupling() == 0;
+        this.isUnreferred = metrics.afferentCoupling() == 0;
         this.ownPackageReferences =  createOwnPackageReferences(javaPackage, basePackage);
     }
 	

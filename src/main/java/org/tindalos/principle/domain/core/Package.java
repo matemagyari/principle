@@ -120,7 +120,7 @@ public abstract class Package {
 
 			@Override
 			public Metrics getMetrics() {
-				return Metrics.undefined();
+				return UndefinedMetrics$.MODULE$;
 			}
 
 			@Override
@@ -256,11 +256,11 @@ public abstract class Package {
 	}
 
 	public Float instability() {
-		return getMetrics().getInstability();
+		return getMetrics().instability();
 	}
 
 	public Float distance() {
-		return getMetrics().getDistance();
+		return getMetrics().distance();
 	}
 
 	public abstract Set<PackageReference> getOwnPackageReferences();
@@ -270,7 +270,7 @@ public abstract class Package {
 	public abstract boolean isUnreferred();
 
 	public boolean isIsolated() {
-		return getMetrics().getAfferentCoupling() == 0 && getMetrics().getEfferentCoupling() == 0;
+		return getMetrics().afferentCoupling() == 0 && getMetrics().efferentCoupling() == 0;
 	}
 
 	@Override

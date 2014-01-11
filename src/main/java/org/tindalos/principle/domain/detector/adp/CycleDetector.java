@@ -31,14 +31,14 @@ public class CycleDetector implements Detector {
 
     public ADPResult analyze(CheckInput checkInput) {
 
-        Package basePackage = packageStructureBuilder.build(checkInput.getPackages(), checkInput.getConfiguration()
+        Package basePackage = packageStructureBuilder.build(checkInput.getPackages(), checkInput.designQualityCheckConfiguration()
                 .getBasePackage());
         Map<PackageReference, Package> references = basePackage.toMap();
 
         Map<PackageReference, Set<Cycle>> cycles = Maps.newHashMap();
 
         List<Package> sortedByAfferents = orderByAfferents(references.values());
-        if (basePackage.getMetrics().getAfferentCoupling() == 0) {
+        if (basePackage.getMetrics().afferentCoupling() == 0) {
             sortedByAfferents.remove(basePackage);
         }
         // sortedByAfferents.add(basePackage); //add to the end
@@ -49,7 +49,7 @@ public class CycleDetector implements Detector {
             cycles.putAll(cyclesInSubgraph.cycles());
             sortedByAfferents.removeAll(cyclesInSubgraph.investigatedPackages());
         }
-        return new ADPResult(cycles, checkInput.getConfiguration().getExpectations().getPackageCoupling().getADP());
+        return new ADPResult(cycles, checkInput.getPackageCouplingExpectations().getADP());
     }
 
     public boolean isWanted(DesignQualityExpectations expectations) {
@@ -65,7 +65,7 @@ public class CycleDetector implements Detector {
         Comparator<Package> comp = new Comparator<Package>() {
 
             public int compare(Package arg0, Package arg1) {
-                return arg0.getMetrics().getAfferentCoupling().compareTo(arg1.getMetrics().getAfferentCoupling());
+                return new Integer(arg0.getMetrics().afferentCoupling()).compareTo(arg1.getMetrics().afferentCoupling());
             }
         };
         Collections.sort(temp, comp);

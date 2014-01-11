@@ -35,7 +35,7 @@ public class SAPViolationDetector implements Detector {
 	private static void removeRootPackageIfEmpty(List<Package> packages) {
 		Package rootPackage = packages.get(0);
 		Metrics metrics = rootPackage.getMetrics();
-		if (metrics.getAbstractness() == 0 && metrics.getInstability() == 0) {
+		if (metrics.abstractness() == 0 && metrics.instability() == 0) {
 			packages.remove(rootPackage);
 		}
 	}
