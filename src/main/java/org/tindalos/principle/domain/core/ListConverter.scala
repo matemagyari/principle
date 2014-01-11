@@ -15,6 +15,15 @@ object ListConverter extends App {
     }
     mut.toList
   }
+
+    
+  def convert[T](javaList:java.util.Collection[T]):scala.collection.immutable.List[T] = {
+    val mut = scala.collection.mutable.ListBuffer[T]()
+    for(elem <- javaList) {
+      mut.+=(elem)
+    }
+    mut.toList
+  }
   
   val javaL = Lists.newArrayList(1, 2, 3)
   val scalaL = convert(javaL)

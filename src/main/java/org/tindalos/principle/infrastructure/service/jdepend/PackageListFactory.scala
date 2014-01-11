@@ -12,9 +12,9 @@ import scala.collection.JavaConversions._
 //eliminate java.util.List
 class PackageListFactory(val packageFactory:PackageFactory, val packageSorter:PackageSorter) {
 
-  def build(analyzedPackagesJava: Collection[JavaPackage]) = {
+  def build(analyzedPackages: List[JavaPackage]):List[Package] = {
     
-    val analyzedPackages:List[JavaPackage] = List.fromArray(analyzedPackagesJava.toArray()).asInstanceOf[List[JavaPackage]]
+    //val analyzedPackages:List[JavaPackage] = List.fromArray(analyzedPackagesJava.toArray()).asInstanceOf[List[JavaPackage]]
     
     val unsortedList:List[Package] = analyzedPackages
     					.filter(packageFactory.isRelevant(_))
