@@ -27,6 +27,8 @@ object ListConverter extends App {
   
   def convert[T](scalaList:scala.collection.immutable.List[T]):java.util.List[T] = scalaList
   
+  def convert[T](scalaSet:scala.collection.immutable.Set[T]):java.util.Set[T] = scalaSet
+
   val javaL = Lists.newArrayList(1, 2, 3)
   val scalaL = convert(javaL)
   println(scalaL)
