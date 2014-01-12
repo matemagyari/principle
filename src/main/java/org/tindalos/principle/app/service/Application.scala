@@ -14,7 +14,7 @@ class Application(val designQualityCheckService: DesignQualityCheckService,
     designQualityCheckResultsReporter.report(checkResults, printer);
 
     if (checkResults.failExpectations()) {
-      throw new ThresholdTrespassedException()
+      throw new ThresholdTrespassedException
     }
     checkResults
   }

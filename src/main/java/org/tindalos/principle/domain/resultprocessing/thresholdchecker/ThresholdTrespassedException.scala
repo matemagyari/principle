@@ -1,0 +1,5 @@
+package org.tindalos.principle.domain.resultprocessing.thresholdchecker
+
+import java.lang.RuntimeException
+
+class ThresholdTrespassedException extends RuntimeException
