@@ -136,7 +136,7 @@ public class ADPTest {
         List<CheckResult> resultList = checkResults.resultList();
         assertEquals(1, resultList.size());
         ADPResult adpResult = (ADPResult) resultList.get(0);
-        return adpResult.getCyclesByBreakingPoints();
+        return adpResult.cyclesByBreakingPoints();
     }
 
     private static DesignQualityExpectations prepareChecks() {
