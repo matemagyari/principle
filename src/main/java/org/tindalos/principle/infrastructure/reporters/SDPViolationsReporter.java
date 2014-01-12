@@ -31,8 +31,8 @@ public class SDPViolationsReporter implements ViolationsReporter<SDPResult> {
 
 		String arrow = "-->";
 		StringBuffer sb = new StringBuffer("");
-		Package depender = violation.getDepender();
-		Package dependee = violation.getDependee();
+		Package depender = violation.depender();
+		Package dependee = violation.dependee();
 		sb.append("\n " + depender.getReference() + "["+ depender.instability()+"] ");
 		sb.append(arrow);
 		sb.append(" " + dependee.getReference() + "["+ dependee.instability()+"] ");
