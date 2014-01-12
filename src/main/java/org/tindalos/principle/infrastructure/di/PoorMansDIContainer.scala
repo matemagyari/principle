@@ -36,7 +36,6 @@ import org.tindalos.principle.infrastructure.service.jdepend.PackageFactory
 import org.tindalos.principle.infrastructure.service.jdepend.PackageListFactory
 import com.google.common.collect.Lists
 import org.tindalos.principle.app.service.Application
-import org.tindalos.principle.domain.resultprocessing.reporter.DesignQualityCheckResultsReporterOld
 
 object PoorMansDIContainer {
 
