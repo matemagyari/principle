@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration;
+import org.tindalos.principle.domain.core.ListConverter;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.coredetector.CheckInput;
@@ -17,11 +18,13 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-public class LayerViolationDetector implements Detector {
+
+public class LayerViolationDetectorOld implements Detector {
 
     public LayerViolationsResult analyze(CheckInput checkInput) {
         List<LayerReference> layerReferences = findViolations(checkInput.getPackages(), checkInput.designQualityCheckConfiguration());
-        return new LayerViolationsResult(layerReferences, checkInput.getLayeringExpectations());
+		//return new LayerViolationsResult(layerReferences, checkInput.getLayeringExpectations());
+        return null;
     }
 
     public boolean isWanted(DesignQualityExpectations expectations) {

@@ -7,12 +7,12 @@ import org.tindalos.principle.domain.expectations.Layering;
 
 import com.google.common.collect.Lists;
 
-public class LayerViolationsResult implements CheckResult {
+public class LayerViolationsResultOld implements CheckResult {
 
     private final List<LayerReference> references;
 	private final Layering layeringExpectations;
 
-    public LayerViolationsResult(List<LayerReference> references, Layering layeringExpectations) {
+    public LayerViolationsResultOld(List<LayerReference> references, Layering layeringExpectations) {
         this.layeringExpectations = layeringExpectations;
 		this.references = Lists.newArrayList(references);
     }
