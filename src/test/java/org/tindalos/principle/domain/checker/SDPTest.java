@@ -37,7 +37,7 @@ public class SDPTest {
         
         SDPResult result = run("org.tindalos.principletest.sdp");
         
-        List<SDPViolation> violations = result.getViolations();
+        List<SDPViolation> violations = result.getViolationsAsJavaList();
         
         for (SDPViolation violation : violations) {
             System.err.println(violation);
