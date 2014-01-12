@@ -15,7 +15,7 @@ class DesignQualityCheckResultsReporter(var reporters: Map[Class[_ <: CheckResul
 
   def report(results: DesignQualityCheckResults, printer: Printer) = {
 
-    results.resultList().foreach({ checkResult =>
+    results.checkResults.foreach({ checkResult =>
       
       val reporter: ViolationsReporter[_ <: CheckResult] = reporters.get(checkResult.getClass()).get
       var report:String = null

@@ -20,7 +20,7 @@ class DesignQualityDetectorsRunner(val detectors: java.util.List[Detector]) {
       .foreach(detector => {
         runDetector(checkResults, checkInput, detector)
       })
-    new DesignQualityCheckResults(checkResults)
+    new DesignQualityCheckResults(checkResults.toList)
   }
 
   private def runDetector(checkResults: scala.collection.mutable.ListBuffer[CheckResult], checkInput: CheckInput, detector: Detector) = {
