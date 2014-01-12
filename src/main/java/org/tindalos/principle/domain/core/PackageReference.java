@@ -57,7 +57,7 @@ public class PackageReference implements Comparable<PackageReference> {
     }
     
     
-    public String getName() {
+    public String name() {
         return name;
     }
 

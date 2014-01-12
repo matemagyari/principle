@@ -5,7 +5,6 @@ import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration
 import org.tindalos.principle.domain.core.ListConverter
 import org.tindalos.principle.domain.core.Package
 import scala.collection.JavaConversions._
-import org.tindalos.principle.domain.core.PackageReference
 import org.tindalos.principle.domain.coredetector.Detector
 import org.tindalos.principle.domain.expectations.DesignQualityExpectations
 
@@ -43,7 +42,7 @@ class LayerViolationDetector extends Detector {
     val referencedPackages = ListConverter.convert(aPackage.getOwnPackageReferences()).filter(_.startsWith(basePackage))
 
     for (referencedPackage <- referencedPackages; layer <- layers if referencedPackage.startsWith(layer)) {
-      references.+=(new LayerReference(aPackage.getReference().getName(), referencedPackage.getName()))
+      references.+=(new LayerReference(aPackage.getReference().name(), referencedPackage.name))
     }
 
     references.toList
