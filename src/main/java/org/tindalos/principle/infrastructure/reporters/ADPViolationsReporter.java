@@ -16,7 +16,7 @@ import com.google.common.collect.Lists;
 public class ADPViolationsReporter implements ViolationsReporter<ADPResult> {
 
     public String report(ADPResult result) {
-        Map<PackageReference, Set<Cycle>> cyclesByBreakingPoints = result.cyclesByBreakingPoints();
+        Map<PackageReference, Set<Cycle>> cyclesByBreakingPoints = result.getCyclesByBreakingPoints();
         String sectionLine = "==============================================================";
         StringBuffer sb = new StringBuffer("\n" + sectionLine + "\n");
         sb.append("\tAcyclic Package Dependency Principle violations (" + cyclesByBreakingPoints.size() + " of the allowed "
