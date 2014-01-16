@@ -28,6 +28,7 @@ object ListConverter extends App {
   def convert[T](scalaList:scala.collection.immutable.List[T]):java.util.List[T] = scalaList
   
   def convert[T](scalaSet:scala.collection.immutable.Set[T]):java.util.Set[T] = scalaSet
+  def convert[T](scalaSet:scala.collection.mutable.Set[T]):java.util.Set[T] = scalaSet
 
   def convert[T](javaSet:java.util.Set[T]):scala.collection.immutable.Set[T] = {
     val mut = scala.collection.mutable.ListBuffer[T]()
@@ -35,6 +36,14 @@ object ListConverter extends App {
       mut.+=(elem)
     }
     mut.toSet
+  }
+  
+  def convert[K,V](javaMap:java.util.Map[K,V]):scala.collection.immutable.Map[K,V] = {
+    var scalaMap = scala.collection.immutable.Map[K,V]()
+    javaMap.foreach({keyVal => 
+      scalaMap += (keyVal._1 -> keyVal._2)
+    })
+    scalaMap
   }
   
   val javaL = Lists.newArrayList(1, 2, 3)

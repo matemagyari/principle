@@ -29,7 +29,7 @@ public class SubmoduleDefinitions implements Iterable<SubmoduleDefinition> {
 			Set<SubmoduleDefinition> otherDefinitions = allBut(definitions, submoduleDefinition);
 			for (SubmoduleDefinition anOtherDefinition : otherDefinitions) {
 				if (submoduleDefinition.overlapsWith(anOtherDefinition)) {
-					overlaps.add(new Overlap(submoduleDefinition.getId(), anOtherDefinition.getId()));
+					overlaps.add(new Overlap(submoduleDefinition.id(), anOtherDefinition.id()));
 				}
 			}
 		}
@@ -41,7 +41,7 @@ public class SubmoduleDefinitions implements Iterable<SubmoduleDefinition> {
 	public SubmoduleDefinitions(List<SubmoduleDefinition> theDefinitions) {
 		this.definitions = Maps.newHashMap();
 		for (SubmoduleDefinition submoduleDefinition : theDefinitions) {
-			definitions.put(submoduleDefinition.getId(), submoduleDefinition);
+			definitions.put(submoduleDefinition.id(), submoduleDefinition);
 		}
 	}
 

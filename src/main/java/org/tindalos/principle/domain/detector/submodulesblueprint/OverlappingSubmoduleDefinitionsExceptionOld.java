@@ -6,9 +6,9 @@ import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefin
 
 
 @SuppressWarnings("serial")
-public class OverlappingSubmoduleDefinitionsException extends InvalidBlueprintDefinitionException {
+public class OverlappingSubmoduleDefinitionsExceptionOld extends InvalidBlueprintDefinitionException {
 
-	public OverlappingSubmoduleDefinitionsException(Set<Overlap> overlaps) {
+	public OverlappingSubmoduleDefinitionsExceptionOld(Set<Overlap> overlaps) {
 		super(toMessage(overlaps));
 	}
 
