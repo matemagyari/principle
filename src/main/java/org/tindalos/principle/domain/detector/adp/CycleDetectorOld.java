@@ -19,13 +19,13 @@ import org.tindalos.principle.domain.expectations.PackageCoupling;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-public class CycleDetector implements Detector {
+public class CycleDetectorOld {} /*implements Detector {
 
     public static final String ID = "APDDetector";
 
     private final PackageStructureBuilder packageStructureBuilder;
 
-    public CycleDetector(PackageStructureBuilder packageStructureBuilder) {
+    public CycleDetectorOld(PackageStructureBuilder packageStructureBuilder) {
         this.packageStructureBuilder = packageStructureBuilder;
     }
 
@@ -71,4 +71,4 @@ public class CycleDetector implements Detector {
         Collections.sort(temp, comp);
         return temp;
     }
-}
+}*/
