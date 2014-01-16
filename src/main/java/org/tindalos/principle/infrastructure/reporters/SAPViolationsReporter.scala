@@ -6,7 +6,7 @@ import org.tindalos.principle.domain.core.Package
 
 class SAPViolationsReporter extends ViolationsReporter[SAPResult] {
   
-  	def report(result:SAPResult) = {
+  	override def report(result:SAPResult) = {
 		val outlierPackages = result.outlierPackages
 		val sectionLine = "=============================================================="
 		val sb = new StringBuffer("\n" + sectionLine + "\n")

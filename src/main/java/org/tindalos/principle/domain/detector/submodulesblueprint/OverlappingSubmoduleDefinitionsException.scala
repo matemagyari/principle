@@ -2,9 +2,13 @@ package org.tindalos.principle.domain.detector.submodulesblueprint
 
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefinitions.Overlap
 import scala.collection.JavaConversions._
+import org.tindalos.principle.domain.core.ListConverter
 
 class OverlappingSubmoduleDefinitionsException(val overlaps: java.util.Set[Overlap])
-  extends InvalidBlueprintDefinitionException(OverlappingSubmoduleDefinitionsException.toMessage(overlaps))
+  extends InvalidBlueprintDefinitionException(OverlappingSubmoduleDefinitionsException.toMessage(overlaps)) {
+
+  def getoverlaps = ListConverter.convert(overlaps)
+}
 
 object OverlappingSubmoduleDefinitionsException {
 
@@ -19,6 +23,6 @@ object OverlappingSubmoduleDefinitionsException {
     })
 
     msg.toString()
-
   }
+
 }

@@ -17,9 +17,13 @@ public class Submodule {
 	private final Set<Package> packagesUnderModule;
 	private final Set<PackageReference> outgoingReferences;
 
-	public Submodule(SubmoduleId id, Set<Package> packagesUnderModule) {
+	public Submodule(SubmoduleId id, Set<Package> packagesUnderModule,Set<SubmoduleId> plannedDependencies) {
+		//TODO move this check to the definition
+		if (plannedDependencies.contains(id)) {
+			throw new InvalidBlueprintDefinitionException("Submodule should not depend on itself: " + this.id);
+		}
 		this.id = id;
-		this.predefinedDependencies = Sets.newHashSet();
+		this.predefinedDependencies = Sets.newHashSet(plannedDependencies);
 		this.packagesUnderModule = Sets.newHashSet(packagesUnderModule);
 		this.outgoingReferences = collectOutgoingReferences();
 	}
@@ -117,13 +121,6 @@ public class Submodule {
 
 	public Set<SubmoduleId> getPredefinedDependencies() {
 		return Sets.newHashSet(predefinedDependencies);
-	}
-
-	public void defineDependencies(Set<SubmoduleId> plannedDependencies) {
-		if (plannedDependencies.contains(id)) {
-			throw new InvalidBlueprintDefinitionException("Submodule should not depend on itself: " + this.id);
-		}
-		this.predefinedDependencies.addAll(plannedDependencies);
 	}
 
 	private SubmoduleId getId() {

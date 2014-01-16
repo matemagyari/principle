@@ -2,6 +2,7 @@ package org.tindalos.principle.domain.checker;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,6 +17,7 @@ import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.coredetector.CheckResult;
 import org.tindalos.principle.domain.detector.adp.ADPResult;
+import org.tindalos.principle.domain.detector.submodulesblueprint.OverlappingSubmoduleDefinitionsException;
 import org.tindalos.principle.domain.detector.submodulesblueprint.Submodule;
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleId;
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmodulesBlueprintCheckResult;
@@ -32,27 +34,18 @@ import com.google.common.collect.Sets;
 
 public class BlueprintTest {
 
-    private DesignQualityCheckConfiguration designQualityCheckConfiguration;
-    private DesignQualityCheckService designQualityCheckService;
-    private DesignQualityExpectations checks = prepareChecks();
-
     @BeforeClass
     public static void setup() {
         TestFixture.setLogger();
     }
 
-    private void init(String basePackage) {
-        designQualityCheckService = PoorMansDIContainer.getDesignCheckService(basePackage);
-        designQualityCheckConfiguration = new DesignQualityCheckConfiguration(checks, basePackage);
-    }
-
     @Test
-    public void simple() {
+    public void missingAndIllegal() {
         
-        SubmodulesBlueprintCheckResult result = run("org.tindalos.principletest.submodulesblueprint");
+        SubmodulesBlueprintCheckResult result = run("org.tindalos.principletest.submodulesblueprint","src/test/resources/principle_blueprint_test.yaml");
         
-        Map<Submodule, Set<Submodule>> illegalDependencies = result.illegalDependencies();
-        Map<Submodule, Set<Submodule>> missingDependencies = result.missingDependencies();
+        Map<Submodule, Set<Submodule>> illegalDependencies = result.illegalDependenciesJava();
+        Map<Submodule, Set<Submodule>> missingDependencies = result.missingDependenciesJava();
         
         Submodule mod1 = fakeSubmodule("MOD1");
         Submodule mod2 = fakeSubmodule("MOD2");
@@ -68,6 +61,12 @@ public class BlueprintTest {
         assertEquals(expectedMissingDependencies, missingDependencies);
     }
     
+    @Test
+    public void overlapping() {
+    	SubmodulesBlueprintCheckResult result = run("org.tindalos.principletest.submodulesblueprint","src/test/resources/principle_blueprint_test_overlapping.yaml");
+    	System.out.println(result);
+    }
+    
     private void assertDependencies(Map<Submodule, Set<Submodule>> actualDependencies, Submodule referer, Submodule... referees) {
 		Map<Submodule, Set<Submodule>> expected = Maps.newHashMap();
 		assertEquals(actualDependencies, expected);
@@ -75,26 +74,27 @@ public class BlueprintTest {
 
 	private static Submodule fakeSubmodule(String name) {
     	Set<Package> empty = Sets.newHashSet();
-		return new Submodule(new SubmoduleId(name), empty);
+		return new Submodule(new SubmoduleId(name), empty, new HashSet<SubmoduleId>());
     }
     
        
-    private SubmodulesBlueprintCheckResult run(String basePackage) {
-        init(basePackage);
-        DesignQualityCheckResults checkResults = designQualityCheckService.analyze(designQualityCheckConfiguration);
+    private SubmodulesBlueprintCheckResult run(String basePackage, String location) {
+        DesignQualityExpectations checks = prepareChecks(location);
+        DesignQualityCheckService designQualityCheckService = PoorMansDIContainer.getDesignCheckService(basePackage);
+        DesignQualityCheckResults checkResults = designQualityCheckService.analyze(new DesignQualityCheckConfiguration(checks, basePackage));
         List<CheckResult> resultList = checkResults.resultList();
         assertEquals(1, resultList.size());
         return (SubmodulesBlueprintCheckResult) resultList.get(0);
     }
 
-    private static DesignQualityExpectations prepareChecks() {
+    private static DesignQualityExpectations prepareChecks(String location) {
         Checks checks = new Checks();
-        checks.setSubmodulesBlueprint(submodulesBlueprint());
+        checks.setSubmodulesBlueprint(submodulesBlueprint(location));
         return checks;
     }
 
-	private static SubmodulesBlueprint submodulesBlueprint() {
-		SubmodulesDefinitionLocation submodulesDefinitionLocation = new SubmodulesDefinitionLocation("src/test/resources/principle_blueprint_test.yaml");
+	private static SubmodulesBlueprint submodulesBlueprint(String location) {
+		SubmodulesDefinitionLocation submodulesDefinitionLocation = new SubmodulesDefinitionLocation(location);
 		return new SubmodulesBlueprint(submodulesDefinitionLocation, 0);
 	}
 
