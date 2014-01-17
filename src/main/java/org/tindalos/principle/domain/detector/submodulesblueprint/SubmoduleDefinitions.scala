@@ -13,14 +13,7 @@ class SubmoduleDefinitions(val definitions: Map[SubmoduleId, SubmoduleDefinition
 
     if (!overlaps.isEmpty) throw new OverlappingSubmoduleDefinitionsException(overlaps.toSet)
   }
-  /*
-	public SubmoduleDefinitionsOld(List[SubmoduleDefinition] theDefinitions) {
-		this.definitions = Maps.newHashMap()
-		for (SubmoduleDefinition submoduleDefinition : theDefinitions) {
-			definitions.put(submoduleDefinition.id(), submoduleDefinition)
-		}
-	}
-*/
+
   def getPackages(submoduleId: SubmoduleId) = definitions.get(submoduleId).get.packages
 
 }
