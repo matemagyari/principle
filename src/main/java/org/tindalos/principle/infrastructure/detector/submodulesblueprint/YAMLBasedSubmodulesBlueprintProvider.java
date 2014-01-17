@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.tindalos.principle.domain.core.ListConverter;
 import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.detector.submodulesblueprint.InvalidBlueprintDefinitionException;
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefinition;
@@ -38,7 +39,7 @@ public class YAMLBasedSubmodulesBlueprintProvider implements SubmoduleDefinition
 		
 		addDependencies(yamlObject, submoduleDefinitionMap);
 		
-		return new SubmoduleDefinitions(submoduleDefinitionMap);
+		return new SubmoduleDefinitions(ListConverter.convert(submoduleDefinitionMap));
 	
 	}
 

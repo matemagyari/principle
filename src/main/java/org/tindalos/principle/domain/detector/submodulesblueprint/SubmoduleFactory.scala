@@ -8,7 +8,7 @@ import scala.collection.JavaConversions._
 class SubmoduleFactory {
 
   def buildModules(submoduleDefinitions: SubmoduleDefinitions, packageMap: java.util.Map[PackageReference, Package]) = 
-    submoduleDefinitions.map(convert(ListConverter.convert(packageMap), _)).toSet
+    submoduleDefinitions.definitions.values.map(convert(ListConverter.convert(packageMap), _)).toSet
 
   private def convert(packageMap: Map[PackageReference, Package], submoduleDefinition: SubmoduleDefinition): Submodule = {
     val packages = submoduleDefinition.packages.map(reference => packageMap.get(reference) match {

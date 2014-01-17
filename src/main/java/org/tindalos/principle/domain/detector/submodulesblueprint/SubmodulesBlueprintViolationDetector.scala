@@ -37,7 +37,7 @@ class SubmodulesBlueprintViolationDetector(private val submoduleFactory: Submodu
 
       new SubmodulesBlueprintCheckResult(submodulesBlueprint, allIllegalDependencies.toMap, allMissingDependencies.toMap)
     } catch {
-      case ex: OverlappingSubmoduleDefinitionsException => new SubmodulesBlueprintCheckResult(submodulesBlueprint, overlaps = ex.getoverlaps)
+      case ex: OverlappingSubmoduleDefinitionsException => new SubmodulesBlueprintCheckResult(submodulesBlueprint, overlaps = ex.overlaps)
     }
   }
 

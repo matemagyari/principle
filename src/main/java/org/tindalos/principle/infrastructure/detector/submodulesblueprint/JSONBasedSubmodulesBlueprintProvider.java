@@ -11,6 +11,7 @@ import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.tindalos.principle.domain.core.ListConverter;
 import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.detector.submodulesblueprint.InvalidBlueprintDefinitionException;
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefinition;
@@ -37,7 +38,7 @@ public class JSONBasedSubmodulesBlueprintProvider implements SubmoduleDefinition
 			
 			addDependencies(jsonObject, submoduleDefinitionMap);
 			
-			return new SubmoduleDefinitions(submoduleDefinitionMap);
+			return new SubmoduleDefinitions(ListConverter.convert(submoduleDefinitionMap));
 
 		} catch (JSONException e) {
 			throw new RuntimeException(e);

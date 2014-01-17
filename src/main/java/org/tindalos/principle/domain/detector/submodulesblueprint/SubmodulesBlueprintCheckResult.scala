@@ -1,9 +1,8 @@
 package org.tindalos.principle.domain.detector.submodulesblueprint
 
+import org.tindalos.principle.domain.core.ListConverter
 import org.tindalos.principle.domain.coredetector.CheckResult
 import org.tindalos.principle.domain.expectations.SubmodulesBlueprint
-import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefinitions.Overlap
-import org.tindalos.principle.domain.core.ListConverter
 
 class SubmodulesBlueprintCheckResult(
   val submodulesBlueprint: SubmodulesBlueprint,
