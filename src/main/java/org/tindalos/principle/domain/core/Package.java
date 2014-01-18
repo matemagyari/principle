@@ -52,16 +52,6 @@ public abstract class Package extends PackageScala {
 		}
 	}
     
-	// all the references going out from this package
-	public Set<PackageReference> accumulatedDirectPackageReferences() {
-		Set<PackageReference> packageReferences = Sets.newHashSet();
-		for (Package child : subPackages()) {
-			packageReferences.addAll(child.accumulatedDirectPackageReferences());
-		}
-		packageReferences.addAll(getOwnPackageReferences());
-		packageReferences.remove(this.reference());
-		return packageReferences;
-	}
 
 	private Set<Package> accumulatedDirectlyReferredPackages(Map<PackageReference, Package> packageReferenceMap) {
 		Set<PackageReference> packageReferences = accumulatedDirectPackageReferences();
