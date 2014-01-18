@@ -17,14 +17,13 @@ import com.google.common.collect.Sets;
 public abstract class Package extends PackageScala {
 
 	private final List<Package> subPackages = Lists.newArrayList();
-	private final PackageReference reference;
 
 	public Package(String name) {
-		this.reference = new PackageReference(name);
+		super(name);
 	}
 
 	public PackageReference getReference() {
-		return reference;
+		return reference();
 	}
 
     public void insert(Package aPackage) {
@@ -52,7 +51,7 @@ public abstract class Package extends PackageScala {
 		accumulatedPackageReferences.removeAll(dependencies);
 
 		if (accumulatedPackageReferences.isEmpty()) {
-			dependencies.remove(this.reference);
+			dependencies.remove(this.reference());
 			return dependencies;
 		} else {
 			Set<PackageReference> result = Sets.newHashSet(accumulatedPackageReferences);
@@ -61,7 +60,7 @@ public abstract class Package extends PackageScala {
 				assert aPackage != null : packageReference + " does not exist!";
 				dependencies.add(packageReference);
 				result.addAll(aPackage.cumulatedDependenciesAcc(packageReferenceMap, dependencies));
-				result.remove(this.reference);
+				result.remove(this.reference());
 			}
 			return result;
 		}
@@ -80,7 +79,7 @@ public abstract class Package extends PackageScala {
 			packageReferences.addAll(child.accumulatedDirectPackageReferences());
 		}
 		packageReferences.addAll(getOwnPackageReferences());
-		packageReferences.remove(this.reference);
+		packageReferences.remove(this.reference());
 		return packageReferences;
 	}
 
@@ -273,23 +272,4 @@ public abstract class Package extends PackageScala {
 		return getMetrics().afferentCoupling() == 0 && getMetrics().efferentCoupling() == 0;
 	}
 
-	@Override
-	public boolean equals(Object other) {
-		if (!(other instanceof Package)) {
-			return false;
-		}
-		Package castOther = (Package) other;
-		return new EqualsBuilder().append(reference, castOther.reference).isEquals();
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(reference).hashCode();
-	}
-
-	@Override
-	public String toString() {
-		return this.reference.toString();
-	}
-	
 }
