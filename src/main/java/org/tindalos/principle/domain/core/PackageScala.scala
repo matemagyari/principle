@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder
 import com.google.common.collect.Lists
 import scala.collection.JavaConversions._
 import com.google.common.collect.Sets
+import com.google.common.base.Optional
 
 abstract class PackageScala(val reference: PackageReference) {
 
@@ -74,7 +75,7 @@ abstract class PackageScala(val reference: PackageReference) {
     if (index != -1) index
     else {
       var matchFoundIndex: Option[Int] = None
-      for (index <- 0 to traversedPackages.size() - 1; if matchFoundIndex.isEmpty) {
+      for (index <- 0 to traversedPackages.size() - 1 if matchFoundIndex.isEmpty) {
         val possibleMatch = traversedPackages.get(index)
         if (possibleMatch.equals(reference)
           || (reference.isDescendantOf(possibleMatch)
@@ -83,13 +84,47 @@ abstract class PackageScala(val reference: PackageReference) {
         }
 
       }
-      // System.err.println("Failed " + traversedPackages + " " + this);
+      // System.err.println("Failed " + traversedPackages + " " + this)
       matchFoundIndex match {
         case None => -1
         case Some(index) => index
       }
     }
   }
+
+  // it dies if there are cycles
+  // through references, not through subPackages. transaitive too
+  def cumulatedDependencies(packageReferenceMap: java.util.Map[PackageReference, Package]) = cumulatedDependenciesAcc(packageReferenceMap, new java.util.HashSet[PackageReference]());
+
+  private def cumulatedDependenciesAcc(packageReferenceMap: java.util.Map[PackageReference, Package], dependencies: java.util.Set[PackageReference]): java.util.Set[PackageReference] = {
+
+    val accumulatedPackageReferences = this.accumulatedDirectPackageReferences()
+
+    accumulatedPackageReferences.removeAll(dependencies)
+
+    if (accumulatedPackageReferences.isEmpty()) {
+      dependencies.remove(reference);
+      dependencies
+    } else {
+      val result = Sets.newHashSet(accumulatedPackageReferences)
+      accumulatedPackageReferences.foreach({ packageReference =>
+        dependencies.add(packageReference)
+        result.addAll(packageReferenceMap.get(packageReference).cumulatedDependenciesAcc(packageReferenceMap, dependencies))
+        result.remove(reference)
+      })
+      result
+    }
+  }
+  /*
+  private def findCycleCandidateEndingHere(traversedPackages: TraversedPackages): Option[java.util.List[PackageReference]] = {
+
+    val indexOfThisPackage = indexInTraversedPath(ListConverter.convert(traversedPackages.packages))
+    if (indexOfThisPackage > -1) {
+      val cycleCandidate = ListConverter.convert(traversedPackages.from(indexOfThisPackage))
+      Some(cycleCandidate)
+    } else None
+  }
+  */
 
   protected def notAllAreDescendantsOf(packages: java.util.List[PackageReference], possibleAncestor: PackageReference) = packages.exists(!_.isDescendantOf(possibleAncestor))
 
