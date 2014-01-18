@@ -48,7 +48,7 @@ abstract class PackageScala(val reference: PackageReference) {
     }
   }
   
-   protected def notAllAreDescendantsOf( packages:List[PackageReference],  possibleAncestor:PackageReference) = packages.exists(_.isDescendantOf(possibleAncestor))
+  protected def notAllAreDescendantsOf( packages:java.util.List[PackageReference],  possibleAncestor:PackageReference) = packages.exists(!_.isDescendantOf(possibleAncestor))
 
   override def equals(other: Any) = other.isInstanceOf[PackageScala] && other.asInstanceOf[PackageScala].reference.equals(reference)
 

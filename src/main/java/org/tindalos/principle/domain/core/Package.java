@@ -198,15 +198,4 @@ public abstract class Package extends PackageScala {
 		return -1;
 	}
 
-	private boolean notAllAreDescendantsOf(List<PackageReference> packages, PackageReference possibleAncestor) {
-		for (PackageReference packageReference : packages) {
-			if (!packageReference.isDescendantOf(possibleAncestor)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-
-
 }
