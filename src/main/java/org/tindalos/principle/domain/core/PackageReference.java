@@ -34,7 +34,6 @@ public class PackageReference extends PackageReferenceScala implements Comparabl
     public boolean pointsInside(PackageReference reference) {
         return this.startsWith(reference.name() + ".");
     }
-     */
 
     public boolean pointsToThatOrInside(PackageReference reference) {
         return this.equals(reference) || this.pointsInside(reference);
@@ -47,6 +46,7 @@ public class PackageReference extends PackageReferenceScala implements Comparabl
     public boolean isDescendantOf(PackageReference reference) {
         return this.startsWith(reference.name() + ".");
     }
+     */
     
     public String relativeNameTo(PackageReference reference) {
     	if (!this.name().startsWith(reference.name() + ".")) {

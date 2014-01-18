@@ -16,24 +16,24 @@ class PackageReferenceScala(private val _name: String) { //extends Comparable[Pa
   def child(relativeName: String) = new PackageReference(name + "." + relativeName)
 
   def pointsInside(reference: PackageReference) = startsWith(reference.name + ".")
+
+  def pointsToThatOrInside(reference: PackageReference) = this.equals(reference) || pointsInside(reference)
+
+  def oneContainsAnother(that: PackageReference) = pointsToThatOrInside(that) || that.pointsToThatOrInside(this.asInstanceOf[PackageReference])
+
+  def isDescendantOf(reference: PackageReference) = startsWith(reference.name + ".")
+
   /*
-
-  def pointsToThatOrInside(reference: PackageReferenceScala) = PackageReferenceScala.this.equals(reference) || pointsInside(reference)
-
-  def oneContainsAnother(that: PackageReferenceScala) = pointsToThatOrInside(that) || that.pointsToThatOrInside(PackageReferenceScala.this)
-
-  def isDescendantOf(reference: PackageReferenceScala) = startsWith(reference.name + ".")
-
-  def relativeNameTo(reference: PackageReferenceScala) =
+  def relativeNameTo(reference: PackageReference) =
     if (!this.name.startsWith(reference.name + ".")) {
       throw new IllegalArgumentException(this + " is not under " + reference);
     } else
       name.replaceFirst(reference.name + ".", "")
 
-  def firstPartOfRelativeNameTo(reference: PackageReferenceScala) = relativeNameTo(reference).split("\\.", 2).head
+  def firstPartOfRelativeNameTo(reference: PackageReference) = relativeNameTo(reference).split("\\.", 2).head
 
   override def toString() = name
 
-  override def compareTo(that: PackageReferenceScala) = name.compareTo(that.name)
+  override def compareTo(that: PackageReference) = name.compareTo(that.name)
 */
 }
