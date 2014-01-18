@@ -99,19 +99,6 @@ public abstract class Package extends PackageScala {
 		return toMap(new HashMap<PackageReference, Package>());
 	}
 
-	private boolean isDirectSuperPackageOf(Package aPackage) {
-		return this.getReference().isDirectParentOf(aPackage.getReference());
-	}
-
-	private boolean doesNotContain(Package aPackage) {
-		return !aPackage.getReference().pointsInside(this.getReference());
-	}
-
-
-	private String firstPartOfRelativeNameTo(Package parentPackage) {
-		return this.getReference().firstPartOfRelativeNameTo(parentPackage.getReference());
-	}
-
 	private CyclesInSubgraph detectCyclesOnThePathFromHere(
 			TraversedPackages traversedPackages, 
 			CyclesInSubgraph foundCycles,

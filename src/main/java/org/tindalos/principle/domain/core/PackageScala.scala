@@ -47,8 +47,14 @@ abstract class PackageScala(val reference: PackageReference) {
         directSubPackage
     }
   }
-  
-  protected def notAllAreDescendantsOf( packages:java.util.List[PackageReference],  possibleAncestor:PackageReference) = packages.exists(!_.isDescendantOf(possibleAncestor))
+
+  protected def notAllAreDescendantsOf(packages: java.util.List[PackageReference], possibleAncestor: PackageReference) = packages.exists(!_.isDescendantOf(possibleAncestor))
+
+  protected def isDirectSuperPackageOf(aPackage: Package) = reference.isDirectParentOf(aPackage.getReference())
+
+  protected def doesNotContain(aPackage: Package) = !aPackage.getReference().pointsInside(reference)
+
+  protected def firstPartOfRelativeNameTo(parentPackage: Package) = reference.firstPartOfRelativeNameTo(parentPackage.getReference())
 
   override def equals(other: Any) = other.isInstanceOf[PackageScala] && other.asInstanceOf[PackageScala].reference.equals(reference)
 
