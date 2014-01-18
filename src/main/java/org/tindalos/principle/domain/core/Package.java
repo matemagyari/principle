@@ -77,10 +77,6 @@ public abstract class Package extends PackageScala {
 		return detectCyclesOnThePathFromHere(TraversedPackages.empty(), CyclesInSubgraph.empty(), packageReferences);
 	}
 
-	public Map<PackageReference, Package> toMap() {
-		return toMap(new HashMap<PackageReference, Package>());
-	}
-
 	private CyclesInSubgraph detectCyclesOnThePathFromHere(
 			TraversedPackages traversedPackages, 
 			CyclesInSubgraph foundCycles,
