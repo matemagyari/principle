@@ -1,7 +1,9 @@
 package org.tindalos.principle.domain.core
 
-case class PackageReferenceScala(val name: String) extends Comparable[PackageReferenceScala] {
-
+class PackageReferenceScala(private val _name: String) { //extends Comparable[PackageReferenceScala] {
+  
+  def name() = _name
+/*
   def startsWith(str: String) = name.startsWith(str)
 
   def createChild(relativeNameOfDirectSubPackage: String) = name + "." + relativeNameOfDirectSubPackage
@@ -33,5 +35,5 @@ case class PackageReferenceScala(val name: String) extends Comparable[PackageRef
   override def toString() = name
 
   override def compareTo(that: PackageReferenceScala) = name.compareTo(that.name)
-
+*/
 }

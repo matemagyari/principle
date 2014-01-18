@@ -42,7 +42,7 @@ class LayerViolationDetector extends Detector {
     val referencedPackages = ListConverter.convert(aPackage.getOwnPackageReferences()).filter(_.startsWith(basePackage))
 
     for (referencedPackage <- referencedPackages; layer <- layers if referencedPackage.startsWith(layer)) {
-      references.+=(new LayerReference(aPackage.getReference().name(), referencedPackage.name))
+      references.+=(new LayerReference(aPackage.getReference().name(), referencedPackage.name()))
     }
 
     references.toList

@@ -2,19 +2,17 @@ package org.tindalos.principle.domain.core;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class PackageReference implements Comparable<PackageReference> {
-
-    private final String name;
+public class PackageReference extends PackageReferenceScala implements Comparable<PackageReference> {
 
     public PackageReference(String name) {
-        this.name = name;
+       super(name);
     }
     public boolean startsWith(String str) {
-        return name.startsWith(str);
+        return name().startsWith(str);
     }
     
 	public String createChild(String relativeNameOfDirectSubPackage) {
-		return name + "." + relativeNameOfDirectSubPackage;
+		return name() + "." + relativeNameOfDirectSubPackage;
 	}
 
     public boolean isDirectParentOf(PackageReference reference) {
@@ -30,11 +28,11 @@ public class PackageReference implements Comparable<PackageReference> {
     }
     
     public PackageReference child(String relativeName) {
-        return new PackageReference(this.name + "." + relativeName);
+        return new PackageReference(this.name() + "." + relativeName);
     }
     
     public boolean pointsInside(PackageReference reference) {
-        return this.startsWith(reference.name + ".");
+        return this.startsWith(reference.name() + ".");
     }
 
     public boolean pointsToThatOrInside(PackageReference reference) {
@@ -46,14 +44,14 @@ public class PackageReference implements Comparable<PackageReference> {
 	}
     
     public boolean isDescendantOf(PackageReference reference) {
-        return this.startsWith(reference.name + ".");
+        return this.startsWith(reference.name() + ".");
     }
     
     public String relativeNameTo(PackageReference reference) {
-    	if (!this.name.startsWith(reference.name + ".")) {
+    	if (!this.name().startsWith(reference.name() + ".")) {
     		throw new IllegalArgumentException(this + " is not under " + reference);
     	}
-        return this.name.replaceFirst(reference.name + ".", "");
+        return this.name().replaceFirst(reference.name() + ".", "");
     }
 
 
@@ -61,11 +59,6 @@ public class PackageReference implements Comparable<PackageReference> {
         return this.relativeNameTo(reference).split("\\.", 2)[0];
     }
     
-    
-    public String name() {
-        return name;
-    }
-
     @Override
     public boolean equals(Object other) {
         if (!(other instanceof PackageReference)) {
@@ -73,21 +66,21 @@ public class PackageReference implements Comparable<PackageReference> {
         }
         PackageReference castOther = (PackageReference) other;
 
-        return name.equals(castOther.name);
+        return name().equals(castOther.name());
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(name).hashCode();
+        return new HashCodeBuilder().append(name()).hashCode();
     }
 
     @Override
     public String toString() {
-        return name;
+        return name();
     }
 
     public int compareTo(PackageReference that) {
-        return name.compareTo(that.name);
+        return name().compareTo(that.name());
     }
 
 }

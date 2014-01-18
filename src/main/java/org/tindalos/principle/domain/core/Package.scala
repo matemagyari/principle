@@ -7,7 +7,7 @@ import scala.collection.JavaConversions._
 import com.google.common.collect.Sets
 import com.google.common.base.Optional
 
-abstract class PackageScala(val reference: PackageReference) {
+abstract class Package(val reference: PackageReference) {
 
   val subPackages: java.util.List[Package] = Lists.newArrayList()
 
@@ -26,10 +26,10 @@ abstract class PackageScala(val reference: PackageReference) {
 
   def insert(aPackage: Package) {
     if (this.equals(aPackage)) {
-      throw new PackageStructureBuildingException("Attempted to insert into itself " + this)
-    } else if (this.doesNotContain(aPackage)) {
-      throw new PackageStructureBuildingException("Attempted to insert " + aPackage + " into " + this)
-    } else if (this.isDirectSuperPackageOf(aPackage)) {
+      throw new PackageStructureBuildingException("Attempted to insert into itself " + Package.this)
+    } else if (doesNotContain(aPackage)) {
+      throw new PackageStructureBuildingException("Attempted to insert " + aPackage + " into " + Package.this)
+    } else if (isDirectSuperPackageOf(aPackage)) {
       subPackages.add(aPackage)
     } else {
       insertIndirectSubPackage(aPackage)
@@ -38,7 +38,7 @@ abstract class PackageScala(val reference: PackageReference) {
 
   // all the references going out from this package
   def accumulatedDirectPackageReferences(): java.util.Set[PackageReference] =
-    subPackages.flatMap(_.accumulatedDirectPackageReferences()).toSet.filterNot(_.equals(reference)).toSet ++: getOwnPackageReferences()
+    subPackages.flatMap(_.accumulatedDirectPackageReferences()).toSet.filterNot(_.equals(reference)).toSet ++: subPackages.flatMap(_.accumulatedDirectPackageReferences()).toSet.filterNot(_.equals(reference)).toSet ++: getOwnPackageReferences()
 
   protected def accumulatedDirectlyReferredPackages(packageReferenceMap: java.util.Map[PackageReference, Package]): java.util.Set[Package] =
     accumulatedDirectPackageReferences().map(packageReferenceMap.get(_))
@@ -47,8 +47,8 @@ abstract class PackageScala(val reference: PackageReference) {
 
   protected def toMap(accumulatingMap: java.util.Map[PackageReference, Package]): java.util.Map[PackageReference, Package] = {
 
-    accumulatingMap.put(reference, this.asInstanceOf[Package])
-    subPackages.foreach(child => child.asInstanceOf[PackageScala].toMap(accumulatingMap))
+    accumulatingMap.put(reference, this)
+    subPackages.foreach(child => child.toMap(accumulatingMap))
     accumulatingMap
   }
 
@@ -103,7 +103,7 @@ abstract class PackageScala(val reference: PackageReference) {
 
   private def cumulatedDependenciesAcc(packageReferenceMap: java.util.Map[PackageReference, Package], dependencies: java.util.Set[PackageReference]): java.util.Set[PackageReference] = {
 
-    val accumulatedPackageReferences = this.accumulatedDirectPackageReferences()
+    val accumulatedPackageReferences = Package.this.accumulatedDirectPackageReferences()
 
     accumulatedPackageReferences.removeAll(dependencies)
 
@@ -122,14 +122,14 @@ abstract class PackageScala(val reference: PackageReference) {
   }
 
   protected def detectCyclesOnThePathFromHere(
-    traversedPackages: TraversedPackages,
-    foundCycles: CyclesInSubgraph,
+    traversedPackages: TraversedPackages, 
+    foundCycles: CyclesInSubgraph, 
     packageReferences: java.util.Map[PackageReference, Package]): CyclesInSubgraph = {
 
     //enough cycles have been found already with this package
-    if (foundCycles.isBreakingPoint(this.asInstanceOf[Package])) foundCycles
+    if (foundCycles.isBreakingPoint(this)) foundCycles
     else {
-      foundCycles.rememberPackageAsInvestigated(this.asInstanceOf[Package])
+      foundCycles.rememberPackageAsInvestigated(this)
 
       // if we just closed a cycle, add it to the found list then return
       val cycleCandidateEndingHere = findCycleCandidateEndingHere(traversedPackages)
@@ -139,8 +139,8 @@ abstract class PackageScala(val reference: PackageReference) {
         }
       } else {
         accumulatedDirectlyReferredPackages(packageReferences).foreach({ referencedPackage =>
-          val cyclesInSubgraph = referencedPackage.asInstanceOf[PackageScala].detectCyclesOnThePathFromHere(traversedPackages.add(reference), foundCycles, packageReferences)
-          foundCycles.mergeIn(cyclesInSubgraph)
+        val cyclesInSubgraph = referencedPackage.detectCyclesOnThePathFromHere(traversedPackages.add(reference), foundCycles, packageReferences)
+        foundCycles.mergeIn(cyclesInSubgraph)
         })
       }
       //System.err.println("Cycles found so far: " + foundCycles.getCycles().size())
@@ -177,11 +177,11 @@ abstract class PackageScala(val reference: PackageReference) {
     else notEveryNodeUnderFirst(cycleCandidate)
 
   protected def insertIndirectSubPackage(aPackage: Package) = {
-    val relativeNameOfDirectSubPackage = aPackage.firstPartOfRelativeNameTo(this.asInstanceOf[Package])
+    val relativeNameOfDirectSubPackage = aPackage.firstPartOfRelativeNameTo(this)
     getSubPackageByRelativeName(relativeNameOfDirectSubPackage).insert(aPackage)
   }
 
-  override def equals(other: Any) = other.isInstanceOf[PackageScala] && other.asInstanceOf[PackageScala].reference.equals(reference)
+  override def equals(other: Any) = other.isInstanceOf[Package] && other.asInstanceOf[Package].reference.equals(reference)
 
   override def hashCode() = new HashCodeBuilder().append(reference).hashCode()
 

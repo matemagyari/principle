@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class PackageReferenceTest {
 
-	private PackageReferenceScala testObj = ref("aa.bb.cc");
+	private PackageReference testObj = ref("aa.bb.cc");
 	
 	@Test
 	public void child() {
@@ -115,12 +115,12 @@ public class PackageReferenceTest {
 		
 	}
 	
-	private static void assertMatches(String expected, PackageReferenceScala actual) {
+	private static void assertMatches(String expected, PackageReference actual) {
 		assertEquals(ref(expected), actual);
 	}
 	
-	private static PackageReferenceScala ref(String str) {
-	    return new PackageReferenceScala(str);
+	private static PackageReference ref(String str) {
+	    return new PackageReference(str);
 	}
 
 }
