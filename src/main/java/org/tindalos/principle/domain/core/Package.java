@@ -155,7 +155,7 @@ public abstract class Package {
 		Optional<List<PackageReference>> cycleCandidateEndingHere = findCycleCandidateEndingHere(traversedPackages);
 		if (cycleCandidateEndingHere.isPresent()) {
 			if (isValid(cycleCandidateEndingHere.get())) {
-				foundCycles.add(new Cycle(cycleCandidateEndingHere.get()));
+				foundCycles.add(new Cycle(ListConverter.convert(cycleCandidateEndingHere.get())));
 			}
 		} else {
 			for (Package referencedPackage : this.accumulatedDirectlyReferredPackages(packageReferences)) {

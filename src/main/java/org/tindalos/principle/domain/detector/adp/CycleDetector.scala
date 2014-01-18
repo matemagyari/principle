@@ -15,7 +15,7 @@ class CycleDetector(private val packageStructureBuilder: PackageStructureBuilder
 
   override def analyze(checkInput: CheckInput) = {
 
-    val basePackage = packageStructureBuilder.build(checkInput.getPackages(),
+    val basePackage = packageStructureBuilder.build(checkInput.packages,
       checkInput.designQualityCheckConfiguration.basePackage)
       
     val references = basePackage.toMap()

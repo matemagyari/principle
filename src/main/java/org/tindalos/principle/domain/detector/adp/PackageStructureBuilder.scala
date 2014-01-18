@@ -19,8 +19,4 @@ class PackageStructureBuilder(val packageSorter:PackageSorter) {
         cachedBasePackage
     }
   
-  def build(packages:java.util.List[Package], basePackageName:String):Package = {
-    build(ListConverter.convert(packages), basePackageName)
-  }
-
 }

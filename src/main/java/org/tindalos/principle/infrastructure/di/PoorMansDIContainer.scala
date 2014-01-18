@@ -60,7 +60,7 @@ object PoorMansDIContainer {
     val submodulesFactory = new SubmodulesFactory(packageStructureBuilder, submoduleDefinitionsProvider, submoduleFactory)
     val submodulesBlueprintViolationDetector = new SubmodulesBlueprintViolationDetector(submodulesFactory)
 
-    val detectors = Lists.newArrayList(layerViolationDetector, cycleDetector, sdpViolationDetector, sapViolationDetector, acdDetector, submodulesBlueprintViolationDetector)
+    val detectors = List(layerViolationDetector, cycleDetector, sdpViolationDetector, sapViolationDetector, acdDetector, submodulesBlueprintViolationDetector)
     val designQualityDetectorsRunner = new DesignQualityDetectorsRunner(detectors)
     new DesignQualityCheckService(packageAnalyzer, designQualityDetectorsRunner)
   }

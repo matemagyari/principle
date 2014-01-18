@@ -15,7 +15,7 @@ class SubmoduleFactory {
       case None => throw new InvalidBlueprintDefinitionException("Package does not exist: " + reference)
       case Some(aPackage) => aPackage
     })
-    new Submodule(submoduleDefinition.id, ListConverter.convert(packages),submoduleDefinition.getPlannedDependencies)
+    new Submodule(submoduleDefinition.id, ListConverter.convert(packages),submoduleDefinition.getLegalDependencies)
   }
 
 }

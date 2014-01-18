@@ -8,7 +8,7 @@ import org.tindalos.principle.domain.core.ListConverter
 
 class SubmoduleDefinition(val id: SubmoduleId, val packages: scala.collection.immutable.Set[PackageReference]) {
 
-  val legalDependencies = Set[SubmoduleId]()
+  private val legalDependencies = Set[SubmoduleId]()
 
   def addPlannedDependencies(plannedDependencies: List[SubmoduleId]) = legalDependencies ++= (plannedDependencies)
 
@@ -16,6 +16,8 @@ class SubmoduleDefinition(val id: SubmoduleId, val packages: scala.collection.im
     val overlappingPackages = for (aPackage <- packages; otherPackage <- that.packages; if (aPackage.oneContainsAnother(otherPackage))) yield (aPackage, otherPackage)
     !overlappingPackages.isEmpty
   }
+  
+  def getLegalDependencies = legalDependencies.toSet
 
   override def equals(other: Any) =
     if (!other.isInstanceOf[SubmoduleDefinition]) false
@@ -25,8 +27,6 @@ class SubmoduleDefinition(val id: SubmoduleId, val packages: scala.collection.im
 
   override def toString() = "SubmoduleDefinition [" + id + "]"
 
-  //only for java
-  def getPlannedDependencies = ListConverter.convert(legalDependencies)
   def getPackages = ListConverter.convert(packages)
   def addPlannedDependencies(plannedDependencies: java.util.Collection[SubmoduleId]) = legalDependencies ++= ListConverter.convert(plannedDependencies)
   def this(id: SubmoduleId, packages: java.util.Set[PackageReference]) = this(id, ListConverter.convert(packages))

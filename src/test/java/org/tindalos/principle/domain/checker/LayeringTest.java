@@ -8,6 +8,7 @@ import java.util.Set;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration;
+import org.tindalos.principle.domain.core.ListConverter;
 import org.tindalos.principle.domain.coredetector.CheckResult;
 import org.tindalos.principle.domain.detector.layering.LayerReference;
 import org.tindalos.principle.domain.detector.layering.LayerViolationsResult;
@@ -65,7 +66,7 @@ public class LayeringTest {
         List<CheckResult> resultList = checkResults.resultList();
         assertEquals(1, resultList.size());
         LayerViolationsResult result = (LayerViolationsResult) resultList.get(0);
-        return result.getViolations();
+        return ListConverter.convert(result.violations());
     }
 
     private static DesignQualityExpectations prepareChecks() {

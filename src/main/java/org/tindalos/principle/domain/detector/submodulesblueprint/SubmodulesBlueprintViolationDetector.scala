@@ -27,12 +27,12 @@ class SubmodulesBlueprintViolationDetector(private val submoduleFactory: Submodu
       for (submodule <- submodules) {
 
         val otherSubmodules = submodules.filterNot(_.equals(submodule))
-        val illegalDependencies = submodule.findIllegalDependencies(ListConverter.convert(otherSubmodules))
-        val missingDependencies = submodule.findMissingPredefinedDependencies(ListConverter.convert(otherSubmodules))
-        if (!illegalDependencies.isEmpty())
-          allIllegalDependencies.put(submodule, ListConverter.convert(illegalDependencies))
-        if (!missingDependencies.isEmpty())
-          allMissingDependencies.put(submodule, ListConverter.convert(missingDependencies))
+        val illegalDependencies = submodule.findIllegalDependencies(otherSubmodules)
+        val missingDependencies = submodule.findMissingPredefinedDependencies(otherSubmodules)
+        if (!illegalDependencies.isEmpty)
+          allIllegalDependencies.put(submodule, illegalDependencies)
+        if (!missingDependencies.isEmpty)
+          allMissingDependencies.put(submodule, missingDependencies)
       }
 
       new SubmodulesBlueprintCheckResult(submodulesBlueprint, allIllegalDependencies.toMap, allMissingDependencies.toMap)

@@ -13,6 +13,5 @@ class CheckInput(val packages: List[Package], val designQualityCheckConfiguratio
   
   private def getExpectations = designQualityCheckConfiguration.expectations
   
-  def getPackages():java.util.List[Package] = ListConverter.convert(packages)
 
 }

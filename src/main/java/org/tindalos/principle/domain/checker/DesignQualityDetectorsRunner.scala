@@ -4,11 +4,10 @@ import org.tindalos.principle.domain.coredetector.Detector
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration
 import org.tindalos.principle.domain.coredetector.CheckInput
 import org.tindalos.principle.domain.core.Package
-import scala.collection.JavaConversions._
 import org.tindalos.principle.domain.coredetector.CheckResult
 import org.tindalos.principle.domain.core.logging.TheLogger
 
-class DesignQualityDetectorsRunner(val detectors: java.util.List[Detector]) {
+class DesignQualityDetectorsRunner(val detectors:List[Detector]) {
 
   //def this(theDetectors:Detector*) = this(List(theDetectors))
 
@@ -25,11 +24,11 @@ class DesignQualityDetectorsRunner(val detectors: java.util.List[Detector]) {
 
   private def runDetector(checkResults: scala.collection.mutable.ListBuffer[CheckResult], checkInput: CheckInput, detector: Detector) = {
     try {
-      TheLogger.info(detector + " is running");
-      val checkResult = detector.analyze(checkInput);
-      checkResults.add(checkResult);
+      TheLogger.info(detector + " is running")
+      val checkResult = detector.analyze(checkInput)
+      checkResults += checkResult
     } catch {
-      case unwantedException: RuntimeException => TheLogger.error(unwantedException.getMessage());
+      case unwantedException: RuntimeException => TheLogger.error(unwantedException.getMessage())
     }
   }
 

@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.CyclesInSubgraph;
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration;
+import org.tindalos.principle.domain.core.ListConverter;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.coredetector.CheckResult;
@@ -74,7 +75,7 @@ public class BlueprintTest {
 
 	private static Submodule fakeSubmodule(String name) {
     	Set<Package> empty = Sets.newHashSet();
-		return new Submodule(new SubmoduleId(name), empty, new HashSet<SubmoduleId>());
+		return new Submodule(new SubmoduleId(name), ListConverter.convert(empty), ListConverter.convert((new HashSet<SubmoduleId>())));
     }
     
        
