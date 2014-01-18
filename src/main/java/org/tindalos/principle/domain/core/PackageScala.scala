@@ -2,8 +2,11 @@ package org.tindalos.principle.domain.core
 
 import scala.collection.mutable.ListBuffer
 import org.apache.commons.lang3.builder.HashCodeBuilder
+import com.google.common.collect.Lists
 
 abstract class PackageScala(val reference: PackageReference) {
+  
+  val subPackages:java.util.List[Package] = Lists.newArrayList()
 
   def this(referenceName: String) = this(new PackageReference(referenceName))
 

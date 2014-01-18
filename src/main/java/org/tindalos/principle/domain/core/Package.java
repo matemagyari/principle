@@ -16,8 +16,6 @@ import com.google.common.collect.Sets;
 
 public abstract class Package extends PackageScala {
 
-	private final List<Package> subPackages = Lists.newArrayList();
-
 	public Package(String name) {
 		super(name);
 	}
@@ -32,7 +30,7 @@ public abstract class Package extends PackageScala {
         } else if (this.doesNotContain(aPackage)) {
             throw new PackageStructureBuildingException("Attempted to insert " + aPackage + " into " + this);
         } else if (this.isDirectSuperPackageOf(aPackage)) {
-            subPackages.add(aPackage);
+            subPackages().add(aPackage);
         } else {
             insertIndirectSubPackage(aPackage);
         }
@@ -75,7 +73,7 @@ public abstract class Package extends PackageScala {
 	// all the references going out from this package
 	public Set<PackageReference> accumulatedDirectPackageReferences() {
 		Set<PackageReference> packageReferences = Sets.newHashSet();
-		for (Package child : subPackages) {
+		for (Package child : subPackages()) {
 			packageReferences.addAll(child.accumulatedDirectPackageReferences());
 		}
 		packageReferences.addAll(getOwnPackageReferences());
@@ -235,20 +233,20 @@ public abstract class Package extends PackageScala {
 	}
 
 	private Package getSubPackageByRelativeName(String relativeName) {
-		for (Package subPackage : subPackages) {
+		for (Package subPackage : subPackages()) {
 			if (subPackage.getReference().equals(this.getReference().child(relativeName))) {
 				return subPackage;
 			}
 		}
 		Package directSubPackage = createNew(this.getReference().createChild(relativeName));
-		subPackages.add(directSubPackage);
+		subPackages().add(directSubPackage);
 		return directSubPackage;
 	}
 
 	private Map<PackageReference, Package> toMap(Map<PackageReference, Package> accumulatingMap) {
 
 		accumulatingMap.put(this.getReference(), this);
-		for (Package child : this.subPackages) {
+		for (Package child : this.subPackages()) {
 			child.toMap(accumulatingMap);
 		}
 		return accumulatingMap;
