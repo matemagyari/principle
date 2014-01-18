@@ -52,6 +52,7 @@ public abstract class Package extends PackageScala {
 		}
 	}
     
+	
 	public CyclesInSubgraph detectCycles(Map<PackageReference, Package> packageReferences) {
 		return detectCyclesOnThePathFromHere(TraversedPackages.empty(), CyclesInSubgraph.empty(), packageReferences);
 	}
@@ -97,32 +98,6 @@ public abstract class Package extends PackageScala {
 			return Optional.absent();
 		}
 
-	}
-
-	private int indexInTraversedPath(List<PackageReference> traversedPackages) {
-		int index = traversedPackages.indexOf(this.getReference());
-		if (index != -1) {
-			// simple case
-			return index;
-		}
-
-		for (index = 0; index < traversedPackages.size() - 1; index++) {
-
-			PackageReference possibleMatch = traversedPackages.get(index);
-			if (possibleMatch.equals(this.getReference())) {
-				return index;
-			} else if (this.getReference().isDescendantOf(possibleMatch)
-			// &&
-			// !this.getReference().isDescendantOf(traversedPackages.get(index+1))
-					&& notAllAreDescendantsOf(traversedPackages.subList(index + 1, traversedPackages.size()), possibleMatch))
-
-			{
-				return index;
-			}
-
-		}
-		// System.err.println("Failed " + traversedPackages + " " + this);
-		return -1;
 	}
 
 }

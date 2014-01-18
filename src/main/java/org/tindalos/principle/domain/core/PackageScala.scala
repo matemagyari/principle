@@ -37,7 +37,7 @@ abstract class PackageScala(val reference: PackageReference) {
   def accumulatedDirectPackageReferences(): java.util.Set[PackageReference] =
     subPackages.flatMap(_.accumulatedDirectPackageReferences()).toSet.filterNot(_.equals(reference)).toSet ++: getOwnPackageReferences()
 
-  protected def accumulatedDirectlyReferredPackages(packageReferenceMap: java.util.Map[PackageReference, Package]):java.util.Set[Package] =
+  protected def accumulatedDirectlyReferredPackages(packageReferenceMap: java.util.Map[PackageReference, Package]): java.util.Set[Package] =
     accumulatedDirectPackageReferences().map(packageReferenceMap.get(_))
 
   def toMap(): java.util.Map[PackageReference, Package] = toMap(new java.util.HashMap[PackageReference, Package]())
@@ -66,6 +66,28 @@ abstract class PackageScala(val reference: PackageReference) {
         val directSubPackage = createNew(reference.createChild(relativeName))
         subPackages.add(directSubPackage)
         directSubPackage
+    }
+  }
+
+  protected def indexInTraversedPath(traversedPackages: java.util.List[PackageReference]) = {
+    val index = traversedPackages.indexOf(reference)
+    if (index != -1) index
+    else {
+      var matchFoundIndex: Option[Int] = None
+      for (index <- 0 to traversedPackages.size() - 1; if matchFoundIndex.isEmpty) {
+        val possibleMatch = traversedPackages.get(index)
+        if (possibleMatch.equals(reference)
+          || (reference.isDescendantOf(possibleMatch)
+            && notAllAreDescendantsOf(traversedPackages.subList(index + 1, traversedPackages.size()), possibleMatch))) {
+          matchFoundIndex = Some(index)
+        }
+
+      }
+      // System.err.println("Failed " + traversedPackages + " " + this);
+      matchFoundIndex match {
+        case None => -1
+        case Some(index) => index
+      }
     }
   }
 
