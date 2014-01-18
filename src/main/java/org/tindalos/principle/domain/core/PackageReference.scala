@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.core
 
 import org.apache.commons.lang3.builder.HashCodeBuilder
 
-class PackageReferenceScala(private val _name: String) extends Comparable[PackageReference] {
+class PackageReference(private val _name: String) extends Comparable[PackageReference] {
   
   def name() = _name
   def startsWith(str: String) = name.startsWith(str)
@@ -40,6 +40,4 @@ class PackageReferenceScala(private val _name: String) extends Comparable[Packag
   override def hashCode() = new HashCodeBuilder().append(name()).hashCode()
 
   override def compareTo(that: PackageReference) = name.compareTo(that.name)
-  /*
-*/
 }
