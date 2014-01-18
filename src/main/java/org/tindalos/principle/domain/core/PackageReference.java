@@ -20,7 +20,6 @@ public class PackageReference extends PackageReferenceScala implements Comparabl
     	if (this.equals(reference)) return false;
         return !reference.relativeNameTo(this).contains(".");
     }
-    */
     public boolean isNotAnAncestorOf(PackageReference reference) {
         return !isAnAncestorOf(reference);
     }
@@ -35,6 +34,7 @@ public class PackageReference extends PackageReferenceScala implements Comparabl
     public boolean pointsInside(PackageReference reference) {
         return this.startsWith(reference.name() + ".");
     }
+     */
 
     public boolean pointsToThatOrInside(PackageReference reference) {
         return this.equals(reference) || this.pointsInside(reference);

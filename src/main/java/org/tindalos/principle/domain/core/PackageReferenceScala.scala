@@ -11,12 +11,12 @@ class PackageReferenceScala(private val _name: String) { //extends Comparable[Pa
     if (this.equals(reference)) false
     else !reference.relativeNameTo(this.asInstanceOf[PackageReference]).contains(".")
 
-    /*
-  def isNotAnAncestorOf(reference: PackageReferenceScala) = !reference.pointsInside(this)
+  def isNotAnAncestorOf(reference: PackageReference) = !reference.pointsInside(this.asInstanceOf[PackageReference])
 
-  def child(relativeName: String) = new PackageReferenceScala(name + "." + relativeName)
+  def child(relativeName: String) = new PackageReference(name + "." + relativeName)
 
-  def pointsInside(reference: PackageReferenceScala) = startsWith(reference.name + ".")
+  def pointsInside(reference: PackageReference) = startsWith(reference.name + ".")
+  /*
 
   def pointsToThatOrInside(reference: PackageReferenceScala) = PackageReferenceScala.this.equals(reference) || pointsInside(reference)
 
