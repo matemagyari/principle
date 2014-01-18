@@ -128,14 +128,6 @@ public abstract class Package extends PackageScala {
 		return foundCycles;
 	}
 
-
-	private boolean isValid(List<PackageReference> cycleCandidate) {
-		if (cycleCandidate.size() < 2) {
-			return false;
-		}
-		return notEveryNodeUnderFirst(cycleCandidate);
-	}
-
 	private Optional<List<PackageReference>> findCycleCandidateEndingHere(TraversedPackages traversedPackages) {
 
 		int indexOfThisPackage = indexInTraversedPath(ListConverter.convert(traversedPackages.packages()));

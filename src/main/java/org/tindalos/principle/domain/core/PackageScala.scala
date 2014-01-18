@@ -64,6 +64,10 @@ abstract class PackageScala(val reference: PackageReference) {
     }
   }
 
+  protected def isValid(cycleCandidate: java.util.List[PackageReference]) =
+    if (cycleCandidate.size() < 2) false
+    else notEveryNodeUnderFirst(cycleCandidate)
+
   override def equals(other: Any) = other.isInstanceOf[PackageScala] && other.asInstanceOf[PackageScala].reference.equals(reference)
 
   override def hashCode() = new HashCodeBuilder().append(reference).hashCode()
