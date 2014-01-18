@@ -23,7 +23,6 @@ class PackageReferenceScala(private val _name: String) { //extends Comparable[Pa
 
   def isDescendantOf(reference: PackageReference) = startsWith(reference.name + ".")
 
-  /*
   def relativeNameTo(reference: PackageReference) =
     if (!this.name.startsWith(reference.name + ".")) {
       throw new IllegalArgumentException(this + " is not under " + reference);
@@ -31,6 +30,7 @@ class PackageReferenceScala(private val _name: String) { //extends Comparable[Pa
       name.replaceFirst(reference.name + ".", "")
 
   def firstPartOfRelativeNameTo(reference: PackageReference) = relativeNameTo(reference).split("\\.", 2).head
+  /*
 
   override def toString() = name
 

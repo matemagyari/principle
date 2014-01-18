@@ -46,7 +46,6 @@ public class PackageReference extends PackageReferenceScala implements Comparabl
     public boolean isDescendantOf(PackageReference reference) {
         return this.startsWith(reference.name() + ".");
     }
-     */
     
     public String relativeNameTo(PackageReference reference) {
     	if (!this.name().startsWith(reference.name() + ".")) {
@@ -59,6 +58,7 @@ public class PackageReference extends PackageReferenceScala implements Comparabl
     public String firstPartOfRelativeNameTo(PackageReference reference) {
         return this.relativeNameTo(reference).split("\\.", 2)[0];
     }
+     */
     
     @Override
     public boolean equals(Object other) {
