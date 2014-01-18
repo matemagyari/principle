@@ -21,7 +21,7 @@ class SDPViolationDetector extends Detector {
      for (aPackage <-checkInput.packages) {
        val violationsForPackage = ListConverter.convert(aPackage.getOwnPackageReferences())
     		   	.map(x => references.get(x).get)
-       			.filter(_.instability() > aPackage.instability())
+       			.filter(_.instability > aPackage.instability)
        			.map(new SDPViolation(aPackage, _))
        sdpViolations.++=(violationsForPackage)			
      }

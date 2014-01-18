@@ -7,6 +7,15 @@ abstract class PackageScala(val reference: PackageReference) {
 
   def this(referenceName: String) = this(new PackageReference(referenceName))
 
+  def isUnreferred(): Boolean
+  def getMetrics(): Metrics
+  def getOwnPackageReferences(): java.util.Set[PackageReference]
+
+  def instability = getMetrics().instability
+  def distance = getMetrics().distance
+
+  def isIsolated() = getMetrics().afferentCoupling == 0 && getMetrics().efferentCoupling == 0;
+
   override def equals(other: Any) = other.isInstanceOf[PackageScala] && other.asInstanceOf[PackageScala].reference.equals(reference)
 
   override def hashCode() = new HashCodeBuilder().append(reference).hashCode()

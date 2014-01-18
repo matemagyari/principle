@@ -24,7 +24,7 @@ class SAPViolationsReporter extends ViolationsReporter[SAPResult] {
 		sb.toString()
 	}
 
-	private def print(outlierPackage:Package) = outlierPackage + " " + outlierPackage.distance()
+	private def print(outlierPackage:Package) = outlierPackage + " " + outlierPackage.distance
 
 	override def getType() = classOf[SAPResult]
 

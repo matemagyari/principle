@@ -254,22 +254,6 @@ public abstract class Package extends PackageScala {
 		return accumulatingMap;
 	}
 
-	public Float instability() {
-		return getMetrics().instability();
-	}
 
-	public Float distance() {
-		return getMetrics().distance();
-	}
-
-	public abstract Set<PackageReference> getOwnPackageReferences();
-
-	public abstract Metrics getMetrics();
-
-	public abstract boolean isUnreferred();
-
-	public boolean isIsolated() {
-		return getMetrics().afferentCoupling() == 0 && getMetrics().efferentCoupling() == 0;
-	}
 
 }

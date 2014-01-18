@@ -12,7 +12,7 @@ class SAPViolationDetector extends Detector {
     val sapExpectation = checkInput.getPackageCouplingExpectations().getSAP()
     val maxDistance = sapExpectation.getMaxDistance()
 
-    val outlierPackages = removeRootPackageIfEmpty(checkInput.packages).filter(_.distance() > maxDistance)
+    val outlierPackages = removeRootPackageIfEmpty(checkInput.packages).filter(_.distance > maxDistance)
 
     new SAPResult(outlierPackages, sapExpectation)
   }
