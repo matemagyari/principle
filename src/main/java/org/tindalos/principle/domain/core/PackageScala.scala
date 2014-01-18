@@ -68,6 +68,11 @@ abstract class PackageScala(val reference: PackageReference) {
     if (cycleCandidate.size() < 2) false
     else notEveryNodeUnderFirst(cycleCandidate)
 
+  protected def insertIndirectSubPackage(aPackage: Package) = {
+    val relativeNameOfDirectSubPackage = aPackage.firstPartOfRelativeNameTo(this.asInstanceOf[Package])
+    getSubPackageByRelativeName(relativeNameOfDirectSubPackage).insert(aPackage)
+  }
+
   override def equals(other: Any) = other.isInstanceOf[PackageScala] && other.asInstanceOf[PackageScala].reference.equals(reference)
 
   override def hashCode() = new HashCodeBuilder().append(reference).hashCode()

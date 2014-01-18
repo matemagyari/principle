@@ -63,12 +63,6 @@ public abstract class Package extends PackageScala {
 			return result;
 		}
 	}
-
-
-    private void insertIndirectSubPackage(Package aPackage) {
-        String relativeNameOfDirectSubPackage = aPackage.firstPartOfRelativeNameTo(this);
-        getSubPackageByRelativeName(relativeNameOfDirectSubPackage).insert(aPackage);
-    }
     
 	// all the references going out from this package
 	public Set<PackageReference> accumulatedDirectPackageReferences() {
