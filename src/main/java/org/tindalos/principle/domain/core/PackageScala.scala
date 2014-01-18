@@ -34,8 +34,11 @@ abstract class PackageScala(val reference: PackageReference) {
   }
 
   // all the references going out from this package
-  def accumulatedDirectPackageReferences(): java.util.Set[PackageReference] = 
+  def accumulatedDirectPackageReferences(): java.util.Set[PackageReference] =
     subPackages.flatMap(_.accumulatedDirectPackageReferences()).toSet.filterNot(_.equals(reference)).toSet ++: getOwnPackageReferences()
+
+  protected def accumulatedDirectlyReferredPackages(packageReferenceMap: java.util.Map[PackageReference, Package]):java.util.Set[Package] =
+    accumulatedDirectPackageReferences().map(packageReferenceMap.get(_))
 
   def toMap(): java.util.Map[PackageReference, Package] = toMap(new java.util.HashMap[PackageReference, Package]())
 

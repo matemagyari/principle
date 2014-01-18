@@ -52,17 +52,6 @@ public abstract class Package extends PackageScala {
 		}
 	}
     
-
-	private Set<Package> accumulatedDirectlyReferredPackages(Map<PackageReference, Package> packageReferenceMap) {
-		Set<PackageReference> packageReferences = accumulatedDirectPackageReferences();
-		Set<Package> packages = Sets.newHashSet();
-		for (PackageReference reference : packageReferences) {
-			packages.add(packageReferenceMap.get(reference));
-		}
-		assert !packages.contains(this) : "self-references should be excluded";
-		return packages;
-	}
-	
 	public CyclesInSubgraph detectCycles(Map<PackageReference, Package> packageReferences) {
 		return detectCyclesOnThePathFromHere(TraversedPackages.empty(), CyclesInSubgraph.empty(), packageReferences);
 	}
