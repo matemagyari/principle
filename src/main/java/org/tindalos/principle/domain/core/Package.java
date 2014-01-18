@@ -11,10 +11,6 @@ public abstract class Package extends PackageScala {
 		super(name);
 	}
 
-	public PackageReference getReference() {
-		return reference();
-	}
-
 	public CyclesInSubgraph detectCycles(Map<PackageReference, Package> packageReferences) {
 		return detectCyclesOnThePathFromHere(TraversedPackages.empty(), CyclesInSubgraph.empty(), packageReferences);
 	}

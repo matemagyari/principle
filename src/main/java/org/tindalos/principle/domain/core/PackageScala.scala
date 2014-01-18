@@ -12,6 +12,8 @@ abstract class PackageScala(val reference: PackageReference) {
   val subPackages: java.util.List[Package] = Lists.newArrayList()
 
   def this(referenceName: String) = this(new PackageReference(referenceName))
+  
+  def getReference() = reference
 
   def isUnreferred(): Boolean
   def getMetrics(): Metrics
