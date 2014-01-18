@@ -14,7 +14,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-public abstract class Package {
+public abstract class Package extends PackageScala {
 
 	private final List<Package> subPackages = Lists.newArrayList();
 	private final PackageReference reference;
@@ -188,10 +188,10 @@ public abstract class Package {
 
 	private Optional<List<PackageReference>> findCycleCandidateEndingHere(TraversedPackages traversedPackages) {
 
-		int indexOfThisPackage = indexInTraversedPath(traversedPackages.toList());
+		int indexOfThisPackage = indexInTraversedPath(ListConverter.convert(traversedPackages.packages()));
 		if (indexOfThisPackage > -1) {
 
-			List<PackageReference> cycleCandidate = traversedPackages.from(indexOfThisPackage);
+			List<PackageReference> cycleCandidate = ListConverter.convert(traversedPackages.from(indexOfThisPackage));
 
 			return Optional.of(cycleCandidate);
 		} else {
@@ -292,27 +292,4 @@ public abstract class Package {
 		return this.reference.toString();
 	}
 	
-	private static class TraversedPackages {
-	    private List<PackageReference> packages;
-	    static TraversedPackages empty() {
-	        return new TraversedPackages(new ArrayList<PackageReference>());
-	    }
-        List<PackageReference> toList() {
-            return Lists.newArrayList(packages);
-        }
-        TraversedPackages add(PackageReference reference) {
-            List<PackageReference> copy = toList();
-            copy.add(reference);
-            return new TraversedPackages(copy);
-        }
-        List<PackageReference> from(int index) {
-            return packages.subList(index, packages.size());
-        }
-        private TraversedPackages(List<PackageReference> sofar) {
-            this.packages = Lists.newArrayList(sofar);
-        }
-	    
-	}
-
-
 }
