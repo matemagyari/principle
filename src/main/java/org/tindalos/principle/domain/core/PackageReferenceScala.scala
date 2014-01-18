@@ -3,15 +3,15 @@ package org.tindalos.principle.domain.core
 class PackageReferenceScala(private val _name: String) { //extends Comparable[PackageReferenceScala] {
   
   def name() = _name
-/*
   def startsWith(str: String) = name.startsWith(str)
 
   def createChild(relativeNameOfDirectSubPackage: String) = name + "." + relativeNameOfDirectSubPackage
 
-  def isDirectParentOf(reference: PackageReferenceScala) =
+  def isDirectParentOf(reference: PackageReference) =
     if (this.equals(reference)) false
-    else !reference.relativeNameTo(PackageReferenceScala.this).contains(".")
+    else !reference.relativeNameTo(this.asInstanceOf[PackageReference]).contains(".")
 
+    /*
   def isNotAnAncestorOf(reference: PackageReferenceScala) = !reference.pointsInside(this)
 
   def child(relativeName: String) = new PackageReferenceScala(name + "." + relativeName)

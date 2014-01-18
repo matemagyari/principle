@@ -7,6 +7,7 @@ public class PackageReference extends PackageReferenceScala implements Comparabl
     public PackageReference(String name) {
        super(name);
     }
+    /*
     public boolean startsWith(String str) {
         return name().startsWith(str);
     }
@@ -19,7 +20,7 @@ public class PackageReference extends PackageReferenceScala implements Comparabl
     	if (this.equals(reference)) return false;
         return !reference.relativeNameTo(this).contains(".");
     }
-    
+    */
     public boolean isNotAnAncestorOf(PackageReference reference) {
         return !isAnAncestorOf(reference);
     }
