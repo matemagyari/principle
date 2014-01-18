@@ -108,31 +108,6 @@ public abstract class Package extends PackageScala {
 	}
 
 
-	protected Package createNew(String name) {
-		return new Package(name) {
-			@Override
-			public Set<PackageReference> getOwnPackageReferences() {
-				return Sets.newHashSet();
-			}
-
-			@Override
-			public Metrics getMetrics() {
-				return UndefinedMetrics$.MODULE$;
-			}
-
-			@Override
-			public boolean isUnreferred() {
-				return true;
-			}
-
-			@Override
-			public boolean isIsolated() {
-				return true;
-			}
-
-		};
-	}
-
 	private String firstPartOfRelativeNameTo(Package parentPackage) {
 		return this.getReference().firstPartOfRelativeNameTo(parentPackage.getReference());
 	}
@@ -232,15 +207,6 @@ public abstract class Package extends PackageScala {
 		return false;
 	}
 
-	private Package getSubPackageByRelativeName(String relativeName) {
-		for (Package subPackage : subPackages()) {
-			if (subPackage.getReference().equals(this.getReference().child(relativeName))) {
-				return subPackage;
-			}
-		}
-		Package directSubPackage = createNew(this.getReference().createChild(relativeName));
-		subPackages().add(directSubPackage);
-		return directSubPackage;
-	}
+
 
 }
