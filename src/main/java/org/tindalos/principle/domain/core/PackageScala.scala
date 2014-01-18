@@ -25,13 +25,17 @@ abstract class PackageScala(val reference: PackageReference) {
     if (this.equals(aPackage)) {
       throw new PackageStructureBuildingException("Attempted to insert into itself " + this)
     } else if (this.doesNotContain(aPackage)) {
-      throw new PackageStructureBuildingException("Attempted to insert " + aPackage + " into " + this);
+      throw new PackageStructureBuildingException("Attempted to insert " + aPackage + " into " + this)
     } else if (this.isDirectSuperPackageOf(aPackage)) {
-      subPackages.add(aPackage);
+      subPackages.add(aPackage)
     } else {
-      insertIndirectSubPackage(aPackage);
+      insertIndirectSubPackage(aPackage)
     }
   }
+
+  // all the references going out from this package
+  def accumulatedDirectPackageReferences(): java.util.Set[PackageReference] = 
+    subPackages.flatMap(_.accumulatedDirectPackageReferences()).toSet.filterNot(_.equals(reference)).toSet ++: getOwnPackageReferences()
 
   def toMap(): java.util.Map[PackageReference, Package] = toMap(new java.util.HashMap[PackageReference, Package]())
 
