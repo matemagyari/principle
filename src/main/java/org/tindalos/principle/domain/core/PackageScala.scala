@@ -56,6 +56,14 @@ abstract class PackageScala(val reference: PackageReference) {
 
   protected def firstPartOfRelativeNameTo(parentPackage: Package) = reference.firstPartOfRelativeNameTo(parentPackage.getReference())
 
+  protected def notEveryNodeUnderFirst(cycleCandidate: java.util.List[PackageReference]) = {
+    val first = cycleCandidate.head
+    cycleCandidate.tail.find(!_.isDescendantOf(first)) match {
+      case None => first.equals(reference)
+      case Some(_) => true
+    }
+  }
+
   override def equals(other: Any) = other.isInstanceOf[PackageScala] && other.asInstanceOf[PackageScala].reference.equals(reference)
 
   override def hashCode() = new HashCodeBuilder().append(reference).hashCode()

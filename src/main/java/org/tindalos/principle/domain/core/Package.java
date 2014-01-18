@@ -128,15 +128,6 @@ public abstract class Package extends PackageScala {
 		return foundCycles;
 	}
 
-	private boolean notEveryNodeUnderFirst(List<PackageReference> cycleCandidate) {
-		PackageReference first = cycleCandidate.get(0);
-		for (int i = 1; i < cycleCandidate.size(); i++) {
-			if (!cycleCandidate.get(i).isDescendantOf(first)) {
-				return true;
-			}
-		}
-		return first.equals(this.getReference());
-	}
 
 	private boolean isValid(List<PackageReference> cycleCandidate) {
 		if (cycleCandidate.size() < 2) {
