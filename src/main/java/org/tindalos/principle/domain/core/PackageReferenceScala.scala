@@ -1,5 +1,7 @@
 package org.tindalos.principle.domain.core
 
+import org.apache.commons.lang3.builder.HashCodeBuilder
+
 class PackageReferenceScala(private val _name: String) { //extends Comparable[PackageReferenceScala] {
   
   def name() = _name
@@ -30,9 +32,13 @@ class PackageReferenceScala(private val _name: String) { //extends Comparable[Pa
       name.replaceFirst(reference.name + ".", "")
 
   def firstPartOfRelativeNameTo(reference: PackageReference) = relativeNameTo(reference).split("\\.", 2).head
-  /*
 
   override def toString() = name
+  
+  override def equals(other:Any) = if (!other.isInstanceOf[PackageReference]) false else other.asInstanceOf[PackageReference].name.equals(this.name)
+  
+  override def hashCode() = new HashCodeBuilder().append(name()).hashCode()
+  /*
 
   override def compareTo(that: PackageReference) = name.compareTo(that.name)
 */

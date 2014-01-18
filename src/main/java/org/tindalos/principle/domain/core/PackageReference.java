@@ -58,7 +58,6 @@ public class PackageReference extends PackageReferenceScala implements Comparabl
     public String firstPartOfRelativeNameTo(PackageReference reference) {
         return this.relativeNameTo(reference).split("\\.", 2)[0];
     }
-     */
     
     @Override
     public boolean equals(Object other) {
@@ -79,6 +78,7 @@ public class PackageReference extends PackageReferenceScala implements Comparabl
     public String toString() {
         return name();
     }
+     */
 
     public int compareTo(PackageReference that) {
         return name().compareTo(that.name());
