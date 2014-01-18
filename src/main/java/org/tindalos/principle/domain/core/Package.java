@@ -24,18 +24,6 @@ public abstract class Package extends PackageScala {
 		return reference();
 	}
 
-    public void insert(Package aPackage) {
-        if (this.equals(aPackage)) {
-            throw new PackageStructureBuildingException("Attempted to insert into itself " + this);
-        } else if (this.doesNotContain(aPackage)) {
-            throw new PackageStructureBuildingException("Attempted to insert " + aPackage + " into " + this);
-        } else if (this.isDirectSuperPackageOf(aPackage)) {
-            subPackages().add(aPackage);
-        } else {
-            insertIndirectSubPackage(aPackage);
-        }
-    }
-
 	// it dies if there are cycles
 	// through references, not through subPackages. transaitive too
 	public Set<PackageReference> cumulatedDependencies(Map<PackageReference, Package> packageReferenceMap) {

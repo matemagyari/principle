@@ -21,6 +21,19 @@ abstract class PackageScala(val reference: PackageReference) {
 
   def isIsolated() = getMetrics().afferentCoupling == 0 && getMetrics().efferentCoupling == 0
 
+  def insert(aPackage: Package) {
+    println("gggggggggggggggggggggg")
+    if (this.equals(aPackage)) {
+      throw new PackageStructureBuildingException("Attempted to insert into itself " + this)
+    } else if (this.doesNotContain(aPackage)) {
+      throw new PackageStructureBuildingException("Attempted to insert " + aPackage + " into " + this);
+    } else if (this.isDirectSuperPackageOf(aPackage)) {
+      subPackages.add(aPackage);
+    } else {
+      insertIndirectSubPackage(aPackage);
+    }
+  }
+
   protected def toMap(accumulatingMap: java.util.Map[PackageReference, Package]): java.util.Map[PackageReference, Package] = {
 
     accumulatingMap.put(reference, this.asInstanceOf[Package])
