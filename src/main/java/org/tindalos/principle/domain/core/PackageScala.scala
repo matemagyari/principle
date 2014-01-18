@@ -12,7 +12,7 @@ abstract class PackageScala(val reference: PackageReference) {
   val subPackages: java.util.List[Package] = Lists.newArrayList()
 
   def this(referenceName: String) = this(new PackageReference(referenceName))
-  
+
   def getReference() = reference
 
   def isUnreferred(): Boolean
@@ -96,7 +96,7 @@ abstract class PackageScala(val reference: PackageReference) {
 
   // it dies if there are cycles
   // through references, not through subPackages. transaitive too
-  def cumulatedDependencies(packageReferenceMap: java.util.Map[PackageReference, Package]) = cumulatedDependenciesAcc(packageReferenceMap, new java.util.HashSet[PackageReference]());
+  def cumulatedDependencies(packageReferenceMap: java.util.Map[PackageReference, Package]) = cumulatedDependenciesAcc(packageReferenceMap, new java.util.HashSet[PackageReference]())
 
   private def cumulatedDependenciesAcc(packageReferenceMap: java.util.Map[PackageReference, Package], dependencies: java.util.Set[PackageReference]): java.util.Set[PackageReference] = {
 
@@ -105,7 +105,7 @@ abstract class PackageScala(val reference: PackageReference) {
     accumulatedPackageReferences.removeAll(dependencies)
 
     if (accumulatedPackageReferences.isEmpty()) {
-      dependencies.remove(reference);
+      dependencies.remove(reference)
       dependencies
     } else {
       val result = Sets.newHashSet(accumulatedPackageReferences)
@@ -117,7 +117,33 @@ abstract class PackageScala(val reference: PackageReference) {
       result
     }
   }
-  /*
+
+  protected def detectCyclesOnThePathFromHere(
+    traversedPackages: TraversedPackages,
+    foundCycles: CyclesInSubgraph,
+    packageReferences: java.util.Map[PackageReference, Package]): CyclesInSubgraph = {
+
+    //enough cycles have been found already with this package
+    if (foundCycles.isBreakingPoint(this.asInstanceOf[Package])) foundCycles
+    else {
+      foundCycles.rememberPackageAsInvestigated(this.asInstanceOf[Package])
+
+      // if we just closed a cycle, add it to the found list then return
+      val cycleCandidateEndingHere = findCycleCandidateEndingHere(traversedPackages)
+      if (cycleCandidateEndingHere.isDefined) {
+        if (isValid(cycleCandidateEndingHere.get)) {
+          foundCycles.add(new Cycle(ListConverter.convert(cycleCandidateEndingHere.get)))
+        }
+      } else {
+        accumulatedDirectlyReferredPackages(packageReferences).foreach({ referencedPackage =>
+          val cyclesInSubgraph = referencedPackage.asInstanceOf[PackageScala].detectCyclesOnThePathFromHere(traversedPackages.add(reference), foundCycles, packageReferences)
+          foundCycles.mergeIn(cyclesInSubgraph)
+        })
+      }
+      //System.err.println("Cycles found so far: " + foundCycles.getCycles().size())
+      foundCycles
+    }
+  }
   private def findCycleCandidateEndingHere(traversedPackages: TraversedPackages): Option[java.util.List[PackageReference]] = {
 
     val indexOfThisPackage = indexInTraversedPath(ListConverter.convert(traversedPackages.packages))
@@ -126,7 +152,6 @@ abstract class PackageScala(val reference: PackageReference) {
       Some(cycleCandidate)
     } else None
   }
-  */
 
   protected def notAllAreDescendantsOf(packages: java.util.List[PackageReference], possibleAncestor: PackageReference) = packages.exists(!_.isDescendantOf(possibleAncestor))
 
