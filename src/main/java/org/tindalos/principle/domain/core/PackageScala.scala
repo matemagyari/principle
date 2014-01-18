@@ -94,6 +94,9 @@ abstract class PackageScala(val reference: PackageReference) {
     }
   }
 
+  def detectCycles(packageReferences: java.util.Map[PackageReference, Package]): CyclesInSubgraph =
+    detectCyclesOnThePathFromHere(TraversedPackages.empty(), CyclesInSubgraph.empty(), packageReferences)
+
   // it dies if there are cycles
   // through references, not through subPackages. transaitive too
   def cumulatedDependencies(packageReferenceMap: java.util.Map[PackageReference, Package]) = cumulatedDependenciesAcc(packageReferenceMap, new java.util.HashSet[PackageReference]())
