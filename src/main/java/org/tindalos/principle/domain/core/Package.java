@@ -243,15 +243,4 @@ public abstract class Package extends PackageScala {
 		return directSubPackage;
 	}
 
-	private Map<PackageReference, Package> toMap(Map<PackageReference, Package> accumulatingMap) {
-
-		accumulatingMap.put(this.getReference(), this);
-		for (Package child : this.subPackages()) {
-			child.toMap(accumulatingMap);
-		}
-		return accumulatingMap;
-	}
-
-
-
 }

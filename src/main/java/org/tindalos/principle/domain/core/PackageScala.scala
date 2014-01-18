@@ -3,10 +3,11 @@ package org.tindalos.principle.domain.core
 import scala.collection.mutable.ListBuffer
 import org.apache.commons.lang3.builder.HashCodeBuilder
 import com.google.common.collect.Lists
+import scala.collection.JavaConversions._
 
 abstract class PackageScala(val reference: PackageReference) {
-  
-  val subPackages:java.util.List[Package] = Lists.newArrayList()
+
+  val subPackages: java.util.List[Package] = Lists.newArrayList()
 
   def this(referenceName: String) = this(new PackageReference(referenceName))
 
@@ -17,7 +18,14 @@ abstract class PackageScala(val reference: PackageReference) {
   def instability = getMetrics().instability
   def distance = getMetrics().distance
 
-  def isIsolated() = getMetrics().afferentCoupling == 0 && getMetrics().efferentCoupling == 0;
+  def isIsolated() = getMetrics().afferentCoupling == 0 && getMetrics().efferentCoupling == 0
+
+  protected def toMap(accumulatingMap: java.util.Map[PackageReference, Package]):java.util.Map[PackageReference, Package] = {
+
+    accumulatingMap.put(reference, this.asInstanceOf[Package])
+    subPackages.foreach(child => child.asInstanceOf[PackageScala].toMap(accumulatingMap))
+    accumulatingMap
+  }
 
   override def equals(other: Any) = other.isInstanceOf[PackageScala] && other.asInstanceOf[PackageScala].reference.equals(reference)
 
