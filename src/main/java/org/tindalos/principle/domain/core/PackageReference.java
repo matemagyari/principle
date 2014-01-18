@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.core;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class PackageReference extends PackageReferenceScala implements Comparable<PackageReference> {
+public class PackageReference extends PackageReferenceScala { //implements Comparable<PackageReference> {
 
     public PackageReference(String name) {
        super(name);
@@ -78,10 +78,10 @@ public class PackageReference extends PackageReferenceScala implements Comparabl
     public String toString() {
         return name();
     }
-     */
 
     public int compareTo(PackageReference that) {
         return name().compareTo(that.name());
     }
+     */
 
 }
