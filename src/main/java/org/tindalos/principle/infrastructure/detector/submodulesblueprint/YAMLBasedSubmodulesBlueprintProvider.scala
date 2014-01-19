@@ -14,15 +14,15 @@ import org.yaml.snakeyaml.Yaml
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefinitions
 import org.tindalos.principle.domain.core.ListConverter
 
-abstract class YAMLBasedSubmodulesBlueprintProviderScala extends SubmoduleDefinitionsProvider {
+class YAMLBasedSubmodulesBlueprintProvider extends SubmoduleDefinitionsProvider {
 
   def readSubmoduleDefinitions(submodulesDefinitionLocation: SubmodulesDefinitionLocation, basePackageName: String) = {
-    val yaml = YAMLBasedSubmodulesBlueprintProviderScala.getYAML(submodulesDefinitionLocation)
-    YAMLBasedSubmodulesBlueprintProviderScala.processYAML(yaml, basePackageName)
+    val yaml = YAMLBasedSubmodulesBlueprintProvider.getYAML(submodulesDefinitionLocation)
+    YAMLBasedSubmodulesBlueprintProvider.processYAML(yaml, basePackageName)
   }
 }
 
-object YAMLBasedSubmodulesBlueprintProviderScala {
+object YAMLBasedSubmodulesBlueprintProvider {
 
   protected def processYAML(yamlText: String, basePackageName: String) = {
 
@@ -35,17 +35,17 @@ object YAMLBasedSubmodulesBlueprintProviderScala {
     new SubmoduleDefinitions(submoduleDefinitionMap)
   }
 
-  protected def checkSubmoduleExists(validSubmodules: Set[SubmoduleId], submoduleId: SubmoduleId) =
+  private def checkSubmoduleExists(validSubmodules: Set[SubmoduleId], submoduleId: SubmoduleId) =
     if (!validSubmodules.contains(submoduleId)) throw new InvalidBlueprintDefinitionException("No submodules defined with id " + submoduleId);
 
-  protected def transformToSubmoduleIds(dependencies: List[String], validSubmodules: Set[SubmoduleId]) = {
+  private def transformToSubmoduleIds(dependencies: List[String], validSubmodules: Set[SubmoduleId]) = {
 
     val ids = dependencies.map(new SubmoduleId(_))
     ids.foreach(checkSubmoduleExists(validSubmodules, _))
     ids
   }
 
-  protected def addDependencies(yamlObject: Map[String, Object], submoduleDefinitionMap: Map[SubmoduleId, SubmoduleDefinition]) = {
+  private def addDependencies(yamlObject: Map[String, Object], submoduleDefinitionMap: Map[SubmoduleId, SubmoduleDefinition]) = {
 
     val dependenciesOpt = yamlObject.get("subdmodule-dependencies")
     if (dependenciesOpt.isEmpty) throw new InvalidBlueprintDefinitionException("Submodule dependencies not defined! ")
@@ -60,7 +60,7 @@ object YAMLBasedSubmodulesBlueprintProviderScala {
     })
   }
 
-  protected def buildSubmoduleDefinitions(yamlObject: Map[String, Object], basePackageName: String) = {
+  private def buildSubmoduleDefinitions(yamlObject: Map[String, Object], basePackageName: String) = {
 
     val definitionsOpt = yamlObject.get("subdmodule-definitions")
     if (definitionsOpt.isEmpty) throw new InvalidBlueprintDefinitionException("Submodules not defined! ")
@@ -75,7 +75,7 @@ object YAMLBasedSubmodulesBlueprintProviderScala {
     }
   }
 
-  protected def transformToPackageReferences(packageNames: List[String], basePackageName: String) = packageNames.map(x => new PackageReference(basePackageName + "." + x))
+  private def transformToPackageReferences(packageNames: List[String], basePackageName: String) = packageNames.map(x => new PackageReference(basePackageName + "." + x))
 
   protected def getYAML(submodulesDefinitionLocation: SubmodulesDefinitionLocation) =
     try {
