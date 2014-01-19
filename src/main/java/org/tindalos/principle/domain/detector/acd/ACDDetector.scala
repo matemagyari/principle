@@ -24,7 +24,7 @@ class ACDDetector(private val packageStructureBuilder: PackageStructureBuilder) 
     new ACDResult(cumulatedComponentDependency, relevantPackages.length, checkInput.getPackageCouplingExpectations())
   }
 
-  override def isWanted(expectations: DesignQualityExpectations) = expectations.getPackageCoupling() match {
+  override def isWanted(expectations: DesignQualityExpectations) = expectations.packageCoupling match {
     case packageCoupling: PackageCoupling =>
       (packageCoupling.getACD() != null) ||
         (packageCoupling.getRACD() != null) ||

@@ -32,7 +32,7 @@ class CycleDetector(private val packageStructureBuilder: PackageStructureBuilder
     }
     new ADPResult(cycles, checkInput.getPackageCouplingExpectations().getADP())
   }
-  override def isWanted(expectations: DesignQualityExpectations) = expectations.getPackageCoupling match {
+  override def isWanted(expectations: DesignQualityExpectations) = expectations.packageCoupling match {
     case packageCoupling: PackageCoupling => packageCoupling.getADP() != null
     case null => false
   }

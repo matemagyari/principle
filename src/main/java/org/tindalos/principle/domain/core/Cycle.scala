@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder
 
 class Cycle(val references: List[PackageReference]) extends Comparable[Cycle] {
   
+  //var x:org.tindalos.principle.infrastructure.plugin.Checks = null
   def this(refs:PackageReference*) = this(refs.toList)
   def this(ref1:PackageReference,ref2:PackageReference) = this(List(ref1, ref2))
   def this(ref1:PackageReference,ref2:PackageReference,ref3:PackageReference) = this(List(ref1, ref2, ref3))

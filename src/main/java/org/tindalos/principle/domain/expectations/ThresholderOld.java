@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.expectations;
 
-public abstract class Thresholder {
+public abstract class ThresholderOld {
 
 	//default threshold
 	protected Integer violationsThreshold = 0;

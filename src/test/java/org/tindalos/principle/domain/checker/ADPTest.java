@@ -142,7 +142,7 @@ public class ADPTest {
 
     private static DesignQualityExpectations prepareChecks() {
         Checks checks = new Checks();
-        checks.setPackageCoupling(packageCoupling());
+        checks.packageCoupling_$eq(packageCoupling());
         return checks;
     }
 

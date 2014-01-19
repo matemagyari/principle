@@ -27,7 +27,7 @@ class SDPViolationDetector extends Detector {
      new SDPResult(sdpViolations.toList, checkInput.getPackageCouplingExpectations().getSDP())
   }
 
-  override def isWanted(expectations: DesignQualityExpectations) = expectations.getPackageCoupling() match {
+  override def isWanted(expectations: DesignQualityExpectations) = expectations.packageCoupling match {
     case packageCoupling: PackageCoupling => packageCoupling.getSDP() != null
     case null => false
   }

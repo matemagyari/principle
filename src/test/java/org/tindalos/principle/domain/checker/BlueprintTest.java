@@ -90,7 +90,7 @@ public class BlueprintTest {
 
     private static DesignQualityExpectations prepareChecks(String location) {
         Checks checks = new Checks();
-        checks.setSubmodulesBlueprint(submodulesBlueprint(location));
+        checks.submodulesBlueprint_$eq(submodulesBlueprint(location));
         return checks;
     }
 

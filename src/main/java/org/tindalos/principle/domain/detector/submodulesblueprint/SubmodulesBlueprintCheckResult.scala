@@ -13,6 +13,6 @@ class SubmodulesBlueprintCheckResult(
 
   def violationsNumber = illegalDependencies.size + missingDependencies.size
   
-  val threshold = submodulesBlueprint.getViolationsThreshold()
+  val threshold = submodulesBlueprint.violationsThreshold
   
 }

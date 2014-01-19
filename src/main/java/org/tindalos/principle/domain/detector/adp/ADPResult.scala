@@ -7,8 +7,8 @@ import org.tindalos.principle.domain.core.PackageReference
 
 class ADPResult(val cyclesByBreakingPoints:Map[PackageReference, Set[Cycle]], val expectation:ADP) extends CheckResult {
 
-  	def expectationsFailed() = cyclesByBreakingPoints.size > expectation.getViolationsThreshold()
+  	def expectationsFailed() = cyclesByBreakingPoints.size > expectation.violationsThreshold
 
-    def getThreshold() = expectation.getViolationsThreshold()
+    def getThreshold() = expectation.violationsThreshold
     
 }

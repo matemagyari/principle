@@ -14,7 +14,7 @@ class LayerViolationDetector extends Detector {
     new LayerViolationsResult(layerReferences, checkInput.getLayeringExpectations())
   }
   
-  override def isWanted(expectations:DesignQualityExpectations) = expectations.getLayering() != null
+  override def isWanted(expectations:DesignQualityExpectations) = expectations.layering != null
 
   private def findViolations(packages: List[Package], configuration: DesignQualityCheckConfiguration): List[LayerReference] = {
 

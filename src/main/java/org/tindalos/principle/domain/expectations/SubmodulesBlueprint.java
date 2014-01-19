@@ -6,7 +6,7 @@ public class SubmodulesBlueprint extends Thresholder {
 
 	public SubmodulesBlueprint(SubmodulesDefinitionLocation submodulesDefinitionLocation, Integer threshold) {
 		this.location = submodulesDefinitionLocation.filePath();
-		this.violationsThreshold = threshold;
+		this.violationsThreshold_$eq(threshold);
 	}
 
 	public SubmodulesBlueprint() {

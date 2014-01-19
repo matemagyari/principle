@@ -7,7 +7,7 @@ public class ADP extends Thresholder {
 	}
 	
 	public ADP(Integer violationsThreshold) {
-		this.violationsThreshold = violationsThreshold;
+		this.violationsThreshold_$eq(violationsThreshold);
 	}	
 	
 

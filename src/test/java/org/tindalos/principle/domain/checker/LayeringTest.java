@@ -71,7 +71,7 @@ public class LayeringTest {
 
     private static DesignQualityExpectations prepareChecks() {
         Checks checks = new Checks();
-        checks.setLayering(layering());
+        checks.layering_$eq(layering());
         return checks;
     }
 

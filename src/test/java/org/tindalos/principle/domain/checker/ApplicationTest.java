@@ -54,8 +54,8 @@ public class ApplicationTest {
 	private DesignQualityExpectations prepareChecks() {
 		Checks checks = new Checks();
 
-		checks.setLayering(layering());
-		checks.setPackageCoupling(packageCoupling());
+		checks.layering_$eq(layering());
+		checks.packageCoupling_$eq(packageCoupling());
 		//checks.setSubmodulesBlueprint(submodulesBlueprint());
 
 		return checks;

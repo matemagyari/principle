@@ -9,7 +9,7 @@ import scala.collection.mutable.Map
 
 class SubmodulesBlueprintViolationDetector(private val submoduleFactory: SubmodulesFactory) extends Detector {
 
-  override def isWanted(designQualityExpectations: DesignQualityExpectations) = designQualityExpectations.getSubmodulesBlueprint() != null
+  override def isWanted(designQualityExpectations: DesignQualityExpectations) = designQualityExpectations.submodulesBlueprint != null
 
   def analyze(checkInput: CheckInput): CheckResult = {
 

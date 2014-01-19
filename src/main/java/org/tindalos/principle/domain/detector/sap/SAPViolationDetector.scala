@@ -23,7 +23,7 @@ class SAPViolationDetector extends Detector {
     else packages
   }
 
-  override def isWanted(expectations: DesignQualityExpectations) = expectations.getPackageCoupling() match {
+  override def isWanted(expectations: DesignQualityExpectations) = expectations.packageCoupling match {
     case packageCoupling: PackageCoupling => packageCoupling.getSAP() != null
     case null => false
   }
