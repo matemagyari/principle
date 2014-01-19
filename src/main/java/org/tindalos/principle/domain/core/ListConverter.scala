@@ -74,5 +74,13 @@ object ListConverter extends App {
     })
     scalaMap
   }
+  
+  def convert(javaMap:java.util.LinkedHashMap[String, java.util.List[String]]):scala.collection.immutable.Map[String, scala.collection.immutable.List[String]] = {
+    var scalaMap = scala.collection.immutable.Map[String, scala.collection.immutable.List[String]]()
+    javaMap.foreach({ keyVal =>
+      scalaMap += (keyVal._1 -> convert(keyVal._2))
+    })
+    scalaMap    
+  }
 
 }
