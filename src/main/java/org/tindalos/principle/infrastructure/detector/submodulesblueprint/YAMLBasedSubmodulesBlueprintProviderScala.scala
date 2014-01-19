@@ -1,0 +1,7 @@
+package org.tindalos.principle.infrastructure.detector.submodulesblueprint
+
+import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefinitionsProvider
+
+abstract class YAMLBasedSubmodulesBlueprintProviderScala extends SubmoduleDefinitionsProvider {
+
+}

@@ -22,7 +22,7 @@ import org.yaml.snakeyaml.Yaml;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-public class YAMLBasedSubmodulesBlueprintProvider implements SubmoduleDefinitionsProvider {
+public class YAMLBasedSubmodulesBlueprintProvider extends YAMLBasedSubmodulesBlueprintProviderScala {
 
 	public SubmoduleDefinitions readSubmoduleDefinitions(SubmodulesDefinitionLocation submodulesDefinitionLocation, String basePackageName) {
 		String yaml = getYAML(submodulesDefinitionLocation);
