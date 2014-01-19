@@ -27,9 +27,9 @@ class SDPViolationsReporter extends ViolationsReporter[SDPResult] {
 
 		val arrow = "-->"
 		val sb = new StringBuffer("")
-		sb.append("\n " + violation.depender.getReference + "["+ violation.depender.instability+"] ")
+		sb.append("\n " + violation.depender.reference + "["+ violation.depender.instability+"] ")
 		sb.append(arrow)
-		sb.append(" " + violation.dependee.getReference + "["+ violation.dependee.instability+"] ")
+		sb.append(" " + violation.dependee.reference + "["+ violation.dependee.instability+"] ")
 		sb.toString()
 	}
 

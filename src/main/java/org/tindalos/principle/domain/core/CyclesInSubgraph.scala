@@ -38,7 +38,7 @@ class CyclesInSubgraph {
       }
     }
 
-  def isBreakingPoint(aPackage: Package) = breakingPoints.get(aPackage.getReference()) match {
+  def isBreakingPoint(aPackage: Package) = breakingPoints.get(aPackage.reference) match {
     case Some(cyclesForThisBreakingPoint) => cyclesForThisBreakingPoint.size > CyclesInSubgraph.LIMIT
     case None => false
   }

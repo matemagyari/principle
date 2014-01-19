@@ -46,7 +46,7 @@ public class ADPTest {
         
         Cycle expectedCycle = new Cycle(new PackageReference("org.tindalos.principletest.cycle.simple.left"),new PackageReference("org.tindalos.principletest.cycle.simple.right"));
         Map<PackageReference, Set<Cycle>> expected = Maps.newHashMap();
-        expected.put(new PackageReference("org.tindalos.principletest.cycle.simple.right"), Sets.newHashSet(expectedCycle));
+        expected.put(new PackageReference("org.tindalos.principletest.cycle.simple.left"), Sets.newHashSet(expectedCycle));
         
         assertEquals(expected, result);
     }
@@ -64,7 +64,7 @@ public class ADPTest {
                 );
         
         Map<PackageReference, Set<Cycle>> expected = Maps.newHashMap();
-        expected.put(new PackageReference("org.tindalos.principletest.cycle.transitive.c"), Sets.newHashSet(expectedCycle));
+        expected.put(new PackageReference("org.tindalos.principletest.cycle.transitive.a"), Sets.newHashSet(expectedCycle));
         
         assertEquals(expected, result);
     }

@@ -19,7 +19,7 @@ class ACDDetector(private val packageStructureBuilder: PackageStructureBuilder) 
       else checkInput.packages
 
     val cumulatedComponentDependency = relevantPackages
-      .foldLeft(0)((acc, aPackage) => acc + aPackage.cumulatedDependencies(referenceMap).size() + 1)
+      .foldLeft(0)((acc, aPackage) => acc + aPackage.cumulatedDependencies(referenceMap).size + 1)
 
     new ACDResult(cumulatedComponentDependency, relevantPackages.length, checkInput.getPackageCouplingExpectations())
   }

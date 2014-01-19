@@ -22,10 +22,10 @@ class LayerViolationDetector extends Detector {
     val violations = scala.collection.mutable.ListBuffer[LayerReference]()
     val layers = ListConverter.convert(configuration.getLayeringExpectations().getLayers()).map(configuration.basePackage + "." + _)
 
-    val relevantPackages = packages.filter(_.getReference().startsWith(configuration.basePackage))
+    val relevantPackages = packages.filter(_.reference.startsWith(configuration.basePackage))
     relevantPackages.foreach({ aPackage =>
 
-      val layer = layers.find(aPackage.getReference().startsWith(_))
+      val layer = layers.find(aPackage.reference.startsWith(_))
       if (layer.isDefined) {
         val outerLayers = layers.slice(0, layers.indexOf(layer.get))
         violations.++=(getReferencesToLayers(aPackage, outerLayers, configuration.basePackage))
@@ -42,7 +42,7 @@ class LayerViolationDetector extends Detector {
     val referencedPackages = ListConverter.convert(aPackage.getOwnPackageReferences()).filter(_.startsWith(basePackage))
 
     for (referencedPackage <- referencedPackages; layer <- layers if referencedPackage.startsWith(layer)) {
-      references.+=(new LayerReference(aPackage.getReference().name, referencedPackage.name))
+      references.+=(new LayerReference(aPackage.reference.name, referencedPackage.name))
     }
 
     references.toList

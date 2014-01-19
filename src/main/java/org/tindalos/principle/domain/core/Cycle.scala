@@ -12,8 +12,6 @@ class Cycle(val references: List[PackageReference]) extends Comparable[Cycle] {
 
   def getLast() = references.last
   
-  def getReferences():java.util.List[PackageReference] = ListConverter.convert(references)
-
   override def toString() = {
     val arrow = "-->"
     val sb = new StringBuffer("*" + arrow)

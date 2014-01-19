@@ -11,7 +11,7 @@ class Submodule(val id: SubmoduleId, val packagesUnderModule: Set[Package], val 
   //TODO move this check to the definition
   if (plannedDependencies.contains(id)) throw new InvalidBlueprintDefinitionException("Submodule should not depend on itself: " + id)
 
-  val outgoingReferences = packagesUnderModule.flatMap(x => ListConverter.convert(x.accumulatedDirectPackageReferences())).toSet
+  val outgoingReferences = packagesUnderModule.flatMap(x => x.accumulatedDirectPackageReferences()).toSet
 
   def findMissingPredefinedDependencies(otherSubmodules: Set[Submodule]) = {
 
@@ -42,7 +42,7 @@ class Submodule(val id: SubmoduleId, val packagesUnderModule: Set[Package], val 
     val results = for (
       packageReference <- references;
       aPackage <- packagesUnderModule;
-      if (packageReference.pointsToThatOrInside(aPackage.getReference()))
+      if (packageReference.pointsToThatOrInside(aPackage.reference))
     ) yield 1
 
     !results.isEmpty
@@ -57,7 +57,7 @@ class Submodule(val id: SubmoduleId, val packagesUnderModule: Set[Package], val 
   }
 
   private def removeOutsideReferences(references: Set[PackageReference]) =
-    references.filterNot(ref => packagesUnderModule.exists(pac => ref.pointsToThatOrInside(pac.getReference())))
+    references.filterNot(ref => packagesUnderModule.exists(pac => ref.pointsToThatOrInside(pac.reference)))
 
   override def equals(other: Any) =
     if (!other.isInstanceOf[Submodule]) false

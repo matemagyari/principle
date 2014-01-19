@@ -17,7 +17,7 @@ class SDPViolationDetector extends Detector {
   override def analyze(checkInput: CheckInput) = {
     
      val sdpViolations = ListBuffer[SDPViolation]()
-     val references:Map[PackageReference, Package] = checkInput.packages.map(aPackage => (aPackage.getReference() -> aPackage)).toMap
+     val references:Map[PackageReference, Package] = checkInput.packages.map(aPackage => (aPackage.reference -> aPackage)).toMap
      for (aPackage <-checkInput.packages) {
        val violationsForPackage = ListConverter.convert(aPackage.getOwnPackageReferences())
     		   	.map(x => references.get(x).get)

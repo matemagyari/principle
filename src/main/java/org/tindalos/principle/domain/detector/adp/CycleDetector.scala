@@ -6,7 +6,6 @@ import org.tindalos.principle.domain.expectations.PackageCoupling
 import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.coredetector.CheckInput
 import org.tindalos.principle.domain.core.CyclesInSubgraph
-import org.tindalos.principle.domain.core.ListConverter
 import org.tindalos.principle.domain.core.Cycle
 import com.google.common.collect.Maps
 import org.tindalos.principle.domain.core.PackageReference
@@ -22,7 +21,7 @@ class CycleDetector(private val packageStructureBuilder: PackageStructureBuilder
 
     var cycles = Map[PackageReference, Set[Cycle]]()
 
-    var sortedByAfferents = ListConverter.convert(references.values()).sortBy(_.getMetrics().afferentCoupling)
+    var sortedByAfferents = references.values.toList.sortBy(_.getMetrics().afferentCoupling)
     if (basePackage.getMetrics().afferentCoupling == 0) {
       sortedByAfferents = sortedByAfferents.filterNot(_ equals basePackage)
     }
