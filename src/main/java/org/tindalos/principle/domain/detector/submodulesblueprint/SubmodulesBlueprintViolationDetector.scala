@@ -6,7 +6,6 @@ import org.tindalos.principle.domain.coredetector.Detector
 import org.tindalos.principle.domain.expectations.DesignQualityExpectations
 import org.tindalos.principle.domain.expectations.SubmodulesBlueprint
 import scala.collection.mutable.Map
-import org.tindalos.principle.domain.core.ListConverter
 
 class SubmodulesBlueprintViolationDetector(private val submoduleFactory: SubmodulesFactory) extends Detector {
 

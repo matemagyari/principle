@@ -2,7 +2,6 @@ package org.tindalos.principle.domain.detector.layering
 
 import org.tindalos.principle.domain.coredetector.CheckResult
 import org.tindalos.principle.domain.expectations.Layering
-import org.tindalos.principle.domain.core.ListConverter
 
 class LayerViolationsResult(val violations: List[LayerReference], val layeringExpectations: Layering) extends CheckResult {
 

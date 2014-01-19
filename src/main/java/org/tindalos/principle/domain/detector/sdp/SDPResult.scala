@@ -2,7 +2,6 @@ package org.tindalos.principle.domain.detector.sdp
 
 import org.tindalos.principle.domain.coredetector.CheckResult
 import org.tindalos.principle.domain.expectations.SDP
-import org.tindalos.principle.domain.core.ListConverter
 
 class SDPResult(val violations:List[SDPViolation], private val expectation:SDP) extends CheckResult {
   
@@ -10,6 +9,5 @@ class SDPResult(val violations:List[SDPViolation], private val expectation:SDP) 
   
   val threshold = expectation.getViolationsThreshold()
   
-  def getViolationsAsJavaList() = ListConverter.convert(violations)
 
 }

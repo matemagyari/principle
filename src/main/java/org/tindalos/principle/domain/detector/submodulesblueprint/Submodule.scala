@@ -1,7 +1,6 @@
 package org.tindalos.principle.domain.detector.submodulesblueprint
 
 import org.tindalos.principle.domain.core.Package
-import org.tindalos.principle.domain.core.ListConverter
 import org.tindalos.principle.domain.core.PackageReference
 import scala.collection.immutable.Set
 import org.apache.commons.lang3.builder.HashCodeBuilder

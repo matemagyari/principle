@@ -57,7 +57,7 @@ public class YAMLBasedSubmodulesBlueprintProvider implements SubmoduleDefinition
 			SubmoduleDefinition submoduleDefinition = submoduleDefinitionMap.get(submoduleId);
 			
 			Collection<SubmoduleId> plannedDependencies = transformToSubmoduleIds(entry.getValue(),submoduleDefinitionMap.keySet());
-			submoduleDefinition.addPlannedDependencies(plannedDependencies);
+			submoduleDefinition.addPlannedDependencies(ListConverter.convert(plannedDependencies));
 		}
 	}
 
@@ -73,7 +73,7 @@ public class YAMLBasedSubmodulesBlueprintProvider implements SubmoduleDefinition
 			SubmoduleId submoduleId = new SubmoduleId(entry.getKey());
 			
 			Set<PackageReference> packages = transformToPackageReferences(entry.getValue(), basePackageName);
-			SubmoduleDefinition submoduleDefinition = new SubmoduleDefinition(submoduleId, packages);
+			SubmoduleDefinition submoduleDefinition = new SubmoduleDefinition(submoduleId, ListConverter.convert(packages));
 			
 			submoduleDefinitionMap.put(submoduleId, submoduleDefinition);
 		}

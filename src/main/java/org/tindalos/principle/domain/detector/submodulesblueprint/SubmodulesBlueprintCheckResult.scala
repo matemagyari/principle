@@ -1,6 +1,5 @@
 package org.tindalos.principle.domain.detector.submodulesblueprint
 
-import org.tindalos.principle.domain.core.ListConverter
 import org.tindalos.principle.domain.coredetector.CheckResult
 import org.tindalos.principle.domain.expectations.SubmodulesBlueprint
 
@@ -16,8 +15,4 @@ class SubmodulesBlueprintCheckResult(
   
   val threshold = submodulesBlueprint.getViolationsThreshold()
   
-  //for java
-  def illegalDependenciesJava = ListConverter.convertMapSet(illegalDependencies)
-  def missingDependenciesJava = ListConverter.convertMapSet(missingDependencies)
-
 }

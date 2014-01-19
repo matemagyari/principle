@@ -62,7 +62,7 @@ public class JSONBasedSubmodulesBlueprintProvider implements SubmoduleDefinition
 			if (submoduleDefinition == null) {
 				throw new InvalidBlueprintDefinitionException("Submodule not defined: " + submoduleId);
 			}
-			submoduleDefinition.addPlannedDependencies(plannedDependencies);
+			submoduleDefinition.addPlannedDependencies(ListConverter.convert(plannedDependencies));
 		}
 	}
 
@@ -79,7 +79,7 @@ public class JSONBasedSubmodulesBlueprintProvider implements SubmoduleDefinition
 			SubmoduleId submoduleId = new SubmoduleId(keys.next());
 			
 			Set<PackageReference> packages = transformToPackageReferences(definitions.getJSONArray(submoduleId.value()),basePackageName);
-			SubmoduleDefinition submoduleDefinition = new SubmoduleDefinition(submoduleId, packages);
+			SubmoduleDefinition submoduleDefinition = new SubmoduleDefinition(submoduleId, ListConverter.convert(packages));
 			
 			submoduleDefinitionMap.put(submoduleId, submoduleDefinition);
 		}

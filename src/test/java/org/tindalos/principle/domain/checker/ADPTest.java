@@ -11,6 +11,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration;
+import org.tindalos.principle.domain.core.ListConverter;
 import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.coredetector.CheckResult;
 import org.tindalos.principle.domain.detector.adp.ADPResult;
@@ -136,7 +137,7 @@ public class ADPTest {
         List<CheckResult> resultList = checkResults.resultList();
         assertEquals(1, resultList.size());
         ADPResult adpResult = (ADPResult) resultList.get(0);
-        return adpResult.getCyclesByBreakingPoints();
+        return ListConverter.convert(adpResult.cyclesByBreakingPoints());
     }
 
     private static DesignQualityExpectations prepareChecks() {

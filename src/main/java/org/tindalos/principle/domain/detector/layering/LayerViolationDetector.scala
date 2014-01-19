@@ -2,7 +2,6 @@ package org.tindalos.principle.domain.detector.layering
 
 import org.tindalos.principle.domain.coredetector.CheckInput
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration
-import org.tindalos.principle.domain.core.ListConverter
 import org.tindalos.principle.domain.core.Package
 import scala.collection.JavaConversions._
 import org.tindalos.principle.domain.coredetector.Detector
@@ -20,7 +19,7 @@ class LayerViolationDetector extends Detector {
   private def findViolations(packages: List[Package], configuration: DesignQualityCheckConfiguration): List[LayerReference] = {
 
     val violations = scala.collection.mutable.ListBuffer[LayerReference]()
-    val layers = ListConverter.convert(configuration.getLayeringExpectations().getLayers()).map(configuration.basePackage + "." + _)
+    val layers = configuration.getLayeringExpectations().getLayers().map(configuration.basePackage + "." + _).toList
 
     val relevantPackages = packages.filter(_.reference.startsWith(configuration.basePackage))
     relevantPackages.foreach({ aPackage =>
@@ -39,7 +38,7 @@ class LayerViolationDetector extends Detector {
   private def getReferencesToLayers(aPackage: Package, layers: List[String], basePackage: String) = {
     val references = scala.collection.mutable.ListBuffer[LayerReference]()
 
-    val referencedPackages = ListConverter.convert(aPackage.getOwnPackageReferences()).filter(_.startsWith(basePackage))
+    val referencedPackages = aPackage.getOwnPackageReferences().filter(_.startsWith(basePackage))
 
     for (referencedPackage <- referencedPackages; layer <- layers if referencedPackage.startsWith(layer)) {
       references.+=(new LayerReference(aPackage.reference.name, referencedPackage.name))

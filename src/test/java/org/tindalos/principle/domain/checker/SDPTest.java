@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration;
+import org.tindalos.principle.domain.core.ListConverter;
 import org.tindalos.principle.domain.coredetector.CheckResult;
 import org.tindalos.principle.domain.detector.sdp.SDPResult;
 import org.tindalos.principle.domain.detector.sdp.SDPViolation;
@@ -37,7 +38,7 @@ public class SDPTest {
         
         SDPResult result = run("org.tindalos.principletest.sdp");
         
-        List<SDPViolation> violations = result.getViolationsAsJavaList();
+        List<SDPViolation> violations = ListConverter.convert(result.violations());
         
         for (SDPViolation violation : violations) {
             System.err.println(violation);

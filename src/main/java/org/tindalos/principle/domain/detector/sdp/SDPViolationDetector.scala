@@ -8,8 +8,6 @@ import org.tindalos.principle.domain.detector.layering.LayerViolationsResult
 import org.tindalos.principle.domain.expectations.PackageCoupling
 import org.tindalos.principle.domain.core.PackageReference
 import org.tindalos.principle.domain.core.Package
-import scala.collection.JavaConversions._
-import org.tindalos.principle.domain.core.ListConverter
 import scala.collection.mutable.ListBuffer
 
 class SDPViolationDetector extends Detector {
@@ -19,7 +17,7 @@ class SDPViolationDetector extends Detector {
      val sdpViolations = ListBuffer[SDPViolation]()
      val references:Map[PackageReference, Package] = checkInput.packages.map(aPackage => (aPackage.reference -> aPackage)).toMap
      for (aPackage <-checkInput.packages) {
-       val violationsForPackage = ListConverter.convert(aPackage.getOwnPackageReferences())
+       val violationsForPackage = aPackage.getOwnPackageReferences()
     		   	.map(x => references.get(x).get)
        			.filter(_.instability > aPackage.instability)
        			.map(new SDPViolation(aPackage, _))

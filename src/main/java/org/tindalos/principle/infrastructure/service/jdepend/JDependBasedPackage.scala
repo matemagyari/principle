@@ -2,7 +2,6 @@ package org.tindalos.principle.infrastructure.service.jdepend
 
 import java.util.Collection
 
-import org.tindalos.principle.domain.core.ListConverter
 import org.tindalos.principle.domain.core.Metrics
 import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.core.PackageReference

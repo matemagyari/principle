@@ -45,8 +45,8 @@ public class BlueprintTest {
         
         SubmodulesBlueprintCheckResult result = run("org.tindalos.principletest.submodulesblueprint","src/test/resources/principle_blueprint_test.yaml");
         
-        Map<Submodule, Set<Submodule>> illegalDependencies = result.illegalDependenciesJava();
-        Map<Submodule, Set<Submodule>> missingDependencies = result.missingDependenciesJava();
+        Map<Submodule, Set<Submodule>> illegalDependencies = ListConverter.convertMapSet(result.illegalDependencies());
+        Map<Submodule, Set<Submodule>> missingDependencies = ListConverter.convertMapSet(result.missingDependencies());
         
         Submodule mod1 = fakeSubmodule("MOD1");
         Submodule mod2 = fakeSubmodule("MOD2");
