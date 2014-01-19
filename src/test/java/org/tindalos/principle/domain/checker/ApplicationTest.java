@@ -1,9 +1,13 @@
 package org.tindalos.principle.domain.checker;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.tindalos.principle.app.service.Application;
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration;
+import org.tindalos.principle.domain.core.ListConverter;
 import org.tindalos.principle.domain.core.logging.ScalaLogger;
 import org.tindalos.principle.domain.core.logging.TheLogger;
 import org.tindalos.principle.domain.expectations.ADP;
@@ -70,8 +74,8 @@ public class ApplicationTest {
 	}
 
 	private Layering layering() {
-		Layering layering = new Layering();
-		layering.setLayers("infrastructure", "app", "domain");
+		List<String> strs = Arrays.asList("infrastructure", "app", "domain");
+		Layering layering = new Layering(ListConverter.convert(strs),0);
 		return layering;
 	}
 

@@ -2,6 +2,7 @@ package org.tindalos.principle.domain.checker;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -77,7 +78,7 @@ public class LayeringTest {
 
     private static Layering layering() {
         Layering layering = new Layering();
-        layering.setLayers("infrastructure","app","domain");
+        layering.setLayers(Arrays.asList("infrastructure","app","domain"));
         return layering;
     }
 

@@ -10,7 +10,7 @@ class ACDResult(val cumulatedComponentDependency: Int, val numOfComponents: Int,
   val rAcd = acd / numOfComponents.toDouble
   val nCcd = acd / numOfComponents.toDouble
 
-  def expectationsFailed() =
+  override def expectationsFailed() =
     greaterIfExists(acd, packageCoupling.acd) || 
     greaterIfExists(rAcd, packageCoupling.racd) || 
     greaterIfExists(nCcd, packageCoupling.nccd)

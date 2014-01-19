@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.expectations
 
-class SubmodulesBlueprint(val submodulesDefinitionLocation:SubmodulesDefinitionLocation, val threshold:Integer) 
+class SubmodulesBlueprint(val submodulesDefinitionLocation:SubmodulesDefinitionLocation, val threshold:Int) 
 extends Thresholder(threshold) {
   
   def this() = this(null,0)

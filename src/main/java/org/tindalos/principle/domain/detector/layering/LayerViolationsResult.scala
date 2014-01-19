@@ -5,6 +5,6 @@ import org.tindalos.principle.domain.expectations.Layering
 
 class LayerViolationsResult(val violations: List[LayerReference], val layeringExpectations: Layering) extends CheckResult {
 
-  override def expectationsFailed() = violations.length > threshold
   val threshold = layeringExpectations.violationsThreshold
+  override def expectationsFailed() = violations.length > threshold
 }

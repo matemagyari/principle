@@ -19,7 +19,7 @@ class LayerViolationDetector extends Detector {
   private def findViolations(packages: List[Package], configuration: DesignQualityCheckConfiguration): List[LayerReference] = {
 
     val violations = scala.collection.mutable.ListBuffer[LayerReference]()
-    val layers = configuration.getLayeringExpectations().getLayers().map(configuration.basePackage + "." + _).toList
+    val layers = configuration.getLayeringExpectations().layers.map(configuration.basePackage + "." + _).toList
 
     val relevantPackages = packages.filter(_.reference.startsWith(configuration.basePackage))
     relevantPackages.foreach({ aPackage =>

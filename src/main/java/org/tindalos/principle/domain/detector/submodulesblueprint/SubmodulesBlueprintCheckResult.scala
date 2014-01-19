@@ -9,10 +9,9 @@ class SubmodulesBlueprintCheckResult(
   val missingDependencies: Map[Submodule, Set[Submodule]] = Map(),
   val overlaps: Set[Overlap] = Set()) extends CheckResult {
 
-  override def expectationsFailed() = violationsNumber > 0
+  val threshold = submodulesBlueprint.violationsThreshold
+  override def expectationsFailed() = violationsNumber > threshold
 
   def violationsNumber = illegalDependencies.size + missingDependencies.size
-  
-  val threshold = submodulesBlueprint.violationsThreshold
-  
+
 }

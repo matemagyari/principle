@@ -11,7 +11,7 @@ class ADPViolationsReporter extends ViolationsReporter[ADPResult] {
     val sectionLine = "=============================================================="
     val sb = new StringBuffer("\n" + sectionLine + "\n")
     sb.append("\tAcyclic Package Dependency Principle violations (" + cyclesByBreakingPoints.size + " of the allowed "
-      + result.getThreshold() + ")\t")
+      + result.threshold + ")\t")
     sb.append("\n" + sectionLine + "\n")
 
     sb.append(sectionLine + "\n")
