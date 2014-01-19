@@ -16,7 +16,7 @@ class CycleDetector(private val packageStructureBuilder: PackageStructureBuilder
 
     val basePackage = packageStructureBuilder.build(checkInput.packages,
       checkInput.designQualityCheckConfiguration.basePackage)
-      
+
     val references = basePackage.toMap()
 
     var cycles = Map[PackageReference, Set[Cycle]]()
@@ -27,8 +27,8 @@ class CycleDetector(private val packageStructureBuilder: PackageStructureBuilder
     }
     while (!sortedByAfferents.isEmpty) {
       val cyclesInSubgraph = sortedByAfferents.head.detectCycles(references)
-      cycles = merge(cycles, cyclesInSubgraph.breakingPoints)
-      sortedByAfferents = sortedByAfferents.filterNot(cyclesInSubgraph.investigatedPackages_.contains(_))
+      cycles = merge(cycles, cyclesInSubgraph.cycles)
+      sortedByAfferents = sortedByAfferents.filterNot(cyclesInSubgraph.investigatedPackages.contains(_))
     }
     new ADPResult(cycles, checkInput.getPackageCouplingExpectations().getADP())
   }
@@ -37,8 +37,9 @@ class CycleDetector(private val packageStructureBuilder: PackageStructureBuilder
     case null => false
   }
 
-  private def merge[T](a: Map[PackageReference, scala.collection.immutable.Set[T]],
-    b: scala.collection.mutable.Map[PackageReference, scala.collection.mutable.Set[T]]) = {
+  private def merge[T](
+    a: Map[PackageReference, scala.collection.immutable.Set[T]],
+    b: Map[PackageReference, scala.collection.immutable.Set[T]]) = {
     var merged = scala.collection.immutable.Map[PackageReference, Set[T]]()
     for ((ka, va) <- a) {
       merged = merged + (ka -> va)

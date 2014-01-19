@@ -91,7 +91,7 @@ abstract class Package(val reference: PackageReference) {
     }
   }
 
-  def detectCycles(packageReferences: Map[PackageReference, Package]): CyclesInSubgraph =
+  def detectCycles(packageReferences: Map[PackageReference, Package]) =
     detectCyclesOnThePathFromHere(TraversedPackages.empty(), CyclesInSubgraph.empty(), packageReferences)
 
   // it dies if there are cycles

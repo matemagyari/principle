@@ -5,29 +5,23 @@ import scala.collection.mutable.Map
 
 class CyclesInSubgraph {
 
-  val investigatedPackages_ = Set[Package]()
-  val breakingPoints = Map[PackageReference, Set[Cycle]]()
+  private val investigatedPackages_ = scala.collection.mutable.Set[Package]()
+  private val breakingPoints = scala.collection.mutable.Map[PackageReference, scala.collection.mutable.Set[Cycle]]()
 
-  def investigatedPackages(): java.util.Set[Package] = ListConverter.convert(investigatedPackages_)
-
-  def cycles() = {
-    val cycles:java.util.Map[PackageReference, java.util.Set[Cycle]] = new java.util.HashMap[PackageReference, java.util.Set[Cycle]]()
-    for ((k, v) <- breakingPoints) {
-      cycles.put(k, ListConverter.convert(v))
-    }
-    cycles
-  }
+  def investigatedPackages = investigatedPackages_.toSet
+  
+  def cycles: scala.collection.immutable.Map[PackageReference, scala.collection.immutable.Set[Cycle]] = (for ((k, v) <- breakingPoints) yield (k,v.toSet)).toMap
 
   def add(cycle: Cycle) = breakingPoints.get(cycle.getLast()) match {
     case Some(opt) => opt += cycle
     case None => breakingPoints += cycle.getLast() -> Set[Cycle](cycle)
   }
 
-  def rememberPackageAsInvestigated(aPackage: Package) = investigatedPackages.add(aPackage)
+  def rememberPackageAsInvestigated(aPackage: Package) = investigatedPackages_ += aPackage
 
   def mergeIn(that: CyclesInSubgraph) = {
     mergeBreakingPoints(that.breakingPoints)
-    investigatedPackages.addAll(that.investigatedPackages)
+    investigatedPackages_ ++= that.investigatedPackages
   }
 
   def mergeBreakingPoints(breakingPointsInOther: Map[PackageReference, Set[Cycle]]) =

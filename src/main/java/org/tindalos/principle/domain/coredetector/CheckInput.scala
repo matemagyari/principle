@@ -2,7 +2,6 @@ package org.tindalos.principle.domain.coredetector
 
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration
 import org.tindalos.principle.domain.core.Package
-import org.tindalos.principle.domain.core.ListConverter
 
 class CheckInput(val packages: List[Package], val designQualityCheckConfiguration: DesignQualityCheckConfiguration) {
 
