@@ -101,6 +101,7 @@
 							<violationsThreshold>0</violationsThreshold>
 						</layering>
 						<!-- 
+						 -->
 						<packageCoupling>
 							<adp>
 								<violationsThreshold>25</violationsThreshold>
@@ -116,7 +117,6 @@
 								<threshold>0.45</threshold>
 							</racd>
 						</packageCoupling>
-						 -->
 						<submodulesBlueprint>
 							<location>src/main/resources/principle_blueprint.yaml</location>
 							<violationsThreshold>0</violationsThreshold>

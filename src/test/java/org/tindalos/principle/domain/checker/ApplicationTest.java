@@ -77,10 +77,9 @@ public class ApplicationTest {
 
 	private PackageCoupling packageCoupling() {
 		PackageCoupling packageCoupling = new PackageCoupling();
-		SAP sap = new SAP();
-		sap.setMaxDistance(0.3d);
+		SAP sap = new SAP(0,0.3d);
 		packageCoupling.setSAP(sap);
-		packageCoupling.setADP(new ADP(0));
+		packageCoupling.setADP(new ADP());
 		packageCoupling.setSDP(new SDP());
 		packageCoupling.setACD(new ACD());
 		return packageCoupling;

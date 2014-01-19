@@ -16,14 +16,14 @@ class ACDResult(val cumulatedComponentDependency: Int, val numOfComponents: Int,
     greaterIfExists(nCcd, packageCoupling.getNCCD())
 
   private def greaterIfExists(actual: Double, expectation: DoubleThresholder) =
-    if (expectation == null || expectation.getThreshold() == null) false
-    else actual > expectation.getThreshold()
+    if (expectation == null || expectation.threshold == Double.NaN) false
+    else actual > expectation.threshold
 
   def getACDThreshold() =
     if (packageCoupling.getACD() == null) 999d
-    else packageCoupling.getACD().getThreshold()
+    else packageCoupling.getACD().threshold
 
   def getRACDThreshold() =
     if (packageCoupling.getRACD() == null) 999d
-    else packageCoupling.getRACD().getThreshold()
+    else packageCoupling.getRACD().threshold
 }

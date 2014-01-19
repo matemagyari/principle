@@ -17,7 +17,7 @@ class SubmodulesBlueprintViolationDetector(private val submoduleFactory: Submodu
 
     try {
       val submodules = submoduleFactory.buildSubmodules(
-        submodulesBlueprint.getSubmodulesDefinitionLocation(),
+        submodulesBlueprint.submodulesDefinitionLocation,
         checkInput.packages, checkInput.getBasePackage())
 
       val allIllegalDependencies = Map[Submodule, Set[Submodule]]()

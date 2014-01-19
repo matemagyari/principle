@@ -7,6 +7,10 @@ import org.tindalos.principle.domain.expectations.exception.InvalidConfiguration
 import com.google.common.collect.Lists;
 
 public class Layering extends Thresholder {
+	
+	public Layering() {
+		super(0);
+	}
 
 	private List<String> layers;
 

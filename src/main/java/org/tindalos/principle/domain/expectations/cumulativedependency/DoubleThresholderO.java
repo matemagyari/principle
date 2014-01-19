@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.expectations.cumulativedependency;
 
-public abstract class DoubleThresholder {
+public abstract class DoubleThresholderO {
 	
 	private Double threshold;
 
