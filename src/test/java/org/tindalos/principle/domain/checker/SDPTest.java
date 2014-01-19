@@ -61,7 +61,7 @@ public class SDPTest {
     
     private PackageCoupling packageCoupling() {
         PackageCoupling packageCoupling = new PackageCoupling();
-        packageCoupling.setSDP(new SDP());
+        packageCoupling.sdp_$eq(new SDP());
         return packageCoupling;
     }
 

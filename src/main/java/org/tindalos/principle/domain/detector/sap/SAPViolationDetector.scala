@@ -9,7 +9,7 @@ import org.tindalos.principle.domain.core.Package
 class SAPViolationDetector extends Detector {
 
   override def analyze(checkInput: CheckInput) = {
-    val sapExpectation = checkInput.getPackageCouplingExpectations().getSAP()
+    val sapExpectation = checkInput.getPackageCouplingExpectations().sap
     val maxDistance = sapExpectation.maxDistance
 
     val outlierPackages = removeRootPackageIfEmpty(checkInput.packages).filter(_.distance > maxDistance)
@@ -24,7 +24,7 @@ class SAPViolationDetector extends Detector {
   }
 
   override def isWanted(expectations: DesignQualityExpectations) = expectations.packageCoupling match {
-    case packageCoupling: PackageCoupling => packageCoupling.getSAP() != null
+    case packageCoupling: PackageCoupling => packageCoupling.sap != null
     case null => false
   }
 

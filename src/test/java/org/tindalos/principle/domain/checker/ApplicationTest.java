@@ -78,10 +78,10 @@ public class ApplicationTest {
 	private PackageCoupling packageCoupling() {
 		PackageCoupling packageCoupling = new PackageCoupling();
 		SAP sap = new SAP(0,0.3d);
-		packageCoupling.setSAP(sap);
-		packageCoupling.setADP(new ADP());
-		packageCoupling.setSDP(new SDP());
-		packageCoupling.setACD(new ACD());
+		packageCoupling.sap_$eq(sap);
+		packageCoupling.adp_$eq(new ADP());
+		packageCoupling.sdp_$eq(new SDP());
+		packageCoupling.acd_$eq(new ACD());
 		return packageCoupling;
 	}
 

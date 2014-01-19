@@ -97,7 +97,7 @@ public class ACDTest {
     
     private PackageCoupling packageCoupling() {
         PackageCoupling packageCoupling = new PackageCoupling();
-        packageCoupling.setACD(new ACD());
+        packageCoupling.acd_$eq(new ACD());
         return packageCoupling;
     }
 

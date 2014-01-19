@@ -148,7 +148,7 @@ public class ADPTest {
 
     private static PackageCoupling packageCoupling() {
         PackageCoupling packageCoupling = new PackageCoupling();
-        packageCoupling.setADP(new ADP(0));
+        packageCoupling.adp_$eq(new ADP(0));
         return packageCoupling;
     }
 

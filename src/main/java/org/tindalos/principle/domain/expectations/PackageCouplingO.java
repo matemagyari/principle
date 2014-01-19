@@ -4,7 +4,7 @@ import org.tindalos.principle.domain.expectations.cumulativedependency.ACD;
 import org.tindalos.principle.domain.expectations.cumulativedependency.NCCD;
 import org.tindalos.principle.domain.expectations.cumulativedependency.RACD;
 
-public class PackageCoupling {
+public class PackageCouplingO {
 	
 	private ADP adp;
 	private SDP sdp;
