@@ -1,7 +1,8 @@
 package org.tindalos.principle.domain.expectations
 
 import org.tindalos.principle.domain.expectations.exception.InvalidConfigurationException
-import org.tindalos.principle.domain.core.ListConverter
+import org.tindalos.principle.domain.util.ListConverter
+import org.tindalos.principle.domain.util.ListConverter
 
 class Layering(var layers: List[String], threshold: Int = 0) extends Thresholder {
 

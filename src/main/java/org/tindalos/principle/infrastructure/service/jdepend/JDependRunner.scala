@@ -4,8 +4,9 @@ import jdepend.framework.JavaPackage
 import jdepend.framework.PackageFilter
 import java.io.IOException
 import jdepend.framework.JDepend
-import org.tindalos.principle.domain.core.ListConverter
+import org.tindalos.principle.domain.util.ListConverter
 import java.util.Collection
+import org.tindalos.principle.domain.util.ListConverter
 
 class JDependRunner {
 

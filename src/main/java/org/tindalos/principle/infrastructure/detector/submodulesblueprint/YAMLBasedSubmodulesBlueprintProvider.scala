@@ -7,16 +7,16 @@ import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefin
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleId
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleId
 import java.io.IOException
-import org.tindalos.principle.domain.expectations.SubmodulesDefinitionLocation
 import org.apache.commons.io.FileUtils
 import java.io.File
 import org.yaml.snakeyaml.Yaml
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefinitions
-import org.tindalos.principle.domain.core.ListConverter
+import org.tindalos.principle.domain.util.ListConverter
+import org.tindalos.principle.domain.util.ListConverter
 
 class YAMLBasedSubmodulesBlueprintProvider extends SubmoduleDefinitionsProvider {
 
-  def readSubmoduleDefinitions(submodulesDefinitionLocation: SubmodulesDefinitionLocation, basePackageName: String) = {
+  def readSubmoduleDefinitions(submodulesDefinitionLocation: String, basePackageName: String) = {
     val yaml = YAMLBasedSubmodulesBlueprintProvider.getYAML(submodulesDefinitionLocation)
     YAMLBasedSubmodulesBlueprintProvider.processYAML(yaml, basePackageName)
   }
@@ -77,10 +77,10 @@ object YAMLBasedSubmodulesBlueprintProvider {
 
   private def transformToPackageReferences(packageNames: List[String], basePackageName: String) = packageNames.map(x => new PackageReference(basePackageName + "." + x))
 
-  protected def getYAML(submodulesDefinitionLocation: SubmodulesDefinitionLocation) =
+  protected def getYAML(submodulesDefinitionLocation: String) =
     try {
-      FileUtils.readFileToString(new File(submodulesDefinitionLocation.filePath()))
+      FileUtils.readFileToString(new File(submodulesDefinitionLocation))
     } catch {
-      case ex: IOException => throw new InvalidBlueprintDefinitionException("problem with reading file from " + submodulesDefinitionLocation.filePath());
+      case ex: IOException => throw new InvalidBlueprintDefinitionException("problem with reading file from " + submodulesDefinitionLocation);
     }
 }

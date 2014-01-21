@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.tindalos.principle.app.service.Application;
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration;
-import org.tindalos.principle.domain.core.ListConverter;
+import org.tindalos.principle.domain.util.ListConverter;
 import org.tindalos.principle.domain.core.logging.ScalaLogger;
 import org.tindalos.principle.domain.core.logging.TheLogger;
 import org.tindalos.principle.domain.expectations.ADP;
@@ -17,7 +17,6 @@ import org.tindalos.principle.domain.expectations.PackageCoupling;
 import org.tindalos.principle.domain.expectations.SAP;
 import org.tindalos.principle.domain.expectations.SDP;
 import org.tindalos.principle.domain.expectations.SubmodulesBlueprint;
-import org.tindalos.principle.domain.expectations.SubmodulesDefinitionLocation;
 import org.tindalos.principle.domain.expectations.cumulativedependency.ACD;
 import org.tindalos.principle.domain.resultprocessing.reporter.Printer;
 import org.tindalos.principle.domain.resultprocessing.thresholdchecker.ThresholdTrespassedException;
@@ -69,8 +68,8 @@ public class ApplicationTest {
 		return new SubmodulesBlueprint(submodulesDefinitionLocation(),0);
 	}
 
-	private SubmodulesDefinitionLocation submodulesDefinitionLocation() {
-		return new SubmodulesDefinitionLocation("src/main/resources/principle_blueprint.yaml");
+	private String submodulesDefinitionLocation() {
+		return "src/main/resources/principle_blueprint.yaml";
 	}
 
 	private Layering layering() {

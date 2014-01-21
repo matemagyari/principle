@@ -11,21 +11,20 @@ import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.tindalos.principle.domain.core.ListConverter;
 import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.detector.submodulesblueprint.InvalidBlueprintDefinitionException;
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefinition;
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefinitions;
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefinitionsProvider;
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleId;
-import org.tindalos.principle.domain.expectations.SubmodulesDefinitionLocation;
+import org.tindalos.principle.domain.util.ListConverter;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 public class JSONBasedSubmodulesBlueprintProvider implements SubmoduleDefinitionsProvider {
 
-	public SubmoduleDefinitions readSubmoduleDefinitions(SubmodulesDefinitionLocation submodulesDefinitionLocation, String basePackageName) {
+	public SubmoduleDefinitions readSubmoduleDefinitions(String submodulesDefinitionLocation, String basePackageName) {
 		String json = getJSON(submodulesDefinitionLocation);
 		return processJSON(json, basePackageName);
 	}
@@ -105,11 +104,11 @@ public class JSONBasedSubmodulesBlueprintProvider implements SubmoduleDefinition
 		return packages;
 	}
 
-	private static String getJSON(SubmodulesDefinitionLocation submodulesDefinitionLocation) {
+	private static String getJSON(String submodulesDefinitionLocation) {
 		try {
-			return FileUtils.readFileToString(new File(submodulesDefinitionLocation.filePath()));
+			return FileUtils.readFileToString(new File(submodulesDefinitionLocation));
 		} catch (IOException e) {
-			throw new InvalidBlueprintDefinitionException("problem with reading file from " + submodulesDefinitionLocation.filePath());
+			throw new InvalidBlueprintDefinitionException("problem with reading file from " + submodulesDefinitionLocation);
 		}
 	}
 

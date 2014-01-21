@@ -15,7 +15,7 @@ import org.tindalos.principle.domain.expectations.cumulativedependency.ACD;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 import org.tindalos.principle.infrastructure.plugin.Checks;
 
-public class ACDTest {
+public class ACDTestO {
 
     private DesignQualityCheckConfiguration designQualityCheckConfiguration;
     private DesignQualityCheckService designQualityCheckService;

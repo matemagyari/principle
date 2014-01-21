@@ -8,25 +8,16 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.tindalos.principle.domain.core.Cycle;
-import org.tindalos.principle.domain.core.CyclesInSubgraph;
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration;
-import org.tindalos.principle.domain.core.ListConverter;
 import org.tindalos.principle.domain.core.Package;
-import org.tindalos.principle.domain.core.PackageReference;
 import org.tindalos.principle.domain.coredetector.CheckResult;
-import org.tindalos.principle.domain.detector.adp.ADPResult;
-import org.tindalos.principle.domain.detector.submodulesblueprint.OverlappingSubmoduleDefinitionsException;
 import org.tindalos.principle.domain.detector.submodulesblueprint.Submodule;
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleId;
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmodulesBlueprintCheckResult;
-import org.tindalos.principle.domain.expectations.ADP;
 import org.tindalos.principle.domain.expectations.DesignQualityExpectations;
-import org.tindalos.principle.domain.expectations.PackageCoupling;
+import org.tindalos.principle.domain.util.ListConverter;
 import org.tindalos.principle.domain.expectations.SubmodulesBlueprint;
-import org.tindalos.principle.domain.expectations.SubmodulesDefinitionLocation;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 import org.tindalos.principle.infrastructure.plugin.Checks;
 
@@ -95,8 +86,7 @@ public class BlueprintTest {
     }
 
 	private static SubmodulesBlueprint submodulesBlueprint(String location) {
-		SubmodulesDefinitionLocation submodulesDefinitionLocation = new SubmodulesDefinitionLocation(location);
-		return new SubmodulesBlueprint(submodulesDefinitionLocation, 0);
+		return new SubmodulesBlueprint(location, 0);
 	}
 
 }

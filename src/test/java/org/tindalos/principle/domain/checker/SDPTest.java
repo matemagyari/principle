@@ -7,7 +7,7 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration;
-import org.tindalos.principle.domain.core.ListConverter;
+import org.tindalos.principle.domain.util.ListConverter;
 import org.tindalos.principle.domain.coredetector.CheckResult;
 import org.tindalos.principle.domain.detector.sdp.SDPResult;
 import org.tindalos.principle.domain.detector.sdp.SDPViolation;
