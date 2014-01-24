@@ -9,7 +9,5 @@ class DesignQualityCheckResults(val checkResults: List[CheckResult]) {
   def getResult[T <: CheckResult](clazz: Class[T]) = checkResults.find(_.getClass() == clazz)
 
   def failExpectations() = checkResults.exists(_.expectationsFailed)
-  
-  def resultList() = ListConverter.convert(checkResults)
 
 }

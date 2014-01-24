@@ -2,7 +2,6 @@ package org.tindalos.principle.domain.detector.adp
 
 import org.tindalos.principle.domain.core.PackageSorter
 import org.tindalos.principle.domain.core.Package
-import org.tindalos.principle.domain.util.ListConverter
 
 class PackageStructureBuilder(val packageSorter:PackageSorter) {
   
