@@ -88,7 +88,7 @@
 			<plugin>
 				<groupId>org.tindalos.principle</groupId>
 				<artifactId>principle</artifactId>
-				<version>0.20</version>
+				<version>0.21</version>
 				<configuration>
 					<basePackage>org.tindalos.principle</basePackage>
 					<checks>
@@ -104,14 +104,14 @@
 						 -->
 						<packageCoupling>
 							<adp>
-								<violationsThreshold>25</violationsThreshold>
+								<violationsThreshold>1</violationsThreshold>
 							</adp>
 							<sdp>
 								<violationsThreshold>5</violationsThreshold>
 							</sdp>
 							<sap>
 								<maxDistance>0.5</maxDistance>
-								<violationsThreshold>5</violationsThreshold>
+								<violationsThreshold>3</violationsThreshold>
 							</sap>
 							<racd>
 								<threshold>0.45</threshold>
