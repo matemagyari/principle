@@ -24,7 +24,7 @@ class DesignQualityDetectorsRunner(val detectors:List[Detector]) {
 
   private def runDetector(checkResults: scala.collection.mutable.ListBuffer[CheckResult], checkInput: CheckInput, detector: Detector) = {
     try {
-      TheLogger.info(detector + " is running")
+      TheLogger.info(detector + " is running.")
       val checkResult = detector.analyze(checkInput)
       checkResults += checkResult
     } catch {
