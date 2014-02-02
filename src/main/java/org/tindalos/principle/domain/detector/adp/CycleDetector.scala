@@ -22,32 +22,20 @@ class CycleDetector(private val packageStructureBuilder: PackageStructureBuilder
     var cycles = Map[PackageReference, Set[Cycle]]()
 
     var sortedByAfferents = references.values.toList.sortBy(_.getMetrics().afferentCoupling)
-    if (basePackage.getMetrics().afferentCoupling == 0) {
+    if (basePackage.getMetrics().afferentCoupling == 0)
       sortedByAfferents = sortedByAfferents.filterNot(_ equals basePackage)
-    }
+
     while (!sortedByAfferents.isEmpty) {
       val cyclesInSubgraph = sortedByAfferents.head.detectCycles(references)
-      cycles = merge(cycles, cyclesInSubgraph.cycles)
+      cycles = cyclesInSubgraph.mergeBreakingPoints2(cycles)
       sortedByAfferents = sortedByAfferents.filterNot(cyclesInSubgraph.investigatedPackages.contains(_))
     }
     new ADPResult(cycles, checkInput.getPackageCouplingExpectations().adp)
   }
+
   override def isWanted(expectations: DesignQualityExpectations) = expectations.packageCoupling match {
     case packageCoupling: PackageCoupling => packageCoupling.adp != null
     case null => false
-  }
-
-  private def merge[T](
-    a: Map[PackageReference, scala.collection.immutable.Set[T]],
-    b: Map[PackageReference, scala.collection.immutable.Set[T]]) = {
-    var merged = scala.collection.immutable.Map[PackageReference, Set[T]]()
-    for ((ka, va) <- a) {
-      merged = merged + (ka -> va)
-    }
-    for ((kb, vb) <- b) {
-      merged = merged + (kb -> vb.toSet)
-    }
-    merged.toMap
   }
 
 }

@@ -11,7 +11,7 @@ class Cycle(val references: List[PackageReference]) extends Comparable[Cycle] {
 
   if (references == null || references.length < 2) throw new DomainException("Invalid cycle " + references)
 
-  def getLast() = references.last
+  val end = references.last
   
   override def toString() = {
     val arrow = "-->"

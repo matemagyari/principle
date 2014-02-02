@@ -6,5 +6,7 @@ trait Detector {
 
   def analyze(checkInput: CheckInput): CheckResult
   def isWanted(designQualityExpectations: DesignQualityExpectations): Boolean
+  
+  override def toString() = this.getClass().getSimpleName()
 
 }

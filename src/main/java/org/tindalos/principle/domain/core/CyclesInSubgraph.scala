@@ -9,28 +9,29 @@ class CyclesInSubgraph {
   private val breakingPoints = scala.collection.mutable.Map[PackageReference, scala.collection.mutable.Set[Cycle]]()
 
   def investigatedPackages = investigatedPackages_.toSet
-  
-  def cycles: scala.collection.immutable.Map[PackageReference, scala.collection.immutable.Set[Cycle]] = (for ((k, v) <- breakingPoints) yield (k,v.toSet)).toMap
 
-  def add(cycle: Cycle) = breakingPoints.get(cycle.getLast()) match {
-    case Some(opt) => opt += cycle
-    case None => breakingPoints += cycle.getLast() -> Set[Cycle](cycle)
+  def cycles: scala.collection.immutable.Map[PackageReference, scala.collection.immutable.Set[Cycle]] = (for ((k, v) <- breakingPoints) yield (k, v.toSet)).toMap
+
+  def add(cycle: Cycle) = {
+    //if this Cycle hasn't been registered yet
+    if (!breakingPoints.values.exists(_.contains(cycle)))
+      breakingPoints.get(cycle.end) match {
+        case Some(opt) => opt += cycle
+        case None => breakingPoints += cycle.end -> Set[Cycle](cycle)
+      }
   }
 
   def rememberPackageAsInvestigated(aPackage: Package) = investigatedPackages_ += aPackage
 
   def mergeIn(that: CyclesInSubgraph) = {
-    mergeBreakingPoints(that.breakingPoints)
+    that.breakingPoints.values.toSet.flatten.foreach({ add(_) })
     investigatedPackages_ ++= that.investigatedPackages
   }
 
-  def mergeBreakingPoints(breakingPointsInOther: Map[PackageReference, Set[Cycle]]) =
-    for ((k, v) <- breakingPointsInOther) {
-      breakingPoints.get(k) match {
-        case Some(cyclesForThisBreakingPoint) => cyclesForThisBreakingPoint ++= v
-        case None => breakingPoints += k -> v
-      }
-    }
+  def mergeBreakingPoints2(breakingPointsInOther: scala.collection.immutable.Map[PackageReference, scala.collection.immutable.Set[Cycle]]) = {
+    breakingPointsInOther.values.toSet.flatten.foreach({ add(_) })
+    cycles
+  }
 
   def isBreakingPoint(aPackage: Package) = breakingPoints.get(aPackage.reference) match {
     case Some(cyclesForThisBreakingPoint) => cyclesForThisBreakingPoint.size > CyclesInSubgraph.LIMIT

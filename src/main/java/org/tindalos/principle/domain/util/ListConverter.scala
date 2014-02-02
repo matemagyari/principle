@@ -1,8 +1,6 @@
 package org.tindalos.principle.domain.util
 
 import scala.collection.JavaConversions._
-import org.tindalos.principle.domain.core.Cycle
-import org.tindalos.principle.domain.core.PackageReference
 
 object ListConverter extends App {
 
@@ -35,13 +33,6 @@ object ListConverter extends App {
   def convert[T](scalaSet: scala.collection.immutable.Set[T]): java.util.Set[T] = scalaSet
   def convert[T](scalaSet: scala.collection.mutable.Set[T]): java.util.Set[T] = scalaSet
 
-  def convert[T](scalaMap: Map[PackageReference, Set[Cycle]]): java.util.Map[PackageReference, java.util.Set[Cycle]] = {
-    val mut = new java.util.HashMap[PackageReference, java.util.Set[Cycle]]
-    for ((k, v) <- scalaMap) {
-      mut.put(k, ListConverter.convert(v))
-    }
-    mut
-  }
   def convertMapSet[K, V](scalaMap: Map[K, Set[V]]): java.util.Map[K, java.util.Set[V]] = {
     val mut = new java.util.HashMap[K, java.util.Set[V]]
     for ((k, v) <- scalaMap) {

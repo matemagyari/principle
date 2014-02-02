@@ -75,7 +75,7 @@ class ACDTest {
 
     assertEquals(2, result, 0.01)
   }
-
+  
   private def run(basePackage: String) = {
     init(basePackage)
     val result = designQualityCheckService.analyze(designQualityCheckConfiguration)
