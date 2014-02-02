@@ -11,11 +11,10 @@ class Application(val designQualityCheckService: DesignQualityCheckService,
 
   def doIt(designQualityCheckConfiguration: DesignQualityCheckConfiguration, printer: Printer) = {
     val checkResults = designQualityCheckService.analyze(designQualityCheckConfiguration)
-    designQualityCheckResultsReporter.report(checkResults, printer);
+    designQualityCheckResultsReporter.report(checkResults, printer)
 
-    if (checkResults.failExpectations()) {
+    if (checkResults.failExpectations())
       throw new ThresholdTrespassedException
-    }
     checkResults
   }
 
