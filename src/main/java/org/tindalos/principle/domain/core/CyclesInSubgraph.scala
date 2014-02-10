@@ -44,7 +44,7 @@ class CyclesInSubgraph {
 
 object CyclesInSubgraph {
 
-  val LIMIT = 25
+  val LIMIT = 5
 
   def empty() = new CyclesInSubgraph()
 

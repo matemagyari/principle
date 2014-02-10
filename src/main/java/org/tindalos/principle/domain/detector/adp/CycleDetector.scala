@@ -24,7 +24,7 @@ class CycleDetector(private val packageStructureBuilder: PackageStructureBuilder
     var sortedByAfferents = references.values.toList.sortBy(_.getMetrics().afferentCoupling)
     if (basePackage.getMetrics().afferentCoupling == 0)
       sortedByAfferents = sortedByAfferents.filterNot(_ equals basePackage)
-
+      
     while (!sortedByAfferents.isEmpty) {
       val cyclesInSubgraph = sortedByAfferents.head.detectCycles(references)
       cycles = cyclesInSubgraph.mergeBreakingPoints2(cycles)

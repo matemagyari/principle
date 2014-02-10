@@ -3,6 +3,7 @@ package org.tindalos.principle.infrastructure.reporters
 import org.tindalos.principle.domain.coredetector.ViolationsReporter
 import org.tindalos.principle.domain.detector.adp.ADPResult
 import org.tindalos.principle.domain.core.Cycle
+import java.io.PrintWriter
 
 class ADPViolationsReporter extends ViolationsReporter[ADPResult] {
 
@@ -22,11 +23,16 @@ class ADPViolationsReporter extends ViolationsReporter[ADPResult] {
       sb.append("The cycles could be broken up refactoring the following packages: \n\n")
 
       cyclesByBreakingPoints.foreach(keyVal => sb.append(keyVal._1 + " (" + keyVal._2.size + ")\n"))
-
+      
+      val cycleDetailsFileName = "cycle_details.txt"
+      sb.append(s"\nFor details check file: ${cycleDetailsFileName} \n\n")
+      
+      val printWriter = new PrintWriter(cycleDetailsFileName)
       cyclesByBreakingPoints.foreach({ keyVal =>
-        sb.append("\nExample cycles caused by " + keyVal._1 + "\n")
-        keyVal._2.toList.sortBy(_.toString).foreach(cycle => { sb.append(print(cycle) + "\n") })
+        printWriter.append("\nExample cycles caused by " + keyVal._1 + "\n")
+        keyVal._2.toList.sortBy(_.toString).foreach(cycle => { printWriter.append(print(cycle) + "\n") })
       })
+      printWriter.close()
     }
 
     sb.append(sectionLine + "\n")
