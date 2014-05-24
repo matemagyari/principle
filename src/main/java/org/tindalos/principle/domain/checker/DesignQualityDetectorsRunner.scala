@@ -13,23 +13,21 @@ class DesignQualityDetectorsRunner(val detectors:List[Detector]) {
 
   def execute(packages: List[Package], designQualityCheckConfiguration: DesignQualityCheckConfiguration) = {
 
-    val checkResults = scala.collection.mutable.ListBuffer[CheckResult]()
     val checkInput = new CheckInput(packages, designQualityCheckConfiguration)
-    detectors.filter(_.isWanted(designQualityCheckConfiguration.expectations))
-      .foreach(detector => {
-        runDetector(checkResults, checkInput, detector)
-      })
-    new DesignQualityCheckResults(checkResults.toList)
+
+    val checkResults = for (detector <- detectors if detector.isWanted(designQualityCheckConfiguration.expectations))
+      yield runDetector(checkInput, detector)
+
+    new DesignQualityCheckResults(checkResults.flatten)
   }
 
-  private def runDetector(checkResults: scala.collection.mutable.ListBuffer[CheckResult], checkInput: CheckInput, detector: Detector) = {
+  private def runDetector(checkInput: CheckInput, detector: Detector) =
     try {
       TheLogger.info(detector + " is running.")
-      val checkResult = detector.analyze(checkInput)
-      checkResults += checkResult
+      Some(detector.analyze(checkInput))
     } catch {
-      case unwantedException: RuntimeException => TheLogger.error(unwantedException.getMessage())
+      case unwantedException: RuntimeException => TheLogger.error(unwantedException.getMessage)
+        None
     }
-  }
 
 }
