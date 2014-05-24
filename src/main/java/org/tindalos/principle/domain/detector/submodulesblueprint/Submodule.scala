@@ -41,7 +41,7 @@ class Submodule(val id: SubmoduleId, val packagesUnderModule: Set[Package], val 
     val results = for (
       packageReference <- references;
       aPackage <- packagesUnderModule;
-      if (packageReference.pointsToThatOrInside(aPackage.reference))
+      if packageReference.pointsToThatOrInside(aPackage.reference)
     ) yield 1
 
     !results.isEmpty

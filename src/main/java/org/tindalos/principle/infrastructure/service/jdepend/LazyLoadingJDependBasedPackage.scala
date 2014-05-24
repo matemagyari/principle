@@ -11,7 +11,7 @@ class LazyLoadingJDependBasedPackage(val javaPackage: JavaPackage, val metrics: 
   extends Package(javaPackage.getName()) {
 
   override def getMetrics() = metrics
-  override def isUnreferred = metrics.afferentCoupling == 0
+  override def isUnreferred() = metrics.afferentCoupling == 0
 
   override def getOwnPackageReferences(): Set[PackageReference] = {
 

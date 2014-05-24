@@ -48,6 +48,6 @@ class ADPViolationsReporter extends ViolationsReporter[ADPResult] {
     sb.toString()
   }
 
-  override def getType = classOf[ADPResult]
+  override def getType() = classOf[ADPResult]
 
 }

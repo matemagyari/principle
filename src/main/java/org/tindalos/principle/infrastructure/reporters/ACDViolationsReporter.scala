@@ -16,6 +16,6 @@ class ACDViolationsReporter extends ViolationsReporter[ACDResult] {
     sb.toString()
   }
 
-  override def getType = classOf[ACDResult]
+  override def getType() = classOf[ACDResult]
 
 }

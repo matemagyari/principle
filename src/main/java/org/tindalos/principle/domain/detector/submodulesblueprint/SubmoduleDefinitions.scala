@@ -7,7 +7,7 @@ class SubmoduleDefinitions(val definitions: Map[SubmoduleId, SubmoduleDefinition
   private def checkNoOverlaps(definitions: List[SubmoduleDefinition]) {
 
     val overlaps = for (
-      submoduleDefinition <- definitions; anOtherDefinition <- definitions.filterNot(_.equals(submoduleDefinition));
+      submoduleDefinition <- definitions; anOtherDefinition <- definitions.filterNot(_.equals(submoduleDefinition))
       if submoduleDefinition.overlapsWith(anOtherDefinition)
     ) yield new Overlap(submoduleDefinition.id, anOtherDefinition.id)
 
@@ -18,6 +18,6 @@ class SubmoduleDefinitions(val definitions: Map[SubmoduleId, SubmoduleDefinition
 
 }
 
-case class Overlap(val submodule1: SubmoduleId, val submodule2: SubmoduleId) {
+case class Overlap(submodule1: SubmoduleId, submodule2: SubmoduleId) {
 	val submoduleIds = Set(submodule1, submodule2)
 }

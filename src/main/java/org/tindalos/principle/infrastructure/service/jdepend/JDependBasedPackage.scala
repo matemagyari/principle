@@ -14,7 +14,7 @@ class JDependBasedPackage(val javaPackage: JavaPackage, val basePackage: String,
   extends Package(javaPackage.getName()) {
 
   override def getMetrics() = metrics
-  override def isUnreferred = metrics.afferentCoupling == 0
+  override def isUnreferred() = metrics.afferentCoupling == 0
   override def getOwnPackageReferences() = ownPackageReferences
 
   private val ownPackageReferences = 

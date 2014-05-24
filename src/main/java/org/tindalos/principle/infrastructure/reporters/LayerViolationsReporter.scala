@@ -21,6 +21,6 @@ class LayerViolationsReporter extends ViolationsReporter[LayerViolationsResult] 
     sb.toString()
   }
 
-  override def getType = classOf[LayerViolationsResult]
+  override def getType() = classOf[LayerViolationsResult]
 
 }

@@ -42,4 +42,10 @@ object MyApp extends App {
     yield ( e.name, c.name, salary - c.avgSalary )
 
   println( result )   // List(  (Mikey, MIK, 100),  (Frank, GOK, 300)  )
+
+  val aMap = Map(1->"2")
+
+  val x2 =  if (false) Map() else aMap.+(3->"4")
+
+  println(aMap + (2->"3"))
 }
