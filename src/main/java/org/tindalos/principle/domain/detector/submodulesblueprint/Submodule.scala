@@ -22,7 +22,7 @@ class Submodule(val id: SubmoduleId, val packagesUnderModule: Set[Package], val 
       .toSet
   }
 
-  def findIllegalDependencies(otherSubmodules: Set[Submodule]):Set[Submodule] = {
+  def findIllegalDependencies(otherSubmodules: Set[Submodule]): Set[Submodule] = {
 
     assert(!otherSubmodules.contains(this))
 
@@ -40,7 +40,7 @@ class Submodule(val id: SubmoduleId, val packagesUnderModule: Set[Package], val 
 
     val results = for (
       packageReference <- references;
-      aPackage <- packagesUnderModule;
+      aPackage <- packagesUnderModule
       if packageReference.pointsToThatOrInside(aPackage.reference)
     ) yield 1
 
@@ -48,6 +48,9 @@ class Submodule(val id: SubmoduleId, val packagesUnderModule: Set[Package], val 
   }
 
   private def calculateExtraReferences(legalDependencies: Set[Submodule]) = {
+
+    //legalDependencies.foldLeft(outgoingReferences)((acc,x) => { acc })
+
     var potentiallyIllegalReferences = outgoingReferences
     legalDependencies.foreach({ legalDependency =>
       potentiallyIllegalReferences = legalDependency.removeOutsideReferences(potentiallyIllegalReferences)

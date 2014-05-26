@@ -11,10 +11,11 @@ class SubmoduleDefinition(val id: SubmoduleId, val packages: scala.collection.im
   def addPlannedDependencies(plannedDependencies: List[SubmoduleId]) = legalDependencies ++= plannedDependencies
 
   def overlapsWith(that: SubmoduleDefinition) = {
-    val overlappingPackages = for (aPackage <- packages; otherPackage <- that.packages; if (aPackage.oneContainsAnother(otherPackage))) yield (aPackage, otherPackage)
+    val overlappingPackages = for (aPackage <- packages; otherPackage <- that.packages; if aPackage.oneContainsAnother(otherPackage))
+    yield (aPackage, otherPackage)
     !overlappingPackages.isEmpty
   }
-  
+
   def getLegalDependencies = legalDependencies.toSet
 
   override def equals(other: Any) =

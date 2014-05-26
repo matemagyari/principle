@@ -4,10 +4,9 @@ import org.tindalos.principle.domain.coredetector.Detector
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration
 import org.tindalos.principle.domain.coredetector.CheckInput
 import org.tindalos.principle.domain.core.Package
-import org.tindalos.principle.domain.coredetector.CheckResult
 import org.tindalos.principle.domain.core.logging.TheLogger
 
-class DesignQualityDetectorsRunner(val detectors:List[Detector]) {
+class DesignQualityDetectorsRunner(val detectors: List[Detector]) {
 
   //def this(theDetectors:Detector*) = this(List(theDetectors))
 
@@ -16,7 +15,7 @@ class DesignQualityDetectorsRunner(val detectors:List[Detector]) {
     val checkInput = new CheckInput(packages, designQualityCheckConfiguration)
 
     val checkResults = for (detector <- detectors if detector.isWanted(designQualityCheckConfiguration.expectations))
-      yield runDetector(checkInput, detector)
+    yield runDetector(checkInput, detector)
 
     new DesignQualityCheckResults(checkResults.flatten)
   }

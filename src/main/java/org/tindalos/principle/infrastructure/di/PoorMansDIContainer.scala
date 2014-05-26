@@ -65,7 +65,7 @@ object PoorMansDIContainer {
     new DesignQualityCheckService(packageAnalyzer, designQualityDetectorsRunner)
   }
 
-  def getDesignCheckResultsReporter(): DesignQualityCheckResultsReporter = {
+  def getDesignCheckResultsReporter() = {
 
     val reporters:Map[Class[_ <: CheckResult], ViolationsReporter[_ <: CheckResult]] = Map(
       classOf[ADPResult] -> new ADPViolationsReporter(),
