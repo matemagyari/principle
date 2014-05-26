@@ -1,7 +1,7 @@
 package org.tindalos.principle.domain.detector.layering
 
-case class LayerReference(private val referer:String, private val referee:String) {
+case class LayerReference(referrer:String, referee:String) {
   
-  override def toString() = referer + " -> " + referee
+  override def toString() = referrer + " -> " + referee
 
 }
