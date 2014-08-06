@@ -5,4 +5,5 @@ trait DesignQualityExpectations {
   def layering: Layering
   def packageCoupling: PackageCoupling
   def submodulesBlueprint: SubmodulesBlueprint
+  def thirdParty: ThirdParty
 }

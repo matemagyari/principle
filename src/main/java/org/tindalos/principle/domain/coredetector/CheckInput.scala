@@ -5,12 +5,13 @@ import org.tindalos.principle.domain.core.Package
 
 class CheckInput(val packages: List[Package], val designQualityCheckConfiguration: DesignQualityCheckConfiguration) {
 
-  def getBasePackage() = designQualityCheckConfiguration.basePackage
-  def getPackageCouplingExpectations() = expectations.packageCoupling
-  def getLayeringExpectations() = expectations.layering
-  def getSubmodulesBlueprint() = expectations.submodulesBlueprint
-  
   private val expectations = designQualityCheckConfiguration.expectations
-  
+
+  def basePackage() = designQualityCheckConfiguration.basePackage
+  def packageCouplingExpectations() = expectations.packageCoupling
+  def layeringExpectations() = expectations.layering
+  def thirdPartyExpectations() = expectations.thirdParty
+  def submodulesBlueprint() = expectations.submodulesBlueprint
+
 
 }

@@ -4,5 +4,5 @@ import org.tindalos.principle.domain.expectations.DesignQualityExpectations
 
 case class DesignQualityCheckConfiguration(expectations: DesignQualityExpectations, basePackage: String) {
 
-  def getLayeringExpectations() = expectations.layering
+  def layeringExpectations() = expectations.layering
 }

@@ -1,17 +1,11 @@
 package org.tindalos.principle.infrastructure.plugin
 
 import org.apache.commons.lang3.Validate
-import org.apache.maven.plugin.AbstractMojo
-import org.apache.maven.plugin.MojoExecutionException
-import org.apache.maven.plugin.MojoFailureException
-import org.apache.maven.plugins.annotations.Mojo
-import org.apache.maven.plugins.annotations.Parameter
-import org.tindalos.principle.app.service.Application
+import org.apache.maven.plugin.{AbstractMojo, MojoFailureException}
+import org.apache.maven.plugins.annotations.{Mojo, Parameter}
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration
-import org.tindalos.principle.domain.core.logging.ScalaLogger
-import org.tindalos.principle.domain.core.logging.TheLogger
+import org.tindalos.principle.domain.core.logging.{ScalaLogger, TheLogger}
 import org.tindalos.principle.domain.expectations.exception.InvalidConfigurationException
-import org.tindalos.principle.domain.resultprocessing.thresholdchecker.ThresholdTrespassedException
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.infrastructure.service.jdepend.ClassesToAnalyzeNotFoundException
 
@@ -41,10 +35,10 @@ class DesignQualityCheckerMojo extends AbstractMojo {
 
     val application = PoorMansDIContainer.getApplication(basePackage)
     try {
-      application.doIt(new DesignQualityCheckConfiguration(checks, basePackage), new LogPrinter(getLog()))
+      val (success,msg) = application.run(new DesignQualityCheckConfiguration(checks, basePackage), new LogPrinter(getLog()))
+      if (!success) throw new MojoFailureException("\nNumber of violations exceeds allowed limits!")
     } catch {
       case ex: ClassesToAnalyzeNotFoundException => getLog().warn(ex.getMessage())
-      case ex: ThresholdTrespassedException => throw new MojoFailureException("\nNumber of violations exceeds allowed limits!")
       case ex: InvalidConfigurationException => throw new MojoFailureException(ex.getMessage())
     }
 

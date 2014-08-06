@@ -12,12 +12,12 @@ class SubmodulesBlueprintViolationDetector(private val submoduleFactory: Submodu
 
   override def analyze(checkInput: CheckInput) = {
 
-    val submodulesBlueprint = checkInput.getSubmodulesBlueprint()
+    val submodulesBlueprint = checkInput.submodulesBlueprint()
 
     try {
       val submodules = submoduleFactory.buildSubmodules(
         submodulesBlueprint.location,
-        checkInput.packages, checkInput.getBasePackage())
+        checkInput.packages, checkInput.basePackage())
 
       val (aID, aMD) = problematicDependencies(submodules)
 

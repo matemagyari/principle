@@ -19,7 +19,7 @@ class SDPViolationDetector extends Detector {
         .map(new SDPViolation(aPackage, _))
 
 
-    new SDPResult(sdpViolations.flatten, checkInput.getPackageCouplingExpectations().sdp)
+    new SDPResult(sdpViolations.flatten, checkInput.packageCouplingExpectations().sdp)
   }
 
   override def isWanted(expectations: DesignQualityExpectations) = expectations.packageCoupling match {

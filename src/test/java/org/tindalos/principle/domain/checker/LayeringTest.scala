@@ -1,17 +1,12 @@
 package org.tindalos.principle.domain.checker
 
-import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration
-import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
-import org.tindalos.principle.domain.expectations.DesignQualityExpectations
-import org.junit.Test
-import org.junit._
-import org.tindalos.principle.infrastructure.plugin.Checks
-import org.tindalos.principle.domain.detector.acd._
-import org.tindalos.principle.domain.expectations._
-import org.tindalos.principle.domain.expectations.cumulativedependency._
 import org.junit.Assert.assertEquals
-import org.tindalos.principle.domain.detector.layering.LayerViolationsResult
-import org.tindalos.principle.domain.detector.layering.LayerReference
+import org.junit._
+import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration
+import org.tindalos.principle.domain.detector.layering.{LayerReference, LayerViolationsResult}
+import org.tindalos.principle.domain.expectations._
+import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
+import org.tindalos.principle.infrastructure.plugin.Checks
 
 class LayeringTest {
 

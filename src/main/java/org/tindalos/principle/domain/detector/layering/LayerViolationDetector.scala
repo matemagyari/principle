@@ -10,14 +10,14 @@ class LayerViolationDetector extends Detector {
 
   override def analyze(checkInput: CheckInput) = {
     val layerReferences = findViolations(checkInput.packages, checkInput.designQualityCheckConfiguration)
-    new LayerViolationsResult(layerReferences, checkInput.getLayeringExpectations())
+    new LayerViolationsResult(layerReferences, checkInput.layeringExpectations())
   }
 
   override def isWanted(expectations: DesignQualityExpectations) = expectations.layering != null
 
   private def findViolations(packages: List[Package], configuration: DesignQualityCheckConfiguration): List[LayerReference] = {
 
-    val layers = configuration.getLayeringExpectations().layers.map(configuration.basePackage + "." + _).toList
+    val layers = configuration.layeringExpectations().layers.map(configuration.basePackage + "." + _).toList
 
     for (aPackage <- packages
             if aPackage.reference.startsWith(configuration.basePackage);

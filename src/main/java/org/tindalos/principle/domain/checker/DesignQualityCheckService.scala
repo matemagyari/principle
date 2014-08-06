@@ -9,7 +9,7 @@ class DesignQualityCheckService(val packageAnalyzer:PackageAnalyzer
   
     def analyze(parameters: DesignQualityCheckConfiguration) = {
         val packages = packageAnalyzer.analyze(parameters)
-        designQualityDetectorsRunner.execute(packages, parameters)
+        designQualityDetectorsRunner.detectorResults(packages, parameters)
     }
 
 }

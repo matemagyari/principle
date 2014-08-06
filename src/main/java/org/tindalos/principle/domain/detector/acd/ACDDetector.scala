@@ -6,7 +6,7 @@ import org.tindalos.principle.domain.detector.adp.PackageStructureBuilder
 import org.tindalos.principle.domain.expectations.DesignQualityExpectations
 import org.tindalos.principle.domain.expectations.PackageCoupling
 
-class ACDDetector(private val packageStructureBuilder: PackageStructureBuilder) extends Detector {
+class ACDDetector(packageStructureBuilder: PackageStructureBuilder) extends Detector {
 
   override def analyze(checkInput: CheckInput) = {
 
@@ -21,7 +21,7 @@ class ACDDetector(private val packageStructureBuilder: PackageStructureBuilder) 
     val cumulatedComponentDependency = relevantPackages
       .foldLeft(0)((acc, aPackage) => acc + aPackage.cumulatedDependencies(referenceMap).size + 1)
 
-    new ACDResult(cumulatedComponentDependency, relevantPackages.length, checkInput.getPackageCouplingExpectations())
+    new ACDResult(cumulatedComponentDependency, relevantPackages.length, checkInput.packageCouplingExpectations())
   }
 
   override def isWanted(expectations: DesignQualityExpectations) = expectations.packageCoupling match {

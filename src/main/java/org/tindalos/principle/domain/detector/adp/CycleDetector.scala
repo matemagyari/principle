@@ -30,7 +30,7 @@ class CycleDetector(private val packageStructureBuilder: PackageStructureBuilder
       cycles = cyclesInSubgraph.mergeBreakingPoints2(cycles)
       sortedByAfferents = sortedByAfferents.filterNot(cyclesInSubgraph.investigatedPackages.contains(_))
     }
-    new ADPResult(cycles, checkInput.getPackageCouplingExpectations().adp)
+    new ADPResult(cycles, checkInput.packageCouplingExpectations().adp)
   }
 
   override def isWanted(expectations: DesignQualityExpectations) = expectations.packageCoupling match {

@@ -10,7 +10,7 @@ class DesignQualityDetectorsRunner(val detectors: List[Detector]) {
 
   //def this(theDetectors:Detector*) = this(List(theDetectors))
 
-  def execute(packages: List[Package], designQualityCheckConfiguration: DesignQualityCheckConfiguration) = {
+  def detectorResults(packages: List[Package], designQualityCheckConfiguration: DesignQualityCheckConfiguration) = {
 
     val checkInput = new CheckInput(packages, designQualityCheckConfiguration)
 
