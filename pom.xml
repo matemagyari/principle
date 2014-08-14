@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -10,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.tindalos.principle</groupId>
     <artifactId>principle</artifactId>
-    <version>0.25-SNAPSHOT</version>
+    <version>0.25</version>
     <packaging>maven-plugin</packaging>
 
     <name>Principle Maven Plugin</name>
@@ -91,7 +90,7 @@
             <plugin>
                 <groupId>org.tindalos.principle</groupId>
                 <artifactId>principle</artifactId>
-                <version>0.25-SNAPSHOT</version>
+                <version>0.24</version>
                 <configuration>
                     <basePackage>org.tindalos.principle</basePackage>
                     <checks>
@@ -103,6 +102,7 @@
                             </layers>
                             <violationsThreshold>0</violationsThreshold>
                         </layering>
+                        <!--
                         <thirdParty>
                             <barriers>
                                 <barrier>
@@ -116,6 +116,7 @@
                             </barriers>
                             <violationsThreshold>0</violationsThreshold>
                         </thirdParty>
+                        -->
                         <packageCoupling>
                             <adp>
                                 <violationsThreshold>0</violationsThreshold>
