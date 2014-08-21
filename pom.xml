@@ -102,7 +102,6 @@
                             </layers>
                             <violationsThreshold>0</violationsThreshold>
                         </layering>
-                        <!--
                         <thirdParty>
                             <barriers>
                                 <barrier>
@@ -116,7 +115,6 @@
                             </barriers>
                             <violationsThreshold>0</violationsThreshold>
                         </thirdParty>
-                        -->
                         <packageCoupling>
                             <adp>
                                 <violationsThreshold>0</violationsThreshold>
