@@ -1,33 +1,37 @@
 package org.tindalos.principle.app.service
 
-import org.tindalos.principle.domain.checker.DesignQualityCheckService
+import org.tindalos.principle.domain.checker.DesignQualityCheckResults
 import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration
-import org.tindalos.principle.domain.resultprocessing.reporter.{DesignQualityCheckResultsReporter, Printer}
+import org.tindalos.principle.domain.resultprocessing.reporter.Printer
 
 /*
 This is the app entry point. Side effects can happen only here in this layer, underneath the code must be pure.
  */
-class Application(designQualityCheckService: DesignQualityCheckService,
-                  designQualityCheckResultsReporter: DesignQualityCheckResultsReporter,
-                  inputValidator: InputValidator) {
+object Application {
 
-  def run(designQualityCheckConfiguration: DesignQualityCheckConfiguration, printer: Printer) = {
+  def buildApplication(designQualityCheck: DesignQualityCheckConfiguration => DesignQualityCheckResults,
+                       designQualityCheckResultsReporter: DesignQualityCheckResults => List[(String, Boolean)],
+                       inputValidator: DesignQualityCheckConfiguration => (Boolean, String)) =
 
-    val (success, msg) = inputValidator.validate(designQualityCheckConfiguration)
+    (designQualityCheckConfiguration: DesignQualityCheckConfiguration, printer: Printer) => {
 
-    if (success) {
+      val (success, msg) = inputValidator(designQualityCheckConfiguration)
 
-      val checkResults = designQualityCheckService.analyze(designQualityCheckConfiguration)
+      if (success) {
 
-      val reports = designQualityCheckResultsReporter.getReports(checkResults)
+        val checkResults = designQualityCheck(designQualityCheckConfiguration)
 
-      reports.foreach({ report =>
-        if (report._2) printer.printWarning(report._1)
-        else printer.printInfo(report._1)
-      })
+        val reports = designQualityCheckResultsReporter(checkResults)
 
-      (!checkResults.expectationsFailed, "Expectations failed")
+        reports.foreach({ report =>
+          if (report._2) printer.printWarning(report._1)
+          else printer.printInfo(report._1)
+        })
 
-    } else (success, msg)
-  }
+        (!checkResults.expectationsFailed, "Expectations failed")
+
+      } else (success, msg)
+
+    }
+
 }

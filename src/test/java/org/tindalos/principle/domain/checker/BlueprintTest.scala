@@ -42,8 +42,8 @@ class BlueprintTest {
 
   private def run(basePackage: String, location: String) = {
     val checks = prepareChecks(location)
-    val designQualityCheckService = PoorMansDIContainer.getDesignCheckService(basePackage)
-    val result = designQualityCheckService.analyze(new DesignQualityCheckConfiguration(checks, basePackage))
+    val designQualityCheckService = PoorMansDIContainer.buildDesignChecker(basePackage)
+    val result = designQualityCheckService(new DesignQualityCheckConfiguration(checks, basePackage))
     assertEquals(1, result.checkResults.length)
     result.checkResults.head.asInstanceOf[SubmodulesBlueprintCheckResult]
   }

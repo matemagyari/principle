@@ -5,7 +5,7 @@ import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration
 /**
  * Created by mate.magyari on 03/08/2014.
  */
-class InputValidator {
+object InputValidator {
 
   def validate(configuration: DesignQualityCheckConfiguration) = {
 

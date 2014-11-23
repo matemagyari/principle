@@ -57,8 +57,8 @@ class ThirdPartyTest {
   private def run(basePackage: String, thirdParty:ThirdParty) = {
     val checks: DesignQualityExpectations = new Checks(layering(), thirdParty)
     val designQualityCheckConfiguration = new DesignQualityCheckConfiguration(checks, basePackage)
-    val designQualityCheckService = PoorMansDIContainer.getDesignCheckService(basePackage)
-    val result = designQualityCheckService.analyze(designQualityCheckConfiguration)
+    val designQualityCheckService = PoorMansDIContainer.buildDesignChecker(basePackage)
+    val result = designQualityCheckService(designQualityCheckConfiguration)
     result.checkResults(1)
   }
 

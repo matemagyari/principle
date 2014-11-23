@@ -1,8 +1,8 @@
 package org.tindalos.principle.infrastructure.di
 
 import org.tindalos.principle.app.service.{InputValidator, Application}
-import org.tindalos.principle.domain.checker.{DesignQualityCheckService, DesignQualityDetectorsRunner}
-import org.tindalos.principle.domain.core.PackageSorter
+import org.tindalos.principle.domain.checker.{DesignQualityCheckResults, DesignQualityDetectorsRunner}
+import org.tindalos.principle.domain.core.{Package, DesignQualityCheckConfiguration, PackageSorter}
 import org.tindalos.principle.domain.coredetector.{CheckResult, ViolationsReporter}
 import org.tindalos.principle.domain.detector.acd.{ACDDetector, ACDResult}
 import org.tindalos.principle.domain.detector.adp.{ADPResult, CycleDetector, PackageStructureBuilder}
@@ -18,14 +18,11 @@ import org.tindalos.principle.infrastructure.service.jdepend.{JDependPackageAnal
 
 object PoorMansDIContainer {
 
-  def getDesignCheckService(basePackage: String) = {
-    val jDependRunner = new JDependRunner()
-    val packageFactory = new PackageFactory(new MetricsCalculator(), basePackage)
-    val packageSorter = new PackageSorter()
-    val packageListFactory = new PackageListFactory(packageFactory, packageSorter)
-    val packageAnalyzer = new JDependPackageAnalyzer(jDependRunner, packageListFactory)
+  def buildDesignChecker(basePackage: String):(DesignQualityCheckConfiguration => DesignQualityCheckResults) = {
 
-    val packageStructureBuilder = new PackageStructureBuilder(packageSorter)
+    val packageSorter = new PackageSorter()
+
+    val packageStructureBuilder = PackageStructureBuilder.build(packageSorter)
 
     val cycleDetector = new CycleDetector(packageStructureBuilder)
     val sdpViolationDetector = new SDPViolationDetector()
@@ -34,18 +31,29 @@ object PoorMansDIContainer {
     val layerViolationDetector = new LayerViolationDetector()
     val thirdPartyDetector = new ThirdPartyDetector()
 
+    val submodulesBlueprintViolationDetector = buildSubmodulesBlueprintViolationDetector(packageStructureBuilder)
+
+    val detectors = List(layerViolationDetector, thirdPartyDetector, cycleDetector, sdpViolationDetector, sapViolationDetector, acdDetector, submodulesBlueprintViolationDetector)
+    val designQualityDetectorsRunner = DesignQualityDetectorsRunner.buildDetectorsRunner(detectors)
+
+    (parameters: DesignQualityCheckConfiguration) => {
+      val packageFactory = new PackageFactory(MetricsCalculator.calculate, basePackage)
+      val packageListTransformer = PackageListFactory.buildPackageListFactory(packageFactory, packageSorter)
+      val packageAnalyzer = JDependPackageAnalyzer.buildAnalyzer(JDependRunner.getAnalyzedPackagesUnder, packageListTransformer)
+      val packages = packageAnalyzer(parameters)
+      designQualityDetectorsRunner(packages, parameters)
+    }
+  }
+
+  def buildSubmodulesBlueprintViolationDetector(packageStructureBuilder: (List[Package], String) => Package): SubmodulesBlueprintViolationDetector = {
     // SubmoduleDefinitionsProvider submoduleDefinitionsProvider = new JSONBasedSubmodulesBlueprintProvider()
     val submoduleDefinitionsProvider = new YAMLBasedSubmodulesBlueprintProvider()
     val submoduleFactory = new SubmoduleFactory()
     val submodulesFactory = new SubmodulesFactory(packageStructureBuilder, submoduleDefinitionsProvider, submoduleFactory)
-    val submodulesBlueprintViolationDetector = new SubmodulesBlueprintViolationDetector(submodulesFactory)
-
-    val detectors = List(layerViolationDetector, thirdPartyDetector, cycleDetector, sdpViolationDetector, sapViolationDetector, acdDetector, submodulesBlueprintViolationDetector)
-    val designQualityDetectorsRunner = new DesignQualityDetectorsRunner(detectors)
-    new DesignQualityCheckService(packageAnalyzer, designQualityDetectorsRunner)
+    new SubmodulesBlueprintViolationDetector(submodulesFactory)
   }
 
-  def getDesignCheckResultsReporter() = {
+  def buildDesignCheckResultsReporter() = {
 
     val reporters:Map[Class[_ <: CheckResult], ViolationsReporter[_ <: CheckResult]] = Map(
       classOf[ADPResult] -> new ADPViolationsReporter(),
@@ -56,9 +64,10 @@ object PoorMansDIContainer {
       classOf[ACDResult] -> new ACDViolationsReporter(),
       classOf[SubmodulesBlueprintCheckResult] -> new SubmodulesBlueprintViolationsReporter())
 
-    new DesignQualityCheckResultsReporter(reporters)
+    DesignQualityCheckResultsReporter.buildResultReporter(reporters)
   }
 
-  def getApplication(basePackage: String) = new Application(getDesignCheckService(basePackage), getDesignCheckResultsReporter(), new InputValidator())
+  def getApplication(basePackage: String) =
+    Application.buildApplication(buildDesignChecker(basePackage), buildDesignCheckResultsReporter(), InputValidator.validate)
 
 }

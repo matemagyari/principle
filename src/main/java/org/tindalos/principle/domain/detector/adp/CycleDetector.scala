@@ -1,20 +1,14 @@
 package org.tindalos.principle.domain.detector.adp
 
-import org.tindalos.principle.domain.coredetector.Detector
-import org.tindalos.principle.domain.expectations.DesignQualityExpectations
-import org.tindalos.principle.domain.expectations.PackageCoupling
-import org.tindalos.principle.domain.core.Package
-import org.tindalos.principle.domain.coredetector.CheckInput
-import org.tindalos.principle.domain.core.CyclesInSubgraph
-import org.tindalos.principle.domain.core.Cycle
-import com.google.common.collect.Maps
-import org.tindalos.principle.domain.core.PackageReference
+import org.tindalos.principle.domain.core.{Cycle, Package, PackageReference}
+import org.tindalos.principle.domain.coredetector.{CheckInput, Detector}
+import org.tindalos.principle.domain.expectations.{DesignQualityExpectations, PackageCoupling}
 
-class CycleDetector(private val packageStructureBuilder: PackageStructureBuilder) extends Detector {
+class CycleDetector(private val packageStructureBuilder: (List[Package], String) => Package) extends Detector {
 
   override def analyze(checkInput: CheckInput) = {
 
-    val basePackage = packageStructureBuilder.build(checkInput.packages,
+    val basePackage = packageStructureBuilder(checkInput.packages,
       checkInput.designQualityCheckConfiguration.basePackage)
 
     val references = basePackage.toMap()
@@ -24,7 +18,7 @@ class CycleDetector(private val packageStructureBuilder: PackageStructureBuilder
     var sortedByAfferents = references.values.toList.sortBy(_.getMetrics().afferentCoupling)
     if (basePackage.getMetrics().afferentCoupling == 0)
       sortedByAfferents = sortedByAfferents.filterNot(_ equals basePackage)
-      
+
     while (!sortedByAfferents.isEmpty) {
       val cyclesInSubgraph = sortedByAfferents.head.detectCycles(references)
       cycles = cyclesInSubgraph.mergeBreakingPoints2(cycles)

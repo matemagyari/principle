@@ -15,7 +15,7 @@ import org.junit.Assert.assertEquals
 class ACDTest {
 
   var designQualityCheckConfiguration: DesignQualityCheckConfiguration = null
-  var designQualityCheckService: DesignQualityCheckService = null
+  var designQualityCheckService: (DesignQualityCheckConfiguration => DesignQualityCheckResults) = null
   var checks: DesignQualityExpectations = prepareChecks()
 
   @Before
@@ -24,7 +24,7 @@ class ACDTest {
   }
 
   def init(basePackage: String) = {
-    designQualityCheckService = PoorMansDIContainer.getDesignCheckService(basePackage)
+    designQualityCheckService = PoorMansDIContainer.buildDesignChecker(basePackage)
     designQualityCheckConfiguration = new DesignQualityCheckConfiguration(checks, basePackage)
   }
 
@@ -78,7 +78,7 @@ class ACDTest {
   
   private def run(basePackage: String) = {
     init(basePackage)
-    val result = designQualityCheckService.analyze(designQualityCheckConfiguration)
+    val result = designQualityCheckService(designQualityCheckConfiguration)
     assertEquals(1, result.checkResults.length)
     result.checkResults.head.asInstanceOf[ACDResult].acd
   }

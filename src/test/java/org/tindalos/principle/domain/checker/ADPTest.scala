@@ -16,7 +16,7 @@ import org.tindalos.principle.domain.core.PackageReference
 class ADPTest {
 
   var designQualityCheckConfiguration: DesignQualityCheckConfiguration = null
-  var designQualityCheckService: DesignQualityCheckService = null
+  var designQualityCheckService: (DesignQualityCheckConfiguration => DesignQualityCheckResults) = null
   var checks: DesignQualityExpectations = prepareChecks()
 
   @Before
@@ -90,13 +90,13 @@ class ADPTest {
   }
 
   def init(basePackage: String) = {
-    designQualityCheckService = PoorMansDIContainer.getDesignCheckService(basePackage)
+    designQualityCheckService = PoorMansDIContainer.buildDesignChecker(basePackage)
     designQualityCheckConfiguration = new DesignQualityCheckConfiguration(checks, basePackage)
   }
 
   private def run(basePackage: String) = {
     init(basePackage)
-    val result = designQualityCheckService.analyze(designQualityCheckConfiguration)
+    val result = designQualityCheckService(designQualityCheckConfiguration)
     assertEquals(1, result.checkResults.length)
     result.checkResults.head.asInstanceOf[ADPResult].cyclesByBreakingPoints
   }

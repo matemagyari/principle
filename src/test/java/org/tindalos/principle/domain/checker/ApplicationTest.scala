@@ -30,7 +30,7 @@ class ApplicationTest {
     val checks = prepareChecks()
 
     try {
-      application.run(new DesignQualityCheckConfiguration(checks, basePackage), new ConsolePrinter())
+      application(new DesignQualityCheckConfiguration(checks, basePackage), new ConsolePrinter())
     } catch {
       case ex: ThresholdTrespassedException =>
       case ex: Exception =>

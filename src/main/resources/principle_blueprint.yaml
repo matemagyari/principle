@@ -1,6 +1,6 @@
 # Map submodules to packages 
 
-  subdmodule-definitions: 
+  tysubdmodule-definitions:
   
     EXPECTATIONS: [domain.expectations]
     CORE: [domain.core]

@@ -1,15 +1,16 @@
 package org.tindalos.principle.infrastructure.service.jdepend
 
-import org.tindalos.principle.domain.checker.PackageAnalyzer
-import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration
-import scala.collection.JavaConversions._
-import org.tindalos.principle.domain.core.Package
+import jdepend.framework.JavaPackage
+import org.tindalos.principle.domain.core.{DesignQualityCheckConfiguration, Package}
 
-class JDependPackageAnalyzer(val jDependRunner:JDependRunner,val packageListFactory:PackageListFactory) extends PackageAnalyzer {
-  
-  def analyze(configuration:DesignQualityCheckConfiguration):List[Package] = {
-    val analyzedPackages = jDependRunner.getAnalyzedPackagesUnder(configuration.basePackage)
-    packageListFactory.build(analyzedPackages)
-  }
+object JDependPackageAnalyzer {
+
+  def buildAnalyzer(jDependRunner: (String, Boolean) => List[JavaPackage]
+                    , packageListFactory: List[JavaPackage] => List[Package]) =
+
+    (configuration: DesignQualityCheckConfiguration) => {
+      val analyzedPackages = jDependRunner(configuration.basePackage,true)
+      packageListFactory(analyzedPackages)
+    }
 
 }

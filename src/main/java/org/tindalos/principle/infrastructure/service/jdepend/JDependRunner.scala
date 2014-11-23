@@ -6,7 +6,7 @@ import java.util.Collection
 import jdepend.framework.{JDepend, JavaPackage, PackageFilter}
 import org.tindalos.principle.domain.util.ListConverter
 
-class JDependRunner {
+object JDependRunner {
 
   def getAnalyzedPackagesUnder(basePackage: String, filterEnabled: Boolean = true) = {
 

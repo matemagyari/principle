@@ -11,7 +11,7 @@ import org.tindalos.principle.infrastructure.plugin.Checks
 class LayeringTest {
 
   var designQualityCheckConfiguration: DesignQualityCheckConfiguration = null
-  var designQualityCheckService: DesignQualityCheckService = null
+  var designQualityCheckService: (DesignQualityCheckConfiguration => DesignQualityCheckResults) = null
   var checks: DesignQualityExpectations = prepareChecks()
 
   @Before
@@ -38,13 +38,13 @@ class LayeringTest {
   }
 
   def init(basePackage: String) = {
-    designQualityCheckService = PoorMansDIContainer.getDesignCheckService(basePackage)
+    designQualityCheckService = PoorMansDIContainer.buildDesignChecker(basePackage)
     designQualityCheckConfiguration = new DesignQualityCheckConfiguration(checks, basePackage)
   }
 
   private def run(basePackage: String) = {
     init(basePackage)
-    val result = designQualityCheckService.analyze(designQualityCheckConfiguration)
+    val result = designQualityCheckService(designQualityCheckConfiguration)
     assertEquals(1, result.checkResults.length)
     result.checkResults.head.asInstanceOf[LayerViolationsResult].violations
   }

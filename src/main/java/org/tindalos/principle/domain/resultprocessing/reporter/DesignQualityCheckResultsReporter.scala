@@ -10,11 +10,13 @@ import org.tindalos.principle.domain.detector.sdp.SDPResult
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmodulesBlueprintCheckResult
 import org.tindalos.principle.domain.detector.thirdparty.ThirdPartyViolationsResult
 
-class DesignQualityCheckResultsReporter(reporters: Map[Class[_ <: CheckResult], ViolationsReporter[_ <: CheckResult]]) {
+object DesignQualityCheckResultsReporter {
 
-  def getReports(results: DesignQualityCheckResults) = for (checkResult <- results.checkResults) yield getReport(checkResult)
-
-  private def getReport(checkResult: CheckResult) = {
+  def buildResultReporter(reporters: Map[Class[_ <: CheckResult], ViolationsReporter[_ <: CheckResult]])
+  = (results: DesignQualityCheckResults) => for (checkResult <- results.checkResults) yield getReport(checkResult,reporters)
+  
+  private def getReport(checkResult: CheckResult
+                         ,reporters: Map[Class[_ <: CheckResult], ViolationsReporter[_ <: CheckResult]]) = {
     val reporter = reporters.get(checkResult.getClass()).get
     val report = checkResult match {
       case cr: ADPResult => reporter.asInstanceOf[ViolationsReporter[ADPResult]].report(cr)

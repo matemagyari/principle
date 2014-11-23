@@ -15,15 +15,13 @@ class InputValidatorTest {
 
   val aLayering = new Layering(layers = List("a","b","c"))
 
-  val testObj = new InputValidator()
-
   @Test
   def wrongOrder() {
 
     val barriers = List(new Barrier("a"),new Barrier("c"),new Barrier("b"))
     val configuration: DesignQualityCheckConfiguration = config(barriers)
 
-    val (success,msg) = testObj.validate(configuration)
+    val (success,msg) = InputValidator.validate(configuration)
 
     assertFalse(success)
   }
@@ -34,7 +32,7 @@ class InputValidatorTest {
     val barriers = List(new Barrier("a"),new Barrier("d"))
     val configuration: DesignQualityCheckConfiguration = config(barriers)
 
-    val (success,msg) = testObj.validate(configuration)
+    val (success,msg) = InputValidator.validate(configuration)
 
     assertFalse(success)
   }
@@ -46,7 +44,7 @@ class InputValidatorTest {
     val barriers = List(new Barrier("a"),new Barrier("b"),new Barrier("c"))
     val configuration: DesignQualityCheckConfiguration = config(barriers)
 
-    val (success,msg) = testObj.validate(configuration)
+    val (success,msg) = InputValidator.validate(configuration)
 
     assertTrue(success)
   }
@@ -57,7 +55,7 @@ class InputValidatorTest {
     val barriers = List(new Barrier("a"), new Barrier("c"))
     val configuration: DesignQualityCheckConfiguration = config(barriers)
 
-    val (success,msg) = testObj.validate(configuration)
+    val (success,msg) = InputValidator.validate(configuration)
 
     assertTrue(success)
   }

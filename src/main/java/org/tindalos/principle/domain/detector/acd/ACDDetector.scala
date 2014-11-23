@@ -1,16 +1,16 @@
 package org.tindalos.principle.domain.detector.acd
 
+import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.coredetector.CheckInput
 import org.tindalos.principle.domain.coredetector.Detector
-import org.tindalos.principle.domain.detector.adp.PackageStructureBuilder
 import org.tindalos.principle.domain.expectations.DesignQualityExpectations
 import org.tindalos.principle.domain.expectations.PackageCoupling
 
-class ACDDetector(packageStructureBuilder: PackageStructureBuilder) extends Detector {
+class ACDDetector(packageStructureBuilder: (List[Package], String) => Package) extends Detector {
 
   override def analyze(checkInput: CheckInput) = {
 
-    val basePackage = packageStructureBuilder.build(checkInput.packages, checkInput.designQualityCheckConfiguration.basePackage)
+    val basePackage = packageStructureBuilder(checkInput.packages, checkInput.designQualityCheckConfiguration.basePackage)
 
     val referenceMap = basePackage.toMap()
 
