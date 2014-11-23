@@ -3,7 +3,7 @@ package org.tindalos.principle.infrastructure.di
 import org.tindalos.principle.app.service.{InputValidator, Application}
 import org.tindalos.principle.domain.checker.{DesignQualityCheckResults, DesignQualityDetectorsRunner}
 import org.tindalos.principle.domain.core.{Package, DesignQualityCheckConfiguration, PackageSorter}
-import org.tindalos.principle.domain.coredetector.{CheckResult, ViolationsReporter}
+import org.tindalos.principle.domain.coredetector.{Detector, CheckResult, ViolationsReporter}
 import org.tindalos.principle.domain.detector.acd.{ACDDetector, ACDResult}
 import org.tindalos.principle.domain.detector.adp.{ADPResult, CycleDetector, PackageStructureBuilder}
 import org.tindalos.principle.domain.detector.layering.{LayerViolationDetector, LayerViolationsResult}
@@ -24,16 +24,7 @@ object PoorMansDIContainer {
 
     val packageStructureBuilder = PackageStructureBuilder.build(packageSorter)
 
-    val cycleDetector = new CycleDetector(packageStructureBuilder)
-    val sdpViolationDetector = new SDPViolationDetector()
-    val sapViolationDetector = new SAPViolationDetector()
-    val acdDetector = new ACDDetector(packageStructureBuilder)
-    val layerViolationDetector = new LayerViolationDetector()
-    val thirdPartyDetector = new ThirdPartyDetector()
-
-    val submodulesBlueprintViolationDetector = buildSubmodulesBlueprintViolationDetector(packageStructureBuilder)
-
-    val detectors = List(layerViolationDetector, thirdPartyDetector, cycleDetector, sdpViolationDetector, sapViolationDetector, acdDetector, submodulesBlueprintViolationDetector)
+    val detectors = buildDetectors(packageStructureBuilder)
     val designQualityDetectorsRunner = DesignQualityDetectorsRunner.buildDetectorsRunner(detectors)
 
     (parameters: DesignQualityCheckConfiguration) => {
@@ -45,11 +36,23 @@ object PoorMansDIContainer {
     }
   }
 
+  def buildDetectors(packageStructureBuilder: (List[Package], String) => Package): List[Detector] = {
+    val cycleDetector = new CycleDetector(packageStructureBuilder)
+    val sdpViolationDetector = new SDPViolationDetector()
+    val sapViolationDetector = new SAPViolationDetector()
+    val acdDetector = new ACDDetector(packageStructureBuilder)
+    val layerViolationDetector = new LayerViolationDetector()
+    val thirdPartyDetector = new ThirdPartyDetector()
+
+    val submodulesBlueprintViolationDetector = buildSubmodulesBlueprintViolationDetector(packageStructureBuilder)
+
+    List(layerViolationDetector, thirdPartyDetector, cycleDetector, sdpViolationDetector, sapViolationDetector, acdDetector, submodulesBlueprintViolationDetector)
+  }
+
   def buildSubmodulesBlueprintViolationDetector(packageStructureBuilder: (List[Package], String) => Package): SubmodulesBlueprintViolationDetector = {
     // SubmoduleDefinitionsProvider submoduleDefinitionsProvider = new JSONBasedSubmodulesBlueprintProvider()
     val submoduleDefinitionsProvider = new YAMLBasedSubmodulesBlueprintProvider()
-    val submoduleFactory = new SubmoduleFactory()
-    val submodulesFactory = new SubmodulesFactory(packageStructureBuilder, submoduleDefinitionsProvider, submoduleFactory)
+    val submodulesFactory = new SubmodulesFactory(packageStructureBuilder, submoduleDefinitionsProvider, SubmoduleFactory.buildModules)
     new SubmodulesBlueprintViolationDetector(submodulesFactory)
   }
 

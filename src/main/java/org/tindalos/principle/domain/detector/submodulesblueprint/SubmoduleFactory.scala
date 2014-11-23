@@ -3,7 +3,7 @@ package org.tindalos.principle.domain.detector.submodulesblueprint
 import org.tindalos.principle.domain.core.PackageReference
 import org.tindalos.principle.domain.core.Package
 
-class SubmoduleFactory {
+object SubmoduleFactory {
 
   def buildModules(submoduleDefinitions: SubmoduleDefinitions, packageMap: Map[PackageReference, Package]) = 
     submoduleDefinitions.definitions.values.map(convert(packageMap, _)).toSet
