@@ -4,7 +4,7 @@ import org.tindalos.principle.domain.core.{Package, PackageReference}
 import org.tindalos.principle.domain.coredetector.{CheckInput, Detector}
 import org.tindalos.principle.domain.expectations.{DesignQualityExpectations, PackageCoupling}
 
-class SDPViolationDetector extends Detector {
+object SDPViolationDetector extends Detector {
 
   override def analyze(checkInput: CheckInput) = {
 

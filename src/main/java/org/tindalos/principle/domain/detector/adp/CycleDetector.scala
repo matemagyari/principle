@@ -1,35 +1,36 @@
 package org.tindalos.principle.domain.detector.adp
 
 import org.tindalos.principle.domain.core.{Cycle, Package, PackageReference}
-import org.tindalos.principle.domain.coredetector.{CheckInput, Detector}
+import org.tindalos.principle.domain.coredetector.{CheckResult, CheckInput, Detector}
 import org.tindalos.principle.domain.expectations.{DesignQualityExpectations, PackageCoupling}
 
-class CycleDetector(private val packageStructureBuilder: (List[Package], String) => Package) extends Detector {
+object CycleDetector {
+  def buildInstance(buildPackageStructure: (List[Package], String) => Package) = new Detector {
 
-  override def analyze(checkInput: CheckInput) = {
+    override def analyze(checkInput: CheckInput) = {
 
-    val basePackage = packageStructureBuilder(checkInput.packages,
-      checkInput.designQualityCheckConfiguration.basePackage)
+      val basePackage = buildPackageStructure(checkInput.packages,
+        checkInput.designQualityCheckConfiguration.basePackage)
 
-    val references = basePackage.toMap()
+      val references = basePackage.toMap()
 
-    var cycles = Map[PackageReference, Set[Cycle]]()
+      var cycles = Map[PackageReference, Set[Cycle]]()
 
-    var sortedByAfferents = references.values.toList.sortBy(_.getMetrics().afferentCoupling)
-    if (basePackage.getMetrics().afferentCoupling == 0)
-      sortedByAfferents = sortedByAfferents.filterNot(_ equals basePackage)
+      var sortedByAfferents = references.values.toList.sortBy(_.getMetrics().afferentCoupling)
+      if (basePackage.getMetrics().afferentCoupling == 0)
+        sortedByAfferents = sortedByAfferents.filterNot(_ equals basePackage)
 
-    while (!sortedByAfferents.isEmpty) {
-      val cyclesInSubgraph = sortedByAfferents.head.detectCycles(references)
-      cycles = cyclesInSubgraph.mergeBreakingPoints2(cycles)
-      sortedByAfferents = sortedByAfferents.filterNot(cyclesInSubgraph.investigatedPackages.contains(_))
+      while (!sortedByAfferents.isEmpty) {
+        val cyclesInSubgraph = sortedByAfferents.head.detectCycles(references)
+        cycles = cyclesInSubgraph.mergeBreakingPoints2(cycles)
+        sortedByAfferents = sortedByAfferents.filterNot(cyclesInSubgraph.investigatedPackages.contains(_))
+      }
+      new ADPResult(cycles, checkInput.packageCouplingExpectations().adp)
     }
-    new ADPResult(cycles, checkInput.packageCouplingExpectations().adp)
-  }
 
-  override def isWanted(expectations: DesignQualityExpectations) = expectations.packageCoupling match {
-    case packageCoupling: PackageCoupling => packageCoupling.adp != null
-    case null => false
+    override def isWanted(expectations: DesignQualityExpectations) = expectations.packageCoupling match {
+      case packageCoupling: PackageCoupling => packageCoupling.adp != null
+      case null => false
+    }
   }
-
 }

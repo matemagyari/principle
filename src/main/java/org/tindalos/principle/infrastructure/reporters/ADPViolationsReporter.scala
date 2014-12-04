@@ -5,7 +5,7 @@ import org.tindalos.principle.domain.detector.adp.ADPResult
 import org.tindalos.principle.domain.core.Cycle
 import java.io.PrintWriter
 
-class ADPViolationsReporter extends ViolationsReporter[ADPResult] {
+object ADPViolationsReporter extends ViolationsReporter[ADPResult] {
 
   override def report(result: ADPResult) = {
     val cyclesByBreakingPoints = result.cyclesByBreakingPoints
@@ -48,6 +48,6 @@ class ADPViolationsReporter extends ViolationsReporter[ADPResult] {
     sb.toString()
   }
 
-  override def getType() = classOf[ADPResult]
+  //override def getType() = classOf[ADPResult]
 
 }

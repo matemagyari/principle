@@ -7,7 +7,7 @@ import org.tindalos.principle.domain.expectations.{Barrier, DesignQualityExpecta
 /**
  * Created by mate.magyari on 26/05/2014.
  */
-class ThirdPartyDetector extends Detector {
+object ThirdPartyDetector extends Detector {
 
   override def analyze(checkInput: CheckInput) = {
 

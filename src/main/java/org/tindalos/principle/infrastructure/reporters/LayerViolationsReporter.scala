@@ -5,7 +5,7 @@ import org.tindalos.principle.domain.detector.layering.LayerViolationsResult
 import org.tindalos.principle.domain.detector.layering.LayerViolationsResult
 import org.tindalos.principle.domain.detector.layering.LayerViolationsResult
 
-class LayerViolationsReporter extends ViolationsReporter[LayerViolationsResult] {
+object LayerViolationsReporter extends ViolationsReporter[LayerViolationsResult] {
 
   override def report(result: LayerViolationsResult) = {
     val layerReferences = result.violations
@@ -21,6 +21,6 @@ class LayerViolationsReporter extends ViolationsReporter[LayerViolationsResult] 
     sb.toString()
   }
 
-  override def getType() = classOf[LayerViolationsResult]
+  //override def getType() = classOf[LayerViolationsResult]
 
 }

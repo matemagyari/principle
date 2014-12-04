@@ -6,7 +6,7 @@ import org.tindalos.principle.domain.expectations.PackageCoupling
 import org.tindalos.principle.domain.coredetector.CheckInput
 import org.tindalos.principle.domain.core.Package
 
-class SAPViolationDetector extends Detector {
+object SAPViolationDetector extends Detector {
 
   override def analyze(checkInput: CheckInput) = {
     val sapExpectation = checkInput.packageCouplingExpectations().sap

@@ -7,12 +7,14 @@ import org.tindalos.principle.domain.core.Package
 
 object PackageListFactory {
 
-  def buildPackageListFactory(packageFactory:PackageFactory, packageSorter:PackageSorter)=
+  def buildPackageListFactory(packageFactory:PackageFactory, packageSorter:PackageSorter) =
+
     (analyzedPackages: List[JavaPackage]) => {
 
       val unsortedList = analyzedPackages
         .filter(packageFactory.isRelevant(_))
         .map(packageFactory.transform(_))
+
       packageSorter.sortByName(unsortedList)
     }
 }

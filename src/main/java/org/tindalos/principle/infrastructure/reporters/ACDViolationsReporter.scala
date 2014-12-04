@@ -3,7 +3,7 @@ package org.tindalos.principle.infrastructure.reporters
 import org.tindalos.principle.domain.detector.acd.ACDResult
 import org.tindalos.principle.domain.coredetector.ViolationsReporter
 
-class ACDViolationsReporter extends ViolationsReporter[ACDResult] {
+object ACDViolationsReporter extends ViolationsReporter[ACDResult] {
 
   override def report(result: ACDResult) = {
     val sectionLine = "=============================================================="
@@ -16,6 +16,6 @@ class ACDViolationsReporter extends ViolationsReporter[ACDResult] {
     sb.toString()
   }
 
-  override def getType() = classOf[ACDResult]
+  //override def getType() = classOf[ACDResult]
 
 }

@@ -6,7 +6,7 @@ import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.coredetector.Detector
 import org.tindalos.principle.domain.expectations.DesignQualityExpectations
 
-class LayerViolationDetector extends Detector {
+object LayerViolationDetector extends Detector {
 
   override def analyze(checkInput: CheckInput) = {
     val layerReferences = findViolations(checkInput.packages, checkInput.designQualityCheckConfiguration)

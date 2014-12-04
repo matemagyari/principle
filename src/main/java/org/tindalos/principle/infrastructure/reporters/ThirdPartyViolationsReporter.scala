@@ -4,7 +4,7 @@ import org.tindalos.principle.domain.coredetector.ViolationsReporter
 import org.tindalos.principle.domain.detector.layering.LayerViolationsResult
 import org.tindalos.principle.domain.detector.thirdparty.ThirdPartyViolationsResult
 
-class ThirdPartyViolationsReporter extends ViolationsReporter[ThirdPartyViolationsResult] {
+object ThirdPartyViolationsReporter extends ViolationsReporter[ThirdPartyViolationsResult] {
 
   override def report(result: ThirdPartyViolationsResult) = {
     val violations = result.violations
@@ -20,6 +20,6 @@ class ThirdPartyViolationsReporter extends ViolationsReporter[ThirdPartyViolatio
     sb.toString()
   }
 
-  override def getType() = classOf[ThirdPartyViolationsResult]
+  //override def getType() = classOf[ThirdPartyViolationsResult]
 
 }

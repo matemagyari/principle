@@ -6,9 +6,9 @@ import org.tindalos.principle.domain.detector.submodulesblueprint.Submodule
 
 import scala.collection.JavaConversions._
 
-class SubmodulesBlueprintViolationsReporter extends ViolationsReporter[SubmodulesBlueprintCheckResult] {
+object SubmodulesBlueprintViolationsReporter extends ViolationsReporter[SubmodulesBlueprintCheckResult] {
 
-  override def getType() = classOf[SubmodulesBlueprintCheckResult]
+  //override def getType() = classOf[SubmodulesBlueprintCheckResult]
 
   override def report(result: SubmodulesBlueprintCheckResult) = {
     val sectionLine = "=============================================================="

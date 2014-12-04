@@ -4,7 +4,7 @@ import org.tindalos.principle.domain.coredetector.ViolationsReporter
 import org.tindalos.principle.domain.detector.sap.SAPResult
 import org.tindalos.principle.domain.core.Package
 
-class SAPViolationsReporter extends ViolationsReporter[SAPResult] {
+object SAPViolationsReporter extends ViolationsReporter[SAPResult] {
   
   	override def report(result:SAPResult) = {
 		val outlierPackages = result.outlierPackages
@@ -26,6 +26,6 @@ class SAPViolationsReporter extends ViolationsReporter[SAPResult] {
 
 	private def print(outlierPackage:Package) = outlierPackage + " " + outlierPackage.distance
 
-	override def getType() = classOf[SAPResult]
+	//override def getType() = classOf[SAPResult]
 
 }

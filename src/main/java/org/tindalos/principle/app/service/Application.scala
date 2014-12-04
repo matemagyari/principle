@@ -9,24 +9,26 @@ This is the app entry point. Side effects can happen only here in this layer, un
  */
 object Application {
 
-  def buildApplication(designQualityCheck: DesignQualityCheckConfiguration => DesignQualityCheckResults,
-                       designQualityCheckResultsReporter: DesignQualityCheckResults => List[(String, Boolean)],
-                       inputValidator: DesignQualityCheckConfiguration => (Boolean, String)) =
+  def buildApplication(checkDesignQuality: DesignQualityCheckConfiguration => DesignQualityCheckResults,
+                       makeReports: DesignQualityCheckResults => List[(String, Boolean)],
+                       validateInput: DesignQualityCheckConfiguration => (Boolean, String)) =
 
     (designQualityCheckConfiguration: DesignQualityCheckConfiguration, printer: Printer) => {
 
-      val (success, msg) = inputValidator(designQualityCheckConfiguration)
+      val (success, msg) = validateInput(designQualityCheckConfiguration)
+
+      def printReport(report: (String, Boolean)) =
+        if (report._2)
+          printer.printWarning(report._1)
+        else
+          printer.printInfo(report._1)
+
 
       if (success) {
 
-        val checkResults = designQualityCheck(designQualityCheckConfiguration)
+        val checkResults = checkDesignQuality(designQualityCheckConfiguration)
 
-        val reports = designQualityCheckResultsReporter(checkResults)
-
-        reports.foreach({ report =>
-          if (report._2) printer.printWarning(report._1)
-          else printer.printInfo(report._1)
-        })
+        makeReports(checkResults).foreach(printReport)
 
         (!checkResults.expectationsFailed, "Expectations failed")
 

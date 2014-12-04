@@ -12,11 +12,14 @@ import org.tindalos.principle.domain.detector.thirdparty.ThirdPartyViolationsRes
 
 object DesignQualityCheckResultsReporter {
 
-  def buildResultReporter(reporters: Map[Class[_ <: CheckResult], ViolationsReporter[_ <: CheckResult]])
-  = (results: DesignQualityCheckResults) => for (checkResult <- results.checkResults) yield getReport(checkResult,reporters)
-  
+  def buildResultReporter(reporters: Map[Class[_ <: CheckResult]
+    , ViolationsReporter[_ <: CheckResult]]) =
+
+    (results: DesignQualityCheckResults)
+    => for (checkResult <- results.checkResults) yield getReport(checkResult, reporters)
+
   private def getReport(checkResult: CheckResult
-                         ,reporters: Map[Class[_ <: CheckResult], ViolationsReporter[_ <: CheckResult]]) = {
+                        , reporters: Map[Class[_ <: CheckResult], ViolationsReporter[_ <: CheckResult]]) = {
     val reporter = reporters.get(checkResult.getClass()).get
     val report = checkResult match {
       case cr: ADPResult => reporter.asInstanceOf[ViolationsReporter[ADPResult]].report(cr)
