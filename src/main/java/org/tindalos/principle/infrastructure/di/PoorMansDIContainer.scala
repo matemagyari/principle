@@ -3,14 +3,13 @@ package org.tindalos.principle.infrastructure.di
 import org.tindalos.principle.app.service.{Application, InputValidator}
 import org.tindalos.principle.domain.checker.{DesignQualityCheckResults, DesignQualityDetectorsRunner}
 import org.tindalos.principle.domain.core.{DesignQualityCheckConfiguration, Package, PackageSorter}
-import org.tindalos.principle.domain.coredetector.{CheckResult, Detector, ViolationsReporter}
-import org.tindalos.principle.domain.detector.acd.{ACDDetector, ACDResult}
-import org.tindalos.principle.domain.detector.adp.{ADPResult, CycleDetector, PackageStructureBuilder}
-import org.tindalos.principle.domain.detector.layering.{LayerViolationDetector, LayerViolationsResult}
-import org.tindalos.principle.domain.detector.sap.{SAPResult, SAPViolationDetector}
-import org.tindalos.principle.domain.detector.sdp.{SDPResult, SDPViolationDetector}
-import org.tindalos.principle.domain.detector.submodulesblueprint.{SubmoduleFactory, SubmodulesBlueprintCheckResult, SubmodulesBlueprintViolationDetector, SubmodulesFactory}
-import org.tindalos.principle.domain.detector.thirdparty.{ThirdPartyDetector, ThirdPartyViolationsResult}
+import org.tindalos.principle.domain.detector.acd.ACDDetector
+import org.tindalos.principle.domain.detector.adp.{CycleDetector, PackageStructureBuilder}
+import org.tindalos.principle.domain.detector.layering.LayerViolationDetector
+import org.tindalos.principle.domain.detector.sap.SAPViolationDetector
+import org.tindalos.principle.domain.detector.sdp.SDPViolationDetector
+import org.tindalos.principle.domain.detector.submodulesblueprint.{SubmoduleFactory, SubmodulesBlueprintViolationDetector, SubmodulesFactory}
+import org.tindalos.principle.domain.detector.thirdparty.ThirdPartyDetector
 import org.tindalos.principle.domain.resultprocessing.reporter.DesignQualityCheckResultsReporter
 import org.tindalos.principle.infrastructure.detector.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider
 import org.tindalos.principle.infrastructure.reporters._
@@ -45,7 +44,7 @@ object PoorMansDIContainer {
       SAPViolationDetector,
       ACDDetector.buildInstance(buildPackageStructure),
       buildSubmodulesBlueprintViolationDetector(buildPackageStructure))
-  
+
 
   def buildSubmodulesBlueprintViolationDetector(buildPackageStructure: (List[Package], String) => Package) = {
     // SubmoduleDefinitionsProvider submoduleDefinitionsProvider = new JSONBasedSubmodulesBlueprintProvider()
@@ -54,21 +53,22 @@ object PoorMansDIContainer {
     SubmodulesBlueprintViolationDetector.buildInstance(submodulesFactory)
   }
 
-  def buildDesignCheckResultsReporter() = {
 
-    val reporters: Map[Class[_ <: CheckResult], ViolationsReporter[_ <: CheckResult]] = Map(
-      classOf[ADPResult] -> ADPViolationsReporter,
-      classOf[LayerViolationsResult] -> LayerViolationsReporter,
-      classOf[ThirdPartyViolationsResult] -> ThirdPartyViolationsReporter,
-      classOf[SDPResult] -> SDPViolationsReporter,
-      classOf[SAPResult] -> SAPViolationsReporter,
-      classOf[ACDResult] -> ACDViolationsReporter,
-      classOf[SubmodulesBlueprintCheckResult] -> SubmodulesBlueprintViolationsReporter)
+  def buildReporter(): (DesignQualityCheckResults) => List[(String, Boolean)] = {
 
-    DesignQualityCheckResultsReporter.buildResultReporter(reporters)
+    DesignQualityCheckResultsReporter.buildResultReporter(
+      ADPViolationsReporter.report,
+      LayerViolationsReporter.report,
+      ThirdPartyViolationsReporter.report,
+      SAPViolationsReporter.report,
+      ACDViolationsReporter.report,
+      SubmodulesBlueprintViolationsReporter.report,
+      SDPViolationsReporter.report
+    )
   }
 
+
   def getApplication(basePackage: String) =
-    Application.buildApplication(buildDesignChecker(basePackage), buildDesignCheckResultsReporter(), InputValidator.validate)
+    Application.buildApplication(buildDesignChecker(basePackage), buildReporter(), InputValidator.validate)
 
 }

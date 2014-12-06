@@ -1,13 +1,10 @@
 package org.tindalos.principle.infrastructure.reporters
 
-import org.tindalos.principle.domain.coredetector.ViolationsReporter
 import org.tindalos.principle.domain.detector.sdp.{SDPViolation, SDPResult}
 
-object SDPViolationsReporter extends ViolationsReporter[SDPResult] {
+object SDPViolationsReporter {
 
-  //override def getType() = classOf[SDPResult]
-
-  override def report(result: SDPResult) = {
+  def report(result: SDPResult) = {
     val violations = result.violations
     val sectionLine = "=============================================================="
     val sb = new StringBuffer("\n" + sectionLine + "\n")

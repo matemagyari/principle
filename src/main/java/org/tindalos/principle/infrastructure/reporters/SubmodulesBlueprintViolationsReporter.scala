@@ -1,16 +1,13 @@
 package org.tindalos.principle.infrastructure.reporters
 
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmodulesBlueprintCheckResult
-import org.tindalos.principle.domain.coredetector.ViolationsReporter
 import org.tindalos.principle.domain.detector.submodulesblueprint.Submodule
 
 import scala.collection.JavaConversions._
 
-object SubmodulesBlueprintViolationsReporter extends ViolationsReporter[SubmodulesBlueprintCheckResult] {
+object SubmodulesBlueprintViolationsReporter {
 
-  //override def getType() = classOf[SubmodulesBlueprintCheckResult]
-
-  override def report(result: SubmodulesBlueprintCheckResult) = {
+  def report(result: SubmodulesBlueprintCheckResult) = {
     val sectionLine = "=============================================================="
     val sb = new StringBuffer("\n" + sectionLine + "\n")
     sb.append("\tSubmodules Blueprint violations (" + result.violationsNumber + " of the allowed " + result.threshold + ")\t")

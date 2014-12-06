@@ -9,7 +9,7 @@ This is the app entry point. Side effects can happen only here in this layer, un
  */
 object Application {
 
-  def buildApplication(checkDesignQuality: DesignQualityCheckConfiguration => DesignQualityCheckResults,
+  def buildApplication(runAnalysis: DesignQualityCheckConfiguration => DesignQualityCheckResults,
                        makeReports: DesignQualityCheckResults => List[(String, Boolean)],
                        validateInput: DesignQualityCheckConfiguration => (Boolean, String)) =
 
@@ -26,7 +26,7 @@ object Application {
 
       if (success) {
 
-        val checkResults = checkDesignQuality(designQualityCheckConfiguration)
+        val checkResults = runAnalysis(designQualityCheckConfiguration)
 
         makeReports(checkResults).foreach(printReport)
 

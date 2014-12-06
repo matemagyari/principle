@@ -1,13 +1,12 @@
 package org.tindalos.principle.infrastructure.reporters
 
-import org.tindalos.principle.domain.coredetector.ViolationsReporter
 import org.tindalos.principle.domain.detector.adp.ADPResult
 import org.tindalos.principle.domain.core.Cycle
 import java.io.PrintWriter
 
-object ADPViolationsReporter extends ViolationsReporter[ADPResult] {
+object ADPViolationsReporter {
 
-  override def report(result: ADPResult) = {
+  def report(result: ADPResult) = {
     val cyclesByBreakingPoints = result.cyclesByBreakingPoints
     val sectionLine = "=============================================================="
     val sb = new StringBuffer("\n" + sectionLine + "\n")

@@ -1,13 +1,10 @@
 package org.tindalos.principle.infrastructure.reporters
 
-import org.tindalos.principle.domain.coredetector.ViolationsReporter
-import org.tindalos.principle.domain.detector.layering.LayerViolationsResult
-import org.tindalos.principle.domain.detector.layering.LayerViolationsResult
 import org.tindalos.principle.domain.detector.layering.LayerViolationsResult
 
-object LayerViolationsReporter extends ViolationsReporter[LayerViolationsResult] {
+object LayerViolationsReporter {
 
-  override def report(result: LayerViolationsResult) = {
+  def report(result: LayerViolationsResult) = {
     val layerReferences = result.violations
     val sectionLine = "=============================================================="
     val sb = new StringBuffer("\n" + sectionLine + "\n")

@@ -1,11 +1,10 @@
 package org.tindalos.principle.infrastructure.reporters
 
 import org.tindalos.principle.domain.detector.acd.ACDResult
-import org.tindalos.principle.domain.coredetector.ViolationsReporter
 
-object ACDViolationsReporter extends ViolationsReporter[ACDResult] {
+object ACDViolationsReporter {
 
-  override def report(result: ACDResult) = {
+  def report(result: ACDResult) = {
     val sectionLine = "=============================================================="
     val sb = new StringBuffer("\n" + sectionLine + "\n")
     sb.append("Component Dependency Metrics\t")
@@ -15,7 +14,5 @@ object ACDViolationsReporter extends ViolationsReporter[ACDResult] {
     sb.append(sectionLine + "\n")
     sb.toString()
   }
-
-  //override def getType() = classOf[ACDResult]
 
 }

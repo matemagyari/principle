@@ -1,12 +1,10 @@
 package org.tindalos.principle.infrastructure.reporters
 
-import org.tindalos.principle.domain.coredetector.ViolationsReporter
-import org.tindalos.principle.domain.detector.layering.LayerViolationsResult
 import org.tindalos.principle.domain.detector.thirdparty.ThirdPartyViolationsResult
 
-object ThirdPartyViolationsReporter extends ViolationsReporter[ThirdPartyViolationsResult] {
+object ThirdPartyViolationsReporter {
 
-  override def report(result: ThirdPartyViolationsResult) = {
+  def report(result: ThirdPartyViolationsResult) = {
     val violations = result.violations
     val sectionLine = "=============================================================="
     val sb = new StringBuffer("\n" + sectionLine + "\n")
@@ -19,7 +17,5 @@ object ThirdPartyViolationsReporter extends ViolationsReporter[ThirdPartyViolati
     sb.append(sectionLine + "\n")
     sb.toString()
   }
-
-  //override def getType() = classOf[ThirdPartyViolationsResult]
 
 }
