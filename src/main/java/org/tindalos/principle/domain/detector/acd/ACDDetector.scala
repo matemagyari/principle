@@ -1,15 +1,15 @@
 package org.tindalos.principle.domain.detector.acd
 
 import org.tindalos.principle.domain.core.Package
-import org.tindalos.principle.domain.coredetector.{CheckInput, Detector}
-import org.tindalos.principle.domain.expectations.{PackageCoupling, DesignQualityExpectations}
+import org.tindalos.principle.domain.coredetector.{PackagesAndExpectations, Detector}
+import org.tindalos.principle.domain.expectations.{PackageCoupling, Expectations}
 
 object ACDDetector {
   def buildInstance(packageStructureBuilder: (List[Package], String) => Package) = new Detector {
 
-    override def analyze(checkInput: CheckInput) = {
+    override def analyze(checkInput: PackagesAndExpectations) = {
 
-      val basePackage = packageStructureBuilder(checkInput.packages, checkInput.designQualityCheckConfiguration.basePackage)
+      val basePackage = packageStructureBuilder(checkInput.packages, checkInput.expectationsConfig.basePackage)
 
       val referenceMap = basePackage.toMap()
 
@@ -23,7 +23,7 @@ object ACDDetector {
       new ACDResult(cumulatedComponentDependency, relevantPackages.length, checkInput.packageCouplingExpectations())
     }
 
-    override def isWanted(expectations: DesignQualityExpectations) = expectations.packageCoupling match {
+    override def isWanted(expectations: Expectations) = expectations.packageCoupling match {
       case packageCoupling: PackageCoupling =>
         (packageCoupling.acd != null) ||
           (packageCoupling.racd != null) ||

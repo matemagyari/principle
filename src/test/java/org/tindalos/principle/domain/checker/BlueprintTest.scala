@@ -1,14 +1,12 @@
 package org.tindalos.principle.domain.checker
 
-import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration
-import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
-import org.tindalos.principle.domain.expectations.DesignQualityExpectations
-import org.junit.Test
-import org.junit._
-import org.tindalos.principle.infrastructure.plugin.Checks
-import org.tindalos.principle.domain.expectations._
 import org.junit.Assert.assertEquals
+import org.junit._
+import org.tindalos.principle.domain.core.ExpectationsConfig
 import org.tindalos.principle.domain.detector.submodulesblueprint._
+import org.tindalos.principle.domain.expectations._
+import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
+import org.tindalos.principle.infrastructure.plugin.Checks
 
 class BlueprintTest {
 
@@ -43,9 +41,9 @@ class BlueprintTest {
   private def run(basePackage: String, location: String) = {
     val checks = prepareChecks(location)
     val designQualityCheckService = PoorMansDIContainer.buildDesignChecker(basePackage)
-    val result = designQualityCheckService(new DesignQualityCheckConfiguration(checks, basePackage))
-    assertEquals(1, result.checkResults.length)
-    result.checkResults.head.asInstanceOf[SubmodulesBlueprintCheckResult]
+    val result = designQualityCheckService(new ExpectationsConfig(checks, basePackage))
+    assertEquals(1, result.length)
+    result.head.asInstanceOf[SubmodulesBlueprintAnalysisResult]
   }
 
   def prepareChecks(location: String) = {

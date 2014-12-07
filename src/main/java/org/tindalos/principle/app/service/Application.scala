@@ -1,7 +1,8 @@
 package org.tindalos.principle.app.service
 
-import org.tindalos.principle.domain.checker.DesignQualityCheckResults
-import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration
+import org.tindalos.principle.domain.checker.AnalysisResults
+import org.tindalos.principle.domain.core.ExpectationsConfig
+import org.tindalos.principle.domain.coredetector.AnalysisResult
 import org.tindalos.principle.domain.resultprocessing.reporter.Printer
 
 /*
@@ -9,11 +10,11 @@ This is the app entry point. Side effects can happen only here in this layer, un
  */
 object Application {
 
-  def buildApplication(runAnalysis: DesignQualityCheckConfiguration => DesignQualityCheckResults,
-                       makeReports: DesignQualityCheckResults => List[(String, Boolean)],
-                       validateInput: DesignQualityCheckConfiguration => (Boolean, String)) =
+  def buildApplication(validateInput: ExpectationsConfig => (Boolean, String),
+                       runAnalysis: ExpectationsConfig => List[AnalysisResult],
+                       makeReports: List[AnalysisResult] => List[(String, Boolean)]) =
 
-    (designQualityCheckConfiguration: DesignQualityCheckConfiguration, printer: Printer) => {
+    (designQualityCheckConfiguration: ExpectationsConfig, printer: Printer) => {
 
       val (success, msg) = validateInput(designQualityCheckConfiguration)
 
@@ -30,7 +31,7 @@ object Application {
 
         makeReports(checkResults).foreach(printReport)
 
-        (!checkResults.expectationsFailed, "Expectations failed")
+        (!checkResults.exists(_.expectationsFailed()), "Expectations failed")
 
       } else (success, msg)
 

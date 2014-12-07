@@ -2,10 +2,11 @@ package org.tindalos.principle.infrastructure.reporters
 
 import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.detector.sap.SAPResult
+import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
 object SAPViolationsReporter {
 
-  def report(result: SAPResult) = {
+  def report(result: SAPResult):AnalysisResultsReporter.Report = {
     val outlierPackages = result.outlierPackages
     val sectionLine = "=============================================================="
     val sb = new StringBuffer("\n" + sectionLine + "\n")

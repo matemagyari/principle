@@ -1,12 +1,12 @@
 package org.tindalos.principle.domain.detector.sdp
 
 import org.tindalos.principle.domain.core.{Package, PackageReference}
-import org.tindalos.principle.domain.coredetector.{CheckInput, Detector}
-import org.tindalos.principle.domain.expectations.{DesignQualityExpectations, PackageCoupling}
+import org.tindalos.principle.domain.coredetector.{PackagesAndExpectations, Detector}
+import org.tindalos.principle.domain.expectations.{Expectations, PackageCoupling}
 
 object SDPViolationDetector extends Detector {
 
-  override def analyze(checkInput: CheckInput) = {
+  override def analyze(checkInput: PackagesAndExpectations) = {
 
     val references = checkInput.packages.map(aPackage => (aPackage.reference -> aPackage)).toMap
     val sdpViolations = for (aPackage <- checkInput.packages)
@@ -20,7 +20,7 @@ object SDPViolationDetector extends Detector {
     new SDPResult(sdpViolations.flatten, checkInput.packageCouplingExpectations().sdp)
   }
 
-  override def isWanted(expectations: DesignQualityExpectations) = expectations.packageCoupling match {
+  override def isWanted(expectations: Expectations) = expectations.packageCoupling match {
     case packageCoupling: PackageCoupling => packageCoupling.sdp != null
     case null => false
   }

@@ -1,11 +1,11 @@
 package org.tindalos.principle.domain.coredetector
 
-import org.tindalos.principle.domain.expectations.DesignQualityExpectations
+import org.tindalos.principle.domain.expectations.Expectations
 
 trait Detector {
 
-  def analyze(checkInput: CheckInput): CheckResult
-  def isWanted(designQualityExpectations: DesignQualityExpectations): Boolean
+  def analyze(checkInput: PackagesAndExpectations): AnalysisResult
+  def isWanted(designQualityExpectations: Expectations): Boolean
   
   override def toString() = this.getClass().getSimpleName()
 

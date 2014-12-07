@@ -2,7 +2,8 @@ package org.tindalos.principle.domain.checker
 
 import org.junit.Assert.assertEquals
 import org.junit._
-import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration
+import org.tindalos.principle.domain.core.ExpectationsConfig
+import org.tindalos.principle.domain.coredetector.AnalysisResult
 import org.tindalos.principle.domain.detector.layering.{LayerReference, LayerViolationsResult}
 import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
@@ -10,9 +11,9 @@ import org.tindalos.principle.infrastructure.plugin.Checks
 
 class LayeringTest {
 
-  var designQualityCheckConfiguration: DesignQualityCheckConfiguration = null
-  var designQualityCheckService: (DesignQualityCheckConfiguration => DesignQualityCheckResults) = null
-  var checks: DesignQualityExpectations = prepareChecks()
+  var designQualityCheckConfiguration: ExpectationsConfig = null
+  var designQualityCheckService: (ExpectationsConfig => List[AnalysisResult]) = null
+  var checks: Expectations = prepareChecks()
 
   @Before
   def setup() = {
@@ -39,14 +40,14 @@ class LayeringTest {
 
   def init(basePackage: String) = {
     designQualityCheckService = PoorMansDIContainer.buildDesignChecker(basePackage)
-    designQualityCheckConfiguration = new DesignQualityCheckConfiguration(checks, basePackage)
+    designQualityCheckConfiguration = new ExpectationsConfig(checks, basePackage)
   }
 
   private def run(basePackage: String) = {
     init(basePackage)
     val result = designQualityCheckService(designQualityCheckConfiguration)
-    assertEquals(1, result.checkResults.length)
-    result.checkResults.head.asInstanceOf[LayerViolationsResult].violations
+    assertEquals(1, result.length)
+    result.head.asInstanceOf[LayerViolationsResult].violations
   }
 
   private def prepareChecks() = new Checks(layering())

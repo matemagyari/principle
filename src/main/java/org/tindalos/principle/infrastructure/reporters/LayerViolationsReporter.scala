@@ -1,10 +1,11 @@
 package org.tindalos.principle.infrastructure.reporters
 
 import org.tindalos.principle.domain.detector.layering.LayerViolationsResult
+import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
 object LayerViolationsReporter {
 
-  def report(result: LayerViolationsResult) = {
+  def report(result: LayerViolationsResult):AnalysisResultsReporter.Report = {
     val layerReferences = result.violations
     val sectionLine = "=============================================================="
     val sb = new StringBuffer("\n" + sectionLine + "\n")

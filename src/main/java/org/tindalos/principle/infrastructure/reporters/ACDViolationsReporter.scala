@@ -1,10 +1,11 @@
 package org.tindalos.principle.infrastructure.reporters
 
 import org.tindalos.principle.domain.detector.acd.ACDResult
+import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
 object ACDViolationsReporter {
 
-  def report(result: ACDResult) = {
+  def report(result: ACDResult):AnalysisResultsReporter.Report = {
     val sectionLine = "=============================================================="
     val sb = new StringBuffer("\n" + sectionLine + "\n")
     sb.append("Component Dependency Metrics\t")

@@ -1,28 +1,29 @@
 package org.tindalos.principle.domain.detector.submodulesblueprint
 
-import org.tindalos.principle.domain.coredetector.{CheckInput, Detector}
-import org.tindalos.principle.domain.expectations.DesignQualityExpectations
+import org.tindalos.principle.domain.core.Package
+import org.tindalos.principle.domain.coredetector.{PackagesAndExpectations, Detector}
+import org.tindalos.principle.domain.expectations.Expectations
 
 import scala.collection.immutable.Map
 
 object SubmodulesBlueprintViolationDetector {
-  def buildInstance(submoduleFactory: SubmodulesFactory) = new Detector {
-    override def isWanted(designQualityExpectations: DesignQualityExpectations) = designQualityExpectations.submodulesBlueprint != null
+  def buildInstance(buildSubmodules: (String, List[Package], String) => Set[Submodule]) = new Detector {
+    override def isWanted(designQualityExpectations: Expectations) = designQualityExpectations.submodulesBlueprint != null
 
-    override def analyze(checkInput: CheckInput) = {
+    override def analyze(checkInput: PackagesAndExpectations) = {
 
       val submodulesBlueprint = checkInput.submodulesBlueprint()
 
       try {
-        val submodules = submoduleFactory.buildSubmodules(
+        val submodules = buildSubmodules(
           submodulesBlueprint.location,
-          checkInput.packages, checkInput.basePackage())
+          checkInput.packages, checkInput.expectationsConfig.basePackage)
 
         val (aID, aMD) = problematicDependencies(submodules)
 
-        new SubmodulesBlueprintCheckResult(submodulesBlueprint, aID, aMD)
+        new SubmodulesBlueprintAnalysisResult(submodulesBlueprint, aID, aMD)
       } catch {
-        case ex: OverlappingSubmoduleDefinitionsException => new SubmodulesBlueprintCheckResult(submodulesBlueprint, overlaps = ex.overlaps)
+        case ex: OverlappingSubmoduleDefinitionsException => new SubmodulesBlueprintAnalysisResult(submodulesBlueprint, overlaps = ex.overlaps)
       }
     }
 

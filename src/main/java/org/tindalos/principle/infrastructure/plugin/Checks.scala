@@ -7,7 +7,7 @@ class Checks(
               var thirdParty: ThirdParty = null,
               var packageCoupling: PackageCoupling = null,
               var submodulesBlueprint: SubmodulesBlueprint = null)
-  extends DesignQualityExpectations {
+  extends Expectations {
 
   def this(aPackageCoupling: PackageCoupling) = this(packageCoupling=aPackageCoupling)
 

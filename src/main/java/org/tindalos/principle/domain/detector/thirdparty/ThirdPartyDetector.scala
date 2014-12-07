@@ -1,15 +1,15 @@
 package org.tindalos.principle.domain.detector.thirdparty
 
 import org.tindalos.principle.domain.core.{Package, PackageReference}
-import org.tindalos.principle.domain.coredetector.{CheckInput, Detector}
-import org.tindalos.principle.domain.expectations.{Barrier, DesignQualityExpectations}
+import org.tindalos.principle.domain.coredetector.{PackagesAndExpectations, Detector}
+import org.tindalos.principle.domain.expectations.{Barrier, Expectations}
 
 /**
  * Created by mate.magyari on 26/05/2014.
  */
 object ThirdPartyDetector extends Detector {
 
-  override def analyze(checkInput: CheckInput) = {
+  override def analyze(checkInput: PackagesAndExpectations) = {
 
     val barriers = checkInput.thirdPartyExpectations().barriers
 
@@ -17,7 +17,7 @@ object ThirdPartyDetector extends Detector {
       List[(PackageReference, PackageReference)]()
     } else {
       val layers = checkInput.layeringExpectations().layers
-      val basePackage = checkInput.designQualityCheckConfiguration.basePackage
+      val basePackage = checkInput.expectationsConfig.basePackage
       for (aPackage <- checkInput.packages
            if (underBasePackage(aPackage.reference, basePackage));
            layer = layerOf(layers,basePackage, aPackage);
@@ -47,5 +47,5 @@ object ThirdPartyDetector extends Detector {
     aPackage.startsWith(basePackage)
 
 
-  override def isWanted(designQualityExpectations: DesignQualityExpectations) = designQualityExpectations.thirdParty != null
+  override def isWanted(designQualityExpectations: Expectations) = designQualityExpectations.thirdParty != null
 }

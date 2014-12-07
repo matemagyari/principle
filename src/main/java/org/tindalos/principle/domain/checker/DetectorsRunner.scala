@@ -1,25 +1,25 @@
 package org.tindalos.principle.domain.checker
 
 import org.tindalos.principle.domain.core.logging.TheLogger
-import org.tindalos.principle.domain.core.{DesignQualityCheckConfiguration, Package}
-import org.tindalos.principle.domain.coredetector.{CheckInput, Detector}
+import org.tindalos.principle.domain.core.{ExpectationsConfig, Package}
+import org.tindalos.principle.domain.coredetector.{PackagesAndExpectations, Detector}
 
-object DesignQualityDetectorsRunner {
+object DetectorsRunner {
 
   def buildDetectorsRunner(detectors: List[Detector]) =
 
-    (packages: List[Package], designQualityCheckConfiguration: DesignQualityCheckConfiguration) => {
+    (packages: List[Package], designQualityCheckConfiguration: ExpectationsConfig) => {
 
-      val checkInput = new CheckInput(packages, designQualityCheckConfiguration)
+      val checkInput = new PackagesAndExpectations(packages, designQualityCheckConfiguration)
 
       val checkResults = for (detector <- detectors
                               if detector.isWanted(designQualityCheckConfiguration.expectations))
                           yield runDetector(checkInput, detector)
 
-      new DesignQualityCheckResults(checkResults.flatten)
+      checkResults.flatten
     }
 
-  private def runDetector(checkInput: CheckInput, detector: Detector) =
+  private def runDetector(checkInput: PackagesAndExpectations, detector: Detector) =
     try {
       TheLogger.info(detector + " is running.")
       Some(detector.analyze(checkInput))

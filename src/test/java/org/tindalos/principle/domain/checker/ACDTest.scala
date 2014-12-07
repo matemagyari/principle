@@ -1,22 +1,20 @@
 package org.tindalos.principle.domain.checker
 
-import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration
-import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
-import org.tindalos.principle.domain.expectations.DesignQualityExpectations
-import org.junit.Test
+import org.junit.Assert.assertEquals
 import org.junit._
-import org.tindalos.principle.infrastructure.plugin.Checks
+import org.tindalos.principle.domain.core.ExpectationsConfig
+import org.tindalos.principle.domain.coredetector.AnalysisResult
 import org.tindalos.principle.domain.detector.acd._
 import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.domain.expectations.cumulativedependency._
-
-import org.junit.Assert.assertEquals
+import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
+import org.tindalos.principle.infrastructure.plugin.Checks
 
 class ACDTest {
 
-  var designQualityCheckConfiguration: DesignQualityCheckConfiguration = null
-  var designQualityCheckService: (DesignQualityCheckConfiguration => DesignQualityCheckResults) = null
-  var checks: DesignQualityExpectations = prepareChecks()
+  var designQualityCheckConfiguration: ExpectationsConfig = null
+  var designQualityCheckService: (ExpectationsConfig => List[AnalysisResult]) = null
+  var checks: Expectations = prepareChecks()
 
   @Before
   def setup() = {
@@ -25,7 +23,7 @@ class ACDTest {
 
   def init(basePackage: String) = {
     designQualityCheckService = PoorMansDIContainer.buildDesignChecker(basePackage)
-    designQualityCheckConfiguration = new DesignQualityCheckConfiguration(checks, basePackage)
+    designQualityCheckConfiguration = new ExpectationsConfig(checks, basePackage)
   }
 
   @Test
@@ -75,12 +73,12 @@ class ACDTest {
 
     assertEquals(2, result, 0.01)
   }
-  
+
   private def run(basePackage: String) = {
     init(basePackage)
     val result = designQualityCheckService(designQualityCheckConfiguration)
-    assertEquals(1, result.checkResults.length)
-    result.checkResults.head.asInstanceOf[ACDResult].acd
+    assertEquals(1, result.length)
+    result.head.asInstanceOf[ACDResult].acd
   }
 
   private def prepareChecks() = new Checks(packageCoupling())

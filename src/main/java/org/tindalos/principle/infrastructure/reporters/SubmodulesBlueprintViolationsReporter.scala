@@ -1,13 +1,14 @@
 package org.tindalos.principle.infrastructure.reporters
 
-import org.tindalos.principle.domain.detector.submodulesblueprint.SubmodulesBlueprintCheckResult
+import org.tindalos.principle.domain.detector.submodulesblueprint.SubmodulesBlueprintAnalysisResult
 import org.tindalos.principle.domain.detector.submodulesblueprint.Submodule
+import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
 import scala.collection.JavaConversions._
 
 object SubmodulesBlueprintViolationsReporter {
 
-  def report(result: SubmodulesBlueprintCheckResult) = {
+  def report(result: SubmodulesBlueprintAnalysisResult):AnalysisResultsReporter.Report = {
     val sectionLine = "=============================================================="
     val sb = new StringBuffer("\n" + sectionLine + "\n")
     sb.append("\tSubmodules Blueprint violations (" + result.violationsNumber + " of the allowed " + result.threshold + ")\t")

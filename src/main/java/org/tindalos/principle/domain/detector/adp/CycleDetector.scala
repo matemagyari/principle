@@ -1,16 +1,16 @@
 package org.tindalos.principle.domain.detector.adp
 
 import org.tindalos.principle.domain.core.{Cycle, Package, PackageReference}
-import org.tindalos.principle.domain.coredetector.{CheckResult, CheckInput, Detector}
-import org.tindalos.principle.domain.expectations.{DesignQualityExpectations, PackageCoupling}
+import org.tindalos.principle.domain.coredetector.{AnalysisResult, PackagesAndExpectations, Detector}
+import org.tindalos.principle.domain.expectations.{Expectations, PackageCoupling}
 
 object CycleDetector {
   def buildInstance(buildPackageStructure: (List[Package], String) => Package) = new Detector {
 
-    override def analyze(checkInput: CheckInput) = {
+    override def analyze(checkInput: PackagesAndExpectations) = {
 
       val basePackage = buildPackageStructure(checkInput.packages,
-        checkInput.designQualityCheckConfiguration.basePackage)
+        checkInput.expectationsConfig.basePackage)
 
       val references = basePackage.toMap()
 
@@ -28,7 +28,7 @@ object CycleDetector {
       new ADPResult(cycles, checkInput.packageCouplingExpectations().adp)
     }
 
-    override def isWanted(expectations: DesignQualityExpectations) = expectations.packageCoupling match {
+    override def isWanted(expectations: Expectations) = expectations.packageCoupling match {
       case packageCoupling: PackageCoupling => packageCoupling.adp != null
       case null => false
     }

@@ -3,8 +3,6 @@ package org.tindalos.principle.infrastructure.detector.submodulesblueprint
 import org.tindalos.principle.domain.core.PackageReference
 import org.tindalos.principle.domain.detector.submodulesblueprint.InvalidBlueprintDefinitionException
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefinition
-import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefinitionsProvider
-import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleId
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleId
 import java.io.IOException
 import org.apache.commons.io.FileUtils
@@ -14,15 +12,12 @@ import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefin
 import org.tindalos.principle.domain.util.ListConverter
 import org.tindalos.principle.domain.util.ListConverter
 
-class YAMLBasedSubmodulesBlueprintProvider extends SubmoduleDefinitionsProvider {
+object YAMLBasedSubmodulesBlueprintProvider {
 
   def readSubmoduleDefinitions(submodulesDefinitionLocation: String, basePackageName: String) = {
-    val yaml = YAMLBasedSubmodulesBlueprintProvider.getYAML(submodulesDefinitionLocation)
-    YAMLBasedSubmodulesBlueprintProvider.processYAML(yaml, basePackageName)
+    val yaml = getYAML(submodulesDefinitionLocation)
+    processYAML(yaml, basePackageName)
   }
-}
-
-object YAMLBasedSubmodulesBlueprintProvider {
 
   protected def processYAML(yamlText: String, basePackageName: String) = {
 

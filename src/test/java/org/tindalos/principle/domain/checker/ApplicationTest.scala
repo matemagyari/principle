@@ -1,25 +1,18 @@
 package org.tindalos.principle.domain.checker
 
-import org.tindalos.principle.domain.expectations.PackageCoupling
+import org.junit.{Assert, Test}
+import org.tindalos.principle.domain.core.ExpectationsConfig
+import org.tindalos.principle.domain.expectations.{ADP, Layering, PackageCoupling, SAP, SDP, SubmodulesBlueprint}
 import org.tindalos.principle.domain.expectations.cumulativedependency.ACD
-import org.tindalos.principle.domain.expectations.Layering
-import org.tindalos.principle.domain.expectations.ADP
-import org.tindalos.principle.domain.expectations.SDP
-import org.tindalos.principle.domain.expectations.SAP
-import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
-import org.tindalos.principle.domain.resultprocessing.thresholdchecker.ThresholdTrespassedException
-import org.junit.Test
-import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration
-import org.tindalos.principle.domain.resultprocessing.thresholdchecker.ThresholdTrespassedException
-import org.junit.Assert
-import org.tindalos.principle.infrastructure.plugin.Checks
-import org.tindalos.principle.domain.expectations.SubmodulesBlueprint
 import org.tindalos.principle.domain.resultprocessing.reporter.Printer
+import org.tindalos.principle.domain.resultprocessing.thresholdchecker.ThresholdTrespassedException
+import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
+import org.tindalos.principle.infrastructure.plugin.Checks
 
 class ApplicationTest {
 
   @Test
-  def checkItself():Unit = {
+  def checkItself(): Unit = {
     val basePackage = "org.tindalos.principle"
     //basePackage = "org.tindalos.principletest"
 
@@ -30,7 +23,7 @@ class ApplicationTest {
     val checks = prepareChecks()
 
     try {
-      application(new DesignQualityCheckConfiguration(checks, basePackage), new ConsolePrinter())
+      application(new ExpectationsConfig(checks, basePackage), new ConsolePrinter())
     } catch {
       case ex: ThresholdTrespassedException =>
       case ex: Exception =>

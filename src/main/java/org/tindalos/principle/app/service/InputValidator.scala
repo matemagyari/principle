@@ -1,13 +1,13 @@
 package org.tindalos.principle.app.service
 
-import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration
+import org.tindalos.principle.domain.core.ExpectationsConfig
 
 /**
  * Created by mate.magyari on 03/08/2014.
  */
 object InputValidator {
 
-  def validate(configuration: DesignQualityCheckConfiguration) = {
+  def validate(configuration: ExpectationsConfig) = {
 
     if (configuration.expectations.thirdParty == null) (true, "")
     else {

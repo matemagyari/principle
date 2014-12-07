@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.coredetector
 
-trait CheckResult {
+trait AnalysisResult {
   
   def expectationsFailed():Boolean
 

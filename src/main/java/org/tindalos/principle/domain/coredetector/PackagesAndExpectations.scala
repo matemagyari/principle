@@ -1,13 +1,12 @@
 package org.tindalos.principle.domain.coredetector
 
-import org.tindalos.principle.domain.core.DesignQualityCheckConfiguration
+import org.tindalos.principle.domain.core.ExpectationsConfig
 import org.tindalos.principle.domain.core.Package
 
-class CheckInput(val packages: List[Package], val designQualityCheckConfiguration: DesignQualityCheckConfiguration) {
+class PackagesAndExpectations(val packages: List[Package], val expectationsConfig: ExpectationsConfig) {
 
-  private val expectations = designQualityCheckConfiguration.expectations
+  private val expectations = expectationsConfig.expectations
 
-  def basePackage() = designQualityCheckConfiguration.basePackage
   def packageCouplingExpectations() = expectations.packageCoupling
   def layeringExpectations() = expectations.layering
   def thirdPartyExpectations() = expectations.thirdParty

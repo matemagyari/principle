@@ -1,13 +1,13 @@
 package org.tindalos.principle.domain.detector.submodulesblueprint
 
-import org.tindalos.principle.domain.coredetector.CheckResult
+import org.tindalos.principle.domain.coredetector.AnalysisResult
 import org.tindalos.principle.domain.expectations.SubmodulesBlueprint
 
-class SubmodulesBlueprintCheckResult(
+class SubmodulesBlueprintAnalysisResult(
   val submodulesBlueprint: SubmodulesBlueprint,
   val illegalDependencies: Map[Submodule, Set[Submodule]] = Map(),
   val missingDependencies: Map[Submodule, Set[Submodule]] = Map(),
-  val overlaps: Set[Overlap] = Set()) extends CheckResult {
+  val overlaps: Set[Overlap] = Set()) extends AnalysisResult {
 
   val threshold = submodulesBlueprint.violationsThreshold
   override def expectationsFailed() = violationsNumber > threshold

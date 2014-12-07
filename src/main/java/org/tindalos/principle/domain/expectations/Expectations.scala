@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.expectations
 
-trait DesignQualityExpectations {
+trait Expectations {
 
   def layering: Layering
   def packageCoupling: PackageCoupling
