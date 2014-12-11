@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.checker
 
 import org.junit.Assert.assertEquals
 import org.junit._
-import org.tindalos.principle.domain.core.ExpectationsConfig
+import org.tindalos.principle.domain.core.AnalysisInput
 import org.tindalos.principle.domain.coredetector.AnalysisResult
 import org.tindalos.principle.domain.detector.sdp._
 import org.tindalos.principle.domain.expectations._
@@ -11,8 +11,8 @@ import org.tindalos.principle.infrastructure.plugin.Checks
 
 class SDPTest {
 
-  var designQualityCheckConfiguration: ExpectationsConfig = null
-  var designQualityCheckService: (ExpectationsConfig => List[AnalysisResult]) = null
+  var designQualityCheckConfiguration: AnalysisInput = null
+  var designQualityCheckService: (AnalysisInput => List[AnalysisResult]) = null
   var checks: Expectations = prepareChecks()
 
   @Before
@@ -22,7 +22,7 @@ class SDPTest {
 
   def init(basePackage: String) = {
     designQualityCheckService = PoorMansDIContainer.buildDesignChecker(basePackage)
-    designQualityCheckConfiguration = new ExpectationsConfig(checks, basePackage)
+    designQualityCheckConfiguration = new AnalysisInput(checks, basePackage)
   }
 
   @Test

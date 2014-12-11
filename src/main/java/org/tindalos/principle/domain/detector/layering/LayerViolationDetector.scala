@@ -1,10 +1,15 @@
 package org.tindalos.principle.domain.detector.layering
 
-import org.tindalos.principle.domain.coredetector.PackagesAndExpectations
-import org.tindalos.principle.domain.core.ExpectationsConfig
+import org.tindalos.principle.domain.coredetector.{AnalysisResult, PackagesAndExpectations, Detector}
+import org.tindalos.principle.domain.core.AnalysisInput
 import org.tindalos.principle.domain.core.Package
-import org.tindalos.principle.domain.coredetector.Detector
 import org.tindalos.principle.domain.expectations.Expectations
+
+case class LayerReference(referrer:String, referee:String)
+
+class LayerViolationsResult(val violations: List[LayerReference], val threshold: Int) extends AnalysisResult {
+  override def expectationsFailed() = violations.length > threshold
+}
 
 object LayerViolationDetector extends Detector {
 
@@ -15,7 +20,7 @@ object LayerViolationDetector extends Detector {
 
   override def isWanted(expectations: Expectations) = expectations.layering != null
 
-  private def findViolations(packages: List[Package], configuration: ExpectationsConfig): List[LayerReference] = {
+  private def findViolations(packages: List[Package], configuration: AnalysisInput): List[LayerReference] = {
 
     val layers = configuration.expectations.layering.layers.map(configuration.basePackage + "." + _).toList
 

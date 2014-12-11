@@ -1,7 +1,7 @@
 package org.tindalos.principle.domain.checker
 
 import org.junit.{Assert, Test}
-import org.tindalos.principle.domain.core.ExpectationsConfig
+import org.tindalos.principle.domain.core.AnalysisInput
 import org.tindalos.principle.domain.expectations.{ADP, Layering, PackageCoupling, SAP, SDP, SubmodulesBlueprint}
 import org.tindalos.principle.domain.expectations.cumulativedependency.ACD
 import org.tindalos.principle.domain.resultprocessing.reporter.Printer
@@ -18,12 +18,12 @@ class ApplicationTest {
 
     TestFixture.setLogger()
 
-    val application = PoorMansDIContainer.getApplication(basePackage)
+    val runAnalysis = PoorMansDIContainer.buildAnalyzer(basePackage, new ConsolePrinter())
 
     val checks = prepareChecks()
 
     try {
-      application(new ExpectationsConfig(checks, basePackage), new ConsolePrinter())
+      runAnalysis(new AnalysisInput(checks, basePackage))
     } catch {
       case ex: ThresholdTrespassedException =>
       case ex: Exception =>

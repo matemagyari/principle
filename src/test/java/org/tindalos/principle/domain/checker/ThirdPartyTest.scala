@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.checker
 
 import org.junit.Assert._
 import org.junit._
-import org.tindalos.principle.domain.core.{ExpectationsConfig, PackageReference}
+import org.tindalos.principle.domain.core.{AnalysisInput, PackageReference}
 import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.infrastructure.plugin.Checks
@@ -56,7 +56,7 @@ class ThirdPartyTest {
 
   private def run(basePackage: String, thirdParty:ThirdParty) = {
     val checks: Expectations = new Checks(layering(), thirdParty)
-    val designQualityCheckConfiguration = new ExpectationsConfig(checks, basePackage)
+    val designQualityCheckConfiguration = new AnalysisInput(checks, basePackage)
     val designQualityCheckService = PoorMansDIContainer.buildDesignChecker(basePackage)
     val result = designQualityCheckService(designQualityCheckConfiguration)
     result(1)

@@ -5,11 +5,12 @@ import org.tindalos.principle.domain.coredetector.{PackagesAndExpectations, Dete
 import org.tindalos.principle.domain.expectations.{PackageCoupling, Expectations}
 
 object ACDDetector {
-  def buildInstance(packageStructureBuilder: (List[Package], String) => Package) = new Detector {
+  
+  def buildInstance(buildPackageStructure: (List[Package], String) => Package) = new Detector {
 
     override def analyze(checkInput: PackagesAndExpectations) = {
 
-      val basePackage = packageStructureBuilder(checkInput.packages, checkInput.expectationsConfig.basePackage)
+      val basePackage = buildPackageStructure(checkInput.packages, checkInput.expectationsConfig.basePackage)
 
       val referenceMap = basePackage.toMap()
 

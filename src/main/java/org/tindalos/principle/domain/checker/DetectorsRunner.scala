@@ -1,19 +1,19 @@
 package org.tindalos.principle.domain.checker
 
 import org.tindalos.principle.domain.core.logging.TheLogger
-import org.tindalos.principle.domain.core.{ExpectationsConfig, Package}
+import org.tindalos.principle.domain.core.{AnalysisInput, Package}
 import org.tindalos.principle.domain.coredetector.{PackagesAndExpectations, Detector}
 
 object DetectorsRunner {
 
   def buildDetectorsRunner(detectors: List[Detector]) =
 
-    (packages: List[Package], designQualityCheckConfiguration: ExpectationsConfig) => {
+    (packages: List[Package], expectationsConfig: AnalysisInput) => {
 
-      val checkInput = new PackagesAndExpectations(packages, designQualityCheckConfiguration)
+      val checkInput = new PackagesAndExpectations(packages, expectationsConfig)
 
       val checkResults = for (detector <- detectors
-                              if detector.isWanted(designQualityCheckConfiguration.expectations))
+                              if detector.isWanted(expectationsConfig.expectations))
                           yield runDetector(checkInput, detector)
 
       checkResults.flatten

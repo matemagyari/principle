@@ -1,9 +1,9 @@
 package org.tindalos.principle.domain.coredetector
 
-import org.tindalos.principle.domain.core.ExpectationsConfig
+import org.tindalos.principle.domain.core.AnalysisInput
 import org.tindalos.principle.domain.core.Package
 
-class PackagesAndExpectations(val packages: List[Package], val expectationsConfig: ExpectationsConfig) {
+class PackagesAndExpectations(val packages: List[Package], val expectationsConfig: AnalysisInput) {
 
   private val expectations = expectationsConfig.expectations
 

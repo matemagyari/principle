@@ -1,13 +1,13 @@
 package org.tindalos.principle.app.service
 
-import org.tindalos.principle.domain.core.ExpectationsConfig
+import org.tindalos.principle.domain.core.AnalysisInput
 
 /**
  * Created by mate.magyari on 03/08/2014.
  */
 object InputValidator {
 
-  def validate(configuration: ExpectationsConfig) = {
+  def validate(configuration: AnalysisInput) = {
 
     if (configuration.expectations.thirdParty == null) (true, "")
     else {

@@ -10,7 +10,6 @@ import java.io.File
 import org.yaml.snakeyaml.Yaml
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefinitions
 import org.tindalos.principle.domain.util.ListConverter
-import org.tindalos.principle.domain.util.ListConverter
 
 object YAMLBasedSubmodulesBlueprintProvider {
 

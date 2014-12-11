@@ -11,17 +11,12 @@ class ACDResult(val cumulatedComponentDependency: Int, val numOfComponents: Int,
   val nCcd = acd / numOfComponents.toDouble
 
   override def expectationsFailed() =
-    greaterIfExists(acd, packageCoupling.acd) || 
-    greaterIfExists(rAcd, packageCoupling.racd) || 
+    greaterIfExists(rAcd, packageCoupling.racd) ||
     greaterIfExists(nCcd, packageCoupling.nccd)
 
   private def greaterIfExists(actual: Double, expectation: DoubleThresholder) =
     if (expectation == null || expectation.threshold == Double.NaN) false
     else actual > expectation.threshold
-
-  def getACDThreshold() =
-    if (packageCoupling.acd == null) 999d
-    else packageCoupling.acd.threshold
 
   def getRACDThreshold() =
     if (packageCoupling.racd == null) 999d
