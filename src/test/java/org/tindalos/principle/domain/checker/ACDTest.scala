@@ -2,8 +2,8 @@ package org.tindalos.principle.domain.checker
 
 import org.junit.Assert.assertEquals
 import org.junit._
-import org.tindalos.principle.domain.core.AnalysisInput
-import org.tindalos.principle.domain.coredetector.AnalysisResult
+import org.tindalos.principle.domain.core.AnalysisPlan
+import org.tindalos.principle.domain.coredetector.AnalysisInput
 import org.tindalos.principle.domain.detector.acd._
 import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.domain.expectations.cumulativedependency._
@@ -12,9 +12,9 @@ import org.tindalos.principle.infrastructure.plugin.Checks
 
 class ACDTest {
 
-  var designQualityCheckConfiguration: AnalysisInput = null
-  var designQualityCheckService: (AnalysisInput => List[AnalysisResult]) = null
-  var checks: Expectations = prepareChecks()
+  var plan: AnalysisPlan = null
+  val runAnalysis = PoorMansDIContainer.buildRunAnalysisFn()
+  var expectations: Expectations = prepareChecks()
 
   @Before
   def setup() = {
@@ -22,8 +22,7 @@ class ACDTest {
   }
 
   def init(basePackage: String) = {
-    designQualityCheckService = PoorMansDIContainer.buildDesignChecker(basePackage)
-    designQualityCheckConfiguration = new AnalysisInput(checks, basePackage)
+    plan = new AnalysisPlan(expectations, basePackage)
   }
 
   @Test
@@ -76,7 +75,9 @@ class ACDTest {
 
   private def run(basePackage: String) = {
     init(basePackage)
-    val result = designQualityCheckService(designQualityCheckConfiguration)
+    val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
+    val packageList = packageListProducer(basePackage)
+    val result = runAnalysis(new AnalysisInput(packageList, plan))
     assertEquals(1, result.length)
     result.head.asInstanceOf[ACDResult].acd
   }

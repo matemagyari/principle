@@ -1,28 +1,27 @@
 package org.tindalos.principle.domain.checker
 
 import org.tindalos.principle.domain.core.logging.TheLogger
-import org.tindalos.principle.domain.core.{AnalysisInput, Package}
-import org.tindalos.principle.domain.coredetector.{PackagesAndExpectations, Detector}
+import org.tindalos.principle.domain.core.{AnalysisPlan, Package}
+import org.tindalos.principle.domain.coredetector.{Detector, AnalysisInput}
 
 object DetectorsRunner {
 
   def buildDetectorsRunner(detectors: List[Detector]) =
 
-    (packages: List[Package], expectationsConfig: AnalysisInput) => {
+    (input: AnalysisInput) => {
 
-      val checkInput = new PackagesAndExpectations(packages, expectationsConfig)
+      val results = for {
+        detector <- detectors
+        if detector.isWanted(input.analysisPlan.expectations)
+      } yield runDetector(input, detector)
 
-      val checkResults = for (detector <- detectors
-                              if detector.isWanted(expectationsConfig.expectations))
-                          yield runDetector(checkInput, detector)
-
-      checkResults.flatten
+      results.flatten
     }
 
-  private def runDetector(checkInput: PackagesAndExpectations, detector: Detector) =
+  private def runDetector(input: AnalysisInput, detector: Detector) =
     try {
       TheLogger.info(detector + " is running.")
-      Some(detector.analyze(checkInput))
+      Some(detector.analyze(input))
     } catch {
       case unwantedException: RuntimeException => TheLogger.error(unwantedException.getMessage)
         None

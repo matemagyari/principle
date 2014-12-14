@@ -1,18 +1,18 @@
 package org.tindalos.principle.domain.checker
 
-import org.junit.Assert.assertEquals
 import org.junit._
-import org.tindalos.principle.domain.core.AnalysisInput
-import org.tindalos.principle.domain.coredetector.AnalysisResult
-import org.tindalos.principle.domain.detector.sdp._
+import org.junit.Assert.assertEquals
+import org.tindalos.principle.domain.core.AnalysisPlan
+import org.tindalos.principle.domain.coredetector.AnalysisInput
+import org.tindalos.principle.domain.detector.sdp.SDPResult
 import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.infrastructure.plugin.Checks
 
 class SDPTest {
 
-  var designQualityCheckConfiguration: AnalysisInput = null
-  var designQualityCheckService: (AnalysisInput => List[AnalysisResult]) = null
+  var plan: AnalysisPlan = null
+  val runAnalysis= PoorMansDIContainer.buildRunAnalysisFn()
   var checks: Expectations = prepareChecks()
 
   @Before
@@ -21,8 +21,7 @@ class SDPTest {
   }
 
   def init(basePackage: String) = {
-    designQualityCheckService = PoorMansDIContainer.buildDesignChecker(basePackage)
-    designQualityCheckConfiguration = new AnalysisInput(checks, basePackage)
+    plan = new AnalysisPlan(checks, basePackage)
   }
 
   @Test
@@ -37,7 +36,9 @@ class SDPTest {
 
   private def run(basePackage: String) = {
     init(basePackage)
-    val result = designQualityCheckService(designQualityCheckConfiguration)
+    val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
+    val packageList = packageListProducer(basePackage)
+    val result = runAnalysis(new AnalysisInput(packageList, plan))
     assertEquals(1, result.length)
     result.head.asInstanceOf[SDPResult]
   }

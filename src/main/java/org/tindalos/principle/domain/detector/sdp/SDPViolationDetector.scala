@@ -1,12 +1,12 @@
 package org.tindalos.principle.domain.detector.sdp
 
 import org.tindalos.principle.domain.core.{Package, PackageReference}
-import org.tindalos.principle.domain.coredetector.{PackagesAndExpectations, Detector}
+import org.tindalos.principle.domain.coredetector.{AnalysisInput, Detector}
 import org.tindalos.principle.domain.expectations.{Expectations, PackageCoupling}
 
 object SDPViolationDetector extends Detector {
 
-  override def analyze(checkInput: PackagesAndExpectations) = {
+  override def analyze(checkInput: AnalysisInput) = {
 
     val references = checkInput.packages.map(aPackage => (aPackage.reference -> aPackage)).toMap
     val sdpViolations = for (aPackage <- checkInput.packages)

@@ -3,12 +3,12 @@ package org.tindalos.principle.domain.detector.sap
 import org.tindalos.principle.domain.coredetector.Detector
 import org.tindalos.principle.domain.expectations.Expectations
 import org.tindalos.principle.domain.expectations.PackageCoupling
-import org.tindalos.principle.domain.coredetector.PackagesAndExpectations
+import org.tindalos.principle.domain.coredetector.AnalysisInput
 import org.tindalos.principle.domain.core.Package
 
 object SAPViolationDetector extends Detector {
 
-  override def analyze(checkInput: PackagesAndExpectations) = {
+  override def analyze(checkInput: AnalysisInput) = {
     val sapExpectation = checkInput.packageCouplingExpectations().sap
     val maxDistance = sapExpectation.maxDistance
 

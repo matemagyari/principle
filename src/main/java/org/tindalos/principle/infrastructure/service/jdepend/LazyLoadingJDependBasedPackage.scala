@@ -7,7 +7,8 @@ import org.tindalos.principle.domain.core.{Metrics, Package, PackageReference}
 
 import scala.collection.JavaConversions._
 
-class LazyLoadingJDependBasedPackage(val javaPackage: JavaPackage, val metrics: Metrics, val packageFactory: PackageFactory)
+class LazyLoadingJDependBasedPackage(val javaPackage: JavaPackage, val metrics: Metrics, val packageFactory: PackageFactory,
+                                      val isRelevant: JavaPackage => Boolean)
   extends Package(javaPackage.getName()) {
 
   private val validExternalEfferents = Set("java", "scala")
@@ -19,7 +20,7 @@ class LazyLoadingJDependBasedPackage(val javaPackage: JavaPackage, val metrics: 
   override def getOwnPackageReferences(): Set[PackageReference] = {
 
     javaPackage.getEfferents().asInstanceOf[Collection[JavaPackage]]
-      .filter(packageFactory.isRelevant(_))
+      .filter(isRelevant(_))
       .map(packageFactory.transform(_).reference)
       .toSet
   }
@@ -27,7 +28,7 @@ class LazyLoadingJDependBasedPackage(val javaPackage: JavaPackage, val metrics: 
   override def getOwnExternalPackageReferences() =
 
     javaPackage.getEfferents().asInstanceOf[Collection[JavaPackage]]
-      .filter(p => !packageFactory.isRelevant(p) && isNotValidExternalEfferent(p))
+      .filter(p => !isRelevant(p) && isNotValidExternalEfferent(p))
       .map(packageFactory.transform(_).reference)
       .toSet
 

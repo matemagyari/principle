@@ -2,7 +2,7 @@ package org.tindalos.principle.app.service
 
 import org.junit.Assert._
 import org.junit.Test
-import org.tindalos.principle.domain.core.AnalysisInput
+import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.expectations.{Barrier, ThirdParty, Layering, Expectations}
 import org.tindalos.principle.infrastructure.plugin.Checks
 
@@ -19,7 +19,7 @@ class InputValidatorTest {
   def wrongOrder() {
 
     val barriers = List(new Barrier("a"),new Barrier("c"),new Barrier("b"))
-    val configuration: AnalysisInput = config(barriers)
+    val configuration: AnalysisPlan = config(barriers)
 
     val (success,msg) = InputValidator.validate(configuration)
 
@@ -30,7 +30,7 @@ class InputValidatorTest {
   def invalidBarrier() {
 
     val barriers = List(new Barrier("a"),new Barrier("d"))
-    val configuration: AnalysisInput = config(barriers)
+    val configuration: AnalysisPlan = config(barriers)
 
     val (success,msg) = InputValidator.validate(configuration)
 
@@ -42,7 +42,7 @@ class InputValidatorTest {
   def fullCover() {
 
     val barriers = List(new Barrier("a"),new Barrier("b"),new Barrier("c"))
-    val configuration: AnalysisInput = config(barriers)
+    val configuration: AnalysisPlan = config(barriers)
 
     val (success,msg) = InputValidator.validate(configuration)
 
@@ -53,7 +53,7 @@ class InputValidatorTest {
   def partialCover() {
 
     val barriers = List(new Barrier("a"), new Barrier("c"))
-    val configuration: AnalysisInput = config(barriers)
+    val configuration: AnalysisPlan = config(barriers)
 
     val (success,msg) = InputValidator.validate(configuration)
 
@@ -61,10 +61,10 @@ class InputValidatorTest {
   }
 
 
-  private def config(barriers: List[Barrier]): AnalysisInput = {
+  private def config(barriers: List[Barrier]): AnalysisPlan = {
     val aThirdParty = new ThirdParty(barriers)
 
     val expectations = new Checks(layering = aLayering, thirdParty = aThirdParty)
-    new AnalysisInput(expectations, basePackage)
+    new AnalysisPlan(expectations, basePackage)
   }
 }

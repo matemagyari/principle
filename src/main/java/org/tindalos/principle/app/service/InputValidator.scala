@@ -1,18 +1,18 @@
 package org.tindalos.principle.app.service
 
-import org.tindalos.principle.domain.core.AnalysisInput
+import org.tindalos.principle.domain.core.AnalysisPlan
 
 /**
  * Created by mate.magyari on 03/08/2014.
  */
 object InputValidator {
 
-  def validate(configuration: AnalysisInput) = {
+  def validate(plan: AnalysisPlan) = {
 
-    if (configuration.expectations.thirdParty == null) (true, "")
+    if (plan.expectations.thirdParty == null) (true, "")
     else {
-      val layers = configuration.expectations.layering.layers
-      val barriers = configuration.expectations.thirdParty.barriers
+      val layers = plan.expectations.layering.layers
+      val barriers = plan.expectations.thirdParty.barriers
 
       val invalidBarriers = for (barrier <- barriers
                                  if (!layers.contains(barrier.layer))) yield barrier

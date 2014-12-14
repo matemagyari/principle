@@ -1,16 +1,16 @@
 package org.tindalos.principle.domain.detector.adp
 
 import org.tindalos.principle.domain.core.{Cycle, Package, PackageReference}
-import org.tindalos.principle.domain.coredetector.{AnalysisResult, PackagesAndExpectations, Detector}
+import org.tindalos.principle.domain.coredetector.{AnalysisResult, AnalysisInput, Detector}
 import org.tindalos.principle.domain.expectations.{Expectations, PackageCoupling}
 
 object CycleDetector {
   def buildInstance(buildPackageStructure: (List[Package], String) => Package) = new Detector {
 
-    override def analyze(checkInput: PackagesAndExpectations) = {
+    override def analyze(checkInput: AnalysisInput) = {
 
       val basePackage = buildPackageStructure(checkInput.packages,
-        checkInput.expectationsConfig.basePackage)
+        checkInput.analysisPlan.basePackage)
 
       val references = basePackage.toMap()
 

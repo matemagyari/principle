@@ -1,7 +1,7 @@
 package org.tindalos.principle.domain.detector.thirdparty
 
 import org.tindalos.principle.domain.core.{Package, PackageReference}
-import org.tindalos.principle.domain.coredetector.{PackagesAndExpectations, Detector}
+import org.tindalos.principle.domain.coredetector.{AnalysisInput, Detector}
 import org.tindalos.principle.domain.expectations.{Barrier, Expectations}
 
 /**
@@ -9,7 +9,7 @@ import org.tindalos.principle.domain.expectations.{Barrier, Expectations}
  */
 object ThirdPartyDetector extends Detector {
 
-  override def analyze(checkInput: PackagesAndExpectations) = {
+  override def analyze(checkInput: AnalysisInput) = {
 
     val barriers = checkInput.thirdPartyExpectations().barriers
 
@@ -17,7 +17,7 @@ object ThirdPartyDetector extends Detector {
       List[(PackageReference, PackageReference)]()
     } else {
       val layers = checkInput.layeringExpectations().layers
-      val basePackage = checkInput.expectationsConfig.basePackage
+      val basePackage = checkInput.analysisPlan.basePackage
       for (aPackage <- checkInput.packages
            if (underBasePackage(aPackage.reference, basePackage));
            layer = layerOf(layers,basePackage, aPackage);

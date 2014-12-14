@@ -3,7 +3,7 @@ package org.tindalos.principle.infrastructure.plugin
 import org.apache.commons.lang3.Validate
 import org.apache.maven.plugin.{AbstractMojo, MojoFailureException}
 import org.apache.maven.plugins.annotations.{Mojo, Parameter}
-import org.tindalos.principle.domain.core.AnalysisInput
+import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.core.logging.{ScalaLogger, TheLogger}
 import org.tindalos.principle.domain.expectations.exception.InvalidConfigurationException
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
@@ -35,7 +35,7 @@ class DesignQualityCheckerMojo extends AbstractMojo {
 
     val analyse = PoorMansDIContainer.buildAnalyzer(basePackage, new LogPrinter(getLog()))
     try {
-      val (success,msg) = analyse(new AnalysisInput(checks, basePackage))
+      val (success,msg) = analyse(new AnalysisPlan(checks, basePackage))
       if (!success) throw new MojoFailureException("\nNumber of violations exceeds allowed limits!")
     } catch {
       case ex: ClassesToAnalyzeNotFoundException => getLog().warn(ex.getMessage())

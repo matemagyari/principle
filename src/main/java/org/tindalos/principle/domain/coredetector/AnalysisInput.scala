@@ -1,11 +1,11 @@
 package org.tindalos.principle.domain.coredetector
 
-import org.tindalos.principle.domain.core.AnalysisInput
+import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.core.Package
 
-class PackagesAndExpectations(val packages: List[Package], val expectationsConfig: AnalysisInput) {
+class AnalysisInput(val packages: List[Package], val analysisPlan: AnalysisPlan) {
 
-  private val expectations = expectationsConfig.expectations
+  private val expectations = analysisPlan.expectations
 
   def packageCouplingExpectations() = expectations.packageCoupling
   def layeringExpectations() = expectations.layering

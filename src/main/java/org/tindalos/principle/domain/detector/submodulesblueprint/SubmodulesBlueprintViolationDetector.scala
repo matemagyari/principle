@@ -1,7 +1,7 @@
 package org.tindalos.principle.domain.detector.submodulesblueprint
 
 import org.tindalos.principle.domain.core.Package
-import org.tindalos.principle.domain.coredetector.{PackagesAndExpectations, Detector}
+import org.tindalos.principle.domain.coredetector.{AnalysisInput, Detector}
 import org.tindalos.principle.domain.expectations.Expectations
 
 import scala.collection.immutable.Map
@@ -10,14 +10,14 @@ object SubmodulesBlueprintViolationDetector {
   def buildInstance(buildSubmodules: (String, List[Package], String) => Set[Submodule]) = new Detector {
     override def isWanted(designQualityExpectations: Expectations) = designQualityExpectations.submodulesBlueprint != null
 
-    override def analyze(checkInput: PackagesAndExpectations) = {
+    override def analyze(checkInput: AnalysisInput) = {
 
       val submodulesBlueprint = checkInput.submodulesBlueprint()
 
       try {
         val submodules = buildSubmodules(
           submodulesBlueprint.location,
-          checkInput.packages, checkInput.expectationsConfig.basePackage)
+          checkInput.packages, checkInput.analysisPlan.basePackage)
 
         val (aID, aMD) = problematicDependencies(submodules)
 

@@ -1,16 +1,16 @@
 package org.tindalos.principle.infrastructure.service.jdepend
 
 import jdepend.framework.JavaPackage
-import org.tindalos.principle.domain.core.{AnalysisInput, Package}
+import org.tindalos.principle.domain.core.{AnalysisPlan, Package}
 
 object JDependPackageAnalyzer {
 
-  def buildAnalyzer(jDependRunner: (String, Boolean) => List[JavaPackage]
-                    , packageListFactory: List[JavaPackage] => List[Package]) =
+  def buildAnalyzerFn(produceJavaPackageList: (String, Boolean) => List[JavaPackage]
+                    , transform: (String, List[JavaPackage]) => List[Package]) =
 
-    (configuration: AnalysisInput) => {
-      val analyzedPackages = jDependRunner(configuration.basePackage,true)
-      packageListFactory(analyzedPackages)
+    (rootPackage: String) => {
+      val analyzedPackages = produceJavaPackageList(rootPackage,true)
+      transform(rootPackage, analyzedPackages)
     }
 
 }

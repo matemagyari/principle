@@ -2,13 +2,16 @@ package org.tindalos.principle.domain.checker
 
 import org.junit.Assert._
 import org.junit._
-import org.tindalos.principle.domain.core.{AnalysisInput, PackageReference}
+import org.tindalos.principle.domain.core.{AnalysisPlan, PackageReference}
+import org.tindalos.principle.domain.coredetector.AnalysisInput
 import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.infrastructure.plugin.Checks
 import org.tindalos.principle.domain.detector.thirdparty.ThirdPartyViolationsResult
 
 class ThirdPartyTest {
+
+  val runAnalysis= PoorMansDIContainer.buildRunAnalysisFn()
 
   @Before
   def setup() = {
@@ -55,10 +58,11 @@ class ThirdPartyTest {
 
 
   private def run(basePackage: String, thirdParty:ThirdParty) = {
-    val checks: Expectations = new Checks(layering(), thirdParty)
-    val designQualityCheckConfiguration = new AnalysisInput(checks, basePackage)
-    val designQualityCheckService = PoorMansDIContainer.buildDesignChecker(basePackage)
-    val result = designQualityCheckService(designQualityCheckConfiguration)
+    val expectations: Expectations = new Checks(layering(), thirdParty)
+    val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
+    val packageList = packageListProducer(basePackage)
+    val plan = new AnalysisPlan(expectations, basePackage)
+    val result = runAnalysis(new AnalysisInput(packageList, plan))
     result(1)
   }
 
