@@ -11,10 +11,10 @@ object Structure {
 
   case class Component(nodes: Set[NodeId], dependencies: Set[NodeId], dependants: Set[NodeId]) {
     def merge(c: Component) = {
-      val mergedClasses = nodes ++ c.nodes
-      val mergedDependencies = dependencies ++ c.dependencies -- mergedClasses
-      val mergedDependants = dependants ++ c.dependants -- mergedClasses
-      Component(mergedClasses, mergedDependencies, mergedDependants)
+      val mergedNodes = nodes ++ c.nodes
+      val mergedDependencies = dependencies ++ c.dependencies -- mergedNodes
+      val mergedDependants = dependants ++ c.dependants -- mergedNodes
+      Component(mergedNodes, mergedDependencies, mergedDependants)
     }
 
     def commonDependenciesRatio(c: Component) =
@@ -41,9 +41,9 @@ object Structure {
     def isConnectedTo(c: Component) = !((dependencies & c.nodes).isEmpty)
 
     //cohesion of a component: in [0,1). 0.0 - no cohesion
-    def cohesion(allClasses: Set[Node]) = {
+    def cohesion(allNodes: Set[Node]) = {
       val componentDepsCount = dependencies.size + dependants.size
-      val classesInComponent = allClasses.filter(c => nodes.contains(c.name)).toList
+      val classesInComponent = allNodes.filter(c => nodes.contains(c.name)).toList
       val classesDepsCount =
         classesInComponent.map(c => (c.dependencies.size + c.dependants.size)).sum
 
