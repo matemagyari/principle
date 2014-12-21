@@ -1,8 +1,6 @@
 package org.tindalos.principle.domain.core
 
-import scala.collection.JavaConversions._
-
-object PackageSorter {
+object PackageSorterModule {
   
   def sortByName(packages:List[Package], basePackageName:String):List[Package] = 
 	 sortByName(packages).filter(_.reference.startsWith(basePackageName))

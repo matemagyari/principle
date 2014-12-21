@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.detector.adp
 
 import org.tindalos.principle.domain.core.Package
 
-object PackageStructureBuilder {
+object PackageStructureModule {
 
   def createBuilder(sortByName: (List[Package], String) => List[Package]) = {
     var cachedBasePackage: Package = null

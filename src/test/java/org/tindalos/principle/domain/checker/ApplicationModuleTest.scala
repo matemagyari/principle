@@ -9,7 +9,7 @@ import org.tindalos.principle.domain.resultprocessing.thresholdchecker.Threshold
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.infrastructure.plugin.Checks
 
-class ApplicationTest {
+class ApplicationModuleTest {
 
   @Test
   def checkItself(): Unit = {

@@ -1,11 +1,11 @@
 package org.tindalos.principle.infrastructure.di
 
-import org.tindalos.principle.app.service.{Application, InputValidator}
+import org.tindalos.principle.app.service.{ApplicationModule, InputValidator}
 import org.tindalos.principle.domain.checker.DetectorsRunner
-import org.tindalos.principle.domain.core.{Package, PackageSorter}
+import org.tindalos.principle.domain.core.{Package, PackageSorterModule}
 import org.tindalos.principle.domain.coredetector.{AnalysisInput, AnalysisResult}
 import org.tindalos.principle.domain.detector.acd.ACDDetector
-import org.tindalos.principle.domain.detector.adp.{CycleDetector, PackageStructureBuilder}
+import org.tindalos.principle.domain.detector.adp.{CycleDetector, PackageStructureModule}
 import org.tindalos.principle.domain.detector.layering.LayerViolationDetector
 import org.tindalos.principle.domain.detector.sap.SAPViolationDetector
 import org.tindalos.principle.domain.detector.sdp.SDPViolationDetector
@@ -25,17 +25,17 @@ object PoorMansDIContainer {
     val runAnalysisFn = buildRunAnalysisFn()
     val reporterFn = buildReporter()
     
-    Application.buildApplicationFn(InputValidator.validate,buildPackagesFn, runAnalysisFn, reporterFn,printer)
+    ApplicationModule.buildApplicationFn(InputValidator.validate,buildPackagesFn, runAnalysisFn, reporterFn,printer)
   }
 
   def buildPackageListProducerFn(rootPackage: String): (String) => List[Package] = {
     val packageFactory = new PackageFactory(rootPackage)
-    val packageListTransformer = packageFactory.buildPackageListFactory(PackageSorter.sortByName(_))
+    val packageListTransformer = packageFactory.buildPackageListFactory(PackageSorterModule.sortByName(_))
     JDependPackageAnalyzer.buildAnalyzerFn(JDependRunner.preparePackages, packageListTransformer)
   }
 
   def buildRunAnalysisFn(): AnalysisInput => List[AnalysisResult] = {
-    val packageStructureBuilder = PackageStructureBuilder.createBuilder(PackageSorter.sortByName(_, _))
+    val packageStructureBuilder = PackageStructureModule.createBuilder(PackageSorterModule.sortByName(_, _))
     val detectors = createDetectors(packageStructureBuilder)
     DetectorsRunner.buildDetectorsRunner(detectors)
   }

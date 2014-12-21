@@ -7,7 +7,7 @@ import org.tindalos.principle.domain.resultprocessing.reporter.Printer
 /*
 This is the app entry point. Side effects can happen only here in this layer, underneath the code must be pure.
  */
-object Application {
+object ApplicationModule {
 
   def buildApplicationFn(validatePlan: AnalysisPlan => (Boolean, String),
                          buildPackages: String => List[Package],
