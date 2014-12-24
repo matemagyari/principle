@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.expectations
 
-import org.tindalos.principle.domain.expectations.cumulativedependency.{ACD, NCCD, RACD}
+import org.tindalos.principle.domain.expectations.cumulativedependency.{Cohesion, ACD, NCCD, RACD}
 
 class PackageCoupling {
 
@@ -11,5 +11,7 @@ class PackageCoupling {
   var acd: ACD = null
   var racd: RACD = null
   var nccd: NCCD = null
+
+  var cohesion: Cohesion = null
 
 }

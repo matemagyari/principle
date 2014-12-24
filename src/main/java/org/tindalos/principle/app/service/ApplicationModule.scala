@@ -2,6 +2,7 @@ package org.tindalos.principle.app.service
 
 import org.tindalos.principle.domain.core.{AnalysisPlan, Package}
 import org.tindalos.principle.domain.coredetector.{AnalysisInput, AnalysisResult}
+import org.tindalos.principle.domain.detector.structure.Structure.Node
 import org.tindalos.principle.domain.resultprocessing.reporter.Printer
 
 /*
@@ -10,7 +11,8 @@ This is the app entry point. Side effects can happen only here in this layer, un
 object ApplicationModule {
 
   def buildApplicationFn(validatePlan: AnalysisPlan => (Boolean, String),
-                         buildPackages: String => List[Package],
+                         getPackages: String => List[Package],
+                         getNodes: String => Set[Node],
                          runAnalysis: AnalysisInput => List[AnalysisResult],
                          makeReports: List[AnalysisResult] => List[(String, Boolean)],
                          printer: Printer) =
@@ -21,9 +23,10 @@ object ApplicationModule {
 
       if (success) {
 
-        val packages = buildPackages(analysisPlan.basePackage)
+        val packages = getPackages(analysisPlan.basePackage)
+        val nodes = getNodes(analysisPlan.basePackage)
 
-        val analysisResults = runAnalysis(new AnalysisInput(packages, analysisPlan))
+        val analysisResults = runAnalysis(new AnalysisInput(packages, nodes, analysisPlan))
 
         def printReport(report: (String, Boolean)) =
           if (report._2)

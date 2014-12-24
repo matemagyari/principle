@@ -6,6 +6,7 @@ import org.tindalos.principle.domain.detector.adp.ADPResult
 import org.tindalos.principle.domain.detector.layering.LayerViolationsResult
 import org.tindalos.principle.domain.detector.sap.SAPResult
 import org.tindalos.principle.domain.detector.sdp.SDPResult
+import org.tindalos.principle.domain.detector.structure.CohesionAnalysisResult
 import org.tindalos.principle.domain.detector.submodulesblueprint.SubmodulesBlueprintAnalysisResult
 import org.tindalos.principle.domain.detector.thirdparty.ThirdPartyViolationsResult
 
@@ -20,7 +21,8 @@ object AnalysisResultsReporter {
                           reportSAPResult: SAPResult => Report,
                           reportACDResult: ACDResult => Report,
                           reportSubmodulesBlueprintCheckResult: SubmodulesBlueprintAnalysisResult => Report,
-                          reportSDPResult: SDPResult => Report) = {
+                          reportSDPResult: SDPResult => Report,
+                          reportCohesionResult: CohesionAnalysisResult => Report) = {
 
     def toReport(result: AnalysisResult) = {
       val report = result match {
@@ -31,6 +33,7 @@ object AnalysisResultsReporter {
         case cr: SAPResult => reportSAPResult(cr)
         case cr: ACDResult => reportACDResult(cr)
         case cr: SubmodulesBlueprintAnalysisResult => reportSubmodulesBlueprintCheckResult(cr)
+        case cr: CohesionAnalysisResult => reportCohesionResult(cr)
         case _ => throw new RuntimeException("terrible thing - no result type")
       }
       (report, result.expectationsFailed())

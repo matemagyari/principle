@@ -9,11 +9,14 @@ import org.tindalos.principle.domain.detector.adp.{CycleDetector, PackageStructu
 import org.tindalos.principle.domain.detector.layering.LayerViolationDetector
 import org.tindalos.principle.domain.detector.sap.SAPViolationDetector
 import org.tindalos.principle.domain.detector.sdp.SDPViolationDetector
+import org.tindalos.principle.domain.detector.structure.PackageCohesionDetector
+import org.tindalos.principle.domain.detector.structure.Structure.Node
 import org.tindalos.principle.domain.detector.submodulesblueprint.{SubmoduleFactory, SubmodulesBlueprintViolationDetector, SubmodulesFactory}
 import org.tindalos.principle.domain.detector.thirdparty.ThirdPartyDetector
 import org.tindalos.principle.domain.resultprocessing.reporter.{AnalysisResultsReporter, Printer}
 import org.tindalos.principle.infrastructure.detector.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider
 import org.tindalos.principle.infrastructure.reporters._
+import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
 import org.tindalos.principle.infrastructure.service.jdepend.{JDependPackageAnalyzer, JDependRunner, PackageFactory}
 
 object PoorMansDIContainer {
@@ -22,10 +25,11 @@ object PoorMansDIContainer {
   def buildAnalyzer(rootPackage: String, printer:Printer) = {
 
     val buildPackagesFn = buildPackageListProducerFn(rootPackage)
+    val buildNodesFn:String => Set[Node] = MyJDependRunner.createNodesOfClasses(_)
     val runAnalysisFn = buildRunAnalysisFn()
     val reporterFn = buildReporter()
     
-    ApplicationModule.buildApplicationFn(InputValidator.validate,buildPackagesFn, runAnalysisFn, reporterFn,printer)
+    ApplicationModule.buildApplicationFn(InputValidator.validate,buildPackagesFn, buildNodesFn, runAnalysisFn, reporterFn,printer)
   }
 
   def buildPackageListProducerFn(rootPackage: String): (String) => List[Package] = {
@@ -48,7 +52,8 @@ object PoorMansDIContainer {
       SDPViolationDetector,
       SAPViolationDetector,
       ACDDetector.buildInstance(buildPackageStructure),
-      buildSubmodulesBlueprintViolationDetector(buildPackageStructure))
+      buildSubmodulesBlueprintViolationDetector(buildPackageStructure),
+      PackageCohesionDetector)
 
 
   private def buildSubmodulesBlueprintViolationDetector(buildPackageStructure: (List[Package], String) => Package) = {
@@ -66,7 +71,8 @@ object PoorMansDIContainer {
       SAPViolationsReporter.report,
       ACDViolationsReporter.report,
       SubmodulesBlueprintViolationsReporter.report,
-      SDPViolationsReporter.report
+      SDPViolationsReporter.report,
+      PackageCohesionReporter.report
     )
   }
 

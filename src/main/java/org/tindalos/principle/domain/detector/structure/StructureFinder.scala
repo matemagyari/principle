@@ -1,39 +1,37 @@
 package org.tindalos.principle.domain.detector.structure
 
-import org.tindalos.principle.domain.detector.structure.Structure.{Component, NodeId, Node}
+import org.tindalos.principle.domain.detector.structure.Structure.{NodeGroup, NodeId, Node}
 
 object StructureFinder {
 
-  def nodeToComponent(c: Node) = Component(Set(c.name), c.dependencies, c.dependants)
-
-  def nodesToComponent(ns: Set[Node]) =
-    Component(ns.map(_.name),
-      ns.flatMap(_.dependencies),
-      ns.flatMap(_.dependants))
-
-  def collapseToLimit(components: Set[Component], nodes: Set[Node]): Set[Component] = {
-    val cohesionFn = (c1: Component, c2: Component) => c1.cohesionDelta(c2, nodes)
-    val cohesionFn2 = (c1: Component, c2: Component) => c1.gravityTo(c2)
-    val closest = findClosest(components, cohesionFn2)
+  def collapseToLimit(components: Set[NodeGroup]): Set[NodeGroup] = {
+    val cohesionFn = (c1: NodeGroup, c2: NodeGroup) => c1.cohesionDelta(c2)
+    val cohesionFn2 = (c1: NodeGroup, c2: NodeGroup) => c1.gravityBetween(c2)
+    val closest = findClosestPair(components, cohesionFn)
     //printStatistics(components)
-    println("Closest 1" + closest._1.nodes)
-    println("Closest 2" + closest._2.nodes)
-    println("Closest value" + closest._3)
-    if (closest._3 > 0.1) {
+    printPair(closest)
+
+    if (closest._3 > 0.2) {
       val merged = closest._1.merge(closest._2)
       val newComponents = components.filter(c => c != closest._1 && c != closest._2) + merged
-      collapseToLimit(newComponents, nodes)
+      collapseToLimit(newComponents)
     } else components
   }
 
-  def printStatistics(components: Set[Component]) = {
+  def printStatistics(components: Set[NodeGroup]) = {
     println("Num of components: " + components.size)
-    println("Num of dependencies: " + components.toList.map(_.dependencies.size).foldLeft(0)(_ + _))
-    println("Num of dependants: " + components.toList.map(_.dependants.size).foldLeft(0)(_ + _))
+    println("Num of dependencies: " + components.toList.map(_.externalDependencies.size).foldLeft(0)(_ + _))
+    println("Num of dependants: " + components.toList.map(_.externalDependants.size).foldLeft(0)(_ + _))
+  }
+
+  def printPair(p:(NodeGroup,NodeGroup,Double)) {
+    println("Closest 1 " + p._1.nodes.foldLeft("")(_+ "," +_.id))
+    println("Closest 2 " + p._2.nodes.foldLeft("")(_+ "," +_.id))
+    println("Closest value " + p._3)
   }
 
 
-  def findClosest(s: Set[Component], closeness: (Component, Component) => Double): (Component, Component, Double) = {
+  def findClosestPair(s: Set[NodeGroup], closeness: (NodeGroup, NodeGroup) => Double): (NodeGroup, NodeGroup, Double) = {
     val pairs = for {
       c1 <- s
       c2 <- s if c1 != c2

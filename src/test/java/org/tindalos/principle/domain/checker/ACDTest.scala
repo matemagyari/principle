@@ -78,7 +78,7 @@ class ACDTest {
     init(basePackage)
     val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
     val packageList = packageListProducer(basePackage)
-    val result = runAnalysis(new AnalysisInput(packageList, plan))
+    val result = runAnalysis(new AnalysisInput(packageList, Set(), plan))
     assertEquals(1, result.length)
     result.head.asInstanceOf[ACDResult].acd
   }

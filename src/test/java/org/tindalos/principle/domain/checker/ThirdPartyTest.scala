@@ -62,7 +62,7 @@ class ThirdPartyTest {
     val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
     val packageList = packageListProducer(basePackage)
     val plan = new AnalysisPlan(expectations, basePackage)
-    val result = runAnalysis(new AnalysisInput(packageList, plan))
+    val result = runAnalysis(new AnalysisInput(packageList, Set(), plan))
     result(1)
   }
 
