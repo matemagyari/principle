@@ -4,6 +4,7 @@ import org.tindalos.principle.domain.detector.adp.ADPResult
 import org.tindalos.principle.domain.core.Cycle
 import java.io.PrintWriter
 
+import org.tindalos.principle.domain.detector.structure.Structure.NodeId
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
 object ADPViolationsReporter {
@@ -45,6 +46,7 @@ object ADPViolationsReporter {
     val arrow = "-->"
     val sb = new StringBuffer()
     cycle.references.foreach(reference => sb.append("\n" + reference + " " + arrow))
+
     sb.append("\n-------------------------------")
     sb.toString()
   }

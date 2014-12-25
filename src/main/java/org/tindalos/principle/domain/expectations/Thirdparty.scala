@@ -10,7 +10,7 @@ import org.tindalos.principle.domain.util.ListConverter
 class Barrier(var layer:String = "",var components:String = "") {
   def this() = this("","")
 
-  def componentList() = if (components.isEmpty) List() else components.split(",").to[List]
+  def componentList() = if (components.isEmpty) List() else components.filter(_ >= ' ').split(",").to[List].map(_.trim)
 }
 
 class ThirdParty(var barriers: List[Barrier], threshold: Int = 0) extends Thresholder {

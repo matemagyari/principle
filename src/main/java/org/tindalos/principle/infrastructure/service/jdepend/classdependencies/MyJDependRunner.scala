@@ -37,8 +37,6 @@ object MyJDependRunner {
 
   def findComponents(rootPackage: String, targetDir: String = "./target/classes/") = {
     val classes = createNodesOfClasses(rootPackage, targetDir)
-    val pc = PackageCohesionModule.packageCohesions(classes)
-
     val initialComponents = classes.map(n => NodeGroup(Set(n)))
     StructureFinder.collapseToLimit(initialComponents).toList.sortBy(_.nodes.size).reverse
   }

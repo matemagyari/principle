@@ -11,60 +11,45 @@ object Structure {
 
     val externalDependencies = nodes.flatMap(n => n.dependencies) -- nodes.map(_.id)
     val externalDependants = nodes.flatMap(n => n.dependants) -- nodes.map(_.id)
-    val externalConnectionsNo = externalDependencies.size + externalDependants.size
+    val externalGroupConnectionsNo = externalDependencies.size + externalDependants.size
 
-    def cohesion() = Math.max(generalCohesion, internalCohesion)
-
-    def connectionNos() = {
+    //based on nodes not the group
+    val (internalArcsNo, externalArcsNo) = {
       val internalNodeIds: Set[NodeId] = nodes.map(_.id)
-      /*
-      val outArcs = for {
-        n <- nodes
-        d <- n.dependencies
-      } yield (n.id,d)
-
-      val inArcs = for {
-        n <- nodes
-        d <- n.dependants
-      } yield (d,n.id)
-
-      val arcs = outArcs ++ inArcs
-
-      val (internalArcs, externalArcs) = arcs.partition(a => internalNodeIds.contains(a._1) && internalNodeIds.contains(a._2))
-
-      val result = (internalArcs.size, externalArcs.size)
-      */
-      //seems to be a much shorter way
       val (internals, externals) = nodes.toList.flatMap(n => n.dependants.toList ++ n.dependencies.toList)
-                                                .partition(d => internalNodeIds.contains(d))
-
+        .partition(d => internalNodeIds.contains(d))
+      //internal arcs counted twice
       (internals.size/2, externals.size)
     }
+
+    val leastBelongingNode = nodes.map(n => (n.id, nodeBelongingness(n))).toList.sortBy(_._2).head
+
+    def cohesion() = generalCohesion //Math.max(generalCohesion, internalCohesion)
+
+    //what ratio a node shares with all the arcs related to the group
+    def nodeBelongingness(n:Node) =
+      (n.dependants.size + n.dependencies.size).toDouble / (internalArcsNo + externalArcsNo).toDouble
+
+    val cohesion3 = nodes.toList.map(nodeBelongingness).sum / nodes.size
+
     //cohesion of a component: in [0,1). 0.0 - no cohesion
     //how much the number of directed arcs decreases with grouping the nodes
     val generalCohesion = {
 
-      val (internalArcsNo, externalArcsNo) = connectionNos()
       val arcsNo = internalArcsNo + externalArcsNo
 
       if (arcsNo == 0) 0.0
-      else 1 - externalConnectionsNo.toDouble / arcsNo.toDouble
+      else 1 - externalGroupConnectionsNo.toDouble / arcsNo.toDouble
     }
 
     //purely internal cohesion
     val internalCohesion = {
       if (nodes.size == 1) 0.0
-      else {
-        val (internalArcsNo, _) = connectionNos()
-        internalArcsNo.toDouble / (nodes.size * (nodes.size - 1)).toDouble
-      }
+      else internalArcsNo.toDouble / (nodes.size * (nodes.size - 1)).toDouble
     }
     //doesn't really mean much
-    lazy val cohesion2 = {
-      // can be nullpointer
-      val (internalArcsNo, externalArcsNo) = connectionNos()
-      internalArcsNo.toDouble / externalArcsNo.toDouble
-    }
+    val cohesion2 = internalArcsNo.toDouble / externalArcsNo.toDouble
+
 
     lazy val isIsolated = externalDependencies.isEmpty && externalDependants.isEmpty
 
@@ -101,8 +86,12 @@ object Structure {
 
     def isConnectedTo(c: NodeGroup) = !((externalDependencies & c.nodes.map(_.id)).isEmpty)
 
-    def cohesionDelta(c: NodeGroup) = merge(c).cohesion() - Math.max(cohesion(), c.cohesion())
-
+    def cohesionDelta(c: NodeGroup) = {
+      val mergedCohesion = merge(c).cohesion()
+      val delta1 = mergedCohesion - cohesion()
+      val delta2 = mergedCohesion - c.cohesion()
+      Math.min(delta1, delta2)
+    }
     override def toString() = nodes.foldLeft("")(_ + "," + _.id.toString)
   }
 

@@ -9,7 +9,7 @@ object PackageCohesionDetector extends Detector {
 
   override def analyze(input: AnalysisInput) = {
 
-    val packages: Set[(PackageName, NodeGroup)] = PackageCohesionModule.componentsFromPackages(input.nodes)
+    val packages: Set[(PackageName, NodeGroup)] = PackageCohesionModule.componentsFromPackages(input.analysisPlan.basePackage, input.nodes)
 
     new CohesionAnalysisResult(packages)
   }

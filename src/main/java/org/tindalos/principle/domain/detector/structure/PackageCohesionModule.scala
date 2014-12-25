@@ -1,28 +1,45 @@
 package org.tindalos.principle.domain.detector.structure
 
-import org.tindalos.principle.domain.detector.structure.Structure.{NodeGroup, Node}
+import org.tindalos.principle.domain.detector.structure.Structure.{NodeId, Node, NodeGroup}
 
-/**
- * Created by mate.magyari on 21/12/2014.
- */
+import scala.annotation.tailrec
+
 object PackageCohesionModule {
 
   type PackageName = String
 
   case class CPackage(name: PackageName, component: NodeGroup)
 
-  def groupByPackages(nodes: Set[Node]): Set[(PackageName, Set[Node])] = {
-    val packageNames = nodes.map(n => n.id.substring(0, n.id.lastIndexOf('.')))
+  def packageOf(nodeId:NodeId) = nodeId.substring(0, nodeId.lastIndexOf('.'))
+
+  def nodesInPackage(nodes:Set[Node], packageName: PackageName) =
+    nodes.filter(n => PackageCohesionModule.packageOf(n.id).equals(packageName))
+
+  def groupByPackages(rootPackage: PackageName, nodes: Set[Node]): Set[(PackageName, Set[Node])] = {
+    //packages with direct classes
+    val endPackageNames = nodes.map(n => packageOf(n.id))
+    val packageNames = endPackageNames.flatMap(p => getPackageNames(rootPackage, p))
     def findNodesInPackageRecursively(packageName: PackageName) = nodes.filter(n => n.id.startsWith(packageName))
     def buildPackage(pn: PackageName) = (pn, findNodesInPackageRecursively(pn))
     packageNames.map(buildPackage)
   }
 
-  def componentsFromPackages(ns: Set[Node]) = groupByPackages(ns).map(x => (x._1, NodeGroup(x._2)))
+  def componentsFromPackages(rootPackage: PackageName, ns: Set[Node]) =
+    groupByPackages(rootPackage, ns)
+      .map(x => (x._1, NodeGroup(x._2)))
 
-  def packageCohesions(ns: Set[Node]): List[(PackageName, NodeGroup, Double)] =
-    componentsFromPackages(ns)
+  def packageCohesions(rootPackage: PackageName, ns: Set[Node]): List[(PackageName, NodeGroup, Double)] =
+    componentsFromPackages(rootPackage, ns)
       .filter(x => x._2.nodes.size > 1)
       .map(x => (x._1, x._2, x._2.cohesion()))
       .toList.sortBy(_._3).reverse
+
+  //returns all the package names under ...
+  def getPackageNames(rootPackage: PackageName, p: PackageName):Set[PackageName] = {
+    @tailrec
+    def f(acc: Set[PackageName], pn: PackageName): Set[PackageName] =
+      if (rootPackage.equals(pn)) acc
+      else f(acc + pn, pn.substring(0, pn.lastIndexOf('.')))
+    f(Set(),p)
+  }
 }

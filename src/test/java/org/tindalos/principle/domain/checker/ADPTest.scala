@@ -5,9 +5,11 @@ import org.junit._
 import org.tindalos.principle.domain.core.{Cycle, AnalysisPlan, PackageReference}
 import org.tindalos.principle.domain.coredetector.{AnalysisInput, AnalysisResult}
 import org.tindalos.principle.domain.detector.adp._
+import org.tindalos.principle.domain.detector.structure.Structure.Node
 import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.infrastructure.plugin.Checks
+import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
 
 class ADPTest {
 
@@ -93,7 +95,8 @@ class ADPTest {
     init(basePackage)
     val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
     val packageList = packageListProducer(basePackage)
-    val result = runAnalysis(new AnalysisInput(packageList, Set(), plan))
+    val classes = MyJDependRunner.createNodesOfClasses(basePackage)
+    val result = runAnalysis(new AnalysisInput(packageList, classes, plan))
     assertEquals(1, result.length)
     result.head.asInstanceOf[ADPResult].cyclesByBreakingPoints
   }

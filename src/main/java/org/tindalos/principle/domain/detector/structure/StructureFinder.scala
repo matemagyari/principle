@@ -11,7 +11,7 @@ object StructureFinder {
     //printStatistics(components)
     printPair(closest)
 
-    if (closest._3 > 0.2) {
+    if (closest._3 > 0.1) {
       val merged = closest._1.merge(closest._2)
       val newComponents = components.filter(c => c != closest._1 && c != closest._2) + merged
       collapseToLimit(newComponents)
@@ -25,8 +25,8 @@ object StructureFinder {
   }
 
   def printPair(p:(NodeGroup,NodeGroup,Double)) {
-    println("Closest 1 " + p._1.nodes.foldLeft("")(_+ "," +_.id))
-    println("Closest 2 " + p._2.nodes.foldLeft("")(_+ "," +_.id))
+    println("Closest 1 " + p._1.cohesion() + " " + p._1.nodes.foldLeft("")(_+ "," +_.id))
+    println("Closest 2 " + p._2.cohesion() + " " + p._2.nodes.foldLeft("")(_+ "," +_.id))
     println("Closest value " + p._3)
   }
 
