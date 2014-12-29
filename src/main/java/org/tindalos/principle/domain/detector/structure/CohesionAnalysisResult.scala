@@ -4,7 +4,8 @@ import org.tindalos.principle.domain.coredetector.AnalysisResult
 import org.tindalos.principle.domain.detector.structure.PackageCohesionModule.PackageName
 import org.tindalos.principle.domain.detector.structure.Structure.NodeGroup
 
-class CohesionAnalysisResult(val packages: Set[(PackageName, NodeGroup)]) extends AnalysisResult {
+class CohesionAnalysisResult(val packages: Set[(PackageName, NodeGroup)]
+                              , val cohesiveNodeGroups: Set[NodeGroup]) extends AnalysisResult {
 
   override def expectationsFailed(): Boolean = false
 }

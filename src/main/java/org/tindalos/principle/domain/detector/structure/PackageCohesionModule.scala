@@ -1,6 +1,7 @@
 package org.tindalos.principle.domain.detector.structure
 
-import org.tindalos.principle.domain.detector.structure.Structure.{NodeId, Node, NodeGroup}
+import org.tindalos.principle.domain.detector.structure.Graph.{NodeId, Node}
+import org.tindalos.principle.domain.detector.structure.Structure.{NodeGroup}
 
 import scala.annotation.tailrec
 

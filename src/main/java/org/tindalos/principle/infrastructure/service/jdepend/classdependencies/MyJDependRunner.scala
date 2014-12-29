@@ -2,8 +2,9 @@ package org.tindalos.principle.infrastructure.service.jdepend.classdependencies
 
 import java.io.File
 
-import org.tindalos.principle.domain.detector.structure.{StructureFinder, PackageCohesionModule}
-import org.tindalos.principle.domain.detector.structure.Structure.{NodeGroup, Node}
+import org.tindalos.principle.domain.detector.structure.Graph.Node
+import org.tindalos.principle.domain.detector.structure.{CohesiveGroupsDiscoveryModule, PackageCohesionModule}
+import org.tindalos.principle.domain.detector.structure.Structure.{NodeGroup}
 import org.tindalos.principle.domain.util.ListConverter
 
 object MyJDependRunner {
@@ -38,7 +39,7 @@ object MyJDependRunner {
   def findComponents(rootPackage: String, targetDir: String = "./target/classes/") = {
     val classes = createNodesOfClasses(rootPackage, targetDir)
     val initialComponents = classes.map(n => NodeGroup(Set(n)))
-    StructureFinder.collapseToLimit(initialComponents).toList.sortBy(_.nodes.size).reverse
+    CohesiveGroupsDiscoveryModule.collapseToLimit(initialComponents).toList.sortBy(_.nodes.size).reverse
   }
 
 

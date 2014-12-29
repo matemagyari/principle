@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.coredetector
 
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.core.Package
-import org.tindalos.principle.domain.detector.structure.Structure.Node
+import org.tindalos.principle.domain.detector.structure.Graph.Node
 
 class AnalysisInput(val packages: List[Package], val nodes:Set[Node] = Set(), val analysisPlan: AnalysisPlan) {
 

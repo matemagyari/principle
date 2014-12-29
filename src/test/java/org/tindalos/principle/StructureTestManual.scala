@@ -1,6 +1,6 @@
 package org.tindalos.principle
 
-import org.tindalos.principle.domain.detector.structure.PackageCohesionModule
+import org.tindalos.principle.domain.detector.structure.{PackageStructureFinder, Graph, PackageCohesionModule}
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
 
 /**
@@ -8,47 +8,46 @@ import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.M
  */
 object StructureTestManual extends App {
 
-  val (targetDir, rootPackage) =
-    ("//Users/mate.magyari/IdeaProjects/gamesys/gamesplatform/poker-player-reputation-system/target/classes/"
-      , "gamesys.poker.reputation")
 
   /*
-  val (targetDir, rootPackage) =
-    ("//Users/mate.magyari/IdeaProjects/gamesys/gamesplatform/poker-critical-core/target/classes/"
-      , "gamesys.poker.engine.model")
+     val (targetDir, rootPackage) =
+       ("//Users/mate.magyari/IdeaProjects/gamesys/gamesplatform/poker-player-reputation-system/target/classes/"
+         , "gamesys.poker.reputation")
 
-*/
+   */
+
+      val (targetDir, rootPackage) =
+        ("//Users/mate.magyari/IdeaProjects/gamesys/gamesplatform/poker-critical-core/target/classes/"
+          , "gamesys.poker.engine.model")
+
   val classes = MyJDependRunner.createNodesOfClasses(rootPackage, targetDir)
   val packages = PackageCohesionModule.componentsFromPackages(rootPackage, classes)
 
-  /*
-  val x = packages
+  val sortedPackages = packages
+    .filter(_._2.nodes.size > 1)
     .toList
     .sortBy(_._2.cohesion())
 
+  val sources = Graph.findSources(classes)
 
-  packages
-    .toList
-    .sortBy(_._2.cohesion())
-    .foreach {
-    line => println(line._2.generalCohesion + "/" + line._2.internalCohesion + " " + line._1)
+  val validGraph = Graph.isValid(classes)
+
+  val grouping = PackageStructureFinder.makeGroups(classes)
+
+  grouping.foreach {
+    kv => {
+      println(kv._1)
+      kv._2.sorted.foreach {
+        x => println("\t" + x)
+      }
+    }
   }
 
-  println("By name")
-  packages
-    .toList
-    .sortBy(_._1)
-    .foreach {
-    line => println(line._2.generalCohesion + "/" + line._2.internalCohesion + " " + line._1)
-  }
-  */
-  //packages.toList.sortBy(_.)
   val components = MyJDependRunner.findComponents(rootPackage, targetDir)
 
-  //val x = components.foreach { _.cohesion() }
-  println(components.toList.sortBy(_.nodes.size).reverse)
-  println("hey")
-  println(components.toList.sortBy(_.cohesion()).reverse)
+  val componentsSortedBySize = components.toList.sortBy(_.nodes.size).reverse
+  val componentsSortedByCohesion = components.toList.sortBy(_.cohesion()).reverse
+
   println("end")
 
 }

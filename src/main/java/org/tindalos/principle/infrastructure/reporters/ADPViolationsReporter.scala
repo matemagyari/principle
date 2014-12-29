@@ -4,7 +4,6 @@ import org.tindalos.principle.domain.detector.adp.ADPResult
 import org.tindalos.principle.domain.core.Cycle
 import java.io.PrintWriter
 
-import org.tindalos.principle.domain.detector.structure.Structure.NodeId
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
 object ADPViolationsReporter {

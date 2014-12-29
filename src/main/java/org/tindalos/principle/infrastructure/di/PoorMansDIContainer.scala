@@ -9,8 +9,8 @@ import org.tindalos.principle.domain.detector.adp.{CycleDetector, PackageStructu
 import org.tindalos.principle.domain.detector.layering.LayerViolationDetector
 import org.tindalos.principle.domain.detector.sap.SAPViolationDetector
 import org.tindalos.principle.domain.detector.sdp.SDPViolationDetector
+import org.tindalos.principle.domain.detector.structure.Graph.Node
 import org.tindalos.principle.domain.detector.structure.PackageCohesionDetector
-import org.tindalos.principle.domain.detector.structure.Structure.Node
 import org.tindalos.principle.domain.detector.submodulesblueprint.{SubmoduleFactory, SubmodulesBlueprintViolationDetector, SubmodulesFactory}
 import org.tindalos.principle.domain.detector.thirdparty.ThirdPartyDetector
 import org.tindalos.principle.domain.resultprocessing.reporter.{AnalysisResultsReporter, Printer}

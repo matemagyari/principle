@@ -3,14 +3,14 @@ package org.tindalos.principle.domain.expectations
 import org.tindalos.principle.domain.expectations.exception.InvalidConfigurationException
 import org.tindalos.principle.domain.util.ListConverter
 
-/**
- * Created by mate.magyari on 26/05/2014.
- */
+class Barrier(var layer: String = "", var components: String = "") {
+  def this() = this("", "")
 
-class Barrier(var layer:String = "",var components:String = "") {
-  def this() = this("","")
-
-  def componentList() = if (components.isEmpty) List() else components.filter(_ >= ' ').split(",").to[List].map(_.trim)
+  def componentList() =
+    if (components.isEmpty) List()
+    else components
+      .filter(_ >= ' ') //remove whitespaces
+      .split(",").to[List].map(_.trim)
 }
 
 class ThirdParty(var barriers: List[Barrier], threshold: Int = 0) extends Thresholder {
