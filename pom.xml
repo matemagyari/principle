@@ -90,7 +90,7 @@
             <plugin>
                 <groupId>org.tindalos.principle</groupId>
                 <artifactId>principle</artifactId>
-                <version>0.25</version>
+                <version>0.26-SNAPSHOT</version>
                 <configuration>
                     <basePackage>org.tindalos.principle</basePackage>
                     <checks>

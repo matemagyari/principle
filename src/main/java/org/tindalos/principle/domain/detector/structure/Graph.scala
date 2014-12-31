@@ -33,12 +33,11 @@ object Graph {
 
     def helper(node: Node, acc: Set[Node]): Set[Node] = {
 
-      // filter out already processed nodes
       val newAcc = acc + node
       val nextNodes = node.dependencies.flatMap(id => nodeMap.get(id)) -- newAcc
 
-      newAcc ++
-        nextNodes.flatMap(x => helper(x, newAcc ++ nextNodes)) // recursively call on dependencies
+      // recursively call on dependencies
+      newAcc ++ nextNodes.flatMap(x => helper(x, newAcc ++ nextNodes))
     }
     helper(n, Set())
   }

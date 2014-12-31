@@ -8,13 +8,13 @@ object PackageCohesionDetector extends Detector {
 
   override def analyze(input: AnalysisInput) = {
 
-    val packages =
-      PackageCohesionModule.componentsFromPackages(input.analysisPlan.basePackage, input.nodes)
+    val packages = PackageCohesionModule.componentsFromPackages(input.analysisPlan.basePackage, input.nodes)
+    val verticalGrouping = PackageStructureFinder.makeGroups(input.nodes)
 
-    val initialComponents = input.nodes.map(n => NodeGroup(Set(n)))
-    val cohesiveGroups = CohesiveGroupsDiscoveryModule.collapseToLimit(initialComponents)
+    val initialGroups = input.nodes.map(n => NodeGroup(Set(n)))
+    val cohesiveGroups = CohesiveGroupsDiscoveryModule.collapseToLimit(initialGroups)
 
-    new CohesionAnalysisResult(packages, cohesiveGroups)
+    new CohesionAnalysisResult(packages, Option(cohesiveGroups), verticalGrouping)
   }
 
   override def isWanted(expectations: Expectations) =  expectations.packageCoupling match {

@@ -3,25 +3,23 @@ package org.tindalos.principle.infrastructure.service.jdepend.classdependencies
 import java.io.File
 
 import org.tindalos.principle.domain.detector.structure.Graph.Node
-import org.tindalos.principle.domain.detector.structure.{CohesiveGroupsDiscoveryModule, PackageCohesionModule}
-import org.tindalos.principle.domain.detector.structure.Structure.{NodeGroup}
 import org.tindalos.principle.domain.util.ListConverter
 
 object MyJDependRunner {
 
   case class Clazz1(name: String, dependencies: Set[String])
 
-  def recursiveListFiles(f: File): Array[File] = {
+  private def recursiveListFiles(f: File): Array[File] = {
     val these = f.listFiles
     these ++ these.filter(_.isDirectory).flatMap(recursiveListFiles)
   }
 
-  def toClazz(f: File, rootPackage: String) = {
+  private def toClazz(f: File, rootPackage: String) = {
     val jc = new MyClassFileParser(rootPackage).parse(f)
     Clazz1(jc.getName(), ListConverter.convert(jc.getDependencies()) - jc.getName)
   }
 
-  def clazz1sToNodes(classes: Set[Clazz1]) =
+  private def clazz1sToNodes(classes: Set[Clazz1]) =
     for {
       c <- classes
       dependants = classes.filter(x => x.dependencies.contains(c.name))
@@ -35,12 +33,5 @@ object MyJDependRunner {
 
     clazz1sToNodes(classFiles.map(toClazz(_, rootPackage)).toSet)
   }
-
-  def findComponents(rootPackage: String, targetDir: String = "./target/classes/") = {
-    val classes = createNodesOfClasses(rootPackage, targetDir)
-    val initialComponents = classes.map(n => NodeGroup(Set(n)))
-    CohesiveGroupsDiscoveryModule.collapseToLimit(initialComponents).toList.sortBy(_.nodes.size).reverse
-  }
-
 
 }

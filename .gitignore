@@ -4,5 +4,5 @@
 .idea/
 principle.iml
 target/
-cohesion_details.txt
-cycle_details.txt
+reports/
+*.txt

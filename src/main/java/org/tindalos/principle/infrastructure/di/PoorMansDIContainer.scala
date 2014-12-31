@@ -16,6 +16,7 @@ import org.tindalos.principle.domain.detector.thirdparty.ThirdPartyDetector
 import org.tindalos.principle.domain.resultprocessing.reporter.{AnalysisResultsReporter, Printer}
 import org.tindalos.principle.infrastructure.detector.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider
 import org.tindalos.principle.infrastructure.reporters._
+import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
 import org.tindalos.principle.infrastructure.service.jdepend.{JDependPackageAnalyzer, JDependRunner, PackageFactory}
 
