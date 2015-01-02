@@ -6,7 +6,7 @@ import org.junit.Test
 /**
  * Created by mate.magyari on 24/12/2014.
  */
-class PackageCohesionModuleTest {
+class PackageGroupingModuleTest {
 
   @Test
   def getPackageNames() {

@@ -43,4 +43,43 @@ object Graph {
   }
 
   def findSources(graph: Set[Node]) = graph.filter(n => n.dependants.isEmpty)
+
+  //find nodes which removal would cause a detach of a subgraph
+  def detachNode(n: Node, graph: Set[Node]) = {
+
+    if (n.dependencies.isEmpty) None
+    else {
+      val subGraph = findDownstreamNodes(n, graph)
+      val upstreamNodes = (subGraph - n).flatMap(_.dependants)
+
+      val intersection = upstreamNodes & subGraph.map(_.id)
+      //if all the upstream nodes are inside of the subgraph
+      if ((upstreamNodes &~ subGraph.map(_.id)).isEmpty) Some(n, subGraph)
+      else None
+    }
+  }
+
+
+  private def findDetachableSubgraph(n: Node, graph: Set[Node]) = {
+    def helper(n: Node, upstreamNodes: Set[Node]): Set[Node] = {
+      val result = for {
+        node <- graph
+        if (n.dependencies.contains(node.id)
+          && ((node.dependants-n.id) &~ upstreamNodes.map(_.id)).isEmpty
+          && !upstreamNodes.contains(node))
+      } yield helper(node, upstreamNodes + n)
+      (upstreamNodes + n) ++ result.flatten
+    }
+    helper(n,Set())
+  }
+
+  def findDetachableSubgraphs(graph:Set[Node]) = {
+    val result = for {
+      n <- graph
+      sg = Graph.findDetachableSubgraph(n,graph)
+      if (sg.size>1)
+    } yield (n,sg)
+    result.toList.sortBy(_._2.size).reverse
+  }
+
 }

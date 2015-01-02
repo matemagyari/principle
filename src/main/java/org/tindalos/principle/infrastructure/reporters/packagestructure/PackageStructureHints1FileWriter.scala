@@ -3,18 +3,22 @@ package org.tindalos.principle.infrastructure.reporters.packagestructure
 import java.io.PrintWriter
 
 import org.tindalos.principle.domain.detector.structure.Graph.NodeId
-import org.tindalos.principle.domain.detector.structure.PackageStructureFinder.GroupingResult
+import org.tindalos.principle.domain.detector.structure.PackageStructureHints1Finder.GroupingResult
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter._
 
 
-object VerticalGroupingFileWriter {
+object PackageStructureHints1FileWriter {
+
+  private val description = "In the first step this algorithm finds the \"source\" vertices in the graph, the classes that are on the top of the dependency hierarchy (no other class refers to them)." +
+    "The second step groups all the classes in the graph based on sources as upstream dependencies. This gives some good package structuring hints."
 
   def writeToFile(grouping: GroupingResult) = {
 
-    val printWriter = new PrintWriter(reportDirectory+"/"+verticalGroupingFileName)
+    val printWriter = new PrintWriter(reportDirectory+"/"+packageStructureHints1FileName)
 
     printWriter
       .append(graphDescription+"\n\n")
+      .append(description+"\n\n")
       .append(s"\nSources (${grouping.labelledSources.size})\n")
       .append(subSectionLine+"\n\n")
 
@@ -38,7 +42,7 @@ object VerticalGroupingFileWriter {
     printWriter.close()
   }
 
-  def aSort(s1:(String,NodeId),s2:(String,NodeId)) = 1//s1.substring(1).toInt.compareTo(s2.substring(1).toInt)
+  private def aSort(s1:(String,NodeId),s2:(String,NodeId)) = 1//s1.substring(1).toInt.compareTo(s2.substring(1).toInt)
 
 
 }

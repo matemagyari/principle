@@ -10,6 +10,4 @@ class NCCD(_threshold: Double = 0) extends DoubleThresholder(_threshold) {
 class RACD(_threshold: Double = 0) extends DoubleThresholder(_threshold) {
   def this() = this(0)
 }
-class Cohesion(_threshold: Double = 0) extends DoubleThresholder(_threshold) {
-  def this() = this(0)
-}
+

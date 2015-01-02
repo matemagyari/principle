@@ -13,7 +13,8 @@ object PackageCohesionReporter {
   val reportDirectory = "./reports"
   val cohesiveGroupsFileName = "cohesive_groups.txt"
   val packageCohesionsFileName = "existing_packages_cohesion.txt"
-  val verticalGroupingFileName = "vertical_grouping.txt"
+  val packageStructureHints1FileName = "package_structure_observations1.txt"
+  val packageStructureHints2FileName = "package_structure_observations2.txt"
 
   val graphDescription = "A directed graph is built representing the structure of the code, " +
     "where each class appears as a vertex and each relationship between classes (composition, inheritance, ...) " +
@@ -28,12 +29,13 @@ object PackageCohesionReporter {
 
   def report(result: CohesionAnalysisResult): AnalysisResultsReporter.Report = {
 
-    var fileNames = s"${packageCohesionsFileName}, ${verticalGroupingFileName}"
+    var fileNames = s"${packageCohesionsFileName}, ${packageStructureHints1FileName}, ${packageStructureHints2FileName}"
 
     new File(reportDirectory).mkdir()
 
     ExistingPackageCohesionsFileWriter.writeToFile(result)
-    VerticalGroupingFileWriter.writeToFile(result.groupingResult)
+    PackageStructureHints1FileWriter.writeToFile(result.groupingResult)
+    PackageStructureHints2FileWriter.writeToFile(result.structureHints2)
     if (result.cohesiveNodeGroups.isDefined) {
       CohesiveGroupsFileWriter.writeToFile(result.cohesiveNodeGroups.get)
       fileNames += s", ${cohesiveGroupsFileName}"

@@ -2,8 +2,8 @@ package org.tindalos.principle.domain.checker
 
 import org.junit.{Assert, Test}
 import org.tindalos.principle.domain.core.AnalysisPlan
-import org.tindalos.principle.domain.expectations.{ADP, Layering, PackageCoupling, SAP, SDP, SubmodulesBlueprint}
-import org.tindalos.principle.domain.expectations.cumulativedependency.{Cohesion, ACD}
+import org.tindalos.principle.domain.expectations._
+import org.tindalos.principle.domain.expectations.cumulativedependency.ACD
 import org.tindalos.principle.domain.resultprocessing.reporter.Printer
 import org.tindalos.principle.domain.resultprocessing.thresholdchecker.ThresholdTrespassedException
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
@@ -53,7 +53,7 @@ class ApplicationModuleTest {
     packageCoupling.adp = new ADP()
     packageCoupling.sdp = new SDP()
     packageCoupling.acd = new ACD()
-    packageCoupling.cohesion = new Cohesion()
+    packageCoupling.grouping = new Grouping()
     packageCoupling
   }
 

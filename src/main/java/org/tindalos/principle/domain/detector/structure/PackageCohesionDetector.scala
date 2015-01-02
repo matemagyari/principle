@@ -8,17 +8,23 @@ object PackageCohesionDetector extends Detector {
 
   override def analyze(input: AnalysisInput) = {
 
-    val packages = PackageCohesionModule.componentsFromPackages(input.analysisPlan.basePackage, input.nodes)
-    val verticalGrouping = PackageStructureFinder.makeGroups(input.nodes)
+    val packagesWithCohesions = PackageCohesionModule.componentsFromPackages(input.analysisPlan.basePackage, input.nodes)
+    val structureHints1 = PackageStructureHints1Finder.makeGroups(input.nodes)
+    val structureHints2 = Graph.findDetachableSubgraphs(input.nodes)
 
-    val initialGroups = input.nodes.map(n => NodeGroup(Set(n)))
-    val cohesiveGroups = CohesiveGroupsDiscoveryModule.collapseToLimit(initialGroups)
+    val structureHints2WithCohesions = structureHints2.map(x => (x._1,x._2,NodeGroup(x._2).cohesion()))
 
-    new CohesionAnalysisResult(packages, Option(cohesiveGroups), verticalGrouping)
+    val cohesiveGroups = if (input.packageCouplingExpectations().grouping.cohesiveGroupsDiscovery != null) {
+      val initialGroups = input.nodes.map(n => NodeGroup(Set(n)))
+      Some(CohesiveGroupsDiscoveryModule.collapseToLimit(initialGroups))
+    } else None
+
+
+    new CohesionAnalysisResult(packagesWithCohesions, cohesiveGroups, structureHints1, structureHints2WithCohesions)
   }
 
   override def isWanted(expectations: Expectations) =  expectations.packageCoupling match {
-    case packageCoupling: PackageCoupling => packageCoupling.cohesion != null
+    case packageCoupling: PackageCoupling => packageCoupling.grouping != null
     case null => false
   }
 }

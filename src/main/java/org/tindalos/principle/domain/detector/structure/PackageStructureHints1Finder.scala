@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.detector.structure
 
 import org.tindalos.principle.domain.detector.structure.Graph._
 
-object PackageStructureFinder {
+object PackageStructureHints1Finder {
 
   case class GroupingResult(val grouping: Map[Set[String], List[NodeId]], val labelledSources: List[(String, NodeId)])
 

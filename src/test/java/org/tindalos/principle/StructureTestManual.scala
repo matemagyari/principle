@@ -1,7 +1,8 @@
 package org.tindalos.principle
 
+import org.tindalos.principle.domain.detector.structure.Graph.Node
 import org.tindalos.principle.domain.detector.structure.Structure.NodeGroup
-import org.tindalos.principle.domain.detector.structure.{CohesiveGroupsDiscoveryModule, PackageStructureFinder, Graph, PackageCohesionModule}
+import org.tindalos.principle.domain.detector.structure.{CohesiveGroupsDiscoveryModule, Graph, PackageCohesionModule, PackageStructureHints1Finder}
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
 
 /**
@@ -9,10 +10,14 @@ import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.M
  */
 object StructureTestManual extends App {
 
+  val (targetDir, rootPackage) =
+    ("//Users/mate.magyari/IdeaProjects/gamesys/gamesplatform/poker-critical-core/target/classes/"
+      , "gamesys.poker.engine.model")
+
   /*
-      val (targetDir, rootPackage) =
-        ("//Users/mate.magyari/IdeaProjects/gamesys/gamesplatform/poker-player-reputation-system/target/classes/"
-          , "gamesys.poker.reputation")
+  val (targetDir, rootPackage) =
+    ("//Users/mate.magyari/IdeaProjects/gamesys/gamesplatform/poker-player-reputation-system/target/classes/"
+      , "gamesys.poker.reputation")
 
 
 
@@ -21,9 +26,7 @@ object StructureTestManual extends App {
           , "gamesys.poker.engine")
 
   */
-  val (targetDir, rootPackage) =
-    ("//Users/mate.magyari/IdeaProjects/gamesys/gamesplatform/poker-critical-core/target/classes/"
-      , "gamesys.poker.engine.model")
+
 
   val classes = MyJDependRunner.createNodesOfClasses(rootPackage, targetDir)
   val packages = PackageCohesionModule.componentsFromPackages(rootPackage, classes)
@@ -37,7 +40,8 @@ object StructureTestManual extends App {
 
   val validGraph = Graph.isValid(classes)
 
-  val grouping = PackageStructureFinder.makeGroups(classes)
+  val grouping = PackageStructureHints1Finder.makeGroups(classes)
+
 
   def aSort(s1: String, s2: String) = s1.substring(1).toInt.compareTo(s2.substring(1).toInt)
 
@@ -55,28 +59,34 @@ object StructureTestManual extends App {
     }
   }
 
-  val cohesions = for {
+  var start = System.currentTimeMillis()
+
+  val cohesionsForGrouping = for {
     g <- grouping.grouping
     nodeSet = g._2.map(x => classes.find(n => n.id == x).get).toSet
     if nodeSet.size > 1
     nodeGroup = NodeGroup(nodeSet)
   } yield (g._1, nodeGroup.cohesion())
 
-  cohesions.toList.sortBy(_._2).reverse.foreach {
+  cohesionsForGrouping.toList.sortBy(_._2).reverse.foreach {
     c => println(c._2 + " " + c._1)
+  }
+
+  val parts = Graph.findDetachableSubgraphs(classes)
+  parts.foreach {
+    p => {
+      println("Top: " + p._1.id + " " + NodeGroup(p._2).cohesion())
+      p._2.map(_.id).toList.sorted.foreach {
+        n => println("\t"+n)
+      }
+    }
   }
 
   val initialComponents = classes.map(n => NodeGroup(Set(n)))
 
-  var start = System.currentTimeMillis()
+  start = System.currentTimeMillis()
   val components = CohesiveGroupsDiscoveryModule.collapseToLimit(initialComponents).toList.sortBy(_.nodes.size).reverse
   println("Time1: " + (System.currentTimeMillis() - start))
-
-  start = System.currentTimeMillis()
-  val components2 = CohesiveGroupsDiscoveryModule.collapseToLimitFP(initialComponents).toList.sortBy(_.nodes.size).reverse
-  println("Time2: " + (System.currentTimeMillis() - start))
-
-  assert(components == components2)
 
   val componentsSortedBySize = components.toList.sortBy(_.nodes.size).reverse
   val componentsSortedByCohesion = components.toList.sortBy(_.cohesion()).reverse
