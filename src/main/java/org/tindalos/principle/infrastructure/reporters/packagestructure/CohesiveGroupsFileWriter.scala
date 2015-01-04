@@ -2,7 +2,7 @@ package org.tindalos.principle.infrastructure.reporters.packagestructure
 
 import java.io.PrintWriter
 
-import org.tindalos.principle.domain.detector.structure.Structure.NodeGroup
+import org.tindalos.principle.domain.agents.structure.Structure.NodeGroup
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter.{reportDirectory, cohesiveGroupsFileName, generalDescription, round, sectionLine, subSectionLine}
 
 object CohesiveGroupsFileWriter {
@@ -40,7 +40,7 @@ object CohesiveGroupsFileWriter {
   private def groupToLine2(n: NodeGroup) =
     s"Cohesion: ${round(n.cohesion())} " +
       s"| Size: ${n.nodes.size} " +
-      s"| Upstream/Downstream dependencies: ${n.externalDependants.size}/${n.externalDependencies.size} " +
-      s"| Internal/External edges: ${n.internalArcsNo}/${n.externalArcsNo} | "
+      s"| Upstream/Downstream dependencies of the group : ${n.externalDependants.size}/${n.externalDependencies.size} " +
+      s"| Internal/External edges of the classes: ${n.internalArcsNo}/${n.externalArcsNo} | "
 
 }

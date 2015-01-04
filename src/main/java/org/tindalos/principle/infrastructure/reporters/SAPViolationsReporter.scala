@@ -1,7 +1,7 @@
 package org.tindalos.principle.infrastructure.reporters
 
 import org.tindalos.principle.domain.core.Package
-import org.tindalos.principle.domain.detector.sap.SAPResult
+import org.tindalos.principle.domain.agents.sap.SAPResult
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
 object SAPViolationsReporter {

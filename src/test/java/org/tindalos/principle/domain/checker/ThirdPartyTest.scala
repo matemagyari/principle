@@ -3,11 +3,11 @@ package org.tindalos.principle.domain.checker
 import org.junit.Assert._
 import org.junit._
 import org.tindalos.principle.domain.core.{AnalysisPlan, PackageReference}
-import org.tindalos.principle.domain.coredetector.AnalysisInput
+import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.infrastructure.plugin.Checks
-import org.tindalos.principle.domain.detector.thirdparty.ThirdPartyViolationsResult
+import org.tindalos.principle.domain.agents.thirdparty.ThirdPartyViolationsResult
 
 class ThirdPartyTest {
 

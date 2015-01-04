@@ -6,9 +6,6 @@ import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.expectations.{Barrier, ThirdParty, Layering, Expectations}
 import org.tindalos.principle.infrastructure.plugin.Checks
 
-/**
- * Created by mate.magyari on 03/08/2014.
- */
 class InputValidatorTest {
 
   val basePackage: String = "xx"

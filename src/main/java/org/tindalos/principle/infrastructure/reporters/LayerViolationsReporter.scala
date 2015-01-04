@@ -1,6 +1,6 @@
 package org.tindalos.principle.infrastructure.reporters
 
-import org.tindalos.principle.domain.detector.layering.{LayerReference, LayerViolationsResult}
+import org.tindalos.principle.domain.agents.layering.{LayerReference, LayerViolationsResult}
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
 object LayerViolationsReporter {

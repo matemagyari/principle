@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -90,7 +91,7 @@
             <plugin>
                 <groupId>org.tindalos.principle</groupId>
                 <artifactId>principle</artifactId>
-                <version>0.26</version>
+                <version>0.28-SNAPSHOT</version>
                 <configuration>
                     <basePackage>org.tindalos.principle</basePackage>
                     <checks>
@@ -106,7 +107,8 @@
                             <barriers>
                                 <barrier>
                                     <layer>infrastructure</layer>
-                                    <components>org.apache.maven,org.json,org.yaml,com.google.common.collect,jdepend</components>
+                                    <components>org.apache.maven,org.json,org.yaml,com.google.common.collect,jdepend
+                                    </components>
                                 </barrier>
                                 <barrier>
                                     <layer>domain</layer>
@@ -129,6 +131,9 @@
                             <racd>
                                 <threshold>0.45</threshold>
                             </racd>
+                            <grouping>
+                                <cohesiveGroupsDiscovery/>
+                            </grouping>
                         </packageCoupling>
                         <submodulesBlueprint>
                             <location>src/main/resources/principle_blueprint.yaml</location>

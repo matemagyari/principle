@@ -1,6 +1,6 @@
 package org.tindalos.principle.infrastructure.reporters
 
-import org.tindalos.principle.domain.detector.acd.ACDResult
+import org.tindalos.principle.domain.agents.acd.ACDResult
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
 object ACDViolationsReporter {

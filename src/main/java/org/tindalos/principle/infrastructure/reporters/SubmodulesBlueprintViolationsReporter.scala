@@ -1,7 +1,7 @@
 package org.tindalos.principle.infrastructure.reporters
 
-import org.tindalos.principle.domain.detector.submodulesblueprint.SubmodulesBlueprintAnalysisResult
-import org.tindalos.principle.domain.detector.submodulesblueprint.Submodule
+import org.tindalos.principle.domain.agents.submodulesblueprint.SubmodulesBlueprintAnalysisResult
+import org.tindalos.principle.domain.agents.submodulesblueprint.Submodule
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
 import scala.collection.JavaConversions._

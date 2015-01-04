@@ -3,8 +3,8 @@ package org.tindalos.principle.domain.checker
 import org.junit.Assert.assertEquals
 import org.junit._
 import org.tindalos.principle.domain.core.{Cycle, AnalysisPlan, PackageReference}
-import org.tindalos.principle.domain.coredetector.{AnalysisInput}
-import org.tindalos.principle.domain.detector.adp._
+import org.tindalos.principle.domain.agentscore.{AnalysisInput}
+import org.tindalos.principle.domain.agents.adp._
 import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.infrastructure.plugin.Checks

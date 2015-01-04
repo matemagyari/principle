@@ -1,18 +1,18 @@
 package org.tindalos.principle.infrastructure.di
 
 import org.tindalos.principle.app.service.{ApplicationModule, InputValidator}
-import org.tindalos.principle.domain.checker.DetectorsRunner
+import org.tindalos.principle.domain.checker.AgentsRunner
 import org.tindalos.principle.domain.core.{Package, PackageSorterModule}
-import org.tindalos.principle.domain.coredetector.{AnalysisInput, AnalysisResult}
-import org.tindalos.principle.domain.detector.acd.ACDDetector
-import org.tindalos.principle.domain.detector.adp.{CycleDetector, PackageStructureModule}
-import org.tindalos.principle.domain.detector.layering.LayerViolationDetector
-import org.tindalos.principle.domain.detector.sap.SAPViolationDetector
-import org.tindalos.principle.domain.detector.sdp.SDPViolationDetector
-import org.tindalos.principle.domain.detector.structure.Graph.Node
-import org.tindalos.principle.domain.detector.structure.PackageCohesionDetector
-import org.tindalos.principle.domain.detector.submodulesblueprint.{SubmoduleFactory, SubmodulesBlueprintViolationDetector, SubmodulesFactory}
-import org.tindalos.principle.domain.detector.thirdparty.ThirdPartyDetector
+import org.tindalos.principle.domain.agentscore.{AnalysisInput, AnalysisResult}
+import org.tindalos.principle.domain.agents.acd.ACDAgent
+import org.tindalos.principle.domain.agents.adp.{CycleDetector, PackageStructureModule}
+import org.tindalos.principle.domain.agents.layering.LayerViolationAgent
+import org.tindalos.principle.domain.agents.sap.SAPViolationAgent
+import org.tindalos.principle.domain.agents.sdp.SDPViolationAgent
+import org.tindalos.principle.domain.agents.structure.Graph.Node
+import org.tindalos.principle.domain.agents.structure._
+import org.tindalos.principle.domain.agents.submodulesblueprint.{SubmoduleFactory, SubmodulesBlueprintAgent, SubmodulesFactory}
+import org.tindalos.principle.domain.agents.thirdparty.ThirdPartyAgent
 import org.tindalos.principle.domain.resultprocessing.reporter.{AnalysisResultsReporter, Printer}
 import org.tindalos.principle.infrastructure.detector.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider
 import org.tindalos.principle.infrastructure.reporters._
@@ -42,24 +42,28 @@ object PoorMansDIContainer {
   def buildRunAnalysisFn(): AnalysisInput => List[AnalysisResult] = {
     val packageStructureBuilder = PackageStructureModule.createBuilder(PackageSorterModule.sortByName(_, _))
     val detectors = createDetectors(packageStructureBuilder)
-    DetectorsRunner.buildDetectorsRunner(detectors)
+    AgentsRunner.buildAgentsRunner(detectors)
   }
 
   private def createDetectors(buildPackageStructure: (List[Package], String) => Package) =
     List(
-      LayerViolationDetector,
-      ThirdPartyDetector,
-      CycleDetector.buildInstance(buildPackageStructure),
-      SDPViolationDetector,
-      SAPViolationDetector,
-      ACDDetector.buildInstance(buildPackageStructure),
+      LayerViolationAgent,
+      ThirdPartyAgent,
+      CycleDetector.buildAgent(buildPackageStructure),
+      SDPViolationAgent,
+      SAPViolationAgent,
+      ACDAgent.buildAgent(buildPackageStructure),
       buildSubmodulesBlueprintViolationDetector(buildPackageStructure),
-      PackageCohesionDetector)
+      PackageCohesionDetector.buildAgent(
+        PackageCohesionModule.componentsFromPackages
+      , PackageStructureHints1Finder.makeGroups
+      , Graph.findDetachableSubgraphs
+      , CohesiveGroupsDiscoveryModule.collapseToLimit))
 
 
   private def buildSubmodulesBlueprintViolationDetector(buildPackageStructure: (List[Package], String) => Package) = {
     val submodulesFactory = SubmodulesFactory.buildInstance(buildPackageStructure, YAMLBasedSubmodulesBlueprintProvider.readSubmoduleDefinitions, SubmoduleFactory.buildModules)
-    SubmodulesBlueprintViolationDetector.buildInstance(submodulesFactory)
+    SubmodulesBlueprintAgent.buildInstance(submodulesFactory)
   }
 
 

@@ -2,15 +2,20 @@ package org.tindalos.principle.infrastructure.reporters.packagestructure
 
 import java.io.PrintWriter
 
-import org.tindalos.principle.domain.detector.structure.Graph.NodeId
-import org.tindalos.principle.domain.detector.structure.PackageStructureHints1Finder.GroupingResult
+import org.tindalos.principle.domain.agents.structure.Graph.NodeId
+import org.tindalos.principle.domain.agents.structure.PackageStructureHints1Finder.GroupingResult
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter._
 
 
 object PackageStructureHints1FileWriter {
 
-  private val description = "In the first step this algorithm finds the \"source\" vertices in the graph, the classes that are on the top of the dependency hierarchy (no other class refers to them)." +
-    "The second step groups all the classes in the graph based on sources as upstream dependencies. This gives some good package structuring hints."
+  private val description = "In the first step the algorithm finds the \"source\" vertices in the graph, the classes that are on the top of the dependency hierarchy (no other class refers to them)." +
+    "The second step groups all the classes in the graph based on sources as upstream dependencies. This gives some good package structuring hints." +
+    " E.g." +
+    "\n\nSources: s01, s02" +
+    "\n\torg.home.sample.Person" +
+    "\n\torg.home.sample.Role" +
+    "\n\nmeans the Person and Role classes are downstream dependencies of s01 and s02 but not of the other sources."
 
   def writeToFile(grouping: GroupingResult) = {
 

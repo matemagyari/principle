@@ -1,10 +1,11 @@
 package org.tindalos.principle.infrastructure.reporters
 
-import org.tindalos.principle.domain.detector.adp.ADPResult
+import org.tindalos.principle.domain.agents.adp.ADPResult
 import org.tindalos.principle.domain.core.Cycle
 import java.io.PrintWriter
 
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
+import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter
 
 object ADPViolationsReporter {
 
@@ -25,7 +26,7 @@ object ADPViolationsReporter {
 
       cyclesByBreakingPoints.foreach(keyVal => sb.append(keyVal._1 + " (" + keyVal._2.size + ")\n"))
       
-      val cycleDetailsFileName = "cycle_details.txt"
+      val cycleDetailsFileName = PackageCohesionReporter.reportDirectory + "/cycle_details.txt"
       sb.append(s"\nFor details check file: ${cycleDetailsFileName} \n\n")
       
       val printWriter = new PrintWriter(cycleDetailsFileName)

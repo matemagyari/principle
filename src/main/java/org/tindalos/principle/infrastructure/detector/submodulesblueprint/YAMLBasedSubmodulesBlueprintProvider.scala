@@ -1,14 +1,14 @@
 package org.tindalos.principle.infrastructure.detector.submodulesblueprint
 
 import org.tindalos.principle.domain.core.PackageReference
-import org.tindalos.principle.domain.detector.submodulesblueprint.InvalidBlueprintDefinitionException
-import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefinition
-import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleId
+import org.tindalos.principle.domain.agents.submodulesblueprint.InvalidBlueprintDefinitionException
+import org.tindalos.principle.domain.agents.submodulesblueprint.SubmoduleDefinition
+import org.tindalos.principle.domain.agents.submodulesblueprint.SubmoduleId
 import java.io.IOException
 import org.apache.commons.io.FileUtils
 import java.io.File
 import org.yaml.snakeyaml.Yaml
-import org.tindalos.principle.domain.detector.submodulesblueprint.SubmoduleDefinitions
+import org.tindalos.principle.domain.agents.submodulesblueprint.SubmoduleDefinitions
 import org.tindalos.principle.domain.util.ListConverter
 
 object YAMLBasedSubmodulesBlueprintProvider {
