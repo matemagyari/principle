@@ -65,6 +65,47 @@ class GraphTest {
 
 
   @Test
+  def findDetachableSubgraphsInGraphWithIslands() {
+    //a -> b,c | b -> d | c->d
+    val (a,b,c,d,e) = ("a","b","c","d","e")
+    val nodeA = Node(a, Set(b), Set(c))
+    val nodeB = Node(b, Set(c), Set(a))
+    val nodeC = Node(c, Set(a), Set(b))
+
+    val nodeD = Node(d,Set(e),Set(e))
+    val nodeE = Node(e,Set(d),Set(d))
+
+    val island1 = Set(nodeA, nodeB, nodeC)
+    val island2 = Set(nodeD, nodeE)
+    val graph = island1 ++ island2
+
+    assertTrue(Graph.isValid(graph))
+
+    val x = Graph.findDetachableSubgraphs(graph)
+    //assertEquals(island1, Graph.findDetachableSubgraphs(graph))
+    //assertEquals(island1, Graph.findDownstreamNodes(nodeB, graph))
+    //assertEquals(island1, Graph.findDownstreamNodes(nodeC, graph))
+  }
+
+  @Test
+  def isIslandPositive() {
+
+    val (a,b,c,d,e) = ("a","b","c","d","e")
+    val nodeA = Node(a, Set(b), Set(c))
+    val nodeB = Node(b, Set(c), Set(a))
+    val nodeC = Node(c, Set(a), Set(b))
+    val nodeD = Node(c, Set(a), Set(e))
+    val nodeE = Node(c, Set(a), Set(b))
+
+    val island = Set(nodeA, nodeB, nodeC)
+    val notIsland = Set(nodeA, nodeB, nodeC, nodeD)
+
+    assertTrue(Graph.isIsland(island))
+    assertFalse(Graph.isIsland(notIsland))
+  }
+
+
+  @Test
   def findDownstreamNodesForCompleteGraph() {
 
     val (a,b,c,d) = ("a","b","c","d")

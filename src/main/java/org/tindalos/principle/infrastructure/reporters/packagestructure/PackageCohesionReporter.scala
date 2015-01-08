@@ -3,6 +3,7 @@ package org.tindalos.principle.infrastructure.reporters.packagestructure
 import java.io.File
 
 import org.tindalos.principle.domain.agents.structure.CohesionAnalysisResult
+import org.tindalos.principle.domain.agents.structure.Structure.NodeGroup
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
 object PackageCohesionReporter {
@@ -36,7 +37,8 @@ object PackageCohesionReporter {
 
     ExistingPackageCohesionsFileWriter.writeToFile(result)
     PackageStructureHints1FileWriter.writeToFile(result.groupingResult)
-    PackageStructureHints2FileWriter.writeToFile(result.structureHints2)
+    
+    PackageStructureHints2FileWriter.writeToFile(result.subgraphDecomposition)
     if (result.cohesiveNodeGroups.isDefined) {
       CohesiveGroupsFileWriter.writeToFile(result.cohesiveNodeGroups.get)
       fileNames += s", ${cohesiveGroupsFileName}"

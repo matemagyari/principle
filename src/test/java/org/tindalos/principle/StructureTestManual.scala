@@ -1,6 +1,5 @@
 package org.tindalos.principle
 
-import org.tindalos.principle.domain.agents.structure.Graph.Node
 import org.tindalos.principle.domain.agents.structure.Structure.NodeGroup
 import org.tindalos.principle.domain.agents.structure.{CohesiveGroupsDiscoveryModule, Graph, PackageCohesionModule, PackageStructureHints1Finder}
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
@@ -36,12 +35,8 @@ object StructureTestManual extends App {
     .toList
     .sortBy(_._2.cohesion())
 
-  val sources = Graph.findSources(classes)
-
-  val validGraph = Graph.isValid(classes)
 
   val grouping = PackageStructureHints1Finder.makeGroups(classes)
-
 
   def aSort(s1: String, s2: String) = s1.substring(1).toInt.compareTo(s2.substring(1).toInt)
 
@@ -72,11 +67,13 @@ object StructureTestManual extends App {
     c => println(c._2 + " " + c._1)
   }
 
-  val parts = Graph.findDetachableSubgraphs(classes)
-  parts.foreach {
+  //val parts = Graph.findDetachableSubgraphs(classes)
+  val parts = Graph.findDetachableSubgraphs(MyJDependRunner.createNodesOfClasses("org.tindalos.principle.infrastructure"))
+
+  parts.peninsulas.foreach {
     p => {
-      println("Top: " + p._1.id + " " + NodeGroup(p._2).cohesion())
-      p._2.map(_.id).toList.sorted.foreach {
+      println("Top: " + p.frontNodes + " " + NodeGroup(p.subgraph).cohesion())
+      p.subgraph.map(_.id).toList.sorted.foreach {
         n => println("\t"+n)
       }
     }

@@ -29,7 +29,6 @@ object PackageStructureHints1Finder {
   }
 
   def label(max: Int, i: Int) = {
-    "".r
     val postfix =
       if (max < 10) i.toString
       else if (max < 100)

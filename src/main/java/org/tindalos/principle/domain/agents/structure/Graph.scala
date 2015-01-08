@@ -6,6 +6,13 @@ object Graph {
 
   case class Node(id: NodeId, dependencies: Set[NodeId], dependants: Set[NodeId])
 
+  case class Peninsula(val frontNodes: Set[Node], val subgraph: Set[Node]) {
+    assert(frontNodes.subsetOf(subgraph))
+    val island = isIsland(subgraph)
+  }
+
+  case class SubgraphDecomposition(val peninsulas: List[Peninsula])
+
   //def nodeById(id: NodeId) = graph.find(_.id == id).get
   //def findDirectDownstreamNodes(n: Node, graph: Set[Node]) = n.dependencies.map(nodeById)
   //def findDirectUpstreamNodes(n: Node, graph: Set[Node]) = n.dependants.map(nodeById)
@@ -27,6 +34,12 @@ object Graph {
     pairs.forall(symmetryHold)
   }
 
+  def isIsland(subgraph: Set[Node]) = {
+    val subgraphDependencies = subgraph.flatMap(n => n.dependants ++ n.dependants)
+    val externalDependencies = subgraphDependencies &~ subgraph.map(_.id)
+    externalDependencies.isEmpty
+  }
+
   def findDownstreamNodes(n: Node, graph: Set[Node]) = {
 
     val nodeMap: Map[NodeId, Node] = graph.groupBy(_.id).map(kv => (kv._1, kv._2.toList.head))
@@ -44,42 +57,42 @@ object Graph {
 
   def findSources(graph: Set[Node]) = graph.filter(n => n.dependants.isEmpty)
 
-  //find nodes which removal would cause a detach of a subgraph
-  def detachNode(n: Node, graph: Set[Node]) = {
-
-    if (n.dependencies.isEmpty) None
-    else {
-      val subGraph = findDownstreamNodes(n, graph)
-      val upstreamNodes = (subGraph - n).flatMap(_.dependants)
-
-      val intersection = upstreamNodes & subGraph.map(_.id)
-      //if all the upstream nodes are inside of the subgraph
-      if ((upstreamNodes &~ subGraph.map(_.id)).isEmpty) Some(n, subGraph)
-      else None
-    }
-  }
-
-
   private def findDetachableSubgraph(n: Node, graph: Set[Node]) = {
-    def helper(n: Node, upstreamNodes: Set[Node]): Set[Node] = {
+    def helper(startNode: Node, upstreamNodes: Set[Node]): Set[Node] = {
       val result = for {
         node <- graph
-        if (n.dependencies.contains(node.id)
-          && ((node.dependants-n.id) &~ upstreamNodes.map(_.id)).isEmpty
-          && !upstreamNodes.contains(node))
-      } yield helper(node, upstreamNodes + n)
-      (upstreamNodes + n) ++ result.flatten
+        if (startNode.dependencies.contains(node.id) //node is a direct dependency of startNode
+          && ((node.dependants - startNode.id) &~ upstreamNodes.map(_.id)).isEmpty //node has no upstream deps outside upstreamNodes
+          && !upstreamNodes.contains(node)) //and node is not among upstreamNodes
+      } yield helper(node, upstreamNodes + startNode)
+      (upstreamNodes + startNode) ++ result.flatten
     }
-    helper(n,Set())
+    helper(n, Set())
   }
 
-  def findDetachableSubgraphs(graph:Set[Node]) = {
+  def findDetachableSubgraphs(graph: Set[Node]) = {
     val result = for {
-      n <- graph
-      sg = Graph.findDetachableSubgraph(n,graph)
-      if (sg.size>1)
-    } yield (n,sg)
-    result.toList.sortBy(_._2.size).reverse
+      node <- graph
+      sg = Graph.findDetachableSubgraph(node, graph)
+      if (sg.size > 1)
+    } yield (node, sg)
+
+    val x = result
+      .groupBy(_._2)
+
+    val peninsulas = result
+      .groupBy(_._2) //Map[Set[Node],Set[(Node,Set[Node])]]
+      .toList
+      .map(
+        kv => {
+          val subgraph: Set[Node] = kv._1
+          val frontNodes: Set[Node] = kv._2.map(_._1)
+          Peninsula(frontNodes, subgraph)
+        })
+      .sortBy(_.subgraph.size)
+      .reverse
+
+    SubgraphDecomposition(peninsulas)
   }
 
 }
