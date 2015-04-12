@@ -3,7 +3,8 @@ package org.tindalos.principle.infrastructure.reporters.packagestructure
 import java.io.PrintWriter
 
 import org.tindalos.principle.domain.agents.structure.Structure.NodeGroup
-import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter.{reportDirectory, cohesiveGroupsFileName, generalDescription, round, sectionLine, subSectionLine}
+import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
+import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter.{cohesiveGroupsFileName, generalDescription, round, sectionLine, subSectionLine}
 
 object CohesiveGroupsFileWriter {
 
@@ -12,7 +13,7 @@ object CohesiveGroupsFileWriter {
 
     val orphanNodesDescription = "\nThe following classes did not fit into any cohesive group"
 
-    val printWriter = new PrintWriter(reportDirectory+"/"+cohesiveGroupsFileName)
+    val printWriter = new PrintWriter(ReportsDirectoryManager.reportDirectoryPath+"/"+cohesiveGroupsFileName)
 
     printWriter
       .append(generalDescription+"\n\n")

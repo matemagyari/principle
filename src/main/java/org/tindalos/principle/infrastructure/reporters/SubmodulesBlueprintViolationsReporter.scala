@@ -14,7 +14,7 @@ object SubmodulesBlueprintViolationsReporter {
     sb.append("\tSubmodules Blueprint violations (" + result.violationsNumber + " of the allowed " + result.threshold + ")\t")
     sb.append("\n" + sectionLine + "\n")
 
-    if (!result.overlaps.isEmpty()) {
+    if (!result.overlaps.isEmpty) {
       sb.append("Invalid blueprint definition, overlapping modulules")
     } else if (result.violationsNumber == 0) {
       sb.append("No violations.\n")

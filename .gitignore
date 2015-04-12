@@ -1,8 +1,8 @@
+.DS_Store
 .classpath
 .project
 .settings/
 .idea/
 principle.iml
 target/
-reports/
-*.txt
+principle_reports

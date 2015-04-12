@@ -4,6 +4,7 @@ import java.io.PrintWriter
 
 import org.tindalos.principle.domain.agents.structure.Graph.NodeId
 import org.tindalos.principle.domain.agents.structure.PackageStructureHints1Finder.GroupingResult
+import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter._
 
 
@@ -19,7 +20,7 @@ object PackageStructureHints1FileWriter {
 
   def writeToFile(grouping: GroupingResult) = {
 
-    val printWriter = new PrintWriter(reportDirectory+"/"+packageStructureHints1FileName)
+    val printWriter = new PrintWriter(ReportsDirectoryManager.reportDirectoryPath+"/"+packageStructureHints1FileName)
 
     printWriter
       .append(graphDescription+"\n\n")

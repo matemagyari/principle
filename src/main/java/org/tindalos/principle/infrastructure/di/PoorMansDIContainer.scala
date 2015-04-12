@@ -25,12 +25,15 @@ object PoorMansDIContainer {
 
   def buildAnalyzer(rootPackage: String, printer:Printer) = {
 
-    val buildPackagesFn = buildPackageListProducerFn(rootPackage)
     val buildNodesFn:String => Set[Node] = MyJDependRunner.createNodesOfClasses(_)
-    val runAnalysisFn = buildRunAnalysisFn()
-    val reporterFn = buildReporter()
-    
-    ApplicationModule.buildApplicationFn(InputValidator.validate,buildPackagesFn, buildNodesFn, runAnalysisFn, reporterFn,printer)
+
+    ApplicationModule.buildApplicationFn(
+      InputValidator.validate,
+      buildPackageListProducerFn(rootPackage),
+      buildNodesFn,
+      buildRunAnalysisFn(),
+      buildReporter(),
+      printer)
   }
 
   def buildPackageListProducerFn(rootPackage: String): (String) => List[Package] = {

@@ -2,8 +2,9 @@ package org.tindalos.principle.infrastructure.reporters.packagestructure
 
 import java.io.PrintWriter
 
-import org.tindalos.principle.domain.agents.structure.Graph.{Peninsula, Node, SubgraphDecomposition}
+import org.tindalos.principle.domain.agents.structure.Graph.{Peninsula, SubgraphDecomposition}
 import org.tindalos.principle.domain.agents.structure.Structure.NodeGroup
+import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter._
 
 
@@ -17,7 +18,7 @@ object PackageStructureHints2FileWriter {
 
   def writeToFile(subgraphDecomposition: SubgraphDecomposition) = {
 
-    val printWriter = new PrintWriter(reportDirectory + "/" + packageStructureHints2FileName)
+    val printWriter = new PrintWriter(ReportsDirectoryManager.reportDirectoryPath + "/" + packageStructureHints2FileName)
       .append(graphDescription + "\n\n")
       .append(description + "\n\n")
       .append(subSectionLine + "\n\n")

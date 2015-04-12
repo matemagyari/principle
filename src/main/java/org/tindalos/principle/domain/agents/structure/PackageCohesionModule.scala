@@ -16,7 +16,7 @@ object PackageCohesionModule {
   def nodesInPackage(nodes:Set[Node], packageName: PackageName) =
     nodes.filter(n => PackageCohesionModule.packageOf(n.id).equals(packageName))
 
-  def groupByPackages(rootPackage: PackageName, nodes: Set[Node]): Set[(PackageName, Set[Node])] = {
+  val groupByPackages = (rootPackage: PackageName, nodes: Set[Node]) => {
     //packages with direct classes
     val endPackageNames = nodes.map(n => packageOf(n.id))
     val packageNames = endPackageNames.flatMap(p => getPackageNames(rootPackage, p))
@@ -25,7 +25,7 @@ object PackageCohesionModule {
     packageNames.map(buildPackage)
   }
 
-  def componentsFromPackages(rootPackage: PackageName, ns: Set[Node]) =
+  val componentsFromPackages = (rootPackage: PackageName, ns: Set[Node]) =>
     groupByPackages(rootPackage, ns)
       .map(x => (x._1, NodeGroup(x._2)))
 

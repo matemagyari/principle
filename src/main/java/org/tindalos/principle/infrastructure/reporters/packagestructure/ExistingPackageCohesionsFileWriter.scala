@@ -4,7 +4,8 @@ import java.io.PrintWriter
 
 import org.tindalos.principle.domain.agents.structure.CohesionAnalysisResult
 import org.tindalos.principle.domain.agents.structure.Structure.NodeGroup
-import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter.{reportDirectory, packageCohesionsFileName, generalDescription, round, sectionLine, subSectionLine}
+import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
+import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter.{packageCohesionsFileName, generalDescription, round, sectionLine, subSectionLine}
 
 
 object ExistingPackageCohesionsFileWriter {
@@ -14,7 +15,7 @@ object ExistingPackageCohesionsFileWriter {
     val columns = "| Cohesion | Size | Upstream/Downstream dependencies of package | Internal/External edges of the classes |\n"
     val oneElementPackageDesc = "Each of the following packages contains only one class, therefore no cohesion is calculated"
 
-    val printWriter = new PrintWriter(reportDirectory+"/"+packageCohesionsFileName)
+    val printWriter = new PrintWriter(ReportsDirectoryManager.reportDirectoryPath+"/"+packageCohesionsFileName)
 
     printWriter
       .append(generalDescription)

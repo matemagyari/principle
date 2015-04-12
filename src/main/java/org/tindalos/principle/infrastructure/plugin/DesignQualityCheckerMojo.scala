@@ -9,6 +9,7 @@ import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.core.logging.{ScalaLogger, TheLogger}
 import org.tindalos.principle.domain.expectations.exception.InvalidConfigurationException
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
+import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 
 @Mojo(name = "check")
 class DesignQualityCheckerMojo extends AbstractMojo {
@@ -34,6 +35,8 @@ class DesignQualityCheckerMojo extends AbstractMojo {
       }
     })
 
+    ReportsDirectoryManager.ensureReportsDirectoryExists()
+
     val analyse = PoorMansDIContainer.buildAnalyzer(basePackage, new LogPrinter(getLog()))
     try {
       val (success,msg) = analyse(new AnalysisPlan(checks, basePackage))
@@ -44,5 +47,4 @@ class DesignQualityCheckerMojo extends AbstractMojo {
     }
 
   }
-
 }

@@ -6,7 +6,7 @@ object PackageStructureHints1Finder {
 
   case class GroupingResult(val grouping: Map[Set[String], List[NodeId]], val labelledSources: List[(String, NodeId)])
 
-  def makeGroups(graph: Set[Node]) = {
+  val makeGroups = (graph: Set[Node]) => {
     val sources = Graph.findSources(graph).toList.sortBy(_.id)
     val labelledSources = for {i <- 0 to sources.size - 1} yield (sources(i), label(sources.size, i))
 

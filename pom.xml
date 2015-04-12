@@ -90,7 +90,7 @@
             <plugin>
                 <groupId>org.tindalos.principle</groupId>
                 <artifactId>principle</artifactId>
-                <version>0.28</version>
+                <version>0.30-SNAPSHOT</version>
                 <configuration>
                     <basePackage>org.tindalos.principle</basePackage>
                     <checks>
@@ -121,14 +121,14 @@
                                 <violationsThreshold>0</violationsThreshold>
                             </adp>
                             <sdp>
-                                <violationsThreshold>5</violationsThreshold>
+                                <violationsThreshold>10</violationsThreshold>
                             </sdp>
                             <sap>
                                 <maxDistance>0.5</maxDistance>
                                 <violationsThreshold>3</violationsThreshold>
                             </sap>
                             <racd>
-                                <threshold>0.45</threshold>
+                                <threshold>0.35</threshold>
                             </racd>
                             <grouping>
                                 <cohesiveGroupsDiscovery />
@@ -179,7 +179,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-plugin-plugin</artifactId>
-                    <version>3.2</version>
+                    <version>3.4</version>
                     <configuration>
                         <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
                     </configuration>

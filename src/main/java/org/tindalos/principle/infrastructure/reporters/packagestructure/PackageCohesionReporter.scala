@@ -1,17 +1,14 @@
 package org.tindalos.principle.infrastructure.reporters.packagestructure
 
-import java.io.File
-
 import org.tindalos.principle.domain.agents.structure.CohesionAnalysisResult
-import org.tindalos.principle.domain.agents.structure.Structure.NodeGroup
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
+import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 
 object PackageCohesionReporter {
 
   val sectionLine = "================================================================================"
   val subSectionLine = "-----------------------------------------------------------------------------"
   val columns = "| Cohesion | Size | upstream/downstream dependencies | internal/external edges |\n"
-  val reportDirectory = "./reports"
   val cohesiveGroupsFileName = "identified_cohesive_groups.txt"
   val packageCohesionsFileName = "existing_packages_cohesion.txt"
   val packageStructureHints1FileName = "code_structure_observations1.txt"
@@ -33,8 +30,6 @@ object PackageCohesionReporter {
 
     var fileNames = s"${packageCohesionsFileName}, ${packageStructureHints1FileName}, ${packageStructureHints2FileName}"
 
-    new File(reportDirectory).mkdir()
-
     ExistingPackageCohesionsFileWriter.writeToFile(result)
     PackageStructureHints1FileWriter.writeToFile(result.groupingResult)
     
@@ -47,7 +42,7 @@ object PackageCohesionReporter {
     val sb = new StringBuffer("\n" + sectionLine + "\n")
     sb.append("\tPackage Cohesion Analysis\t")
     sb.append("\n" + sectionLine + "\n")
-    sb.append(s"\nFor details check files: ${fileNames} in ${reportDirectory}\n\n")
+    sb.append(s"\nFor details check files: ${fileNames} in ${ReportsDirectoryManager.ensureReportsDirectoryExists()}\n\n")
 
     sb.append(sectionLine + "\n")
 

@@ -1,8 +1,8 @@
 package org.tindalos.principle.domain.agents.thirdparty
 
-import org.tindalos.principle.domain.core.{Package, PackageReference}
-import org.tindalos.principle.domain.agentscore.{AnalysisInput, Agent}
-import org.tindalos.principle.domain.expectations.{Barrier, Expectations}
+import org.tindalos.principle.domain.agentscore.{Agent, AnalysisInput}
+import org.tindalos.principle.domain.core.PackageReference
+import org.tindalos.principle.domain.expectations.Barrier
 
 /**
  * Created by mate.magyari on 26/05/2014.
@@ -13,14 +13,13 @@ object ThirdPartyAgent extends Agent {
 
     val barriers = checkInput.thirdPartyExpectations().barriers
 
-    val violations = if (barriers == null || barriers.isEmpty) {
-      List[(PackageReference, PackageReference)]()
-    } else {
+    val violations = if (barriers == null || barriers.isEmpty) List[(PackageReference, PackageReference)]()
+    else {
       val layers = checkInput.layeringExpectations().layers
       val basePackage = checkInput.analysisPlan.basePackage
       for (aPackage <- checkInput.packages
            if (underBasePackage(aPackage.reference, basePackage));
-           layer = layerOf(layers,basePackage, aPackage);
+           layer = layerOf(layers, basePackage, aPackage);
            if layer.isDefined;
            referencedPackage <- aPackage.getOwnExternalPackageReferences();
            if (outOfAllowedComponents(layer.get, layers, barriers, referencedPackage))
