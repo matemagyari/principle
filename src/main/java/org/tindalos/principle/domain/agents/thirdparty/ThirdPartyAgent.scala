@@ -1,8 +1,8 @@
 package org.tindalos.principle.domain.agents.thirdparty
 
 import org.tindalos.principle.domain.agentscore.{Agent, AnalysisInput}
-import org.tindalos.principle.domain.core.PackageReference
-import org.tindalos.principle.domain.expectations.Barrier
+import org.tindalos.principle.domain.core.{Package, PackageReference}
+import org.tindalos.principle.domain.expectations.{Expectations, Barrier}
 
 /**
  * Created by mate.magyari on 26/05/2014.
