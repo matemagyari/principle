@@ -1,1 +1,2 @@
 language: scala
+jdk: oraclejdk7
