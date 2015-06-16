@@ -144,7 +144,7 @@ Simply put the following xml-snippet into the plugins section of your pom.xml. K
 <plugin>
   <groupId>org.tindalos.principle</groupId>
   <artifactid>principle</artifactid>
-  <version>0.28</version>
+  <version>0.30</version>
   <configuration>
     <!-- This should the root package of you project -->
     <basePackage>org.myproject</basePackage>
@@ -219,7 +219,7 @@ Simply put the following xml-snippet into the plugins section of your pom.xml. K
 </plugin>
 ```
 
-The latest stable version of JPrinciple is 0.28.
+The latest stable version of JPrinciple is 0.30
 
 # Contact
 
