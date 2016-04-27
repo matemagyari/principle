@@ -1,19 +1,21 @@
-# Map submodules to packages 
+checks:
+  # Map submodules to packages
+  modules:
 
-  tysubdmodule-definitions:
-  
-    EXPECTATIONS: [domain.expectations]
-    CORE: [domain.core]
-    COREDETECTOR: [domain.coredetector]
-    DETECTOR: [domain.detector, infrastructure.reporters]
-    CHECKER: [domain.checker]
+    module-definitions:
 
-# Define dependencies between submodules
+      EXPECTATIONS: [domain.expectations]
+      CORE: [domain.core]
+      COREDETECTOR: [domain.coredetector]
+      DETECTOR: [domain.detector, infrastructure.reporters]
+      CHECKER: [domain.checker]
 
-  subdmodule-dependencies: 
+  # Define dependencies between submodules
 
-    EXPECTATIONS: []
-    CORE: [EXPECTATIONS]
-    COREDETECTOR: [CORE, EXPECTATIONS]
-    DETECTOR: [CORE,COREDETECTOR,EXPECTATIONS]
-    CHECKER: [CORE, COREDETECTOR]
+    module-dependencies:
+
+      EXPECTATIONS: []
+      CORE: [EXPECTATIONS]
+      COREDETECTOR: [CORE, EXPECTATIONS]
+      DETECTOR: [CORE,COREDETECTOR,EXPECTATIONS]
+      CHECKER: [CORE, COREDETECTOR]

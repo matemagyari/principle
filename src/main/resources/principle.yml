@@ -1,0 +1,37 @@
+root_package: org.tindalos.principle
+
+checks:
+
+  layering:
+    layers: [infrastructure, app, domain]
+    threshold: 0
+
+  third_party:
+    barriers:
+      - layer: infrastructure
+        components: [org.apache.maven, org.json, org.yaml, com.google.common.collect, jdepend]
+      - layer: domain
+        components: [org.apache.commons]
+    threshold: 0
+
+  package_coupling:
+    adp_threshold: 0
+    racd_threshold: 0.35
+
+  modules:
+    # Map modules to packages
+    module-definitions:
+      EXPECTATIONS: [domain.expectations]
+      CORE: [domain.core]
+      COREDETECTOR: [domain.coredetector]
+      DETECTOR: [domain.detector, infrastructure.reporters]
+      CHECKER: [domain.checker]
+    # Define dependencies between modules
+    module-dependencies:
+      EXPECTATIONS: []
+      CORE: [EXPECTATIONS]
+      COREDETECTOR: [CORE, EXPECTATIONS]
+      DETECTOR: [CORE,COREDETECTOR,EXPECTATIONS]
+      CHECKER: [CORE, COREDETECTOR]
+
+    threshold: 0
