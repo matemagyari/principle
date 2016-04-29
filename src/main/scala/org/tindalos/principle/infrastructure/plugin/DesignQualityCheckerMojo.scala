@@ -14,8 +14,8 @@ import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 @Mojo(name = "check")
 class DesignQualityCheckerMojo extends AbstractMojo {
 
-  @Parameter(property = "check.configurationLocation")
-  private var configurationLocation: String = null
+  @Parameter(property = "check.location")
+  private var location: String = null
 
   def execute(): Unit = {
 
@@ -32,7 +32,7 @@ class DesignQualityCheckerMojo extends AbstractMojo {
     ReportsDirectoryManager.ensureReportsDirectoryExists()
 
     val (checks, rootPackage) = {
-      val cl = if (configurationLocation == null) None else Some(configurationLocation)
+      val cl = if (location == null) None else Some(location)
       ChecksReader.readFromFile(cl)
     }
 
@@ -43,6 +43,7 @@ class DesignQualityCheckerMojo extends AbstractMojo {
     } catch {
       case ex: IOException => getLog().error("/target/classes not found! " + ex.getMessage())
       case ex: InvalidConfigurationException => throw new MojoFailureException(ex.getMessage())
+      case ex: Exception ⇒ throw new MojoFailureException("Unexpected error", ex)
     }
 
   }

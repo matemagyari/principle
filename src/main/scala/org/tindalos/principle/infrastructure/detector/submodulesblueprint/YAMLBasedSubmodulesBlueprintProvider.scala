@@ -17,6 +17,7 @@ import scala.collection.JavaConverters._
 object YAMLBasedSubmodulesBlueprintProvider {
 
   def readSubmoduleDefinitions(submodulesDefinitionLocation: String, basePackageName: String) = {
+    println(s"")
     val yaml = getYAML(submodulesDefinitionLocation)
     processYAML(yaml, basePackageName)
   }

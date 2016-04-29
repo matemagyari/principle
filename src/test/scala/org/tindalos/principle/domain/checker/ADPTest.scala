@@ -49,7 +49,7 @@ class ADPTest {
       ref("org.tindalos.principletest.cycle.transitive2.a"),
       ref("org.tindalos.principletest.cycle.transitive2.b"),
       ref("org.tindalos.principletest.cycle.transitive2.c"))
-    val expected = Map(ref("org.tindalos.principletest.cycle.transitive2.c") -> Set(expectedCycle))
+    val expected = Map(ref("org.tindalos.principletest.cycle.transitive2.b") -> Set(expectedCycle))
     assertEquals(expected, result)
   }
 

@@ -14,7 +14,7 @@ class ChecksReaderTest
 
   @Test
   def readerTest() {
-    val r = ChecksReader.readFromFile(None)
+    val r = ChecksReader.readFromFile(Some("principle.yml"))
     println(s"RESULT: $r")
   }
 

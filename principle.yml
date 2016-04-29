@@ -4,7 +4,7 @@ checks:
 
   layering:
     layers: [infrastructure, app, domain]
-    threshold: 0
+    violation_threshold: 0
 
   third_party:
     barriers:
@@ -12,10 +12,10 @@ checks:
         components: [org.apache.maven, org.json, org.yaml, com.google.common.collect, jdepend]
       - layer: domain
         components: [org.apache.commons]
-    threshold: 0
+    violation_threshold: 0
 
   package_coupling:
-    adp_threshold: 0
+    adp_violation_threshold: 0
     racd_threshold: 0.35
 
   modules:
@@ -23,15 +23,15 @@ checks:
     module-definitions:
       EXPECTATIONS: [domain.expectations]
       CORE: [domain.core]
-      COREDETECTOR: [domain.coredetector]
-      DETECTOR: [domain.detector, infrastructure.reporters]
+      AGENTSCORE: [domain.agentscore]
+      AGENTS: [domain.agents, infrastructure.reporters]
       CHECKER: [domain.checker]
     # Define dependencies between modules
     module-dependencies:
       EXPECTATIONS: []
       CORE: [EXPECTATIONS]
-      COREDETECTOR: [CORE, EXPECTATIONS]
-      DETECTOR: [CORE,COREDETECTOR,EXPECTATIONS]
-      CHECKER: [CORE, COREDETECTOR]
+      AGENTSCORE: [CORE, EXPECTATIONS]
+      AGENTS: [CORE,AGENTSCORE,EXPECTATIONS]
+      CHECKER: [CORE, AGENTSCORE]
 
-    threshold: 0
+    violation_threshold: 0
