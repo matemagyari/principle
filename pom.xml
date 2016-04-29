@@ -8,13 +8,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.tindalos.principle</groupId>
     <artifactId>principle</artifactId>
-    <version>0.31-SNAPSHOT</version>
+    <version>0.33-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
     <name>Principle Maven Plugin</name>
 
     <properties>
-        <scala-version>2.10.2</scala-version>
+        <scala-version>2.11.7</scala-version>
         <scala-plugin-version>2.15.2</scala-plugin-version>
     </properties>
 
@@ -80,74 +80,33 @@
             <artifactId>classycle</artifactId>
             <version>1.4.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_2.11</artifactId>
+            <version>2.2.4</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
-            <!--
-            -->
-            <plugin>
-                <groupId>org.tindalos.principle</groupId>
-                <artifactId>principle</artifactId>
-                <version>0.29</version>
-                <configuration>
-                    <basePackage>org.tindalos.principle</basePackage>
-                    <checks>
-                        <layering>
-                            <layers>
-                                <param>infrastructure</param>
-                                <param>app</param>
-                                <param>domain</param>
-                            </layers>
-                            <violationsThreshold>0</violationsThreshold>
-                        </layering>
-                        <thirdParty>
-                            <barriers>
-                                <barrier>
-                                    <layer>infrastructure</layer>
-                                    <components>org.apache.maven,org.json,org.yaml,com.google.common.collect,jdepend
-                                    </components>
-                                </barrier>
-                                <barrier>
-                                    <layer>domain</layer>
-                                    <components>org.apache.commons</components>
-                                </barrier>
-                            </barriers>
-                            <violationsThreshold>0</violationsThreshold>
-                        </thirdParty>
-                        <packageCoupling>
-                            <adp>
-                                <violationsThreshold>0</violationsThreshold>
-                            </adp>
-                            <sdp>
-                                <violationsThreshold>10</violationsThreshold>
-                            </sdp>
-                            <sap>
-                                <maxDistance>0.5</maxDistance>
-                                <violationsThreshold>3</violationsThreshold>
-                            </sap>
-                            <racd>
-                                <threshold>0.35</threshold>
-                            </racd>
-                            <grouping>
-                                <cohesiveGroupsDiscovery />
-                            </grouping>
-                        </packageCoupling>
-                        <submodulesBlueprint>
-                            <location>src/main/resources/principle_blueprint.yaml</location>
-                            <violationsThreshold>0</violationsThreshold>
-                        </submodulesBlueprint>
-                    </checks>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.tindalos.principle</groupId>-->
+                <!--<artifactId>principle</artifactId>-->
+                <!--<version>0.31-SNAPSHOT</version>-->
+                <!--<configuration>-->
+                    <!--<location>principle.yml</location>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<phase>compile</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>check</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
 
             <!-- scala compiler -->
             <plugin>

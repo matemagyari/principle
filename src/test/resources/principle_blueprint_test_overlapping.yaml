@@ -1,15 +1,18 @@
-# Map submodules to packages 
+checks:
 
-  subdmodule-definitions: 
-  
-    MOD1: [domain.mod1, app.mod1]
-    # overlap
-    MOD2: [domain.mod2, app.mod1.xxx]
-    MOD3: [domain.mod3, app.mod3]
+  modules:
+  # Map submodules to packages
 
-# Define dependencies between submodules
+    module-definitions:
 
-  subdmodule-dependencies: 
-    
-    MOD2: [MOD1]
-    MOD3: [MOD2]
+      MOD1: [domain.mod1, app.mod1]
+      # overlap
+      MOD2: [domain.mod2, app.mod1.xxx]
+      MOD3: [domain.mod3, app.mod3]
+
+  # Define dependencies between submodules
+
+    module-dependencies:
+
+      MOD2: [MOD1]
+      MOD3: [MOD2]

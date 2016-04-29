@@ -65,7 +65,10 @@ object PoorMansDIContainer {
 
 
   private def buildSubmodulesBlueprintViolationDetector(buildPackageStructure: (List[Package], String) => Package) = {
-    val submodulesFactory = SubmodulesFactory.buildInstance(buildPackageStructure, YAMLBasedSubmodulesBlueprintProvider.readSubmoduleDefinitions, SubmoduleFactory.buildModules)
+    val submodulesFactory = SubmodulesFactory.buildInstance(
+      buildPackageStructure,
+      YAMLBasedSubmodulesBlueprintProvider.readSubmoduleDefinitions,
+      SubmoduleFactory.buildModules)
     SubmodulesBlueprintAgent.buildInstance(submodulesFactory)
   }
 

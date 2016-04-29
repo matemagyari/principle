@@ -7,7 +7,9 @@ import org.tindalos.principle.domain.expectations.Expectations
 import scala.collection.immutable.Map
 
 object SubmodulesBlueprintAgent {
+
   def buildInstance(buildSubmodules: (String, List[Package], String) => Set[Submodule]) = new Agent {
+
     override def isWanted(designQualityExpectations: Expectations) = designQualityExpectations.submodulesBlueprint != null
 
     override def analyze(checkInput: AnalysisInput) = {

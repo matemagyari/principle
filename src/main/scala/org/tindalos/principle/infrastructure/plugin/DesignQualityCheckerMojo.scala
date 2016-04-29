@@ -14,16 +14,10 @@ import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 @Mojo(name = "check")
 class DesignQualityCheckerMojo extends AbstractMojo {
 
-  @Parameter(property = "check.basePackage", defaultValue = "")
-  private var basePackage = ""
-
-  @Parameter(property = "check.checks")
-  private var checks: Checks = null
+  @Parameter(property = "check.location")
+  private var location: String = null
 
   def execute(): Unit = {
-
-    Validate.notNull(checks, "Missing <checks> tag!")
-    Validate.notBlank(basePackage, "Missing <basePackage> tag!")
 
     TheLogger.setLogger(new ScalaLogger() {
       override def info(msg: String) = {
@@ -37,13 +31,19 @@ class DesignQualityCheckerMojo extends AbstractMojo {
 
     ReportsDirectoryManager.ensureReportsDirectoryExists()
 
-    val analyse = PoorMansDIContainer.buildAnalyzer(basePackage, new LogPrinter(getLog()))
+    val (checks, rootPackage) = {
+      val cl = if (location == null) None else Some(location)
+      ChecksReader.readFromFile(cl)
+    }
+
+    val analyse = PoorMansDIContainer.buildAnalyzer(rootPackage, new LogPrinter(getLog()))
     try {
-      val (success,msg) = analyse(new AnalysisPlan(checks, basePackage))
+      val (success,msg) = analyse(new AnalysisPlan(checks, rootPackage))
       if (!success) throw new MojoFailureException("\nNumber of violations exceeds allowed limits!")
     } catch {
       case ex: IOException => getLog().error("/target/classes not found! " + ex.getMessage())
       case ex: InvalidConfigurationException => throw new MojoFailureException(ex.getMessage())
+      case ex: Exception ⇒ throw new MojoFailureException("Unexpected error", ex)
     }
 
   }

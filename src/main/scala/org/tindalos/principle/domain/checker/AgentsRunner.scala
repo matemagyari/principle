@@ -1,7 +1,6 @@
 package org.tindalos.principle.domain.checker
 
 import org.tindalos.principle.domain.core.logging.TheLogger
-import org.tindalos.principle.domain.core.{AnalysisPlan, Package}
 import org.tindalos.principle.domain.agentscore.{Agent, AnalysisInput}
 
 object AgentsRunner {

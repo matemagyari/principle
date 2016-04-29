@@ -101,7 +101,7 @@ All these sub-modules are cutting through all the layers of course, but should b
 ```yaml
 # Map submodules to packages 
 
-  subdmodule-definitions: 
+  module-definitions: 
   
     CORE: [domain.core]
     CUSTOMER: [domain.customer,app.customer,infrastructure.customer]
@@ -110,7 +110,7 @@ All these sub-modules are cutting through all the layers of course, but should b
 
 # Define dependencies between submodules
 
-  subdmodule-dependencies: 
+  module-dependencies: 
 
     CORE: []
     CUSTOMER: [CORE]
@@ -118,7 +118,7 @@ All these sub-modules are cutting through all the layers of course, but should b
     PAYMENT: [CORE]
 ```    
 
-Under submodule-definitions the sub-modules are mapped to packages, and under submodule-dependencies we specified that all modules can depend on Core, but not on others. It's a very simple example, but conveys the general idea. So for example if in the code there is a dependency between classes _org.amazon.app.customer.CustomerAccountManager --> org.amazon.domain.order.Order_
+Under module-definitions the sub-modules are mapped to packages, and under module-dependencies we specified that all modules can depend on Core, but not on others. It's a very simple example, but conveys the general idea. So for example if in the code there is a dependency between classes _org.amazon.app.customer.CustomerAccountManager --> org.amazon.domain.order.Order_
 
 then you'll see this in the report:
 
@@ -128,7 +128,7 @@ Submodule Blueprint violations (1 of allowed 0)
 Invalid dependency: CUSTOMER ---> ORDER
 ```
 
-If the Payment Module doesn't actually have a dependency on Core Module (contrary to what's stated under submodule-dependencies), you'll see
+If the Payment Module doesn't actually have a dependency on Core Module (contrary to what's stated under module-dependencies), you'll see
 
 `Missing dependency: PAYMENT---> CORE`
 
