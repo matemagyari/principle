@@ -172,7 +172,9 @@ checks:
 
   layering:
     #Layers' allowed dependencies point from left to right. 
-    #'infrastructure' can depend on 'app' and 'domain', 'app' can depend on 'domain', 'domain' should not depend on any other layer
+    #'infrastructure' can depend on 'app' and 'domain', 'app' can depend on 'domain', 'domain' 
+    #should not depend on any other layer
+    #Layers are the packages under root package
     layers: [infrastructure, app, domain]
     #the number of violation allowed before breaking the build
     violation_threshold: 0
@@ -181,13 +183,14 @@ checks:
   third_party_restrictions:
     allowed_libraries:
       - layer: infrastructure
-        #the values serve as prefixes. E.g any library is accessable under 'org.apache.maven' ('org.apache.maven', 'org.apache.maven.archetypes, ...')
+        #the values serve as prefixes. E.g any library is accessable under 'org.apache.maven' ('org.apache.maven.plugins', 'org.apache.maven.archetypes, ...')
         libraries: [org.apache.maven, org.json, org.yaml, com.google.common.collect, jdepend]
       - layer: domain
         libraries: [org.apache.commons]
     violation_threshold: 0
 
   package_coupling:
+    #number of allowed cyclic dependencies
     cyclic_dependencies_threshold: 0
     #Relative Average Component Dependency. The build will break if any package depends on more than 35% of all the packages
     acd_threshold: 0.35
@@ -208,6 +211,7 @@ checks:
       AGENTS: [CORE,AGENTSCORE,EXPECTATIONS]
       CHECKER: [CORE, AGENTSCORE]
 
+    #number of allowed invalid dependencies
     violation_threshold: 0
 
 #Runs some cohesion analysis on the code base and prints the results under principle_reports
