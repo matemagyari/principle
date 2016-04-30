@@ -175,7 +175,7 @@ checks:
     #Layers are the packages under root package. The allowed dependencies point from left to right. 
     #'infrastructure' can depend on 'app' and 'domain', 'app' can depend on 'domain', 'domain' should not depend on any other layer
     layers: [infrastructure, app, domain]
-    #the number of violation allowed before breaking the build
+    #number of allowed invalid dependencies
     violation_threshold: 0
 
   #libraries access can be configured by layers.  
