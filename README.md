@@ -166,6 +166,7 @@ Put the following xml-snippet into the plugins section of your pom.xml
 An example yaml file. Each section under `checks` is optional, also is any subsection under `package_coupling`.
 
 ```yaml
+#The root package for the analysis. All packages below are relative to this.
 root_package: org.tindalos.principle
 
 checks:
