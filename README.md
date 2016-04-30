@@ -172,16 +172,16 @@ checks:
 
   layering:
     #Layers' allowed dependencies point from left to right. 
-    #'infrastructure' can depend on 'app' and 'domain',
-    #'app' can depend on domain
-    #'domain' should not depend on any other layer
+    #'infrastructure' can depend on 'app' and 'domain', 'app' can depend on 'domain', 'domain' should not depend on any other layer
     layers: [infrastructure, app, domain]
     #the number of violation allowed before breaking the build
     violation_threshold: 0
 
+  #libraries access can be configured by layers.  
   third_party_restrictions:
     allowed_libraries:
       - layer: infrastructure
+        #the values serve as prefixes. E.g any library is accessable under 'org.apache.maven' ('org.apache.maven', 'org.apache.maven.archetypes, ...')
         libraries: [org.apache.maven, org.json, org.yaml, com.google.common.collect, jdepend]
       - layer: domain
         libraries: [org.apache.commons]
@@ -189,6 +189,7 @@ checks:
 
   package_coupling:
     cyclic_dependencies_threshold: 0
+    #Relative Average Component Dependency. The build will break if any package depends on more than 35% of all the packages
     acd_threshold: 0.35
 
   modules:
@@ -209,6 +210,7 @@ checks:
 
     violation_threshold: 0
 
+#Runs some cohesion analysis on the code base and prints the results under principle_reports
 structure_analysis_enabled: true
 ```
 
@@ -300,7 +302,7 @@ Simply put the following xml-snippet into the plugins section of your pom.xml. K
 
 
 
-The latest stable version of JPrinciple is 0.30
+The latest stable version of JPrinciple is 0.34
 
 # Contact
 
