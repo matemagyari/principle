@@ -30,7 +30,7 @@ object ChecksReader {
     }
     val rootPackage = yamlObject("root_package").asInstanceOf[String]
 
-    val checks = getYamlStructure(yamlObject, "checks").get //todo
+    val checks = getYamlStructure(yamlObject, "checks").get
 
     val modules: SubmodulesBlueprint = getYamlStructure(checks, "modules")
       .map { modules ⇒
@@ -43,15 +43,20 @@ object ChecksReader {
       getYamlStructure(checks, "layering").map(toLayering).getOrElse(null)
 
     val thirdParty: ThirdParty =
-      getYamlStructure(checks, "third_party").map(toThirdParty).getOrElse(null)
+      getYamlStructure(checks, "third_party_restrictions").map(toThirdParty).getOrElse(null)
 
     val packageCoupling = new PackageCoupling()
     getYamlStructure(checks, "package_coupling").foreach { pc ⇒
-      pc.get("racd_threshold").foreach { threshold ⇒
+      pc.get("acd_threshold").foreach { threshold ⇒
         packageCoupling.racd = new RACD(threshold.asInstanceOf[Double])
       }
-      pc.get("adp_violation_threshold").foreach { threshold ⇒
+      pc.get("cyclic_dependencies_threshold").foreach { threshold ⇒
         packageCoupling.adp = new ADP(threshold.asInstanceOf[Int])
+      }
+    }
+    yamlObject.get("structure_analysis_enabled").map { sa ⇒
+      if (sa.asInstanceOf[Boolean]) {
+        packageCoupling.grouping = new Grouping()
       }
     }
 
@@ -59,14 +64,14 @@ object ChecksReader {
   }
 
   private def toThirdParty(structure: Map[String, Object]): ThirdParty = {
-    val barriersYaml: Seq[Map[String, Object]] = structure("barriers")
+    val barriersYaml: Seq[Map[String, Object]] = structure("allowed_libraries")
         .asInstanceOf[java.util.List[java.util.Map[String, Object]]]
         .asScala.to[Seq].map(javaMap ⇒ javaMap.asScala.toMap)
 
     def toBarrier(m: Map[String, Object]): Barrier =
       new Barrier(
         layer = m("layer").asInstanceOf[String],
-        components = m("components")
+        components = m("libraries")
             .asInstanceOf[java.util.List[String]]
             .asScala.to[Seq].mkString(","))
 

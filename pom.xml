@@ -94,7 +94,7 @@
             <!--<plugin>-->
                 <!--<groupId>org.tindalos.principle</groupId>-->
                 <!--<artifactId>principle</artifactId>-->
-                <!--<version>0.31-SNAPSHOT</version>-->
+                <!--<version>0.34-SNAPSHOT</version>-->
                 <!--<configuration>-->
                     <!--<location>principle.yml</location>-->
                 <!--</configuration>-->

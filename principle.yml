@@ -6,17 +6,17 @@ checks:
     layers: [infrastructure, app, domain]
     violation_threshold: 0
 
-  third_party:
-    barriers:
+  third_party_restrictions:
+    allowed_libraries:
       - layer: infrastructure
-        components: [org.apache.maven, org.json, org.yaml, com.google.common.collect, jdepend]
+        libraries: [org.apache.maven, org.json, org.yaml, com.google.common.collect, jdepend]
       - layer: domain
-        components: [org.apache.commons]
+        libraries: [org.apache.commons]
     violation_threshold: 0
 
   package_coupling:
-    adp_violation_threshold: 0
-    racd_threshold: 0.35
+    cyclic_dependencies_threshold: 0
+    acd_threshold: 0.35
 
   modules:
     # Map modules to packages
@@ -35,3 +35,5 @@ checks:
       CHECKER: [CORE, AGENTSCORE]
 
     violation_threshold: 0
+
+structure_analysis_enabled: true
