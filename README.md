@@ -171,10 +171,8 @@ root_package: org.tindalos.principle
 checks:
 
   layering:
-    #Layers' allowed dependencies point from left to right. 
-    #'infrastructure' can depend on 'app' and 'domain', 'app' can depend on 'domain', 'domain' 
-    #should not depend on any other layer
-    #Layers are the packages under root package
+    #Layers are the packages under root package. The allowed dependencies point from left to right. 
+    #'infrastructure' can depend on 'app' and 'domain', 'app' can depend on 'domain', 'domain' should not depend on any other layer
     layers: [infrastructure, app, domain]
     #the number of violation allowed before breaking the build
     violation_threshold: 0
