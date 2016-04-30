@@ -1,5 +1,5 @@
 ### On the importance of constraints
-It's a natural phenomena that as a code base grows, the level of quality becomes harder and harder to uphold, simply because the ever increasing complexity outgrows the developers' capability to keep up with it. Code analysers have been born for easing the burden on the developers and highlight the problems with the code. A common experience though, that even the best tools are useless if the developers can ignore them. But an analyser built into the build process, so it can break it, much like CI servers do if tests fail or coverage drops, is an unignorable way to enforce good practices and keep the level of quality constantly high from the start.
+As a code base grows, the level of quality becomes gradually harder to uphold, because the ever increasing complexity outgrows the developers' capability to keep up with it. Static code analysers are meant to ease the burden on the developers and highlight the problems with the code. But even the best tools are useless if the developers can ignore them. An analyser built into the build process, so it can break it, much like CI servers do if tests fail or coverage drops, is an unignorable way to enforce good practices and keep the level of quality constantly high from the start.
 
 # Introduction
 JPrinciple is a lightweight, non-intrusive static code analyzer written in Scala for Java/Scala projects in the form of a Maven plugin. It runs the analysis during the build process, logs the results and even breaks the build if the predefined allowed number of violations is exceeded, enforcing discipline on the developer and ensuring that the code quality never drops.
@@ -96,10 +96,10 @@ Vertical slices are similar to layering, but instead of being a horizontal (or i
 |            CORE            |
 ```
 
-All these sub-modules are cutting through all the layers of course, but should be quite independent of each other, meaning that dependencies between them should be few and far between, if any (the exception is the _Core upon which all the others depend). In Principle you can define your vertical slices in a YAML file, explicitly defining what packages belong to a given sub-module and what dependencies are allowed between the  sub-modules.
+Each of these modules cuts through all the layers of course, but should be quite independent of each other, meaning that dependencies between them should be few and far between, if any (the exception is the _Core upon which all the others depend). In Principle you can define your vertical slices in a YAML file, explicitly defining what packages belong to a given module and what dependencies are allowed between the modules.
 
 ```yaml
-# Map submodules to packages 
+# Map modules to packages 
 
   module-definitions: 
   
@@ -108,7 +108,7 @@ All these sub-modules are cutting through all the layers of course, but should b
     ORDER: [domain.order,app.order,infrastructure.order]
     PAYMENT: [domain.payment,app.payment,infrastructure.payment]
 
-# Define dependencies between submodules
+# Define dependencies between modules
 
   module-dependencies: 
 
@@ -118,7 +118,7 @@ All these sub-modules are cutting through all the layers of course, but should b
     PAYMENT: [CORE]
 ```    
 
-Under module-definitions the sub-modules are mapped to packages, and under module-dependencies we specified that all modules can depend on Core, but not on others. It's a very simple example, but conveys the general idea. So for example if in the code there is a dependency between classes _org.amazon.app.customer.CustomerAccountManager --> org.amazon.domain.order.Order_
+Under module-definitions the modules are mapped to packages, and under module-dependencies we specified that all modules can depend on Core, but not on others. It's a very simple example, but conveys the general idea. So for example if in the code there is a dependency between classes _org.amazon.app.customer.CustomerAccountManager --> org.amazon.domain.order.Order_
 
 then you'll see this in the report:
 
@@ -138,6 +138,82 @@ This guard enables the developer to constrain access to third party libraries to
 
 # How to use the plugin
 
+## From version 0.34
+
+Put the following xml-snippet into the plugins section of your pom.xml
+
+```xml
+<plugin>
+  <groupId>org.tindalos.principle</groupId>
+  <artifactid>principle</artifactid>
+  <version>0.30</version>
+  <configuration>
+    <!-- Location of the configuration file relative to the project's root folder-->
+    <location>principle.yml</location>
+</configuration>
+<executions>
+  <execution>
+    <!-- specify here after which lifecycle-phase the plugin should be executed -->
+    <phase>compile</phase>
+    <goals>
+      <goal>check</goal>
+    </goals>
+  </execution>
+</executions>
+</plugin>
+```
+
+An example yaml file. Each section under `checks` is optional, also is any subsection under `package_coupling`.
+
+```yaml
+root_package: org.tindalos.principle
+
+checks:
+
+  layering:
+    #Layers' allowed dependencies point from left to right. 
+    #'infrastructure' can depend on 'app' and 'domain',
+    #'app' can depend on domain
+    #'domain' should not depend on any other layer
+    layers: [infrastructure, app, domain]
+    #the number of violation allowed before breaking the build
+    violation_threshold: 0
+
+  third_party_restrictions:
+    allowed_libraries:
+      - layer: infrastructure
+        libraries: [org.apache.maven, org.json, org.yaml, com.google.common.collect, jdepend]
+      - layer: domain
+        libraries: [org.apache.commons]
+    violation_threshold: 0
+
+  package_coupling:
+    cyclic_dependencies_threshold: 0
+    acd_threshold: 0.35
+
+  modules:
+    # Map modules to packages
+    module-definitions:
+      EXPECTATIONS: [domain.expectations]
+      CORE: [domain.core]
+      AGENTSCORE: [domain.agentscore]
+      AGENTS: [domain.agents, infrastructure.reporters]
+      CHECKER: [domain.checker]
+    # Define dependencies between modules
+    module-dependencies:
+      EXPECTATIONS: []
+      CORE: [EXPECTATIONS]
+      AGENTSCORE: [CORE, EXPECTATIONS]
+      AGENTS: [CORE,AGENTSCORE,EXPECTATIONS]
+      CHECKER: [CORE, AGENTSCORE]
+
+    violation_threshold: 0
+
+structure_analysis_enabled: true
+```
+
+## Up to Version 0.30
+
 Simply put the following xml-snippet into the plugins section of your pom.xml. Keep in mind that you only need to define guards that you actually want to use. Guards are defined under the 'check' section. Similar ones (SDP, SAP, ADP, ACD) are grouped.
 
 ```xml
@@ -147,7 +223,7 @@ Simply put the following xml-snippet into the plugins section of your pom.xml. K
   <version>0.30</version>
   <configuration>
     <!-- This should the root package of you project -->
-    <basePackage>org.myproject</basePackage>
+    <basePackage>com.your.root</basePackage>
     <checks>
       <!-- The package names (relative to the baseBackage). Only downward dependencies are allowed. -->
       <layering>
@@ -218,6 +294,11 @@ Simply put the following xml-snippet into the plugins section of your pom.xml. K
 </executions>
 </plugin>
 ```
+
+```yml
+```
+
+
 
 The latest stable version of JPrinciple is 0.30
 
