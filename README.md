@@ -15,7 +15,7 @@ In JPrinciple you can set up _guards_ that can detect violations against OO prin
 
 # Guards
 
-You can configure the guards in xml, where you inject the plugin dependency in your project's pom.xml. In general, each guard runs and reports independently of the others, and can break the build if the user-defined violation threshold is exceeded. Otherwise simply reports the found problems in console.
+You can configure the guards in yaml from version 0.34 and in xml before that. In general, each guard runs and reports independently of the others, and can break the build if the user-defined violation threshold is exceeded. Otherwise simply reports the found problems in console and some in files.
 
 ## Acyclic Dependency Principle Guard
 
