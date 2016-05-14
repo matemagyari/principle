@@ -13,9 +13,7 @@ class Barrier(var layer: String = "", var components: String = "") {
       .split(",").to[List].map(_.trim)
 }
 
-class ThirdParty(var barriers: List[Barrier], threshold: Int = 0) extends Thresholder {
-
-  def this() = this(List(), 0)
+case class ThirdParty(var barriers: List[Barrier] = List.empty, threshold: Int = 0) extends Thresholder {
 
   def setBarriers(theBarriers: java.util.List[Barrier]) = {
     if (theBarriers == null)

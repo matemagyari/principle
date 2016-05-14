@@ -4,9 +4,7 @@ import org.tindalos.principle.domain.expectations.exception.InvalidConfiguration
 import org.tindalos.principle.domain.util.ListConverter
 import org.tindalos.principle.domain.util.ListConverter
 
-class Layering(var layers: List[String], threshold: Int = 0) extends Thresholder {
-
-  def this() = this(List(), 0)
+case class Layering(var layers: List[String] = List.empty, threshold: Int = 0) extends Thresholder {
 
   def setLayers(theLayers: java.util.List[String]) = {
     if (theLayers == null || theLayers.isEmpty)

@@ -87,7 +87,7 @@ class ACDTest {
 
   private def packageCoupling() = {
     val packageCoupling = new PackageCoupling()
-    packageCoupling.acd = new ACD()
+    packageCoupling.acd = ACD()
     packageCoupling
   }
 

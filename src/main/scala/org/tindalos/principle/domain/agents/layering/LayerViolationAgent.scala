@@ -32,7 +32,7 @@ object LayerViolationAgent extends Agent {
             if referencedPackage.startsWith(configuration.basePackage);
          referencedLayer <- layers.slice(0, layers.indexOf(layer.get))
             if referencedPackage.startsWith(referencedLayer)
-    ) yield new LayerReference(aPackage.reference.name, referencedPackage.name)
+    ) yield LayerReference(aPackage.reference.name, referencedPackage.name)
   }
 
 }

@@ -24,9 +24,9 @@ class LayeringTest {
   def simple() = {
 
     val result = run("org.tindalos.principletest.layering.simple")
-    val expected = Set(new LayerReference("org.tindalos.principletest.layering.simple.domain", "org.tindalos.principletest.layering.simple.app"),
-      new LayerReference("org.tindalos.principletest.layering.simple.domain", "org.tindalos.principletest.layering.simple.infrastructure"),
-      new LayerReference("org.tindalos.principletest.layering.simple.app", "org.tindalos.principletest.layering.simple.infrastructure"))
+    val expected = Set(LayerReference("org.tindalos.principletest.layering.simple.domain", "org.tindalos.principletest.layering.simple.app"),
+      LayerReference("org.tindalos.principletest.layering.simple.domain", "org.tindalos.principletest.layering.simple.infrastructure"),
+      LayerReference("org.tindalos.principletest.layering.simple.app", "org.tindalos.principletest.layering.simple.infrastructure"))
     assertEquals(expected, result.toSet)
   }
 
@@ -34,7 +34,7 @@ class LayeringTest {
   def deeper() = {
 
     val result = run("org.tindalos.principletest.layering.deeper")
-    val expected = Set(new LayerReference("org.tindalos.principletest.layering.deeper.domain.aaa", "org.tindalos.principletest.layering.deeper.app.bbb.ccc"))
+    val expected = Set(LayerReference("org.tindalos.principletest.layering.deeper.domain.aaa", "org.tindalos.principletest.layering.deeper.app.bbb.ccc"))
     assertEquals(expected, result.toSet)
   }
 
@@ -54,7 +54,7 @@ class LayeringTest {
   private def prepareChecks() = new Checks(layering())
 
   private def layering() = {
-    val layering = new Layering()
+    val layering = Layering()
     layering.layers = List("infrastructure", "app", "domain")
     layering
   }

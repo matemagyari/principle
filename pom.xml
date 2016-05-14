@@ -91,22 +91,22 @@
 
     <build>
         <plugins>
-            <!--<plugin>-->
-                <!--<groupId>org.tindalos.principle</groupId>-->
-                <!--<artifactId>principle</artifactId>-->
-                <!--<version>0.34-SNAPSHOT</version>-->
-                <!--<configuration>-->
-                    <!--<location>principle.yml</location>-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>compile</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>check</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>org.tindalos.principle</groupId>
+                <artifactId>principle</artifactId>
+                <version>0.34</version>
+                <configuration>
+                    <location>principle.yml</location>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
             <!-- scala compiler -->
             <plugin>

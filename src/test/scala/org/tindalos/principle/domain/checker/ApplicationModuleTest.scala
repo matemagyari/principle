@@ -52,10 +52,10 @@ class ApplicationModuleTest {
 
   private def packageCoupling() = {
     val packageCoupling = new PackageCoupling()
-    packageCoupling.sap = new SAP(0, 0.3d)
-    packageCoupling.adp = new ADP()
-    packageCoupling.sdp = new SDP()
-    packageCoupling.acd = new ACD()
+    packageCoupling.sap = SAP(0, 0.3d)
+    packageCoupling.adp = ADP()
+    packageCoupling.sdp = SDP()
+    packageCoupling.acd = ACD()
     packageCoupling.grouping = new Grouping()
     packageCoupling
   }

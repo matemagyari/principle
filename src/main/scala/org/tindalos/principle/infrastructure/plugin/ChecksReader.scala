@@ -48,10 +48,10 @@ object ChecksReader {
     val packageCoupling = new PackageCoupling()
     getYamlStructure(checks, "package_coupling").foreach { pc ⇒
       pc.get("acd_threshold").foreach { threshold ⇒
-        packageCoupling.racd = new RACD(threshold.asInstanceOf[Double])
+        packageCoupling.racd = RACD(threshold.asInstanceOf[Double])
       }
       pc.get("cyclic_dependencies_threshold").foreach { threshold ⇒
-        packageCoupling.adp = new ADP(threshold.asInstanceOf[Int])
+        packageCoupling.adp = ADP(threshold.asInstanceOf[Int])
       }
     }
     yamlObject.get("structure_analysis_enabled").map { sa ⇒

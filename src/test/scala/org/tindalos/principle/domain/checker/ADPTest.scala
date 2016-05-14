@@ -104,7 +104,7 @@ class ADPTest {
 
   private def packageCoupling() = {
     val packageCoupling = new PackageCoupling()
-    packageCoupling.adp = new ADP()
+    packageCoupling.adp = ADP()
     packageCoupling
   }
   
