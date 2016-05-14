@@ -20,7 +20,7 @@ object PackageCohesionDetector {
       val structureHints1 = makeStructureHints1(input.nodes)
       val structureHints2 = findDetachableSubgraphs(input.nodes)
 
-      val cohesiveGroups = if (input.packageCouplingExpectations().grouping.cohesiveGroupsDiscovery != null) {
+      val cohesiveGroups = if (input.packageCouplingExpectations().grouping != null) {
         val initialGroups = input.nodes.map(n => NodeGroup(Set(n)))
         Some(collapseToLimit(initialGroups))
       } else None

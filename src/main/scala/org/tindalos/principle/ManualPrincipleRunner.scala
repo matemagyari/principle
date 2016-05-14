@@ -3,7 +3,6 @@ package org.tindalos.principle
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.core.logging.{ScalaLogger, TheLogger}
 import org.tindalos.principle.domain.expectations._
-import org.tindalos.principle.domain.expectations.cumulativedependency.ACD
 import org.tindalos.principle.domain.resultprocessing.reporter.Printer
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.infrastructure.plugin.Checks

@@ -10,7 +10,7 @@ class InputValidatorTest {
 
   val basePackage: String = "xx"
 
-  val aLayering = new Layering(layers = List("a","b","c"))
+  val aLayering = Layering(layers = List("a","b","c"))
 
   @Test
   def wrongOrder() {

@@ -10,7 +10,5 @@ case class Metrics(afferentCoupling:Int,
 }
 
 object UndefinedMetrics extends Metrics(0,0,0,0,0) {
-  
   override def isCalculated() = false
-  
 }

@@ -53,10 +53,6 @@ class LayeringTest {
 
   private def prepareChecks() = new Checks(layering())
 
-  private def layering() = {
-    val layering = Layering()
-    layering.layers = List("infrastructure", "app", "domain")
-    layering
-  }
+  private def layering() = Layering(List("infrastructure", "app", "domain"))
 
 }
