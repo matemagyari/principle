@@ -29,7 +29,10 @@ object ThirdPartyAgent extends Agent {
     new ThirdPartyViolationsResult(violations, checkInput.thirdPartyExpectations())
   }
 
-  private def allowedComponentsForLayer(layers: List[String], layer: String, barriers: List[Barrier]) = {
+  private def allowedComponentsForLayer(
+      layers: List[String],
+      layer: String,
+      barriers: List[Barrier]) = {
     val innerLayers = layers.dropWhile(_ != layer)
     barriers.filter(b => innerLayers.contains(b.layer)).flatMap(_.componentList())
   }
