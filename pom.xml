@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.tindalos.principle</groupId>
     <artifactId>principle</artifactId>
-    <version>0.36-SNAPSHOT</version>
+    <version>0.35</version>
     <packaging>maven-plugin</packaging>
 
     <name>Principle Maven Plugin</name>
