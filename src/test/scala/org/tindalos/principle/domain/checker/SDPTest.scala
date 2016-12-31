@@ -11,7 +11,7 @@ import org.tindalos.principle.infrastructure.plugin.Checks
 
 class SDPTest {
 
-  var plan: AnalysisPlan = null
+  var plan: AnalysisPlan = _
   val runAnalysis= PoorMansDIContainer.buildRunAnalysisFn()
   var checks: Expectations = prepareChecks()
 

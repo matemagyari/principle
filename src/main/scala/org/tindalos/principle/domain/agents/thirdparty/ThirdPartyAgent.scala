@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.agents.thirdparty
 
 import org.tindalos.principle.domain.agentscore.{Agent, AnalysisInput}
 import org.tindalos.principle.domain.core.{Package, PackageReference}
-import org.tindalos.principle.domain.expectations.{Expectations, Barrier}
+import org.tindalos.principle.domain.expectations.{Barrier, Expectations}
 
 /**
  * Created by mate.magyari on 26/05/2014.
@@ -47,7 +47,6 @@ object ThirdPartyAgent extends Agent {
 
   private def underBasePackage(aPackage: PackageReference, basePackage: String) =
     aPackage.startsWith(basePackage)
-
 
   override def isWanted(designQualityExpectations: Expectations) = designQualityExpectations.thirdParty != null
 }

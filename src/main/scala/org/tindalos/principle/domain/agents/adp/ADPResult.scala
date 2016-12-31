@@ -4,10 +4,9 @@ import org.tindalos.principle.domain.core.{Cycle, PackageReference}
 import org.tindalos.principle.domain.agentscore.AnalysisResult
 import org.tindalos.principle.domain.expectations.ADP
 
-
-class ADPResult(val cyclesByBreakingPoints: Map[PackageReference, Set[Cycle]],
-                val expectation: ADP)
-  extends AnalysisResult {
+case class ADPResult(
+    cyclesByBreakingPoints: Map[PackageReference, Set[Cycle]],
+    expectation: ADP) extends AnalysisResult {
 
   val threshold = expectation.violationsThreshold
 

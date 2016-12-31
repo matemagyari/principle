@@ -15,6 +15,7 @@
 
     <properties>
         <scala-version>2.11.7</scala-version>
+        <principle-version>0.34</principle-version>
         <scala-plugin-version>2.15.2</scala-plugin-version>
     </properties>
 
@@ -94,7 +95,7 @@
             <plugin>
                 <groupId>org.tindalos.principle</groupId>
                 <artifactId>principle</artifactId>
-                <version>0.34</version>
+                <version>${principle-version}</version>
                 <configuration>
                     <location>principle.yml</location>
                 </configuration>

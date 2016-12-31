@@ -5,6 +5,8 @@ import org.tindalos.principle.domain.core.PackageReference
 import scala.collection.immutable.Set
 import org.apache.commons.lang3.builder.HashCodeBuilder
 
+case class SubmoduleId(value:String)
+
 class Submodule(val id: SubmoduleId, val packagesUnderModule: Set[Package], val plannedDependencies: Set[SubmoduleId]) {
 
   //TODO move this check to the definition

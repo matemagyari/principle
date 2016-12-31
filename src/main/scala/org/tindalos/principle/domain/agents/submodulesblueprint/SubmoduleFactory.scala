@@ -16,7 +16,4 @@ object SubmoduleFactory {
     }
     submoduleDefinitions.definitions.values.map(convert(_)).toSet
   }
-
-
-
 }

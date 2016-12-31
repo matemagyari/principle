@@ -7,7 +7,10 @@ import org.tindalos.principle.domain.expectations.Expectations
 
 case class LayerReference(referrer:String, referee:String)
 
-class LayerViolationsResult(val violations: List[LayerReference], val threshold: Int) extends AnalysisResult {
+case class LayerViolationsResult(
+    violations: List[LayerReference],
+    threshold: Int) extends AnalysisResult {
+
   override def expectationsFailed() = violations.length > threshold
 }
 

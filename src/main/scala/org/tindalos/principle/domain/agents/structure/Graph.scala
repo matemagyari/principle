@@ -83,12 +83,11 @@ object Graph {
     val peninsulas = result
       .groupBy(_._2) //Map[Set[Node],Set[(Node,Set[Node])]]
       .toList
-      .map(
-        kv => {
-          val subgraph: Set[Node] = kv._1
-          val frontNodes: Set[Node] = kv._2.map(_._1)
-          Peninsula(frontNodes, subgraph)
-        })
+      .map { kv =>
+        val subgraph: Set[Node] = kv._1
+        val frontNodes: Set[Node] = kv._2.map(_._1)
+        Peninsula(frontNodes, subgraph)
+      }
       .sortBy(_.subgraph.size)
       .reverse
 
