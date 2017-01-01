@@ -4,7 +4,7 @@ As a code base grows, the level of quality gets gradually harder to uphold as th
 # Introduction
 JPrinciple is a lightweight, non-intrusive static code analyzer written in Scala for Java/Scala projects in the form of a Maven plugin. It runs the analysis during Maven's *compile* phase, logs the results and even breaks the build if the predefined allowed number of violations is exceeded, enforcing discipline on the developer and ensuring that the code quality never drops.
 
-In JPrinciple you can set up _guards_ that can detect violations against OO principles, developer-imposed code-structuring rules, and can break the build process if those violations exceed the developer-defined thresholds. JPrinciple currently supports _guards_ to _watch out_ for the following
+In JPrinciple you can set up _constraints_ that can detect violations against OO principles, developer-imposed code-structuring rules, and can break the build process if those violations exceed the developer-defined thresholds. JPrinciple currently supports _constraints_ to _watch out_ for the following
 * Onion Layering 
 * Acyclic Dependency Principle
 * Stable Abstractions Principle
@@ -13,11 +13,11 @@ In JPrinciple you can set up _guards_ that can detect violations against OO prin
 * Boundaries of the use of third-party libraries
 * Low Average Component Dependency
 
-# Guards
+# Constraints
 
-You can configure the guards in yaml from version 0.34 and in xml before that. In general, each guard runs and reports independently of the others, and can break the build if the user-defined violation threshold is exceeded. Otherwise simply reports the found problems in console and some in files.
+You can configure the constraints in yaml from version 0.34 and in xml before that. In general, each constraint runs and reports independently of the others, and can break the build if the user-defined violation threshold is exceeded. Otherwise simply reports the found problems in console and some in files.
 
-## Acyclic Dependency Principle Guard
+## Acyclic Dependency Principle Constraint
 
 Cyclic dependencies yields entangled code bases that are difficult to maintain and extend. You can find in-depth material about it [here](http://stan4j.com/advanced/acyclic-dependencies-principle.html) or [here](http://www.objectmentor.com/resources/articles/granularity.pdf). JDepend, the well-known tool JPrinciple is largely based on, can detect some limited forms of cycles. It can only detect direct dependency cycles (not transitive ones), and can't detect cycles between larger blocks. Let me try to explain. Let's assume the following dependency chain
 
@@ -40,7 +40,7 @@ org.sampleapp.app <----> org.sampleapp.domain
 ```
 A UML-like figure would be nice to visualize it, but I don't know how to use one inside the wiki (yeah, shame on me). If you draw a package-diagram on a paper, you'll see what I mean.
 
-## Onion Layering Guard
+## Onion Layering Constraint
 
 Most code bases use some level of layering. For example in DDD there are 3 basic layers, the Infrastructure, the Application and the Domain. The code structure is like an onion, where the core is the Domain, wrapped around by the Application layer, then the Infrastructure layer. The dependencies can only point inwards, so Infrastructure can depend on Application and Domain, the Application on Domain, and Domain on none of the others. About the benefits of this architectural style over the traditional layering you can read for example [here](http://blog.8thlight.com/uncle-bob/2012/08/13/the-clean-architecture.html). JPrinciple can force this style of layering, detecting deviations from it. In case of deviations are found, you'll see something like this in the console:
 
@@ -56,9 +56,9 @@ org.someapp.domain-->
 
 Package _org.someapp.infrastructure_ depends on _org.someapp.application_, which depends on _org.someapp.domain_, which depends on _org.someapp.infrastructure_ , closing the circle.
 
-## Stable Abstractions Principle Guard
+## Stable Abstractions Principle Constraint
 
-Read about this [here](http://www.objectmentor.com/resources/articles/stability.pdf). With this Guard you must define a _maximal allowed distance_. Each package with a higher distance will be regarded as a violation. The error report lists all these packages. For example if the _Distance_ threshold is 0.5 and _Distance_ value of the packages _org.amazon.customer_ and _org.amazon.core_are higher, then the report will list them
+Read about this [here](http://www.objectmentor.com/resources/articles/stability.pdf). With this Constraint you must define a _maximal allowed distance_. Each package with a higher distance will be regarded as a violation. The error report lists all these packages. For example if the _Distance_ threshold is 0.5 and _Distance_ value of the packages _org.amazon.customer_ and _org.amazon.core_are higher, then the report will list them
 
 ```
 Stable Abstractions Principle violations (2 of allowed 5)
@@ -67,7 +67,7 @@ org.amazon.customer[0.6666667]
 org.amazon.core[0.75]
 ```
 
-## Stable Dependencies Principle Guard
+## Stable Dependencies Principle Constraint
 
 Read about this on the [same link](http://www.objectmentor.com/resources/articles/stability.pdf) as the SAP-one. The error report lists all the dependencies, where a package depends on an other package of higher instability (the number in angular brackets), like
 
@@ -77,7 +77,7 @@ Stable Abstractions Principle violations (1 of allowed 2)
 org.amazon.customer[0.6666667] --> org.amazon.core[0.75] 
 ```
 
-## Average Component Dependency Guard
+## Average Component Dependency Constraint
 
 ACD is a numeric value telling you that picking up an arbitrary package, how many packages in average it depends on. And symmetrically how many packages depend on it. In other words, if you do a change in a package, how many of the other packages will be affected in average. Obviously we want to keep it as low as possible, so changes would affect only small part of the code instead of rippling through the whole code base. For more details read this. Principle can measure absolute ACD and relative ACD (rACD), which is the percentage-based version of ACD. E.g. 15% means an average package depends on the 15% of all packages in the code base.
 ```
@@ -86,7 +86,7 @@ Component Dependency Metrics
 Average Component Dependency 8.92
 Relative Average Component Dependency 35.23% ( of the allowed 20%)
 ```
-## Modularity Guard
+## Modularity Constraint
 
 Vertical slices are similar to layering, but instead of being a horizontal (or in case of onion layering a concentric) partitioning, it is, as the name suggests, vertical (in case of onion layering cutting through the layers). For a little demonstration let's assume, a bit unrealistically, that Amazon is one monolithic application. In this case it has to have a _Customer Module_, a _Payment Module_, an _Order Module_, and several others. There probably is a _Core Module_, too, containing shared parts of the other ones. A simplified version of the architecture would look like this
 
@@ -132,9 +132,9 @@ If the Payment Module doesn't actually have a dependency on Core Module (contrar
 
 `Missing dependency: PAYMENT---> CORE`
 
-## Third party Guard
+## Third-party Constraint
 
-This guard enables the developer to constrain access to third party libraries to designated parts of the code. The developer can specify which libraries she allows access to in which layer. All the layers above the specified one can use those libraries of course, but nothing under it. The visual idea behind it is that your code is a castle with multiple circles of defending walls around it. You let foreign troops leaking into your territory only until certain walls. Different troops can have different privileges, one (org.yaml) can only set up his tent inside the outmost wall (Infrastructure), the other (org.apache.commons) is allowed to enter the inner sanctum (Domain).
+This constraint enables the developer to constrain access to third party libraries to designated parts of the code. The developer can specify which libraries she allows access to in which layer. All the layers above the specified one can use those libraries of course, but nothing under it. The visual idea behind it is that your code is a castle with multiple circles of defending walls around it. You let foreign troops leaking into your territory only until certain walls. Different troops can have different privileges, one (org.yaml) can only set up his tent inside the outmost wall (Infrastructure), the other (org.apache.commons) is allowed to enter the inner sanctum (Domain).
 
 # How to use the plugin
 
@@ -219,7 +219,7 @@ structure_analysis_enabled: true
 
 ## Up to Version 0.30
 
-Simply put the following xml-snippet into the plugins section of your pom.xml. Keep in mind that you only need to define guards that you actually want to use. Guards are defined under the 'check' section. Similar ones (SDP, SAP, ADP, ACD) are grouped.
+Simply put the following xml-snippet into the plugins section of your pom.xml. Keep in mind that you only need to define constraints that you actually want to use. Constraints are defined under the 'check' section. Similar ones (SDP, SAP, ADP, ACD) are grouped.
 
 ```xml
 <plugin>
@@ -257,7 +257,7 @@ Simply put the following xml-snippet into the plugins section of your pom.xml. K
         </barriers>
         <violationsThreshold>0</violationsThreshold>
       </thirdParty>
-      <!-- Some Guards are grouped under 'packageCoupling'--> 
+      <!-- Some Constraints are grouped under 'packageCoupling'--> 
       <packageCoupling>
         <!-- Acyclic Dependency Principle.The build will break if the number of cycles detected exceeds 4. -->
         <adp>
