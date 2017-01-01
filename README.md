@@ -307,6 +307,10 @@ Simply put the following xml-snippet into the plugins section of your pom.xml. K
 
 The latest stable version of JPrinciple is 0.36
 
+# Future plans
+
+SBT plugin.
+
 # Contact
 
 Developer: Mate Magyari, Email: mate.magyari@gmail.com
