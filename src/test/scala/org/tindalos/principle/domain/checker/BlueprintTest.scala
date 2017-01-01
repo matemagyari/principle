@@ -51,7 +51,7 @@ class BlueprintTest {
   }
 
   def prepareChecks(location: String) =
-    Checks(submodulesBlueprint = submodulesBlueprint(location))
+    Checks(submodulesBlueprint = Some(submodulesBlueprint(location)))
 
   def submodulesBlueprint(location: String) = new SubmodulesBlueprint(location, 0)
 

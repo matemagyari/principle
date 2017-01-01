@@ -10,24 +10,27 @@ object SubmodulesBlueprintAgent {
 
   def buildInstance(buildSubmodules: (String, List[Package], String) => Set[Submodule]) = new Agent {
 
-    override def isWanted(designQualityExpectations: Expectations) = designQualityExpectations.submodulesBlueprint != null
+    override def isWanted(designQualityExpectations: Expectations) = designQualityExpectations.submodulesBlueprint.nonEmpty
 
-    override def analyze(checkInput: AnalysisInput) = {
+    override def analyze(checkInput: AnalysisInput) =
 
-      val submodulesBlueprint = checkInput.submodulesBlueprint()
+      checkInput.submodulesBlueprint().map { submodulesBlueprint ⇒
 
-      try {
-        val submodules = buildSubmodules(
-          submodulesBlueprint.location,
-          checkInput.packages, checkInput.analysisPlan.basePackage)
+        try {
+          val submodules = buildSubmodules(
+            submodulesBlueprint.location,
+            checkInput.packages, checkInput.analysisPlan.basePackage)
 
-        val (aID, aMD) = problematicDependencies(submodules)
+          val (aID, aMD) = problematicDependencies(submodules)
 
-        new SubmodulesBlueprintAnalysisResult(submodulesBlueprint, aID, aMD)
-      } catch {
-        case ex: OverlappingSubmoduleDefinitionsException => new SubmodulesBlueprintAnalysisResult(submodulesBlueprint, overlaps = ex.overlaps)
+          new SubmodulesBlueprintAnalysisResult(submodulesBlueprint, aID, aMD)
+        }
+        catch {
+          case ex: OverlappingSubmoduleDefinitionsException =>
+            new SubmodulesBlueprintAnalysisResult(submodulesBlueprint, overlaps = ex.overlaps)
+        }
       }
-    }
+      .getOrElse(new SubmodulesBlueprintAnalysisResult(submodulesBlueprint = null))
 
     private def problematicDependencies(submodules: Set[Submodule]): (Map[Submodule, Set[Submodule]], Map[Submodule, Set[Submodule]]) = {
       val emptyMap = Map[Submodule, Set[Submodule]]()

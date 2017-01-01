@@ -4,6 +4,6 @@ trait Expectations {
 
   def layering: Layering
   def packageCoupling: PackageCoupling
-  def submodulesBlueprint: SubmodulesBlueprint
+  def submodulesBlueprint: Option[SubmodulesBlueprint]
   def thirdParty: Option[ThirdParty]
 }
