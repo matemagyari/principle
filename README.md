@@ -146,7 +146,7 @@ Put the following xml-snippet into the plugins section of your pom.xml
 <plugin>
   <groupId>org.tindalos.principle</groupId>
   <artifactid>principle</artifactid>
-  <version>0.34</version>
+  <version>0.36</version>
   <configuration>
     <!-- Location of the configuration file relative to the project's root folder-->
     <location>principle.yml</location>
