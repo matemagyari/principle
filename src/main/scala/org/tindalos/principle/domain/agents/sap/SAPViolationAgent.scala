@@ -1,7 +1,7 @@
 package org.tindalos.principle.domain.agents.sap
 
 import org.tindalos.principle.domain.agentscore.Agent
-import org.tindalos.principle.domain.expectations.Expectations
+import org.tindalos.principle.domain.expectations.Checks
 import org.tindalos.principle.domain.expectations.PackageCoupling
 import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.core.Package
@@ -23,7 +23,7 @@ object SAPViolationAgent extends Agent {
     else packages
   }
 
-  override def isWanted(expectations: Expectations) = expectations.packageCoupling match {
+  override def isWanted(expectations: Checks) = expectations.packageCoupling match {
     case packageCoupling: PackageCoupling => packageCoupling.sap != null
     case null => false
   }

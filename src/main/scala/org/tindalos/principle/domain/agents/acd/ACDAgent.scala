@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.agents.acd
 
 import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.agentscore.{AnalysisInput, Agent}
-import org.tindalos.principle.domain.expectations.{PackageCoupling, Expectations}
+import org.tindalos.principle.domain.expectations.{PackageCoupling, Checks}
 
 object ACDAgent {
   
@@ -24,7 +24,7 @@ object ACDAgent {
       new ACDResult(cumulatedComponentDependency, relevantPackages.length, checkInput.packageCouplingExpectations())
     }
 
-    override def isWanted(expectations: Expectations) = expectations.packageCoupling match {
+    override def isWanted(expectations: Checks) = expectations.packageCoupling match {
       case packageCoupling: PackageCoupling =>
         (packageCoupling.acd != null) ||
           (packageCoupling.racd != null) ||

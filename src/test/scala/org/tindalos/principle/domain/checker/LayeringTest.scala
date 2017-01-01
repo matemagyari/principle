@@ -12,7 +12,7 @@ class LayeringTest {
 
   var plan: AnalysisPlan = null
   var runAnalysis = PoorMansDIContainer.buildRunAnalysisFn()
-  var expectations: Expectations = prepareChecks()
+  var expectations: Checks = prepareChecks()
 
   @Before
   def setup() = {

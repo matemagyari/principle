@@ -12,7 +12,7 @@ class ACDTest {
 
   var plan: AnalysisPlan = null
   val runAnalysis = PoorMansDIContainer.buildRunAnalysisFn()
-  var expectations: Expectations = prepareChecks()
+  var expectations: Checks = prepareChecks()
 
   @Before
   def setup() = {

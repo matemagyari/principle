@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.agents.sdp
 
 import org.tindalos.principle.domain.core.{Package, PackageReference}
 import org.tindalos.principle.domain.agentscore.{AnalysisInput, Agent}
-import org.tindalos.principle.domain.expectations.{Expectations, PackageCoupling}
+import org.tindalos.principle.domain.expectations.{Checks, PackageCoupling}
 
 object SDPViolationAgent extends Agent {
 
@@ -20,7 +20,7 @@ object SDPViolationAgent extends Agent {
     new SDPResult(sdpViolations.flatten, checkInput.packageCouplingExpectations().sdp)
   }
 
-  override def isWanted(expectations: Expectations) = expectations.packageCoupling match {
+  override def isWanted(expectations: Checks) = expectations.packageCoupling match {
     case packageCoupling: PackageCoupling => packageCoupling.sdp != null
     case null => false
   }

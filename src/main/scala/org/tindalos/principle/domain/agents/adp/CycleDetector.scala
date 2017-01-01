@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.agents.adp
 
 import org.tindalos.principle.domain.core.{Cycle, Package, PackageReference}
 import org.tindalos.principle.domain.agentscore.{AnalysisInput, Agent}
-import org.tindalos.principle.domain.expectations.{Expectations, PackageCoupling}
+import org.tindalos.principle.domain.expectations.{Checks, PackageCoupling}
 
 object CycleDetector {
   def buildAgent(buildPackageStructure: (List[Package], String) => Package) = new Agent {
@@ -29,7 +29,7 @@ object CycleDetector {
       new ADPResult(cycles, input.packageCouplingExpectations().adp)
     }
 
-    override def isWanted(expectations: Expectations) = expectations.packageCoupling match {
+    override def isWanted(expectations: Checks) = expectations.packageCoupling match {
       case packageCoupling: PackageCoupling => packageCoupling.adp != null
       case null => false
     }

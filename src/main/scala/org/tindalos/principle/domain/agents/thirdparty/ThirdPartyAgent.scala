@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.agents.thirdparty
 
 import org.tindalos.principle.domain.agentscore.{Agent, AnalysisInput}
 import org.tindalos.principle.domain.core.{Package, PackageReference}
-import org.tindalos.principle.domain.expectations.{Barrier, Expectations}
+import org.tindalos.principle.domain.expectations.{Barrier, Checks}
 
 import scala.collection.immutable.Seq
 
@@ -52,5 +52,5 @@ object ThirdPartyAgent extends Agent {
   private def underBasePackage(aPackage: PackageReference, basePackage: String) =
     aPackage.startsWith(basePackage)
 
-  override def isWanted(designQualityExpectations: Expectations) = designQualityExpectations.thirdParty.nonEmpty
+  override def isWanted(designQualityChecks: Checks) = designQualityChecks.thirdParty.nonEmpty
 }

@@ -13,7 +13,7 @@ class ADPTest {
 
   var plan: AnalysisPlan = null
   var runAnalysis = PoorMansDIContainer.buildRunAnalysisFn()
-  var checks: Expectations = prepareChecks()
+  var checks: Checks = prepareChecks()
 
   @Before
   def setup() = {

@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.agents.submodulesblueprint
 
 import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.agentscore.{AnalysisInput, Agent}
-import org.tindalos.principle.domain.expectations.Expectations
+import org.tindalos.principle.domain.expectations.Checks
 
 import scala.collection.immutable.Map
 
@@ -10,7 +10,7 @@ object SubmodulesBlueprintAgent {
 
   def buildInstance(buildSubmodules: (String, List[Package], String) => Set[Submodule]) = new Agent {
 
-    override def isWanted(designQualityExpectations: Expectations) = designQualityExpectations.submodulesBlueprint.nonEmpty
+    override def isWanted(designQualityChecks: Checks) = designQualityChecks.submodulesBlueprint.nonEmpty
 
     override def analyze(checkInput: AnalysisInput) =
 

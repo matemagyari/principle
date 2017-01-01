@@ -12,7 +12,7 @@ class SDPTest {
 
   var plan: AnalysisPlan = _
   val runAnalysis= PoorMansDIContainer.buildRunAnalysisFn()
-  var checks: Expectations = prepareChecks()
+  var checks: Checks = prepareChecks()
 
   @Before
   def setup() = {
