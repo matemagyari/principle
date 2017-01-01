@@ -35,14 +35,8 @@ class ApplicationModuleTest {
 
   }
 
-  private def prepareChecks() = {
-    val checks = new Checks()
-
-    checks.layering = layering()
-    checks.packageCoupling = packageCoupling()
-    //checks.setSubmodulesBlueprint(submodulesBlueprint())
-    checks
-  }
+  private def prepareChecks() =
+    Checks(layering = layering(), packageCoupling = packageCoupling())
 
   private val submodulesDefinitionLocation = "src/main/resources/principle_blueprint.yaml"
   private val submodulesBlueprint = new SubmodulesBlueprint(submodulesDefinitionLocation, 0)

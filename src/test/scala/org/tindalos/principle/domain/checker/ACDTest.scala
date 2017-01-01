@@ -81,7 +81,7 @@ class ACDTest {
     result.head.asInstanceOf[ACDResult].acd
   }
 
-  private def prepareChecks() = new Checks(packageCoupling())
+  private def prepareChecks() = Checks(packageCoupling = packageCoupling())
 
   private def packageCoupling() = {
     val packageCoupling = new PackageCoupling()

@@ -50,11 +50,8 @@ class BlueprintTest {
     result.head.asInstanceOf[SubmodulesBlueprintAnalysisResult]
   }
 
-  def prepareChecks(location: String) = {
-    val checks = new Checks()
-    checks.submodulesBlueprint = submodulesBlueprint(location)
-    checks
-  }
+  def prepareChecks(location: String) =
+    Checks(submodulesBlueprint = submodulesBlueprint(location))
 
   def submodulesBlueprint(location: String) = new SubmodulesBlueprint(location, 0)
 

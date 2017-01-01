@@ -43,7 +43,7 @@ class SDPTest {
     result.head.asInstanceOf[SDPResult]
   }
 
-  private def prepareChecks() = new Checks(packageCoupling())
+  private def prepareChecks() = new Checks(packageCoupling = packageCoupling())
 
   private def packageCoupling() = {
     val packageCoupling = new PackageCoupling()

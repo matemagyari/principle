@@ -28,14 +28,16 @@ object ManualPrincipleRunner extends App {
 
   runAnalysis(new AnalysisPlan(checks, basePackage))
 
-  private def prepareChecks() = {
-    val checks = new Checks()
+  private def prepareChecks() = Checks(packageCoupling = packageCoupling())
 
-    //checks.layering = layering()
-    checks.packageCoupling = packageCoupling()
-    //checks.setSubmodulesBlueprint(submodulesBlueprint())
-    checks
-  }
+//  {
+//    val checks = new Checks()
+//
+//    //checks.layering = layering()
+//    checks.packageCoupling = packageCoupling()
+//    //checks.setSubmodulesBlueprint(submodulesBlueprint())
+//    checks
+//  }
 
   //private val submodulesDefinitionLocation = "src/main/resources/principle_blueprint.yaml"
   //private val submodulesBlueprint = new SubmodulesBlueprint(submodulesDefinitionLocation, 0)
