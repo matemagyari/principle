@@ -163,7 +163,7 @@ Put the following xml-snippet into the plugins section of your pom.xml
 </plugin>
 ```
 
-An example yaml file. Each entry under `checks` is optional, also is any entry under `package_coupling`.
+An example yaml file (referred as principle.yml above). Each entry under `checks` is optional, also is any entry under `package_coupling`.
 
 ```yaml
 #The root package for the analysis. All packages below are relative to this.
