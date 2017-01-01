@@ -41,8 +41,8 @@ object ChecksReader {
     val layering: Layering =
       getYamlStructure(checks, "layering").map(toLayering).getOrElse(null)
 
-    val thirdParty: ThirdParty =
-      getYamlStructure(checks, "third_party_restrictions").map(toThirdParty).getOrElse(null)
+    val thirdParty: Option[ThirdParty] =
+      getYamlStructure(checks, "third_party_restrictions").map(toThirdParty)
 
     val packageCoupling = new PackageCoupling()
     getYamlStructure(checks, "package_coupling").foreach { pc ⇒

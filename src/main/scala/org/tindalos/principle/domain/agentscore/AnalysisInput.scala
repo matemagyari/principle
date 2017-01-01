@@ -3,6 +3,7 @@ package org.tindalos.principle.domain.agentscore
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.agents.structure.Graph.Node
+import org.tindalos.principle.domain.expectations.ThirdParty
 
 case class AnalysisInput(
     packages: List[Package],
@@ -13,7 +14,7 @@ case class AnalysisInput(
 
   def packageCouplingExpectations() = expectations.packageCoupling
   def layeringExpectations() = expectations.layering
-  def thirdPartyExpectations() = expectations.thirdParty
+  def thirdPartyExpectations(): Option[ThirdParty] = expectations.thirdParty
   def submodulesBlueprint() = expectations.submodulesBlueprint
 
 }

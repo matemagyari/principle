@@ -61,7 +61,7 @@ class InputValidatorTest {
   private def config(barriers: List[Barrier]): AnalysisPlan = {
     val aThirdParty = new ThirdParty(barriers)
 
-    val expectations = new Checks(layering = aLayering, thirdParty = aThirdParty)
+    val expectations = new Checks(layering = aLayering, thirdParty = Some(aThirdParty))
     new AnalysisPlan(expectations, basePackage)
   }
 }

@@ -5,7 +5,7 @@ import org.tindalos.principle.domain.expectations._
 //todo - probably the extra constructors can be get rid of
 class Checks(
     var layering: Layering = null,
-    var thirdParty: ThirdParty = null,
+    override val thirdParty: Option[ThirdParty] = None,
     var packageCoupling: PackageCoupling = null,
     var submodulesBlueprint: SubmodulesBlueprint = null) extends Expectations {
 
@@ -13,10 +13,10 @@ class Checks(
 
   def this(aLayering: Layering) = this(layering = aLayering)
 
-  def this(aThirdParty: ThirdParty) = this(thirdParty = aThirdParty)
+  def this(aThirdParty: ThirdParty) = this(thirdParty = Some(aThirdParty))
 
-  def this(aLayering: Layering, aThirdParty: ThirdParty) = this(layering = aLayering, thirdParty = aThirdParty)
+  def this(aLayering: Layering, aThirdParty: ThirdParty) = this(layering = aLayering, thirdParty = Some(aThirdParty))
 
-  def this() = this(null, null, null)
+  def this() = this(layering = null, thirdParty = None, packageCoupling = null)
 
 }

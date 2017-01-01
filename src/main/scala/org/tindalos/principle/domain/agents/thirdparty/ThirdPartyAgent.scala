@@ -4,30 +4,34 @@ import org.tindalos.principle.domain.agentscore.{Agent, AnalysisInput}
 import org.tindalos.principle.domain.core.{Package, PackageReference}
 import org.tindalos.principle.domain.expectations.{Barrier, Expectations}
 
-/**
- * Created by mate.magyari on 26/05/2014.
- */
+import scala.collection.immutable.Seq
+
 object ThirdPartyAgent extends Agent {
 
-  override def analyze(checkInput: AnalysisInput) = {
+  override def analyze(checkInput: AnalysisInput) =
 
-    val barriers = checkInput.thirdPartyExpectations().barriers
+    checkInput.thirdPartyExpectations()
+        .map { thirdParty ⇒
 
-    val violations = if (barriers == null || barriers.isEmpty) List[(PackageReference, PackageReference)]()
-    else {
-      val layers = checkInput.layeringExpectations().layers
-      val basePackage = checkInput.analysisPlan.basePackage
-      for (aPackage <- checkInput.packages
-           if (underBasePackage(aPackage.reference, basePackage));
-           layer = layerOf(layers, basePackage, aPackage);
-           if layer.isDefined;
-           referencedPackage <- aPackage.getOwnExternalPackageReferences();
-           if (outOfAllowedComponents(layer.get, layers, barriers, referencedPackage))
-      ) yield (aPackage.reference, referencedPackage)
+          val barriers = thirdParty.barriers
+          val violations =
+            if (barriers.isEmpty)
+              List[(PackageReference, PackageReference)]()
+            else {
+              val layers = checkInput.layeringExpectations().layers
+              val basePackage = checkInput.analysisPlan.basePackage
+              for (aPackage <- checkInput.packages
+                   if (underBasePackage(aPackage.reference, basePackage));
+                   layer = layerOf(layers, basePackage, aPackage);
+                   if layer.isDefined;
+                   referencedPackage <- aPackage.getOwnExternalPackageReferences();
+                   if (outOfAllowedComponents(layer.get, layers, barriers, referencedPackage))
+              ) yield (aPackage.reference, referencedPackage)
+            }
 
-    }
-    new ThirdPartyViolationsResult(violations, checkInput.thirdPartyExpectations())
-  }
+          new ThirdPartyViolationsResult(violations, thirdParty)
+        }
+        .getOrElse(new ThirdPartyViolationsResult(List.empty, null))
 
   private def allowedComponentsForLayer(
       layers: List[String],
@@ -48,5 +52,5 @@ object ThirdPartyAgent extends Agent {
   private def underBasePackage(aPackage: PackageReference, basePackage: String) =
     aPackage.startsWith(basePackage)
 
-  override def isWanted(designQualityExpectations: Expectations) = designQualityExpectations.thirdParty != null
+  override def isWanted(designQualityExpectations: Expectations) = designQualityExpectations.thirdParty.nonEmpty
 }
