@@ -61,7 +61,7 @@ object ChecksReader {
           .map { _ ⇒ new Grouping() }
           .getOrElse(null)
 
-      new PackageCoupling(
+      PackageCoupling(
         racd = x.flatMap(_._1).getOrElse(null),
         adp = x.flatMap(_._2).getOrElse(null),
         grouping = grouping)

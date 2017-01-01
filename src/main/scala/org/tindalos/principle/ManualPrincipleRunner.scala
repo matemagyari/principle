@@ -44,17 +44,7 @@ object ManualPrincipleRunner extends App {
 
   private def layering() = new Layering(List("infrastructure", "app", "domain"), 0)
 
-  private def packageCoupling() = {
-    val packageCoupling = new PackageCoupling()
-    /*
-    packageCoupling.sap = new SAP(0, 0.3d)
-    packageCoupling.adp = new ADP()
-    packageCoupling.sdp = new SDP()
-    packageCoupling.acd = new ACD()
-    */
-    packageCoupling.grouping = new Grouping()
-    packageCoupling
-  }
+  private def packageCoupling() = PackageCoupling(grouping = new Grouping())
 
   class ConsolePrinter extends Printer {
 

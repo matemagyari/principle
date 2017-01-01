@@ -45,10 +45,6 @@ class SDPTest {
 
   private def prepareChecks() = new Checks(packageCoupling = packageCoupling())
 
-  private def packageCoupling() = {
-    val packageCoupling = new PackageCoupling()
-    packageCoupling.sdp = new SDP()
-    packageCoupling
-  }
+  private def packageCoupling() = PackageCoupling(sdp = new SDP())
 
 }

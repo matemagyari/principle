@@ -43,15 +43,13 @@ class ApplicationModuleTest {
 
   private def layering() = new Layering(List("infrastructure", "app", "domain"), 0)
 
-  private def packageCoupling() = {
-    val packageCoupling = new PackageCoupling()
-    packageCoupling.sap = SAP(0, 0.3d)
-    packageCoupling.adp = ADP()
-    packageCoupling.sdp = SDP()
-    packageCoupling.acd = ACD()
-    packageCoupling.grouping = new Grouping()
-    packageCoupling
-  }
+  private def packageCoupling() =
+    PackageCoupling(
+      sap = SAP(0, 0.3d),
+      adp = ADP(),
+      sdp = SDP(),
+      acd = ACD(),
+      grouping = new Grouping())
 
   private class ConsolePrinter extends Printer {
 

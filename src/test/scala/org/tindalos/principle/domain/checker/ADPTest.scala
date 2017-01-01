@@ -102,12 +102,8 @@ class ADPTest {
 
   private def prepareChecks() = Checks(packageCoupling = packageCoupling())
 
-  private def packageCoupling() = {
-    val packageCoupling = new PackageCoupling()
-    packageCoupling.adp = ADP()
-    packageCoupling
-  }
-  
+  private def packageCoupling() = PackageCoupling(adp = ADP())
+
   private def ref(reference:String) = new PackageReference(reference)
 
 }
