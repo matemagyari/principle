@@ -7,7 +7,6 @@ import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
-import org.tindalos.principle.infrastructure.plugin.Checks
 
 class ACDTest {
 

@@ -5,7 +5,6 @@ import org.tindalos.principle.domain.core.logging.{ScalaLogger, TheLogger}
 import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.domain.resultprocessing.reporter.Printer
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
-import org.tindalos.principle.infrastructure.plugin.Checks
 
 object ManualPrincipleRunner extends App {
 

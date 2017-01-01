@@ -6,7 +6,6 @@ import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.domain.resultprocessing.reporter.Printer
 import org.tindalos.principle.domain.resultprocessing.thresholdchecker.ThresholdTrespassedException
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
-import org.tindalos.principle.infrastructure.plugin.Checks
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 
 class ApplicationModuleTest {

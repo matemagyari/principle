@@ -29,9 +29,9 @@ object ThirdPartyAgent extends Agent {
               ) yield (aPackage.reference, referencedPackage)
             }
 
-          new ThirdPartyViolationsResult(violations, thirdParty)
+          ThirdPartyViolationsResult(violations, thirdParty)
         }
-        .getOrElse(new ThirdPartyViolationsResult(List.empty, null))
+        .getOrElse(ThirdPartyViolationsResult(List.empty, null))
 
   private def allowedComponentsForLayer(
       layers: List[String],

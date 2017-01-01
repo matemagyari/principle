@@ -3,8 +3,7 @@ package org.tindalos.principle.app.service
 import org.junit.Assert._
 import org.junit.Test
 import org.tindalos.principle.domain.core.AnalysisPlan
-import org.tindalos.principle.domain.expectations.{Barrier, ThirdParty, Layering, Expectations}
-import org.tindalos.principle.infrastructure.plugin.Checks
+import org.tindalos.principle.domain.expectations._
 
 class InputValidatorTest {
 
@@ -15,7 +14,7 @@ class InputValidatorTest {
   @Test
   def wrongOrder() {
 
-    val barriers = List(new Barrier("a"),new Barrier("c"),new Barrier("b"))
+    val barriers = List(Barrier("a"),Barrier("c"),Barrier("b"))
     val configuration: AnalysisPlan = config(barriers)
 
     val (success,msg) = InputValidator.validate(configuration)
@@ -26,7 +25,7 @@ class InputValidatorTest {
   @Test
   def invalidBarrier() {
 
-    val barriers = List(new Barrier("a"),new Barrier("d"))
+    val barriers = List(Barrier("a"),Barrier("d"))
     val configuration: AnalysisPlan = config(barriers)
 
     val (success,msg) = InputValidator.validate(configuration)
@@ -38,7 +37,7 @@ class InputValidatorTest {
   @Test
   def fullCover() {
 
-    val barriers = List(new Barrier("a"),new Barrier("b"),new Barrier("c"))
+    val barriers = List(Barrier("a"),Barrier("b"),Barrier("c"))
     val configuration: AnalysisPlan = config(barriers)
 
     val (success,msg) = InputValidator.validate(configuration)
@@ -49,7 +48,7 @@ class InputValidatorTest {
   @Test
   def partialCover() {
 
-    val barriers = List(new Barrier("a"), new Barrier("c"))
+    val barriers = List(Barrier("a"), Barrier("c"))
     val configuration: AnalysisPlan = config(barriers)
 
     val (success,msg) = InputValidator.validate(configuration)
@@ -59,7 +58,7 @@ class InputValidatorTest {
 
 
   private def config(barriers: List[Barrier]): AnalysisPlan = {
-    val aThirdParty = new ThirdParty(barriers)
+    val aThirdParty = ThirdParty(barriers)
 
     val expectations = new Checks(layering = aLayering, thirdParty = Some(aThirdParty))
     new AnalysisPlan(expectations, basePackage)
