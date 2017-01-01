@@ -4,7 +4,10 @@ import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.agents.structure.Graph.Node
 
-class AnalysisInput(val packages: List[Package], val nodes:Set[Node] = Set(), val analysisPlan: AnalysisPlan) {
+case class AnalysisInput(
+    packages: List[Package],
+    nodes:Set[Node] = Set(),
+    analysisPlan: AnalysisPlan) {
 
   private val expectations = analysisPlan.expectations
 
@@ -12,6 +15,5 @@ class AnalysisInput(val packages: List[Package], val nodes:Set[Node] = Set(), va
   def layeringExpectations() = expectations.layering
   def thirdPartyExpectations() = expectations.thirdParty
   def submodulesBlueprint() = expectations.submodulesBlueprint
-
 
 }
