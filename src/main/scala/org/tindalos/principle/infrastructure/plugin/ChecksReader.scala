@@ -43,19 +43,28 @@ object ChecksReader {
     val thirdParty: Option[ThirdParty] =
       getYamlStructure(checks, "third_party_restrictions").map(toThirdParty)
 
-    val packageCoupling = new PackageCoupling()
-    getYamlStructure(checks, "package_coupling").foreach { pc ⇒
-      pc.get("acd_threshold").foreach { threshold ⇒
-        packageCoupling.racd = RACD(threshold.asInstanceOf[Double])
+    val packageCoupling = {
+      val x: Option[(Option[RACD], Option[ADP])] = getYamlStructure(checks, "package_coupling").map { pc ⇒
+
+        val racdTh = pc.get("acd_threshold").map { threshold ⇒
+          RACD(threshold.asInstanceOf[Double])
+        }
+        val adpTh = pc.get("cyclic_dependencies_threshold").map { threshold ⇒
+          ADP(threshold.asInstanceOf[Int])
+        }
+
+        (racdTh, adpTh)
       }
-      pc.get("cyclic_dependencies_threshold").foreach { threshold ⇒
-        packageCoupling.adp = ADP(threshold.asInstanceOf[Int])
-      }
-    }
-    yamlObject.get("structure_analysis_enabled").map { sa ⇒
-      if (sa.asInstanceOf[Boolean]) {
-        packageCoupling.grouping = new Grouping()
-      }
+
+      val grouping = yamlObject.get("structure_analysis_enabled")
+          .filter(_.asInstanceOf[Boolean])
+          .map { _ ⇒ new Grouping() }
+          .getOrElse(null)
+
+      new PackageCoupling(
+        racd = x.flatMap(_._1).getOrElse(null),
+        adp = x.flatMap(_._2).getOrElse(null),
+        grouping = grouping)
     }
 
     (new Checks(layering, thirdParty, packageCoupling, modules), rootPackage)
