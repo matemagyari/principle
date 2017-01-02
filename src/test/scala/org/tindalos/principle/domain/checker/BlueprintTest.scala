@@ -39,7 +39,7 @@ class BlueprintTest {
   }
 
   private def run(basePackage: String, location: String) = {
-    val expectations = prepareChecks(location)
+    val expectations = Checks(submodulesBlueprint = Some(submodulesBlueprint(location)))
     val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
     val packageList = packageListProducer(basePackage)
     val runAnalysis= PoorMansDIContainer.buildRunAnalysisFn()
@@ -48,9 +48,6 @@ class BlueprintTest {
     assertEquals(1, result.length)
     result.head.asInstanceOf[SubmodulesBlueprintAnalysisResult]
   }
-
-  def prepareChecks(location: String) =
-    Checks(submodulesBlueprint = Some(submodulesBlueprint(location)))
 
   def submodulesBlueprint(location: String) = new SubmodulesBlueprint(location, 0)
 

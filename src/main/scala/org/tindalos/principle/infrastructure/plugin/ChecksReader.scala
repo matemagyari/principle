@@ -66,7 +66,8 @@ object ChecksReader {
       new Checks(
         layering = getYamlStructure(checksYaml, "layering").map(toLayering).getOrElse(null),
         thirdParty = getYamlStructure(checksYaml, "third_party_restrictions").map(toThirdParty),
-        packageCoupling, modules)
+        packageCoupling = Some(packageCoupling),
+        modules)
     }
 
     (checks, rootPackage)

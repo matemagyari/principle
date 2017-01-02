@@ -7,14 +7,17 @@ import org.tindalos.principle.domain.expectations.{SubmodulesBlueprint, ThirdPar
 
 case class AnalysisInput(
     packages: List[Package],
-    nodes:Set[Node] = Set(),
+    nodes: Set[Node] = Set(),
     analysisPlan: AnalysisPlan) {
 
   private val expectations = analysisPlan.expectations
 
   def packageCouplingExpectations() = expectations.packageCoupling
+
   def layeringExpectations() = expectations.layering
+
   def thirdPartyExpectations(): Option[ThirdParty] = expectations.thirdParty
+
   def submodulesBlueprint(): Option[SubmodulesBlueprint] = expectations.submodulesBlueprint
 
 }

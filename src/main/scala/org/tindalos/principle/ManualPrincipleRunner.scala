@@ -23,11 +23,9 @@ object ManualPrincipleRunner extends App {
 
   val basePackage = "org.tindalos.principle"
   val runAnalysis = PoorMansDIContainer.buildAnalyzer(basePackage, printer)
-  val checks = prepareChecks()
+  val checks = Checks(packageCoupling = Some(PackageCoupling(grouping = Grouping())))
 
   runAnalysis(new AnalysisPlan(checks, basePackage))
-
-  private def prepareChecks() = Checks(packageCoupling = packageCoupling())
 
 //  {
 //    val checks = new Checks()
@@ -42,8 +40,6 @@ object ManualPrincipleRunner extends App {
   //private val submodulesBlueprint = new SubmodulesBlueprint(submodulesDefinitionLocation, 0)
 
   private def layering() = new Layering(List("infrastructure", "app", "domain"), 0)
-
-  private def packageCoupling() = PackageCoupling(grouping = new Grouping())
 
   class ConsolePrinter extends Printer {
 

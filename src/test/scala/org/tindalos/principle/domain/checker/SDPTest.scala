@@ -12,7 +12,7 @@ class SDPTest {
 
   var plan: AnalysisPlan = _
   val runAnalysis= PoorMansDIContainer.buildRunAnalysisFn()
-  var checks: Checks = prepareChecks()
+  val checks = new Checks(packageCoupling = Some(PackageCoupling(sdp = new SDP())))
 
   @Before
   def setup() = {
@@ -41,9 +41,5 @@ class SDPTest {
     assertEquals(1, result.length)
     result.head.asInstanceOf[SDPResult]
   }
-
-  private def prepareChecks() = new Checks(packageCoupling = packageCoupling())
-
-  private def packageCoupling() = PackageCoupling(sdp = new SDP())
 
 }

@@ -13,7 +13,7 @@ class ADPTest {
 
   var plan: AnalysisPlan = null
   var runAnalysis = PoorMansDIContainer.buildRunAnalysisFn()
-  var checks: Checks = prepareChecks()
+  val checks = Checks(packageCoupling = Some(PackageCoupling(adp = ADP())))
 
   @Before
   def setup() = {
@@ -98,10 +98,6 @@ class ADPTest {
     assertEquals(1, result.length)
     result.head.asInstanceOf[ADPResult].cyclesByBreakingPoints
   }
-
-  private def prepareChecks() = Checks(packageCoupling = packageCoupling())
-
-  private def packageCoupling() = PackageCoupling(adp = ADP())
 
   private def ref(reference:String) = new PackageReference(reference)
 

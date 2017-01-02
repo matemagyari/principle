@@ -4,8 +4,6 @@ import org.tindalos.principle.domain.agentscore.{Agent, AnalysisInput}
 import org.tindalos.principle.domain.core.{Package, PackageReference}
 import org.tindalos.principle.domain.expectations.{Barrier, Checks}
 
-import scala.collection.immutable.Seq
-
 object ThirdPartyAgent extends Agent {
 
   override def analyze(checkInput: AnalysisInput) =

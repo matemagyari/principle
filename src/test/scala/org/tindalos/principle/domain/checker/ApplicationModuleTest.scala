@@ -21,7 +21,14 @@ class ApplicationModuleTest {
 
     val runAnalysis = PoorMansDIContainer.buildAnalyzer(basePackage, new ConsolePrinter())
 
-    val checks = prepareChecks()
+    val checks = Checks(
+      layering = layering(),
+      packageCoupling = Some(PackageCoupling(
+        sap = SAP(0, 0.3d),
+        adp = ADP(),
+        sdp = SDP(),
+        acd = ACD(),
+        grouping = new Grouping())))
 
     try {
       runAnalysis(new AnalysisPlan(checks, basePackage))
@@ -34,21 +41,10 @@ class ApplicationModuleTest {
 
   }
 
-  private def prepareChecks() =
-    Checks(layering = layering(), packageCoupling = packageCoupling())
-
   private val submodulesDefinitionLocation = "src/main/resources/principle_blueprint.yaml"
   private val submodulesBlueprint = new SubmodulesBlueprint(submodulesDefinitionLocation, 0)
 
   private def layering() = new Layering(List("infrastructure", "app", "domain"), 0)
-
-  private def packageCoupling() =
-    PackageCoupling(
-      sap = SAP(0, 0.3d),
-      adp = ADP(),
-      sdp = SDP(),
-      acd = ACD(),
-      grouping = new Grouping())
 
   private class ConsolePrinter extends Printer {
 
