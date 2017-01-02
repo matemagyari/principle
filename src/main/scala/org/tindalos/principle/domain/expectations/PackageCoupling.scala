@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.expectations
 
 //todo - make them Options
 case class PackageCoupling(
-  adp: ADP = null,
+  adp: Option[ADP] = None,
   sdp: SDP = null,
   sap: SAP = null,
   acd: ACD = null,

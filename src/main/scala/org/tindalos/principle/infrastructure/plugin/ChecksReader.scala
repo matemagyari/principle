@@ -59,7 +59,7 @@ object ChecksReader {
 
         PackageCoupling(
           racd = x.flatMap(_._1).getOrElse(null),
-          adp = x.flatMap(_._2).getOrElse(null),
+          adp = x.flatMap(_._2),
           grouping = grouping)
       }
 

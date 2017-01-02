@@ -25,7 +25,7 @@ class ApplicationModuleTest {
       layering = layering(),
       packageCoupling = Some(PackageCoupling(
         sap = SAP(0, 0.3d),
-        adp = ADP(),
+        adp = Some(ADP()),
         sdp = SDP(),
         acd = ACD(),
         grouping = new Grouping())))

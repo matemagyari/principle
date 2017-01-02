@@ -13,7 +13,7 @@ class ADPTest {
 
   var plan: AnalysisPlan = null
   var runAnalysis = PoorMansDIContainer.buildRunAnalysisFn()
-  val checks = Checks(packageCoupling = Some(PackageCoupling(adp = ADP())))
+  val checks = Checks(packageCoupling = Some(PackageCoupling(adp = Some(ADP()))))
 
   @Before
   def setup() = {

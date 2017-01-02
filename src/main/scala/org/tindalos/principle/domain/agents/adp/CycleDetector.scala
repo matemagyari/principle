@@ -26,9 +26,9 @@ object CycleDetector {
         sortedByAfferents = sortedByAfferents.filterNot(cyclesInSubgraph.investigatedPackages.contains(_))
       }
 
-      new ADPResult(cycles, input.packageCouplingExpectations().get.adp)
+      new ADPResult(cycles, input.packageCouplingExpectations().flatMap(_.adp).get)
     }
 
-    override def isWanted(expectations: Checks) = expectations.packageCoupling.exists(_.adp != null)
+    override def isWanted(expectations: Checks) = expectations.packageCoupling.flatMap(_.adp).nonEmpty
   }
 }
