@@ -58,7 +58,7 @@ Package _org.someapp.infrastructure_ depends on _org.someapp.application_, which
 
 ## Stable Abstractions Principle Constraint
 
-Read about this [here](http://www.objectmentor.com/resources/articles/stability.pdf). With this Constraint you must define a _maximal allowed distance_. Each package with a higher distance will be regarded as a violation. The error report lists all these packages. For example if the _Distance_ threshold is 0.5 and _Distance_ value of the packages _org.amazon.customer_ and _org.amazon.core_are higher, then the report will list them
+Read about this [here](https://drive.google.com/file/d/0BwhCYaYDn8EgZjI3OTU4ZTAtYmM4Mi00MWMyLTgxN2YtMzk5YTY1NTViNTBh/view). With this Constraint you must define a _maximal allowed distance_. Each package with a higher distance will be regarded as a violation. The error report lists all these packages. For example if the _Distance_ threshold is 0.5 and _Distance_ value of the packages _org.amazon.customer_ and _org.amazon.core_are higher, then the report will list them
 
 ```
 Stable Abstractions Principle violations (2 of allowed 5)
@@ -69,7 +69,7 @@ org.amazon.core[0.75]
 
 ## Stable Dependencies Principle Constraint
 
-Read about this on the [same link](http://www.objectmentor.com/resources/articles/stability.pdf) as the SAP-one. The error report lists all the dependencies, where a package depends on an other package of higher instability (the number in angular brackets), like
+Read about this on the [same link](https://drive.google.com/file/d/0BwhCYaYDn8EgZjI3OTU4ZTAtYmM4Mi00MWMyLTgxN2YtMzk5YTY1NTViNTBh/view) as the SAP-one. The error report lists all the dependencies, where a package depends on an other package of higher instability (the number in angular brackets), like
 
 ```
 Stable Abstractions Principle violations (1 of allowed 2)
