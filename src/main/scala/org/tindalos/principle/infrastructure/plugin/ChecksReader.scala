@@ -29,37 +29,48 @@ object ChecksReader {
     }
     val rootPackage = yamlObject("root_package").asInstanceOf[String]
 
-    val checks = getYamlStructure(yamlObject, "checks").get
+    val checksYaml = getYamlStructure(yamlObject, "checks").get
 
-    val modules: SubmodulesBlueprint = getYamlStructure(checks, "modules")
-      .map { modules ⇒
-        val threshold = modules.get("violation_threshold").map(_.asInstanceOf[Int]).getOrElse(0)
-        new SubmodulesBlueprint(fileLocation, threshold)
+    val checks = {
+
+      val modules: Option[SubmodulesBlueprint] = getYamlStructure(checksYaml, "modules")
+          .map { modules ⇒
+            val threshold = modules.get("violation_threshold").map(_.asInstanceOf[Int]).getOrElse(0)
+            new SubmodulesBlueprint(fileLocation, threshold)
+          }
+
+      val packageCoupling = {
+        val x: Option[(Option[RACD], Option[ADP])] = getYamlStructure(checksYaml, "package_coupling").map { pc ⇒
+
+          val racdTh = pc.get("acd_threshold").map { threshold ⇒
+            RACD(threshold.asInstanceOf[Double])
+          }
+          val adpTh = pc.get("cyclic_dependencies_threshold").map { threshold ⇒
+            ADP(threshold.asInstanceOf[Int])
+          }
+
+          (racdTh, adpTh)
+        }
+
+        val grouping = yamlObject.get("structure_analysis_enabled")
+            .filter(_.asInstanceOf[Boolean])
+            .map { _ ⇒ new Grouping() }
+            .getOrElse(null)
+
+        PackageCoupling(
+          racd = x.flatMap(_._1).getOrElse(null),
+          adp = x.flatMap(_._2),
+          grouping = grouping)
       }
-      .getOrElse(null)
 
-    val layering: Layering =
-      getYamlStructure(checks, "layering").map(toLayering).getOrElse(null)
-
-    val thirdParty: ThirdParty =
-      getYamlStructure(checks, "third_party_restrictions").map(toThirdParty).getOrElse(null)
-
-    val packageCoupling = new PackageCoupling()
-    getYamlStructure(checks, "package_coupling").foreach { pc ⇒
-      pc.get("acd_threshold").foreach { threshold ⇒
-        packageCoupling.racd = RACD(threshold.asInstanceOf[Double])
-      }
-      pc.get("cyclic_dependencies_threshold").foreach { threshold ⇒
-        packageCoupling.adp = ADP(threshold.asInstanceOf[Int])
-      }
+      new Checks(
+        layering = getYamlStructure(checksYaml, "layering").map(toLayering).getOrElse(null),
+        thirdParty = getYamlStructure(checksYaml, "third_party_restrictions").map(toThirdParty),
+        packageCoupling = Some(packageCoupling),
+        modules)
     }
-    yamlObject.get("structure_analysis_enabled").map { sa ⇒
-      if (sa.asInstanceOf[Boolean]) {
-        packageCoupling.grouping = new Grouping()
-      }
-    }
 
-    (new Checks(layering, thirdParty, packageCoupling, modules), rootPackage)
+    (checks, rootPackage)
   }
 
   private def toThirdParty(structure: Map[String, Object]): ThirdParty = {
@@ -68,13 +79,13 @@ object ChecksReader {
         .asScala.to[Seq].map(javaMap ⇒ javaMap.asScala.toMap)
 
     def toBarrier(m: Map[String, Object]): Barrier =
-      new Barrier(
+      Barrier(
         layer = m("layer").asInstanceOf[String],
         components = m("libraries")
             .asInstanceOf[java.util.List[String]]
             .asScala.to[Seq].mkString(","))
 
-    new ThirdParty(
+    ThirdParty(
       barriers = barriersYaml.map(toBarrier).to[List],
       threshold = structure("violation_threshold").asInstanceOf[Int])
   }

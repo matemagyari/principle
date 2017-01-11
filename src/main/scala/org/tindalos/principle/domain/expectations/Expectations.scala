@@ -1,9 +1,8 @@
 package org.tindalos.principle.domain.expectations
 
-trait Expectations {
-
-  def layering: Layering
-  def packageCoupling: PackageCoupling
-  def submodulesBlueprint: SubmodulesBlueprint
-  def thirdParty: ThirdParty
-}
+//todo make nulls Options
+case class Checks(
+    layering: Layering = null,
+    thirdParty: Option[ThirdParty] = None,
+    packageCoupling: Option[PackageCoupling] = None,
+    submodulesBlueprint: Option[SubmodulesBlueprint] = None)

@@ -7,13 +7,12 @@ import org.tindalos.principle.domain.agentscore.{AnalysisInput, AnalysisResult}
 import org.tindalos.principle.domain.agents.layering.{LayerReference, LayerViolationsResult}
 import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
-import org.tindalos.principle.infrastructure.plugin.Checks
 
 class LayeringTest {
 
   var plan: AnalysisPlan = null
   var runAnalysis = PoorMansDIContainer.buildRunAnalysisFn()
-  var expectations: Expectations = prepareChecks()
+  var expectations: Checks = prepareChecks()
 
   @Before
   def setup() = {

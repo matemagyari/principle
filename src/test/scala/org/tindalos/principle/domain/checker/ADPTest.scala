@@ -7,14 +7,13 @@ import org.tindalos.principle.domain.agentscore.{AnalysisInput}
 import org.tindalos.principle.domain.agents.adp._
 import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
-import org.tindalos.principle.infrastructure.plugin.Checks
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
 
 class ADPTest {
 
   var plan: AnalysisPlan = null
   var runAnalysis = PoorMansDIContainer.buildRunAnalysisFn()
-  var checks: Expectations = prepareChecks()
+  val checks = Checks(packageCoupling = Some(PackageCoupling(adp = Some(ADP()))))
 
   @Before
   def setup() = {
@@ -100,14 +99,6 @@ class ADPTest {
     result.head.asInstanceOf[ADPResult].cyclesByBreakingPoints
   }
 
-  private def prepareChecks() = new Checks(packageCoupling())
-
-  private def packageCoupling() = {
-    val packageCoupling = new PackageCoupling()
-    packageCoupling.adp = ADP()
-    packageCoupling
-  }
-  
   private def ref(reference:String) = new PackageReference(reference)
 
 }

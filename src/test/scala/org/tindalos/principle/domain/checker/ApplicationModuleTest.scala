@@ -6,7 +6,6 @@ import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.domain.resultprocessing.reporter.Printer
 import org.tindalos.principle.domain.resultprocessing.thresholdchecker.ThresholdTrespassedException
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
-import org.tindalos.principle.infrastructure.plugin.Checks
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 
 class ApplicationModuleTest {
@@ -22,7 +21,14 @@ class ApplicationModuleTest {
 
     val runAnalysis = PoorMansDIContainer.buildAnalyzer(basePackage, new ConsolePrinter())
 
-    val checks = prepareChecks()
+    val checks = Checks(
+      layering = layering(),
+      packageCoupling = Some(PackageCoupling(
+        sap = SAP(0, 0.3d),
+        adp = Some(ADP()),
+        sdp = SDP(),
+        acd = ACD(),
+        grouping = new Grouping())))
 
     try {
       runAnalysis(new AnalysisPlan(checks, basePackage))
@@ -35,29 +41,10 @@ class ApplicationModuleTest {
 
   }
 
-  private def prepareChecks() = {
-    val checks = new Checks()
-
-    checks.layering = layering()
-    checks.packageCoupling = packageCoupling()
-    //checks.setSubmodulesBlueprint(submodulesBlueprint())
-    checks
-  }
-
   private val submodulesDefinitionLocation = "src/main/resources/principle_blueprint.yaml"
   private val submodulesBlueprint = new SubmodulesBlueprint(submodulesDefinitionLocation, 0)
 
   private def layering() = new Layering(List("infrastructure", "app", "domain"), 0)
-
-  private def packageCoupling() = {
-    val packageCoupling = new PackageCoupling()
-    packageCoupling.sap = SAP(0, 0.3d)
-    packageCoupling.adp = ADP()
-    packageCoupling.sdp = SDP()
-    packageCoupling.acd = ACD()
-    packageCoupling.grouping = new Grouping()
-    packageCoupling
-  }
 
   private class ConsolePrinter extends Printer {
 

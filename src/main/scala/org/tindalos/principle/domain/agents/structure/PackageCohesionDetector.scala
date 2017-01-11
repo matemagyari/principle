@@ -5,7 +5,7 @@ import org.tindalos.principle.domain.agents.structure.Graph.{SubgraphDecompositi
 import org.tindalos.principle.domain.agents.structure.PackageCohesionModule.PackageName
 import org.tindalos.principle.domain.agents.structure.PackageStructureHints1Finder.GroupingResult
 import org.tindalos.principle.domain.agents.structure.Structure.NodeGroup
-import org.tindalos.principle.domain.expectations.{PackageCoupling, Expectations}
+import org.tindalos.principle.domain.expectations.{PackageCoupling, Checks}
 
 object PackageCohesionDetector {
   
@@ -20,19 +20,18 @@ object PackageCohesionDetector {
       val structureHints1 = makeStructureHints1(input.nodes)
       val structureHints2 = findDetachableSubgraphs(input.nodes)
 
-      val cohesiveGroups = if (input.packageCouplingExpectations().grouping != null) {
-        val initialGroups = input.nodes.map(n => NodeGroup(Set(n)))
-        Some(collapseToLimit(initialGroups))
-      } else None
-
+      val cohesiveGroups =
+        input.packageCouplingExpectations().map { _ ⇒
+          val initialGroups = input.nodes.map(n => NodeGroup(Set(n)))
+          collapseToLimit(initialGroups)
+        }
 
       CohesionAnalysisResult(packagesWithCohesions, cohesiveGroups, structureHints1, structureHints2)
     }
 
-    override def isWanted(expectations: Expectations) =  expectations.packageCoupling match {
-      case packageCoupling: PackageCoupling => packageCoupling.grouping != null
-      case null => false
-    }
+    override def isWanted(expectations: Checks) =  expectations.packageCoupling
+        .map(_.grouping != null)
+        .getOrElse(false)
   }
 
 

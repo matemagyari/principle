@@ -7,13 +7,12 @@ import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.agents.sdp.SDPResult
 import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
-import org.tindalos.principle.infrastructure.plugin.Checks
 
 class SDPTest {
 
   var plan: AnalysisPlan = _
   val runAnalysis= PoorMansDIContainer.buildRunAnalysisFn()
-  var checks: Expectations = prepareChecks()
+  val checks = new Checks(packageCoupling = Some(PackageCoupling(sdp = new SDP())))
 
   @Before
   def setup() = {
@@ -41,14 +40,6 @@ class SDPTest {
     val result = runAnalysis(new AnalysisInput(packageList, Set(), plan))
     assertEquals(1, result.length)
     result.head.asInstanceOf[SDPResult]
-  }
-
-  private def prepareChecks() = new Checks(packageCoupling())
-
-  private def packageCoupling() = {
-    val packageCoupling = new PackageCoupling()
-    packageCoupling.sdp = new SDP()
-    packageCoupling
   }
 
 }

@@ -6,7 +6,6 @@ import org.tindalos.principle.domain.core.{AnalysisPlan, PackageReference}
 import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
-import org.tindalos.principle.infrastructure.plugin.Checks
 import org.tindalos.principle.domain.agents.thirdparty.ThirdPartyViolationsResult
 
 class ThirdPartyTest {
@@ -21,8 +20,8 @@ class ThirdPartyTest {
   @Test
   def simple() {
 
-    val barriers = List(new Barrier("app", "org.apache.commons.lang3"))
-    val thirdParty = new ThirdParty(barriers)
+    val barriers = List(Barrier("app", "org.apache.commons.lang3"))
+    val thirdParty = ThirdParty(barriers)
 
     val result = run("org.tindalos.principletest.thirdparty.simple",thirdParty).asInstanceOf[ThirdPartyViolationsResult]
     val expected = Set((new PackageReference("org.tindalos.principletest.thirdparty.simple.domain")
@@ -33,8 +32,8 @@ class ThirdPartyTest {
   @Test
   def allowBoth() {
 
-    val barriers = List(new Barrier("app", "org.apache.commons.lang3,org.apache.commons.io"))
-    val thirdParty = new ThirdParty(barriers)
+    val barriers = List(Barrier("app", "org.apache.commons.lang3,org.apache.commons.io"))
+    val thirdParty = ThirdParty(barriers)
 
     val result = run("org.tindalos.principletest.thirdparty.simple2",thirdParty).asInstanceOf[ThirdPartyViolationsResult]
 
@@ -45,8 +44,8 @@ class ThirdPartyTest {
   @Test
   def allowOneRejectTheOther() {
 
-    val barriers = List(new Barrier("app", "org.apache.commons.lang3"))
-    val thirdParty = new ThirdParty(barriers)
+    val barriers = List(Barrier("app", "org.apache.commons.lang3"))
+    val thirdParty = ThirdParty(barriers)
 
     val result = run("org.tindalos.principletest.thirdparty.simple2",thirdParty).asInstanceOf[ThirdPartyViolationsResult]
 
@@ -58,7 +57,7 @@ class ThirdPartyTest {
 
 
   private def run(basePackage: String, thirdParty:ThirdParty) = {
-    val expectations: Expectations = new Checks(layering(), thirdParty)
+    val expectations: Checks = Checks(layering = layering(), thirdParty = Some(thirdParty))
     val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
     val packageList = packageListProducer(basePackage)
     val plan = new AnalysisPlan(expectations, basePackage)

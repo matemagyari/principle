@@ -7,7 +7,6 @@ import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.agents.submodulesblueprint._
 import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
-import org.tindalos.principle.infrastructure.plugin.Checks
 
 class BlueprintTest {
 
@@ -40,7 +39,7 @@ class BlueprintTest {
   }
 
   private def run(basePackage: String, location: String) = {
-    val expectations = prepareChecks(location)
+    val expectations = Checks(submodulesBlueprint = Some(submodulesBlueprint(location)))
     val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
     val packageList = packageListProducer(basePackage)
     val runAnalysis= PoorMansDIContainer.buildRunAnalysisFn()
@@ -48,12 +47,6 @@ class BlueprintTest {
     val result = runAnalysis(new AnalysisInput(packageList, Set(), plan))
     assertEquals(1, result.length)
     result.head.asInstanceOf[SubmodulesBlueprintAnalysisResult]
-  }
-
-  def prepareChecks(location: String) = {
-    val checks = new Checks()
-    checks.submodulesBlueprint = submodulesBlueprint(location)
-    checks
   }
 
   def submodulesBlueprint(location: String) = new SubmodulesBlueprint(location, 0)

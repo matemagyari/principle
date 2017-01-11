@@ -1,16 +1,13 @@
 package org.tindalos.principle.domain.expectations
 
-class PackageCoupling {
-
-  var adp: ADP = null
-  var sdp: SDP = null
-  var sap: SAP = null
-
-  var acd: ACD = null
-  var racd: RACD = null
-  var nccd: NCCD = null
-
-  var grouping: Grouping = null
-}
+//todo - make them Options
+case class PackageCoupling(
+  adp: Option[ADP] = None,
+  sdp: SDP = null,
+  sap: SAP = null,
+  acd: ACD = null,
+  racd: RACD = null,
+  nccd: NCCD = null,
+  grouping: Grouping = null)
 
 case class Grouping()

@@ -7,13 +7,12 @@ import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
-import org.tindalos.principle.infrastructure.plugin.Checks
 
 class ACDTest {
 
   var plan: AnalysisPlan = null
   val runAnalysis = PoorMansDIContainer.buildRunAnalysisFn()
-  var expectations: Expectations = prepareChecks()
+  var expectations: Checks = prepareChecks()
 
   @Before
   def setup() = {
@@ -81,12 +80,5 @@ class ACDTest {
     result.head.asInstanceOf[ACDResult].acd
   }
 
-  private def prepareChecks() = new Checks(packageCoupling())
-
-  private def packageCoupling() = {
-    val packageCoupling = new PackageCoupling()
-    packageCoupling.acd = ACD()
-    packageCoupling
-  }
-
+  private def prepareChecks() = Checks(packageCoupling = Some(PackageCoupling(acd = ACD())))
 }
