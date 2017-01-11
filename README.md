@@ -79,7 +79,7 @@ org.amazon.customer[0.6666667] --> org.amazon.core[0.75]
 
 ## Average Component Dependency Constraint
 
-ACD is a numeric value telling you that picking up an arbitrary package, how many packages in average it depends on. And symmetrically how many packages depend on it. In other words, if you do a change in a package, how many of the other packages will be affected in average. Obviously we want to keep it as low as possible, so changes would affect only small part of the code instead of rippling through the whole code base. For more details read this. Principle can measure absolute ACD and relative ACD (rACD), which is the percentage-based version of ACD. E.g. 15% means an average package depends on the 15% of all packages in the code base.
+ACD is a numeric value telling you that picking up an arbitrary package, how many packages in average it depends on. And symmetrically how many packages depend on it. In other words, if you do a change in a package, how many of the other packages will be affected in average. Obviously we want to keep it as low as possible, so changes would affect only small part of the code instead of rippling through the whole code base. For more details read [this](https://qconsf.com/sf2009/dl/qcon-sanfran-2008/slides/AlexanderVonZitzewitz_Successful_projects_with_architecture_management.pdf). Principle can measure absolute ACD and relative ACD (rACD), which is the percentage-based version of ACD. E.g. 15% means an average package depends on the 15% of all packages in the code base.
 ```
 Component Dependency Metrics
 ====================================
