@@ -16,33 +16,24 @@ import java.util.Iterator;
  * @author Clarkware Consulting, Inc.
  */
 
-public class MyClassFileParser extends AbstractParser {
+public class MyClassFileParserOld extends AbstractParser {
 
-    private static final int JAVA_MAGIC = 0xCAFEBABE;
-    private static final int CONSTANT_UTF8 = 1;
-    private static final int CONSTANT_UNICODE = 2;
-    private static final int CONSTANT_INTEGER = 3;
-    private static final int CONSTANT_FLOAT = 4;
-    private static final int CONSTANT_LONG = 5;
-    private static final int CONSTANT_DOUBLE = 6;
-    private static final int CONSTANT_CLASS = 7;
-    private static final int CONSTANT_STRING = 8;
-    private static final int CONSTANT_FIELD = 9;
-    private static final int CONSTANT_METHOD = 10;
-    private static final int CONSTANT_INTERFACEMETHOD = 11;
-    private static final int CONSTANT_NAMEANDTYPE = 12;
-
-    private static final int CONSTANT_METHOD_HANDLE = 15;
-    private static final int CONSTANT_METHOD_TYPE = 16;
-    private static final int CONSTANT_INVOKEDYNAMIC = 18;
-
-    private static final char CLASS_DESCRIPTOR = 'L';
-    private static final int ACC_INTERFACE = 0x200;
-    private static final int ACC_ABSTRACT = 0x400;
-
-    private static final String ATTR_ANNOTATIONS = "RuntimeVisibleAnnotations";
-    private static final String ATTR_SIGNATURE = "Signature";
-    private static final String ATTR_SOURCE = "SourceFile";
+    public static final int JAVA_MAGIC = 0xCAFEBABE;
+    public static final int CONSTANT_UTF8 = 1;
+    public static final int CONSTANT_UNICODE = 2;
+    public static final int CONSTANT_INTEGER = 3;
+    public static final int CONSTANT_FLOAT = 4;
+    public static final int CONSTANT_LONG = 5;
+    public static final int CONSTANT_DOUBLE = 6;
+    public static final int CONSTANT_CLASS = 7;
+    public static final int CONSTANT_STRING = 8;
+    public static final int CONSTANT_FIELD = 9;
+    public static final int CONSTANT_METHOD = 10;
+    public static final int CONSTANT_INTERFACEMETHOD = 11;
+    public static final int CONSTANT_NAMEANDTYPE = 12;
+    public static final char CLASS_DESCRIPTOR = 'L';
+    public static final int ACC_INTERFACE = 0x200;
+    public static final int ACC_ABSTRACT = 0x400;
 
     private String fileName;
     private String className;
@@ -58,11 +49,11 @@ public class MyClassFileParser extends AbstractParser {
     private String rootName;
 
 
-    public MyClassFileParser(String rootName) {
-        this(new PackageFilter(), rootName);
+    public MyClassFileParserOld(String rootName) {
+        this(PackageFilter.all(), rootName);
     }
 
-    public MyClassFileParser(PackageFilter filter, String rootName) {
+    public MyClassFileParserOld(PackageFilter filter, String rootName) {
         super(filter);
         this.rootName = rootName;
         reset();
@@ -83,7 +74,7 @@ public class MyClassFileParser extends AbstractParser {
 
     /**
      * Registered parser listeners are informed that the resulting
-     * <code>MyJavaClass</code> was parsed.
+     * <code>JavaClass</code> was parsed.
      */
     public MyJavaClass parse(File classFile) throws IOException {
 
@@ -110,7 +101,6 @@ public class MyClassFileParser extends AbstractParser {
         }
     }
 
-    @Override
     public MyJavaClass parse(InputStream is) throws IOException {
 
         reset();
@@ -119,10 +109,10 @@ public class MyClassFileParser extends AbstractParser {
 
         in = new DataInputStream(is);
 
-        parseMagic();
+        int magic = parseMagic();
 
-        parseMinorVersion();
-        parseMajorVersion();
+        int minorVersion = parseMinorVersion();
+        int majorVersion = parseMajorVersion();
 
         constantPool = parseConstantPool();
 
@@ -139,8 +129,6 @@ public class MyClassFileParser extends AbstractParser {
         methods = parseMethods();
 
         parseAttributes();
-
-        addSignatureReferences();
 
         addClassConstantReferences();
 
@@ -182,7 +170,8 @@ public class MyClassFileParser extends AbstractParser {
             //
             // 8-byte constants use two constant pool entries
             //
-            if (constant.getTag() == CONSTANT_DOUBLE || constant.getTag() == CONSTANT_LONG) {
+            if (constant.getTag() == CONSTANT_DOUBLE
+                    || constant.getTag() == CONSTANT_LONG) {
                 i++;
             }
         }
@@ -246,9 +235,9 @@ public class MyClassFileParser extends AbstractParser {
             String descriptor = toUTF8(fields[i].getDescriptorIndex());
             debug("Parser: field descriptor = " + descriptor);
             String[] types = descriptorToTypes(descriptor);
-            for (String type : types) {
-                addImport(getPackageName(type));
-                debug("Parser: field type = " + type);
+            for (int t = 0; t < types.length; t++) {
+                addImport(getPackageName(types[t]));
+                debug("Parser: field type = " + types[t]);
             }
         }
 
@@ -263,10 +252,10 @@ public class MyClassFileParser extends AbstractParser {
             String descriptor = toUTF8(methods[i].getDescriptorIndex());
             debug("Parser: method descriptor = " + descriptor);
             String[] types = descriptorToTypes(descriptor);
-            for (String type : types) {
-                if (type.length() > 0) {
-                    addImport(getPackageName(type));
-                    debug("Parser: method type = " + type);
+            for (int t = 0; t < types.length; t++) {
+                if (types[t].length() > 0) {
+                    addImport(getPackageName(types[t]));
+                    debug("Parser: method type = " + types[t]);
                 }
             }
         }
@@ -282,35 +271,31 @@ public class MyClassFileParser extends AbstractParser {
 
         switch (tag) {
 
-            case (MyClassFileParser.CONSTANT_CLASS):
-            case (MyClassFileParser.CONSTANT_STRING):
-            case (MyClassFileParser.CONSTANT_METHOD_TYPE):
+            case (MyClassFileParserOld.CONSTANT_CLASS):
+            case (MyClassFileParserOld.CONSTANT_STRING):
                 result = new Constant(tag, in.readUnsignedShort());
                 break;
-            case (MyClassFileParser.CONSTANT_FIELD):
-            case (MyClassFileParser.CONSTANT_METHOD):
-            case (MyClassFileParser.CONSTANT_INTERFACEMETHOD):
-            case (MyClassFileParser.CONSTANT_NAMEANDTYPE):
-            case (MyClassFileParser.CONSTANT_INVOKEDYNAMIC):
-                result = new Constant(tag, in.readUnsignedShort(), in.readUnsignedShort());
+            case (MyClassFileParserOld.CONSTANT_FIELD):
+            case (MyClassFileParserOld.CONSTANT_METHOD):
+            case (MyClassFileParserOld.CONSTANT_INTERFACEMETHOD):
+            case (MyClassFileParserOld.CONSTANT_NAMEANDTYPE):
+                result = new Constant(tag, in.readUnsignedShort(), in
+                        .readUnsignedShort());
                 break;
-            case (MyClassFileParser.CONSTANT_INTEGER):
+            case (MyClassFileParserOld.CONSTANT_INTEGER):
                 result = new Constant(tag, new Integer(in.readInt()));
                 break;
-            case (MyClassFileParser.CONSTANT_FLOAT):
-                result = new Constant(tag, in.readFloat());
+            case (MyClassFileParserOld.CONSTANT_FLOAT):
+                result = new Constant(tag, new Float(in.readFloat()));
                 break;
-            case (MyClassFileParser.CONSTANT_LONG):
-                result = new Constant(tag, in.readLong());
+            case (MyClassFileParserOld.CONSTANT_LONG):
+                result = new Constant(tag, new Long(in.readLong()));
                 break;
-            case (MyClassFileParser.CONSTANT_DOUBLE):
-                result = new Constant(tag, in.readDouble());
+            case (MyClassFileParserOld.CONSTANT_DOUBLE):
+                result = new Constant(tag, new Double(in.readDouble()));
                 break;
-            case (MyClassFileParser.CONSTANT_UTF8):
+            case (MyClassFileParserOld.CONSTANT_UTF8):
                 result = new Constant(tag, in.readUTF());
-                break;
-            case (MyClassFileParser.CONSTANT_METHOD_HANDLE):
-                result = new Constant(tag, in.readByte(), in.readUnsignedShort());
                 break;
             default:
                 throw new IOException("Unknown constant: " + tag);
@@ -322,16 +307,14 @@ public class MyClassFileParser extends AbstractParser {
     private FieldOrMethodInfo parseFieldOrMethodInfo() throws IOException {
 
         FieldOrMethodInfo result = new FieldOrMethodInfo(
-                in.readUnsignedShort(), in.readUnsignedShort(), in.readUnsignedShort());
+                in.readUnsignedShort(), in.readUnsignedShort(), in
+                .readUnsignedShort());
 
         int attributesCount = in.readUnsignedShort();
         for (int a = 0; a < attributesCount; a++) {
             AttributeInfo attribute = parseAttribute();
-            if (ATTR_ANNOTATIONS.equals(attribute.name)) {
+            if ("RuntimeVisibleAnnotations".equals(attribute.name)) {
                 result._runtimeVisibleAnnotations = attribute;
-            }
-            if (ATTR_SIGNATURE.equals(attribute.name)) {
-                result._signature = attribute;
             }
         }
 
@@ -347,7 +330,7 @@ public class MyClassFileParser extends AbstractParser {
 
             // Section 4.7.7 of VM Spec - Class File Format
             if (attributes[i].getName() != null) {
-                if (attributes[i].getName().equals(ATTR_SOURCE)) {
+                if (attributes[i].getName().equals("SourceFile")) {
                     byte[] b = attributes[i].getValue();
                     int b0 = b[0] < 0 ? b[0] + 256 : b[0];
                     int b1 = b[1] < 0 ? b[1] + 256 : b[1];
@@ -379,38 +362,12 @@ public class MyClassFileParser extends AbstractParser {
     }
 
     private Constant getConstantPoolEntry(int entryIndex) throws IOException {
+
         if (entryIndex < 0 || entryIndex >= constantPool.length) {
             throw new IOException("Illegal constant pool index : " + entryIndex);
         }
 
         return constantPool[entryIndex];
-    }
-
-    private void addSignatureReferences() throws IOException {
-        for (AttributeInfo attr : attributes) {
-            if (attr.getName().equals(ATTR_SIGNATURE)) {
-                String name = toUTF8(u2(attr.getValue(), 0));
-                for (final String pack : SignatureParser.parseClassSignature(name).getPackages()) {
-                    addImport(pack);
-                }
-            }
-        }
-        for (FieldOrMethodInfo info : fields) {
-            if (info._signature != null) {
-                String name = toUTF8(u2(info._signature.getValue(), 0));
-                for (final String pack : SignatureParser.parseFieldSignature(name).getPackages()) {
-                    addImport(pack);
-                }
-            }
-        }
-        for (FieldOrMethodInfo info : methods) {
-            if (info._signature != null) {
-                String name = toUTF8(u2(info._signature.getValue(), 0));
-                for (final String pack : SignatureParser.parseMethodSignature(name).getPackages()) {
-                    addImport(pack);
-                }
-            }
-        }
     }
 
     private void addClassConstantReferences() throws IOException {
@@ -422,7 +379,8 @@ public class MyClassFileParser extends AbstractParser {
                 debug("Parser: class type = " + slashesToDots(name));
             }
 
-            if (constantPool[j].getTag() == CONSTANT_DOUBLE || constantPool[j].getTag() == CONSTANT_LONG) {
+            if (constantPool[j].getTag() == CONSTANT_DOUBLE
+                    || constantPool[j].getTag() == CONSTANT_LONG) {
                 j++;
             }
         }
@@ -430,7 +388,7 @@ public class MyClassFileParser extends AbstractParser {
 
     private void addAnnotationsReferences() throws IOException {
         for (int j = 1; j < attributes.length; j++) {
-            if (ATTR_ANNOTATIONS.equals(attributes[j].name)) {
+            if ("RuntimeVisibleAnnotations".equals(attributes[j].name)) {
                 addAnnotationReferences(attributes[j]);
             }
         }
@@ -463,7 +421,7 @@ public class MyClassFileParser extends AbstractParser {
             int visitedElementValuePairs = 0;
             index += 2;
             while (visitedElementValuePairs < numElementValuePairs) {
-                index = addAnnotationElementValueReferences(data, index + 2);
+                index = addAnnotationElementValueReferences(data, index = index + 2);
                 visitedElementValuePairs++;
             }
             visitedAnnotations++;
@@ -533,7 +491,8 @@ public class MyClassFileParser extends AbstractParser {
             return (String) entry.getValue();
         }
 
-        throw new IOException("Constant pool entry is not a UTF8 type: " + entryIndex);
+        throw new IOException("Constant pool entry is not a UTF8 type: "
+                + entryIndex);
     }
 
     private void addImport(String importPackage) {
@@ -598,11 +557,11 @@ public class MyClassFileParser extends AbstractParser {
 
     class Constant {
 
-        private final byte _tag;
+        private byte _tag;
 
-        private final int _nameIndex;
+        private int _nameIndex;
 
-        private final int _typeIndex;
+        private int _typeIndex;
 
         private Object _value;
 
@@ -638,10 +597,9 @@ public class MyClassFileParser extends AbstractParser {
             return _value;
         }
 
-        @Override
         public String toString() {
 
-            StringBuilder s = new StringBuilder("");
+            StringBuffer s = new StringBuffer("");
 
             s.append("tag: " + getTag());
 
@@ -663,16 +621,16 @@ public class MyClassFileParser extends AbstractParser {
 
     class FieldOrMethodInfo {
 
-        private final int _accessFlags;
+        private int _accessFlags;
 
-        private final int _nameIndex;
+        private int _nameIndex;
 
-        private final int _descriptorIndex;
+        private int _descriptorIndex;
 
         private AttributeInfo _runtimeVisibleAnnotations;
-        private AttributeInfo _signature;
 
         FieldOrMethodInfo(int accessFlags, int nameIndex, int descriptorIndex) {
+
             _accessFlags = accessFlags;
             _nameIndex = nameIndex;
             _descriptorIndex = descriptorIndex;
@@ -690,18 +648,20 @@ public class MyClassFileParser extends AbstractParser {
             return _descriptorIndex;
         }
 
-        @Override
         public String toString() {
-            StringBuilder s = new StringBuilder("");
+            StringBuffer s = new StringBuffer("");
 
             try {
-                s.append("\n    name (#" + getNameIndex() + ") = " + toUTF8(getNameIndex()));
 
-                s.append("\n    signature (#" + getDescriptorIndex() + ") = " + toUTF8(getDescriptorIndex()));
+                s.append("\n    name (#" + getNameIndex() + ") = "
+                        + toUTF8(getNameIndex()));
+
+                s.append("\n    signature (#" + getDescriptorIndex() + ") = "
+                        + toUTF8(getDescriptorIndex()));
 
                 String[] types = descriptorToTypes(toUTF8(getDescriptorIndex()));
-                for (String type : types) {
-                    s.append("\n        type = " + type);
+                for (int t = 0; t < types.length; t++) {
+                    s.append("\n        type = " + types[t]);
                 }
 
             } catch (Exception e) {
@@ -740,10 +700,9 @@ public class MyClassFileParser extends AbstractParser {
      *
      * @return String representation.
      */
-    @Override
     public String toString() {
 
-        StringBuilder s = new StringBuilder();
+        StringBuffer s = new StringBuffer();
 
         try {
 
@@ -753,7 +712,8 @@ public class MyClassFileParser extends AbstractParser {
             for (int i = 1; i < constantPool.length; i++) {
                 Constant entry = getConstantPoolEntry(i);
                 s.append("    " + i + ". " + entry.toString() + "\n");
-                if (entry.getTag() == CONSTANT_DOUBLE || entry.getTag() == CONSTANT_LONG) {
+                if (entry.getTag() == CONSTANT_DOUBLE
+                        || entry.getTag() == CONSTANT_LONG) {
                     i++;
                 }
             }
@@ -762,23 +722,25 @@ public class MyClassFileParser extends AbstractParser {
             s.append("Super Name: " + superClassName + "\n\n");
 
             s.append(interfaceNames.length + " interfaces\n");
-            for (String interfaceName : interfaceNames) {
-                s.append("    " + interfaceName + "\n");
+            for (int i = 0; i < interfaceNames.length; i++) {
+                s.append("    " + interfaceNames[i] + "\n");
             }
 
             s.append("\n" + fields.length + " fields\n");
-            for (FieldOrMethodInfo field : fields) {
-                s.append(field.toString() + "\n");
+            for (int i = 0; i < fields.length; i++) {
+                s.append(fields[i].toString() + "\n");
             }
 
             s.append("\n" + methods.length + " methods\n");
-            for (FieldOrMethodInfo method : methods) {
-                s.append(method.toString() + "\n");
+            for (int i = 0; i < methods.length; i++) {
+                s.append(methods[i].toString() + "\n");
             }
 
             s.append("\nDependencies:\n");
-            for (Object jPackage : jClass.getImportedPackages()) {
-                s.append("    " + jPackage + "\n");
+            Iterator imports = jClass.getImportedPackages().iterator();
+            while (imports.hasNext()) {
+                JavaPackage jPackage = (JavaPackage) imports.next();
+                s.append("    " + jPackage.getName() + "\n");
             }
 
         } catch (Exception e) {
@@ -787,4 +749,5 @@ public class MyClassFileParser extends AbstractParser {
 
         return s.toString();
     }
+
 }

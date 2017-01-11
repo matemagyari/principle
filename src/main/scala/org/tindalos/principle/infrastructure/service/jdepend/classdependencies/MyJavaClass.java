@@ -1,16 +1,11 @@
 package org.tindalos.principle.infrastructure.service.jdepend.classdependencies;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import jdepend.framework.JavaClass;
-import jdepend.framework.JavaPackage;
 
-import java.util.*;
+import java.util.Set;
 
-/**
- * Created by mate.magyari on 16/12/2014.
- */
-public class MyJavaClass extends JavaClass{
+public class MyJavaClass extends JavaClass {
 
     private Set<String> dependencies = Sets.newHashSet();
 

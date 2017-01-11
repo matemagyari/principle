@@ -14,8 +14,8 @@
     <name>Principle Maven Plugin</name>
 
     <properties>
-        <scala-version>2.11.7</scala-version>
-        <principle-version>0.36</principle-version>
+        <scala-version>2.12.1</scala-version>
+        <principle-version>0.37-SNAPSHOT</principle-version>
         <scala-plugin-version>2.15.2</scala-plugin-version>
     </properties>
 
