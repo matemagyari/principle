@@ -305,7 +305,7 @@ Simply put the following xml-snippet into the plugins section of your pom.xml. K
 
 
 
-The latest stable version of JPrinciple is 0.36
+The latest stable version of JPrinciple is 0.37
 
 # Future plans
 
