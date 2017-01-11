@@ -59,7 +59,7 @@ public class MyClassFileParser extends AbstractParser {
 
 
     public MyClassFileParser(String rootName) {
-        this(new PackageFilter(), rootName);
+        this(PackageFilter.all().excludingRest(), rootName);
     }
 
     public MyClassFileParser(PackageFilter filter, String rootName) {

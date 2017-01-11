@@ -15,7 +15,7 @@
 
     <properties>
         <scala-version>2.12.1</scala-version>
-        <principle-version>0.37-SNAPSHOT</principle-version>
+        <principle-version>0.36</principle-version>
         <scala-plugin-version>2.15.2</scala-plugin-version>
     </properties>
 
@@ -36,10 +36,11 @@
             <version>3.2</version>
             <scope>provided</scope>
         </dependency>
+        <!-- source: https://github.com/nidi3/jdepend -->
         <dependency>
-            <groupId>jdepend</groupId>
+            <groupId>guru.nidi</groupId>
             <artifactId>jdepend</artifactId>
-            <version>2.9.1</version>
+            <version>2.9.5</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

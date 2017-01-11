@@ -13,7 +13,7 @@ object JDependRunner {
       val directory = "./target/classes/" + rootPackage.replaceAll("\\.", "/")
       jDepend.addDirectory(directory)
       if (filterEnabled) {
-        val filter = new PackageFilter()
+        val filter = PackageFilter.all()
         filter.accept(rootPackage)
         jDepend.setFilter(filter)
       }
