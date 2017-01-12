@@ -24,8 +24,7 @@ object YAMLBasedSubmodulesBlueprintProvider {
 
   protected def processYAML(yamlText: String, basePackageName: String) = {
 
-    val yamlObjectJava = new Yaml().load(yamlText).asInstanceOf[util.Map[String, Object]]
-    val yamlObject = ListConverter.convert(yamlObjectJava)
+    val yamlObject = new Yaml().load(yamlText).asInstanceOf[util.Map[String, Object]].asScala.toMap
     processYaml(basePackageName, yamlObject)
   }
 
@@ -61,15 +60,20 @@ object YAMLBasedSubmodulesBlueprintProvider {
 
     val dependenciesOpt = yamlObject.get("module-dependencies")
     if (dependenciesOpt.isEmpty) throw new InvalidBlueprintDefinitionException("Submodule dependencies not defined! ")
-    val dependencies: Map[String, List[String]] = ListConverter.convert(dependenciesOpt.get.asInstanceOf[java.util.LinkedHashMap[String, java.util.List[String]]])
 
-    dependencies.foreach({ keyVal =>
+    val dependencies: Map[String, List[String]] = dependenciesOpt.map { d ⇒
+      d.asInstanceOf[java.util.LinkedHashMap[String, java.util.List[String]]]
+          .asScala.toMap
+              .map { case (k, v) ⇒ (k, v.asScala.to[List]) }
+    }.getOrElse(Map.empty)
+
+    dependencies.foreach { keyVal =>
       val submoduleId = new SubmoduleId(keyVal._1)
       checkSubmoduleExists(submoduleDefinitionMap.keySet, submoduleId)
       val submoduleDefinition = submoduleDefinitionMap.get(submoduleId).get
       val plannedDependencies = transformToSubmoduleIds(keyVal._2, submoduleDefinitionMap.keySet)
       submoduleDefinition.addPlannedDependencies(plannedDependencies)
-    })
+    }
   }
 
   private def buildSubmoduleDefinitions(yamlObject: Map[String, Object], basePackageName: String) = {

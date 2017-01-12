@@ -1,9 +1,7 @@
 package org.tindalos.principle.infrastructure.service.jdepend
 
-import java.util.Collection
-
 import jdepend.framework._
-import org.tindalos.principle.domain.util.ListConverter
+import scala.collection.JavaConverters._
 
 object JDependRunner {
 
@@ -19,8 +17,7 @@ object JDependRunner {
       }
 
       jDepend.addPackage(rootPackage)
-      val packageCollection = jDepend.analyze().asInstanceOf[Collection[JavaPackage]]
-      ListConverter.convert(packageCollection)
+      jDepend.analyze().asScala.to[List]
   }
 
 }

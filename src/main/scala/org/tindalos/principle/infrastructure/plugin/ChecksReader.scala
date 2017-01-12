@@ -23,10 +23,9 @@ object ChecksReader {
   }
 
   private def fromYaml(yamlText: String, fileLocation: String): (Checks, String) = {
-    val yamlObject = {
-      val yamlObjectJava = new Yaml().load(yamlText).asInstanceOf[java.util.Map[String, Object]]
-      ListConverter.convert(yamlObjectJava)
-    }
+    val yamlObject =
+      new Yaml().load(yamlText).asInstanceOf[java.util.Map[String, Object]].asScala.toMap
+
     val rootPackage = yamlObject("root_package").asInstanceOf[String]
 
     val checksYaml = getYamlStructure(yamlObject, "checks").get
@@ -97,11 +96,11 @@ object ChecksReader {
 
   private def getYamList(structure: Map[String, Object], field: String): Option[List[String]] =
     structure.get(field)
-        .map(f ⇒ ListConverter.convert(f.asInstanceOf[java.util.List[String]]))
+        .map(_.asInstanceOf[java.util.List[String]].asScala.to[List])
 
   private def getYamlStructure(structure: Map[String, Object], field: String): Option[Map[String, Object]] =
     structure.get(field)
-        .map(f ⇒ ListConverter.convert(f.asInstanceOf[java.util.Map[String, Object]]))
+        .map(_.asInstanceOf[java.util.Map[String, Object]].asScala.toMap)
 
   private def readYAML(fileLocation: String): String =
     try {

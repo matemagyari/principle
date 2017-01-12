@@ -16,7 +16,8 @@ object MyJDependRunner {
 
   private def toClazz(f: File, rootPackage: String) = {
     val jc = new MyClassFileParser(rootPackage).parse(f)
-    Clazz1(jc.getName(), ListConverter.convert(jc.getDependencies()) - jc.getName)
+    import scala.collection.JavaConverters._
+    Clazz1(jc.getName(), jc.getDependencies().asScala.to[Set] - jc.getName)
   }
 
   private def clazz1sToNodes(classes: Set[Clazz1]) =

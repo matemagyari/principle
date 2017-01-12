@@ -35,8 +35,12 @@ abstract class Package(val reference: PackageReference) {
   }
 
   // all the references going out from this package
-  def accumulatedDirectPackageReferences(): Set[PackageReference] =
-    subPackages.flatMap(_.accumulatedDirectPackageReferences()).toSet.filterNot(_.equals(reference)).toSet ++: subPackages.flatMap(_.accumulatedDirectPackageReferences()).toSet.filterNot(_.equals(reference)).toSet ++: getOwnPackageReferences()
+  def accumulatedDirectPackageReferences(): Set[PackageReference] = {
+    val rs = subPackages
+        .flatMap(_.accumulatedDirectPackageReferences())
+        .filterNot(_.equals(reference))
+    rs.toSet ++: getOwnPackageReferences()
+  }
 
   protected def accumulatedDirectlyReferredPackages(packageReferenceMap: Map[PackageReference, Package]): Set[Package] =
     accumulatedDirectPackageReferences().map(packageReferenceMap.get(_).get)
