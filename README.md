@@ -146,7 +146,7 @@ Put the following xml-snippet into the plugins section of your pom.xml
 <plugin>
   <groupId>org.tindalos.principle</groupId>
   <artifactid>principle</artifactid>
-  <version>0.36</version>
+  <version>0.37</version>
   <configuration>
     <!-- Location of the configuration file relative to the project's root folder-->
     <location>principle.yml</location>
@@ -305,7 +305,7 @@ Simply put the following xml-snippet into the plugins section of your pom.xml. K
 
 
 
-The latest stable version of JPrinciple is 0.36
+The latest stable version of JPrinciple is 0.37
 
 # Future plans
 
