@@ -3,7 +3,6 @@ package org.tindalos.principle.infrastructure.service.jdepend.classdependencies
 import java.io.File
 
 import org.tindalos.principle.domain.agents.structure.Graph.Node
-import org.tindalos.principle.domain.util.ListConverter
 
 object MyJDependRunner {
 
@@ -21,15 +20,19 @@ object MyJDependRunner {
   }
 
   private def clazz1sToNodes(classes: Set[Clazz1]) =
-    for {
-      c <- classes
-      dependants = classes.filter(x => x.dependencies.contains(c.name))
-    } yield Node(c.name, c.dependencies, dependants.map(_.name))
+    classes.map { clazz ⇒
+      val dependantNames = classes
+          .filter(_.dependencies.contains(clazz.name))
+          .map(_.name)
+      Node(clazz.name, clazz.dependencies, dependantNames)
+    }
 
   //to ignore inner subclasses
   def className(fullName:String) =
-    if (fullName.contains("$")) fullName.substring(0, fullName.indexOf("$"))
-    else fullName
+    if (fullName.contains("$"))
+      fullName.substring(0, fullName.indexOf("$"))
+    else
+      fullName
 
   def createNodesOfClasses(rootPackage: String, targetDir: String = "./target/classes/"): Set[Node] = {
 
@@ -40,10 +43,10 @@ object MyJDependRunner {
       .filter(_.getName.endsWith(".class"))
       .map(toClazz(_, rootPackage)) //Array[Clazz1]
       .groupBy(c => className(c.name)) //Map[String,Array[Clazz1]]
-      .map(kv => {
+      .map { kv ⇒
         val aggregatedDependencies = kv._2.flatMap(_.dependencies).toSet
         Clazz1(kv._1, aggregatedDependencies)
-      })
+      }
 
     clazz1sToNodes(clazzes.to[Set])
   }

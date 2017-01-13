@@ -17,7 +17,6 @@ import scala.collection.JavaConverters._
 object YAMLBasedSubmodulesBlueprintProvider {
 
   def readSubmoduleDefinitions(submodulesDefinitionLocation: String, basePackageName: String) = {
-    println(s"")
     val yaml = getYAML(submodulesDefinitionLocation)
     processYAML(yaml, basePackageName)
   }
@@ -64,7 +63,7 @@ object YAMLBasedSubmodulesBlueprintProvider {
     val dependencies: Map[String, List[String]] = dependenciesOpt.map { d ⇒
       d.asInstanceOf[java.util.LinkedHashMap[String, java.util.List[String]]]
           .asScala.toMap
-              .map { case (k, v) ⇒ (k, v.asScala.to[List]) }
+          .map { case (k, v) ⇒ (k, v.asScala.to[List]) }
     }.getOrElse(Map.empty)
 
     dependencies.foreach { keyVal =>
@@ -81,11 +80,15 @@ object YAMLBasedSubmodulesBlueprintProvider {
     val definitionsOpt = yamlObject.get("module-definitions")
     if (definitionsOpt.isEmpty) throw new InvalidBlueprintDefinitionException("Submodules not defined! ")
 
-    val definitions: Map[String, List[String]] = ListConverter.convert(definitionsOpt.get.asInstanceOf[util.LinkedHashMap[String, util.List[String]]])
+    val definitions: Map[String, List[String]] = definitionsOpt.map { ds ⇒
+      ds.asInstanceOf[java.util.LinkedHashMap[String, java.util.List[String]]]
+          .asScala.toMap
+          .map { case (k, v) ⇒ (k, v.asScala.to[List]) }
+    }.getOrElse(Map.empty)
 
-    for (keyVal <- definitions) yield {
-      val submoduleId = new SubmoduleId(keyVal._1)
-      val packages = transformToPackageReferences(keyVal._2, basePackageName)
+    definitions.map { definition ⇒
+      val submoduleId = new SubmoduleId(definition._1)
+      val packages = transformToPackageReferences(definition._2, basePackageName)
       val submoduleDefinition = new SubmoduleDefinition(submoduleId, packages.toSet)
       (submoduleId, submoduleDefinition)
     }
