@@ -5,7 +5,6 @@ import java.io.File
 import org.apache.commons.io.FileUtils
 import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.domain.expectations.exception.InvalidConfigurationException
-import org.tindalos.principle.domain.util.ListConverter
 import org.yaml.snakeyaml.Yaml
 
 import scala.collection.JavaConverters._

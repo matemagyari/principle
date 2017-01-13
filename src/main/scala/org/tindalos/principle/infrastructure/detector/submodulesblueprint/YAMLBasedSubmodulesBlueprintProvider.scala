@@ -11,7 +11,6 @@ import org.apache.commons.io.FileUtils
 import java.io.File
 import org.yaml.snakeyaml.Yaml
 import org.tindalos.principle.domain.agents.submodulesblueprint.SubmoduleDefinitions
-import org.tindalos.principle.domain.util.ListConverter
 import scala.collection.JavaConverters._
 
 object YAMLBasedSubmodulesBlueprintProvider {
