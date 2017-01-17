@@ -9,16 +9,17 @@ object CycleDetector {
 
     override def analyze(input: AnalysisInput) = {
 
-      val basePackage = buildPackageStructure(input.packages,
-        input.analysisPlan.basePackage)
+      val basePackage = buildPackageStructure(input.packages, input.analysisPlan.basePackage)
 
       val references = basePackage.toMap()
 
       var cycles = Map[PackageReference, Set[Cycle]]()
 
       var sortedByAfferents = references.values.toList.sortBy(_.getMetrics().afferentCoupling)
-      if (basePackage.getMetrics().afferentCoupling == 0)
+
+      if (basePackage.getMetrics().afferentCoupling == 0) {
         sortedByAfferents = sortedByAfferents.filterNot(_ equals basePackage)
+      }
 
       while (!sortedByAfferents.isEmpty) {
         val cyclesInSubgraph = sortedByAfferents.head.detectCycles(references)

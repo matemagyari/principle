@@ -1,8 +1,8 @@
 package org.tindalos.principle.domain.agents.acd
 
+import org.tindalos.principle.domain.agentscore.{Agent, AnalysisInput}
 import org.tindalos.principle.domain.core.Package
-import org.tindalos.principle.domain.agentscore.{AnalysisInput, Agent}
-import org.tindalos.principle.domain.expectations.{PackageCoupling, Checks}
+import org.tindalos.principle.domain.expectations.Checks
 
 object ACDAgent {
   
@@ -19,7 +19,9 @@ object ACDAgent {
         else checkInput.packages
 
       val cumulatedComponentDependency = relevantPackages
-        .foldLeft(0)((acc, aPackage) => acc + aPackage.cumulatedDependencies(referenceMap).size + 1)
+        .foldLeft(0) { (acc, aPackage) ⇒
+          acc + aPackage.cumulatedDependencies(referenceMap).size + 1
+        }
 
       //todo - remove .get
       new ACDResult(cumulatedComponentDependency, relevantPackages.length, checkInput.packageCouplingExpectations().get)

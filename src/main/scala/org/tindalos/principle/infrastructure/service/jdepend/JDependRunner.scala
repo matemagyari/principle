@@ -5,19 +5,19 @@ import scala.collection.JavaConverters._
 
 object JDependRunner {
 
-  def preparePackages(rootPackage: String, filterEnabled: Boolean = true):List[JavaPackage] = {
+  def preparePackages(rootPackage: String, filterEnabled: Boolean = true): List[JavaPackage] = {
 
-      val jDepend = new JDepend()
-      val directory = "./target/classes/" + rootPackage.replaceAll("\\.", "/")
-      jDepend.addDirectory(directory)
-      if (filterEnabled) {
-        val filter = PackageFilter.all()
-        filter.accept(rootPackage)
-        jDepend.setFilter(filter)
-      }
+    val jDepend = new JDepend()
+    val directory = "./target/classes/" + rootPackage.replaceAll("\\.", "/")
+    jDepend.addDirectory(directory)
+    if (filterEnabled) {
+      val filter = PackageFilter.all()
+      filter.accept(rootPackage)
+      jDepend.setFilter(filter)
+    }
 
-      jDepend.addPackage(rootPackage)
-      jDepend.analyze().asScala.to[List]
+    jDepend.addPackage(rootPackage)
+    jDepend.analyze().asScala.to[List]
   }
 
 }
