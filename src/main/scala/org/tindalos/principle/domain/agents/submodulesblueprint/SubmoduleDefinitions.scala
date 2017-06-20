@@ -1,10 +1,12 @@
 package org.tindalos.principle.domain.agents.submodulesblueprint
 
+import scala.collection.immutable.Seq
+
 class SubmoduleDefinitions(val definitions: Map[SubmoduleId, SubmoduleDefinition]) {
 
   checkNoOverlaps(definitions.values.toList)
 
-  private def checkNoOverlaps(definitions: List[SubmoduleDefinition]) {
+  private def checkNoOverlaps(definitions: Seq[SubmoduleDefinition]) {
 
     val overlaps = for (
       submoduleDefinition <- definitions; anOtherDefinition <- definitions.filterNot(_.equals(submoduleDefinition))

@@ -5,16 +5,18 @@ import org.tindalos.principle.domain.agentscore.{AnalysisInput, AnalysisResult}
 import org.tindalos.principle.domain.agents.structure.Graph.Node
 import org.tindalos.principle.domain.resultprocessing.reporter.Printer
 
+import scala.collection.immutable.Seq
+
 /*
 This is the app entry point. Side effects can happen only here in this layer, underneath the code must be pure.
  */
 object ApplicationModule {
 
   def buildApplicationFn(validatePlan: AnalysisPlan => (Boolean, String),
-                         getPackages: String => List[Package],
+                         getPackages: String => Seq[Package],
                          getNodes: String => Set[Node],
-                         runAnalysis: AnalysisInput => List[AnalysisResult],
-                         makeReports: List[AnalysisResult] => List[(String, Boolean)],
+                         runAnalysis: AnalysisInput => Seq[AnalysisResult],
+                         makeReports: Seq[AnalysisResult] => Seq[(String, Boolean)],
                          printer: Printer) =
 
     (analysisPlan: AnalysisPlan) => {

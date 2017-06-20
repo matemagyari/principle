@@ -20,6 +20,8 @@ import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageC
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
 import org.tindalos.principle.infrastructure.service.jdepend.{JDependPackageAnalyzer, JDependRunner, PackageFactory}
 
+import scala.collection.immutable.Seq
+
 object PoorMansDIContainer {
 
 
@@ -36,19 +38,19 @@ object PoorMansDIContainer {
       printer)
   }
 
-  def buildPackageListProducerFn(rootPackage: String): (String) => List[Package] = {
+  def buildPackageListProducerFn(rootPackage: String): (String) => Seq[Package] = {
     val packageFactory = new PackageFactory(rootPackage)
     val packageListTransformer = packageFactory.buildPackageListFactory(PackageSorterModule.sortByName(_))
     JDependPackageAnalyzer.buildAnalyzerFn(JDependRunner.preparePackages, packageListTransformer)
   }
 
-  def buildRunAnalysisFn(): AnalysisInput => List[AnalysisResult] = {
+  def buildRunAnalysisFn(): AnalysisInput => Seq[AnalysisResult] = {
     val packageStructureBuilder = PackageStructureModule.createBuilder(PackageSorterModule.sortByName(_, _))
     val detectors = createDetectors(packageStructureBuilder)
     AgentsRunner.buildAgentsRunner(detectors)
   }
 
-  private def createDetectors(buildPackageStructure: (List[Package], String) => Package) =
+  private def createDetectors(buildPackageStructure: (Seq[Package], String) => Package) =
     List(
       LayerViolationAgent,
       ThirdPartyAgent,
@@ -64,7 +66,7 @@ object PoorMansDIContainer {
       , CohesiveGroupsDiscoveryModule.collapseToLimit))
 
 
-  private def buildSubmodulesBlueprintViolationDetector(buildPackageStructure: (List[Package], String) => Package) = {
+  private def buildSubmodulesBlueprintViolationDetector(buildPackageStructure: (Seq[Package], String) => Package) = {
     val submodulesFactory = SubmodulesFactory.buildInstance(
       buildPackageStructure,
       YAMLBasedSubmodulesBlueprintProvider.readSubmoduleDefinitions,
@@ -73,7 +75,7 @@ object PoorMansDIContainer {
   }
 
 
-  private def buildReporter(): List[AnalysisResult] => List[(String, Boolean)] = {
+  private def buildReporter(): Seq[AnalysisResult] => Seq[(String, Boolean)] = {
 
     AnalysisResultsReporter.buildResultReporter(
       ADPViolationsReporter.report,

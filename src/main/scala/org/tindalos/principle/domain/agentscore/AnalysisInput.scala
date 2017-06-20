@@ -5,8 +5,10 @@ import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.agents.structure.Graph.Node
 import org.tindalos.principle.domain.expectations.{SubmodulesBlueprint, ThirdParty}
 
+import scala.collection.immutable.Seq
+
 case class AnalysisInput(
-    packages: List[Package],
+    packages: Seq[Package],
     nodes: Set[Node] = Set(),
     analysisPlan: AnalysisPlan) {
 

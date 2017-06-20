@@ -10,6 +10,8 @@ import org.tindalos.principle.domain.agents.structure.CohesionAnalysisResult
 import org.tindalos.principle.domain.agents.submodulesblueprint.SubmodulesBlueprintAnalysisResult
 import org.tindalos.principle.domain.agents.thirdparty.ThirdPartyViolationsResult
 
+import scala.collection.immutable.Seq
+
 //couldn't figure out how to inject reporter functions in a Map
 object AnalysisResultsReporter {
 
@@ -39,7 +41,7 @@ object AnalysisResultsReporter {
       (report, result.expectationsFailed())
     }
 
-    (results: List[AnalysisResult]) => results map toReport
+    (results: Seq[AnalysisResult]) => results map toReport
   }
 
 

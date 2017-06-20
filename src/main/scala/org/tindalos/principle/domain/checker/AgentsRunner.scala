@@ -3,9 +3,11 @@ package org.tindalos.principle.domain.checker
 import org.tindalos.principle.domain.core.logging.TheLogger
 import org.tindalos.principle.domain.agentscore.{Agent, AnalysisInput, AnalysisResult}
 
+import scala.collection.immutable.Seq
+
 object AgentsRunner {
 
-  def buildAgentsRunner(agents: List[Agent]) =
+  def buildAgentsRunner(agents: Seq[Agent]) =
 
     (input: AnalysisInput) => {
 

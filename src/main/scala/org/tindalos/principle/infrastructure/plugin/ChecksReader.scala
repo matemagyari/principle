@@ -93,7 +93,7 @@ object ChecksReader {
       layers = getYamList(structure, "layers").get,
       threshold = structure.get("violation_threshold").map(_.asInstanceOf[Int]).getOrElse(0))
 
-  private def getYamList(structure: Map[String, Object], field: String): Option[List[String]] =
+  private def getYamList(structure: Map[String, Object], field: String): Option[Seq[String]] =
     structure.get(field)
         .map(_.asInstanceOf[java.util.List[String]].asScala.to[List])
 

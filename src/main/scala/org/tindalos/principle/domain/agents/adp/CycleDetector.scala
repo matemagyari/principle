@@ -4,8 +4,10 @@ import org.tindalos.principle.domain.core.{Cycle, Package, PackageReference}
 import org.tindalos.principle.domain.agentscore.{AnalysisInput, Agent}
 import org.tindalos.principle.domain.expectations.{Checks, PackageCoupling}
 
+import scala.collection.immutable.Seq
+
 object CycleDetector {
-  def buildAgent(buildPackageStructure: (List[Package], String) => Package) = new Agent {
+  def buildAgent(buildPackageStructure: (Seq[Package], String) => Package) = new Agent {
 
     override def analyze(input: AnalysisInput) = {
 

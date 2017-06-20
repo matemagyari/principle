@@ -6,6 +6,8 @@ import org.tindalos.principle.domain.expectations.PackageCoupling
 import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.core.Package
 
+import scala.collection.immutable.Seq
+
 object SAPViolationAgent extends Agent {
 
   override def analyze(checkInput: AnalysisInput) = {
@@ -17,7 +19,7 @@ object SAPViolationAgent extends Agent {
     new SAPResult(outlierPackages, sapExpectation)
   }
 
-  private def removeRootPackageIfEmpty(packages: List[Package]) = {
+  private def removeRootPackageIfEmpty(packages: Seq[Package]) = {
     val metrics = packages.head.getMetrics()
     if (metrics.abstractness == 0 && metrics.instability == 0) packages.tail
     else packages

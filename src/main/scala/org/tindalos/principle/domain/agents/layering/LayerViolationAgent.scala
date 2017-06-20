@@ -5,10 +5,12 @@ import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.expectations.Checks
 
+import scala.collection.immutable.Seq
+
 case class LayerReference(referrer:String, referee:String)
 
 case class LayerViolationsResult(
-    violations: List[LayerReference],
+    violations: Seq[LayerReference],
     threshold: Int) extends AnalysisResult {
 
   override def expectationsFailed() = violations.length > threshold
@@ -23,7 +25,7 @@ object LayerViolationAgent extends Agent {
 
   override def isWanted(expectations: Checks) = expectations.layering != null
 
-  private def findViolations(packages: List[Package], configuration: AnalysisPlan): List[LayerReference] = {
+  private def findViolations(packages: Seq[Package], configuration: AnalysisPlan): Seq[LayerReference] = {
 
     val layers = configuration.expectations.layering.layers.map(configuration.basePackage + "." + _).toList
 

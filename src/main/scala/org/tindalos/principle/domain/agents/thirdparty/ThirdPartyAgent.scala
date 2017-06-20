@@ -4,6 +4,8 @@ import org.tindalos.principle.domain.agentscore.{Agent, AnalysisInput}
 import org.tindalos.principle.domain.core.{Package, PackageReference}
 import org.tindalos.principle.domain.expectations.{Barrier, Checks}
 
+import scala.collection.immutable.Seq
+
 object ThirdPartyAgent extends Agent {
 
   override def analyze(checkInput: AnalysisInput) =
@@ -14,7 +16,7 @@ object ThirdPartyAgent extends Agent {
           val barriers = thirdParty.barriers
           val violations =
             if (barriers.isEmpty)
-              List[(PackageReference, PackageReference)]()
+              Seq[(PackageReference, PackageReference)]()
             else {
               val layers = checkInput.layeringExpectations().layers
               val basePackage = checkInput.analysisPlan.basePackage
@@ -32,18 +34,18 @@ object ThirdPartyAgent extends Agent {
         .getOrElse(ThirdPartyViolationsResult(List.empty, null))
 
   private def allowedComponentsForLayer(
-      layers: List[String],
+      layers: Seq[String],
       layer: String,
-      barriers: List[Barrier]) = {
+      barriers: Seq[Barrier]) = {
     val innerLayers = layers.dropWhile(_ != layer)
     barriers.filter(b => innerLayers.contains(b.layer)).flatMap(_.componentList())
   }
 
-  private def outOfAllowedComponents(layer: String, layers: List[String], barriers: List[Barrier], referencedPackage: PackageReference) =
+  private def outOfAllowedComponents(layer: String, layers: Seq[String], barriers: Seq[Barrier], referencedPackage: PackageReference) =
     !allowedComponentsForLayer(layers, layer, barriers).exists(referencedPackage.startsWith(_))
 
 
-  private def layerOf(layers: List[String], basePackage: String, aPackage: Package) =
+  private def layerOf(layers: Seq[String], basePackage: String, aPackage: Package) =
     layers.find(l => aPackage.reference.startsWith(s"${basePackage}.${l}"))
 
 

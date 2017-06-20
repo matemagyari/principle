@@ -4,10 +4,12 @@ import org.tindalos.principle.domain.agentscore.AnalysisResult
 import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.expectations.SDP
 
+import scala.collection.immutable.Seq
+
 case class SDPViolation(depender:Package, dependee:Package)
 
 case class SDPResult(
-    violations: List[SDPViolation],
+    violations: Seq[SDPViolation],
     expectation: SDP) extends AnalysisResult {
 
   val threshold = expectation.violationsThreshold

@@ -2,9 +2,11 @@ package org.tindalos.principle.domain.agents.structure
 
 import org.tindalos.principle.domain.agents.structure.Graph._
 
+import scala.collection.immutable.Seq
+
 object PackageStructureHints1Finder {
 
-  case class GroupingResult(val grouping: Map[Set[String], List[NodeId]], val labelledSources: List[(String, NodeId)])
+  case class GroupingResult(val grouping: Map[Set[String], Seq[NodeId]], val labelledSources: Seq[(String, NodeId)])
 
   val makeGroups = (graph: Set[Node]) => {
     val sources = Graph.findSources(graph).toList.sortBy(_.id)
@@ -15,12 +17,12 @@ object PackageStructureHints1Finder {
            downstream <- Graph.findDownstreamNodes(source, graph)
       } yield (label, downstream.id)
 
-    val grouping:Map[Set[String], List[NodeId]] = labelledNodes
+    val grouping:Map[Set[String], Seq[NodeId]] = labelledNodes
       .toList
-      .groupBy(_._2)                             //Map[NodeId, List[(String, NodeId)]]
+      .groupBy(_._2)                             //Map[NodeId, Seq[(String, NodeId)]]
       .map(kv => (kv._1, kv._2.map(_._1).toSet)) //Map[NodeId, Set[String]]
-      .toList                                    //List[(NodeId, Set[String])]
-      .groupBy(_._2)                             //Map[NodeId, List[(NodeId, Set[String]])]
+      .toList                                    //Seq[(NodeId, Set[String])]
+      .groupBy(_._2)                             //Map[NodeId, Seq[(NodeId, Set[String]])]
       .map(kv => (kv._1, kv._2.map(_._1)))
 
 

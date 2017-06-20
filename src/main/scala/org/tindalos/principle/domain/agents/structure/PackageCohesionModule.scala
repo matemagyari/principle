@@ -5,6 +5,8 @@ import org.tindalos.principle.domain.agents.structure.Structure.{NodeGroup}
 
 import scala.annotation.tailrec
 
+import scala.collection.immutable.Seq
+
 object PackageCohesionModule {
 
   type PackageName = String
@@ -29,7 +31,7 @@ object PackageCohesionModule {
     groupByPackages(rootPackage, ns)
       .map(x => (x._1, NodeGroup(x._2)))
 
-  def packageCohesions(rootPackage: PackageName, ns: Set[Node]): List[(PackageName, NodeGroup, Double)] =
+  def packageCohesions(rootPackage: PackageName, ns: Set[Node]): Seq[(PackageName, NodeGroup, Double)] =
     componentsFromPackages(rootPackage, ns)
       .filter(x => x._2.nodes.size > 1)
       .map(x => (x._1, x._2, x._2.cohesion()))

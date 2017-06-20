@@ -4,9 +4,11 @@ import org.tindalos.principle.domain.agentscore.{Agent, AnalysisInput}
 import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.expectations.Checks
 
+import scala.collection.immutable.Seq
+
 object ACDAgent {
   
-  def buildAgent(buildPackageStructure: (List[Package], String) => Package) = new Agent {
+  def buildAgent(buildPackageStructure: (Seq[Package], String) => Package) = new Agent {
 
     override def analyze(checkInput: AnalysisInput) = {
 

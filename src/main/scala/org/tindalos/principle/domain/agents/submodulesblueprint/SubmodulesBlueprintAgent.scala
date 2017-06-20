@@ -6,9 +6,11 @@ import org.tindalos.principle.domain.expectations.Checks
 
 import scala.collection.immutable.Map
 
+import scala.collection.immutable.Seq
+
 object SubmodulesBlueprintAgent {
 
-  def buildInstance(buildSubmodules: (String, List[Package], String) => Set[Submodule]) = new Agent {
+  def buildInstance(buildSubmodules: (String, Seq[Package], String) => Set[Submodule]) = new Agent {
 
     override def isWanted(designQualityChecks: Checks) = designQualityChecks.submodulesBlueprint.nonEmpty
 

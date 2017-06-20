@@ -5,6 +5,8 @@ import org.tindalos.principle.domain.core.{Metrics, Package}
 
 import scala.collection.immutable.List
 
+import scala.collection.immutable.Seq
+
 class PackageFactory(rootPackage: String) {
 
   def isRelevant(javaPackage: JavaPackage) = javaPackage.getName().startsWith(rootPackage)
@@ -18,9 +20,9 @@ class PackageFactory(rootPackage: String) {
     new Metrics(jPackage.afferentCoupling(), jPackage.efferentCoupling(), jPackage.abstractness(), jPackage.instability(), jPackage.distance())
 
 
-  def buildPackageListFactory(sortByName: List[Package] => List[Package]) =
+  def buildPackageListFactory(sortByName: Seq[Package] => Seq[Package]) =
 
-    (rootPackage:String, analyzedPackages: List[JavaPackage]) => {
+    (rootPackage:String, analyzedPackages: Seq[JavaPackage]) => {
 
       val unsortedList = analyzedPackages
         .filter(isRelevant)

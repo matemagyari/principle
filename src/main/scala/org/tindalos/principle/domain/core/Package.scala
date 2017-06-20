@@ -6,6 +6,8 @@ import com.google.common.collect.Lists
 import com.google.common.collect.Sets
 import com.google.common.base.Optional
 
+import scala.collection.immutable.Seq
+
 abstract class Package(val reference: PackageReference) {
 
   val _subPackages: ListBuffer[Package] = ListBuffer()
@@ -75,7 +77,7 @@ abstract class Package(val reference: PackageReference) {
     }
   }
 
-  protected def indexInTraversedPath(traversedPackages: List[PackageReference]) = {
+  protected def indexInTraversedPath(traversedPackages: Seq[PackageReference]) = {
     val index = traversedPackages.indexOf(reference)
     if (index != -1) index
     else {
@@ -147,14 +149,14 @@ abstract class Package(val reference: PackageReference) {
       foundCycles
     }
   }
-  private def findCycleCandidateEndingHere(traversedPackages: TraversedPackages): Option[List[PackageReference]] = {
+  private def findCycleCandidateEndingHere(traversedPackages: TraversedPackages): Option[Seq[PackageReference]] = {
 
     val indexOfThisPackage = indexInTraversedPath(traversedPackages.packages)
     if (indexOfThisPackage > -1) Some(traversedPackages.from(indexOfThisPackage))
     else None
   }
 
-  protected def notAllAreDescendantsOf(packages: List[PackageReference], possibleAncestor: PackageReference) = packages.exists(!_.isDescendantOf(possibleAncestor))
+  protected def notAllAreDescendantsOf(packages: Seq[PackageReference], possibleAncestor: PackageReference) = packages.exists(!_.isDescendantOf(possibleAncestor))
 
   protected def isDirectSuperPackageOf(aPackage: Package) = reference.isDirectParentOf(aPackage.reference)
 
@@ -162,7 +164,7 @@ abstract class Package(val reference: PackageReference) {
 
   protected def firstPartOfRelativeNameTo(parentPackage: Package) = reference.firstPartOfRelativeNameTo(parentPackage.reference)
 
-  protected def notEveryNodeUnderFirst(cycleCandidate: List[PackageReference]) = {
+  protected def notEveryNodeUnderFirst(cycleCandidate: Seq[PackageReference]) = {
     val first = cycleCandidate.head
     cycleCandidate.tail.find(!_.isDescendantOf(first)) match {
       case None => first.equals(reference)
@@ -170,7 +172,7 @@ abstract class Package(val reference: PackageReference) {
     }
   }
 
-  protected def isValid(cycleCandidate: List[PackageReference]) =
+  protected def isValid(cycleCandidate: Seq[PackageReference]) =
     if (cycleCandidate.length < 2) false
     else notEveryNodeUnderFirst(cycleCandidate)
 
@@ -186,7 +188,7 @@ abstract class Package(val reference: PackageReference) {
   override def toString() = reference.toString()
 }
 
-class TraversedPackages(val packages: List[PackageReference] = List()) {
+class TraversedPackages(val packages: Seq[PackageReference] = List()) {
 
   def add(reference: PackageReference) = new TraversedPackages(packages :+ reference)
   def from(index: Int) = packages.slice(index, packages.length)

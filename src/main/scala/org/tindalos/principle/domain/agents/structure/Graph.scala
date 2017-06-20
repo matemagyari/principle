@@ -1,5 +1,7 @@
 package org.tindalos.principle.domain.agents.structure
 
+import scala.collection.immutable.Seq
+
 object Graph {
 
   type NodeId = String
@@ -11,7 +13,7 @@ object Graph {
     val island = isIsland(subgraph)
   }
 
-  case class SubgraphDecomposition(val peninsulas: List[Peninsula])
+  case class SubgraphDecomposition(val peninsulas: Seq[Peninsula])
 
   //def nodeById(id: NodeId) = graph.find(_.id == id).get
   //def findDirectDownstreamNodes(n: Node, graph: Set[Node]) = n.dependencies.map(nodeById)

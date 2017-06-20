@@ -2,7 +2,9 @@ package org.tindalos.principle.domain.core
 
 import org.apache.commons.lang3.builder.HashCodeBuilder
 
-class Cycle(val references: List[PackageReference]) extends Comparable[Cycle] {
+import scala.collection.immutable.Seq
+
+class Cycle(val references: Seq[PackageReference]) extends Comparable[Cycle] {
   
   //var x:org.tindalos.principle.domain.expectations.Checks = null
   def this(refs:PackageReference*) = this(refs.toList)

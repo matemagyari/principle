@@ -3,9 +3,11 @@ package org.tindalos.principle.infrastructure.service.jdepend
 import jdepend.framework._
 import scala.collection.JavaConverters._
 
+import scala.collection.immutable.Seq
+
 object JDependRunner {
 
-  def preparePackages(rootPackage: String, filterEnabled: Boolean = true): List[JavaPackage] = {
+  def preparePackages(rootPackage: String, filterEnabled: Boolean = true): Seq[JavaPackage] = {
 
     val jDepend = new JDepend()
     val directory = "./target/classes/" + rootPackage.replaceAll("\\.", "/")

@@ -5,6 +5,8 @@ import org.junit.Test
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.expectations._
 
+import scala.collection.immutable.Seq
+
 class InputValidatorTest {
 
   val basePackage: String = "xx"
@@ -57,7 +59,7 @@ class InputValidatorTest {
   }
 
 
-  private def config(barriers: List[Barrier]): AnalysisPlan = {
+  private def config(barriers: Seq[Barrier]): AnalysisPlan = {
     val aThirdParty = ThirdParty(barriers)
 
     val expectations = new Checks(layering = aLayering, thirdParty = Some(aThirdParty))
