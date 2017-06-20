@@ -2,7 +2,6 @@ package org.tindalos.principle.infrastructure.plugin
 
 import java.io.IOException
 
-import org.apache.commons.lang3.Validate
 import org.apache.maven.plugin.{AbstractMojo, MojoFailureException}
 import org.apache.maven.plugins.annotations.{Mojo, Parameter}
 import org.tindalos.principle.domain.core.AnalysisPlan
