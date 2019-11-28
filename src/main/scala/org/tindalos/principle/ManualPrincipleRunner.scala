@@ -6,6 +6,8 @@ import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.domain.resultprocessing.reporter.Printer
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 
+import scala.collection.immutable.Seq
+
 object ManualPrincipleRunner extends App {
 
 
@@ -37,9 +39,9 @@ object ManualPrincipleRunner extends App {
 //  }
 
   //private val submodulesDefinitionLocation = "src/main/resources/principle_blueprint.yaml"
-  //private val submodulesBlueprint = new SubmodulesBlueprint(submodulesDefinitionLocation, 0)
+  //private val submodulesBlueprint = SubmodulesBlueprint(submodulesDefinitionLocation, 0)
 
-  private def layering() = new Layering(List("infrastructure", "app", "domain"), 0)
+  private def layering() = new Layering(Seq("infrastructure", "app", "domain"), 0)
 
   class ConsolePrinter extends Printer {
 

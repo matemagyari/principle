@@ -7,20 +7,20 @@ object Structure {
 
   case class NodeGroup(nodes: Set[Node]) {
 
-    val externalDependencies = nodes.flatMap(n => n.dependencies) -- nodes.map(_.id)
-    val externalDependants = nodes.flatMap(n => n.dependants) -- nodes.map(_.id)
+    val externalDependencies = nodes.flatMap(n ⇒ n.dependencies) -- nodes.map(_.id)
+    val externalDependants = nodes.flatMap(n ⇒ n.dependants) -- nodes.map(_.id)
     val externalGroupConnectionsNo = externalDependencies.size + externalDependants.size
 
     //based on nodes not the group
     val (internalArcsNo, externalArcsNo) = {
       val internalNodeIds: Set[NodeId] = nodes.map(_.id)
-      val (internals, externals) = nodes.toList.flatMap(n => n.dependants.toList ++ n.dependencies.toList)
-        .partition(d => internalNodeIds.contains(d))
+      val (internals, externals) = nodes.toList.flatMap(n ⇒ n.dependants.toList ++ n.dependencies.toList)
+        .partition(d ⇒ internalNodeIds.contains(d))
       //internal arcs counted twice
       (internals.size / 2, externals.size)
     }
 
-    val leastBelongingNode = nodes.map(n => (n.id, nodeBelongingness(n))).toList.sortBy(_._2).head
+    val leastBelongingNode = nodes.map(n ⇒ (n.id, nodeBelongingness(n))).toList.sortBy(_._2).head
 
     def cohesion() = generalCohesion //Math.max(generalCohesion, internalCohesion)
 

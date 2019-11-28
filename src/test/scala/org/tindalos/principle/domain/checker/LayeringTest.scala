@@ -8,6 +8,8 @@ import org.tindalos.principle.domain.agents.layering.{LayerReference, LayerViola
 import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 
+import scala.collection.immutable.Seq
+
 class LayeringTest {
 
   var plan: AnalysisPlan = null
@@ -52,6 +54,6 @@ class LayeringTest {
 
   private def prepareChecks() = new Checks(layering())
 
-  private def layering() = Layering(List("infrastructure", "app", "domain"))
+  private def layering() = Layering(Seq("infrastructure", "app", "domain"))
 
 }

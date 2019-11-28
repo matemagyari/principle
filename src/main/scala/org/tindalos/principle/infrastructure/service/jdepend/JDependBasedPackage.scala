@@ -23,16 +23,16 @@ class JDependBasedPackage(val javaPackage: JavaPackage, val basePackage: String,
   private lazy val ownPackageReferences =
     javaPackage.getEfferents().asInstanceOf[Collection[JavaPackage]]
       .filter(_.getName().startsWith(basePackage))
-      .map(x => new PackageReference(x.getName()))
+      .map(x ⇒ new PackageReference(x.getName()))
       .toSet
 
   private lazy val ownExternalPackageReferences =
 
     javaPackage.getEfferents().asInstanceOf[Collection[JavaPackage]]
-      .filter(p => !p.getName().startsWith(basePackage) && isNotValidExternalEfferent(p))
-      .map(x => new PackageReference(x.getName()))
+      .filter(p ⇒ !p.getName().startsWith(basePackage) && isNotValidExternalEfferent(p))
+      .map(x ⇒ new PackageReference(x.getName()))
       .toSet
 
-  def isNotValidExternalEfferent(p: JavaPackage) = !validExternalEfferents.exists(e => p.getName().startsWith(e))
+  def isNotValidExternalEfferent(p: JavaPackage) = !validExternalEfferents.exists(e ⇒ p.getName().startsWith(e))
 
 }

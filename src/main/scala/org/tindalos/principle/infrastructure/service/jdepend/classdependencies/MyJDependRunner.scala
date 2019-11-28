@@ -42,7 +42,7 @@ object MyJDependRunner {
       recursiveListFiles(rootDir) //Array[File]
       .filter(_.getName.endsWith(".class"))
       .map(toClazz(_, rootPackage)) //Array[Clazz1]
-      .groupBy(c => className(c.name)) //Map[String,Array[Clazz1]]
+      .groupBy(c ⇒ className(c.name)) //Map[String,Array[Clazz1]]
       .map { kv ⇒
         val aggregatedDependencies = kv._2.flatMap(_.dependencies).toSet
         Clazz1(kv._1, aggregatedDependencies)

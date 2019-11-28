@@ -8,7 +8,7 @@ object PackageStructureHints1Finder {
 
   case class GroupingResult(val grouping: Map[Set[String], Seq[NodeId]], val labelledSources: Seq[(String, NodeId)])
 
-  val makeGroups = (graph: Set[Node]) => {
+  val makeGroups = (graph: Set[Node]) ⇒ {
     val sources = Graph.findSources(graph).toList.sortBy(_.id)
     val labelledSources = for {i <- 0 to sources.size - 1} yield (sources(i), label(sources.size, i))
 
@@ -20,13 +20,13 @@ object PackageStructureHints1Finder {
     val grouping:Map[Set[String], Seq[NodeId]] = labelledNodes
       .toList
       .groupBy(_._2)                             //Map[NodeId, Seq[(String, NodeId)]]
-      .map(kv => (kv._1, kv._2.map(_._1).toSet)) //Map[NodeId, Set[String]]
+      .map(kv ⇒ (kv._1, kv._2.map(_._1).toSet)) //Map[NodeId, Set[String]]
       .toList                                    //Seq[(NodeId, Set[String])]
       .groupBy(_._2)                             //Map[NodeId, Seq[(NodeId, Set[String]])]
-      .map(kv => (kv._1, kv._2.map(_._1)))
+      .map(kv ⇒ (kv._1, kv._2.map(_._1)))
 
 
-    GroupingResult(grouping, labelledSources.toList.map(x => (x._2, x._1.id)))
+    GroupingResult(grouping, labelledSources.toList.map(x ⇒ (x._2, x._1.id)))
 
   }
 

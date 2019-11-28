@@ -40,8 +40,8 @@ class DesignQualityCheckerMojo extends AbstractMojo {
       val (success,msg) = analyse(new AnalysisPlan(checks, rootPackage))
       if (!success) throw new MojoFailureException("\nNumber of violations exceeds allowed limits!")
     } catch {
-      case ex: IOException => getLog().error("/target/classes not found! " + ex.getMessage())
-      case ex: InvalidConfigurationException => throw new MojoFailureException(ex.getMessage())
+      case ex: IOException ⇒ getLog().error("/target/classes not found! " + ex.getMessage())
+      case ex: InvalidConfigurationException ⇒ throw new MojoFailureException(ex.getMessage())
       case ex: Exception ⇒ throw new MojoFailureException("Unexpected error", ex)
     }
 

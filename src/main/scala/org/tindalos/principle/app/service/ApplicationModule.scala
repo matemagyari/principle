@@ -12,14 +12,14 @@ This is the app entry point. Side effects can happen only here in this layer, un
  */
 object ApplicationModule {
 
-  def buildApplicationFn(validatePlan: AnalysisPlan => (Boolean, String),
-                         getPackages: String => Seq[Package],
-                         getNodes: String => Set[Node],
-                         runAnalysis: AnalysisInput => Seq[AnalysisResult],
-                         makeReports: Seq[AnalysisResult] => Seq[(String, Boolean)],
-                         printer: Printer) =
+  def buildApplicationFn(validatePlan: AnalysisPlan ⇒ (Boolean, String),
+                         getPackages: String ⇒ Seq[Package],
+                         getNodes: String ⇒ Set[Node],
+                         runAnalysis: AnalysisInput ⇒ Seq[AnalysisResult],
+                         makeReports: Seq[AnalysisResult] ⇒ Seq[(String, Boolean)],
+                         printer: Printer): AnalysisPlan ⇒ (Boolean, String) =
 
-    (analysisPlan: AnalysisPlan) => {
+    analysisPlan ⇒ {
 
       val (success, msg) = validatePlan(analysisPlan)
 

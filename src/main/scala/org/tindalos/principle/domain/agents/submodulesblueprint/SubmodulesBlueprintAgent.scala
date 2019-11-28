@@ -10,7 +10,7 @@ import scala.collection.immutable.Seq
 
 object SubmodulesBlueprintAgent {
 
-  def buildInstance(buildSubmodules: (String, Seq[Package], String) => Set[Submodule]) = new Agent {
+  def buildInstance(buildSubmodules: (String, Seq[Package], String) ⇒ Set[Submodule]) = new Agent {
 
     override def isWanted(designQualityChecks: Checks) = designQualityChecks.submodulesBlueprint.nonEmpty
 
@@ -25,18 +25,18 @@ object SubmodulesBlueprintAgent {
 
           val (aID, aMD) = problematicDependencies(submodules)
 
-          new SubmodulesBlueprintAnalysisResult(submodulesBlueprint, aID, aMD)
+          SubmodulesBlueprintAnalysisResult(submodulesBlueprint, aID, aMD)
         }
         catch {
-          case ex: OverlappingSubmoduleDefinitionsException =>
-            new SubmodulesBlueprintAnalysisResult(submodulesBlueprint, overlaps = ex.overlaps)
+          case ex: OverlappingSubmoduleDefinitionsException ⇒
+            SubmodulesBlueprintAnalysisResult(submodulesBlueprint, overlaps = ex.overlaps)
         }
       }
-      .getOrElse(new SubmodulesBlueprintAnalysisResult(submodulesBlueprint = null))
+      .getOrElse(SubmodulesBlueprintAnalysisResult(submodulesBlueprint = null))
 
     private def problematicDependencies(submodules: Set[Submodule]): (Map[Submodule, Set[Submodule]], Map[Submodule, Set[Submodule]]) = {
       val emptyMap = Map[Submodule, Set[Submodule]]()
-      submodules.foldLeft((emptyMap, emptyMap))((acc, submodule) => {
+      submodules.foldLeft((emptyMap, emptyMap))((acc, submodule) ⇒ {
         val otherSubmodules = submodules.filterNot(_.equals(submodule))
         val illegalDependencies = submodule.findIllegalDependencies(otherSubmodules)
         val missingDependencies = submodule.findMissingPredefinedDependencies(otherSubmodules)

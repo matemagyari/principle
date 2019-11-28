@@ -31,11 +31,11 @@ object PackageStructureHints2FileWriter {
           printWriter.append(s"${firstLine}\n")
 
         p.frontNodes.map(_.id).toList.sorted.foreach {
-          nodeId => printWriter.append(s"Top class: ${nodeId}\n")
+          nodeId ⇒ printWriter.append(s"Top class: ${nodeId}\n")
         }
         printWriter.append(subSectionLine + "\n")
         (p.subgraph -- p.frontNodes).map(_.id).toList.sorted.foreach {
-          nodeId => printWriter.append(s"           ${nodeId}\n")
+          nodeId ⇒ printWriter.append(s"           ${nodeId}\n")
         }
         printWriter.append("\n")
       }

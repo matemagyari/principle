@@ -29,18 +29,18 @@ object PackageStructureHints1FileWriter {
       .append(subSectionLine+"\n\n")
 
     grouping.labelledSources.sortBy(_._1).foreach {
-      x => printWriter.append(x._1 + " -> " + x._2+"\n")
+      x ⇒ printWriter.append(x._1 + " -> " + x._2+"\n")
     }
     printWriter
       .append(s"\nGroups (${grouping.grouping.size}) ordered by size\n")
       .append(subSectionLine+"\n\n")
 
     grouping.grouping.to[List].sortBy(_._2.size).foreach {
-      kv => {
+      kv ⇒ {
         val sources = kv._1.foldLeft("")(_ + "," + _).substring(1)
         printWriter.append(s"Sources: ${sources}\n")
         kv._2.sorted.foreach {
-          x => printWriter.append("\t" + x+"\n")
+          x ⇒ printWriter.append("\t" + x+"\n")
         }
       }
     }

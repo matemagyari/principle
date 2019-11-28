@@ -11,12 +11,12 @@ class InputValidatorTest {
 
   val basePackage: String = "xx"
 
-  val aLayering = Layering(layers = List("a","b","c"))
+  val aLayering = Layering(layers = Seq("a","b","c"))
 
   @Test
   def wrongOrder() {
 
-    val barriers = List(Barrier("a"),Barrier("c"),Barrier("b"))
+    val barriers = Seq(Barrier("a"),Barrier("c"),Barrier("b"))
     val configuration: AnalysisPlan = config(barriers)
 
     val (success,msg) = InputValidator.validate(configuration)
@@ -27,7 +27,7 @@ class InputValidatorTest {
   @Test
   def invalidBarrier() {
 
-    val barriers = List(Barrier("a"),Barrier("d"))
+    val barriers = Seq(Barrier("a"),Barrier("d"))
     val configuration: AnalysisPlan = config(barriers)
 
     val (success,msg) = InputValidator.validate(configuration)
@@ -39,7 +39,7 @@ class InputValidatorTest {
   @Test
   def fullCover() {
 
-    val barriers = List(Barrier("a"),Barrier("b"),Barrier("c"))
+    val barriers = Seq(Barrier("a"),Barrier("b"),Barrier("c"))
     val configuration: AnalysisPlan = config(barriers)
 
     val (success,msg) = InputValidator.validate(configuration)
@@ -50,7 +50,7 @@ class InputValidatorTest {
   @Test
   def partialCover() {
 
-    val barriers = List(Barrier("a"), Barrier("c"))
+    val barriers = Seq(Barrier("a"), Barrier("c"))
     val configuration: AnalysisPlan = config(barriers)
 
     val (success,msg) = InputValidator.validate(configuration)

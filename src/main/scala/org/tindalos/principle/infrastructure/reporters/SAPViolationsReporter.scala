@@ -16,7 +16,7 @@ object SAPViolationsReporter {
     if (outlierPackages.isEmpty) {
       sb.append("No violations.\n")
     } else {
-      outlierPackages foreach { outlierPackage =>
+      outlierPackages foreach { outlierPackage ⇒
         sb.append(print(outlierPackage) + "\n")
       }
     }

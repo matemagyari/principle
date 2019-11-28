@@ -20,9 +20,9 @@ class PackageFactory(rootPackage: String) {
     new Metrics(jPackage.afferentCoupling(), jPackage.efferentCoupling(), jPackage.abstractness(), jPackage.instability(), jPackage.distance())
 
 
-  def buildPackageListFactory(sortByName: Seq[Package] => Seq[Package]) =
+  def buildPackageListFactory(sortByName: Seq[Package] ⇒ Seq[Package]) =
 
-    (rootPackage:String, analyzedPackages: Seq[JavaPackage]) => {
+    (rootPackage:String, analyzedPackages: Seq[JavaPackage]) ⇒ {
 
       val unsortedList = analyzedPackages
         .filter(isRelevant)

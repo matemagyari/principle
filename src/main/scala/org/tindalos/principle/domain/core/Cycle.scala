@@ -8,8 +8,8 @@ class Cycle(val references: Seq[PackageReference]) extends Comparable[Cycle] {
   
   //var x:org.tindalos.principle.domain.expectations.Checks = null
   def this(refs:PackageReference*) = this(refs.toList)
-  def this(ref1:PackageReference,ref2:PackageReference) = this(List(ref1, ref2))
-  def this(ref1:PackageReference,ref2:PackageReference,ref3:PackageReference) = this(List(ref1, ref2, ref3))
+  def this(ref1:PackageReference,ref2:PackageReference) = this(Seq(ref1, ref2))
+  def this(ref1:PackageReference,ref2:PackageReference,ref3:PackageReference) = this(Seq(ref1, ref2, ref3))
 
   if (references == null || references.length < 2) throw new DomainException("Invalid cycle " + references)
 
@@ -18,14 +18,14 @@ class Cycle(val references: Seq[PackageReference]) extends Comparable[Cycle] {
   override def toString() = {
     val arrow = "-->"
     val sb = new StringBuffer("*" + arrow)
-    references foreach { reference =>
+    references foreach { reference ⇒
       sb.append(reference + arrow)
     }
     sb.append("*").toString()
   }
 
   override def equals(other: Any) = other match {
-    case castOther: Cycle =>
+    case castOther: Cycle ⇒
       if (!references.toSet.equals(castOther.references.toSet)) false
       else {
 
@@ -39,7 +39,7 @@ class Cycle(val references: Seq[PackageReference]) extends Comparable[Cycle] {
         }
         result
       }
-    case _ => false
+    case _ ⇒ false
   }
 
   override def hashCode() = new HashCodeBuilder().append(references.length).hashCode()

@@ -9,10 +9,10 @@ import org.tindalos.principle.domain.expectations.{PackageCoupling, Checks}
 
 object PackageCohesionDetector {
   
-  def buildAgent(buildComponents:(PackageName, Set[Node]) => Set[(PackageName, NodeGroup)]
-             , makeStructureHints1: Set[Node] => GroupingResult
-             , findDetachableSubgraphs: Set[Node] => SubgraphDecomposition
-             , collapseToLimit: Set[NodeGroup] => Set[NodeGroup]) = new Agent {
+  def buildAgent(buildComponents:(PackageName, Set[Node]) ⇒ Set[(PackageName, NodeGroup)]
+             , makeStructureHints1: Set[Node] ⇒ GroupingResult
+             , findDetachableSubgraphs: Set[Node] ⇒ SubgraphDecomposition
+             , collapseToLimit: Set[NodeGroup] ⇒ Set[NodeGroup]) = new Agent {
     
     override def analyze(input: AnalysisInput) = {
 
@@ -22,7 +22,7 @@ object PackageCohesionDetector {
 
       val cohesiveGroups =
         input.packageCouplingExpectations().map { _ ⇒
-          val initialGroups = input.nodes.map(n => NodeGroup(Set(n)))
+          val initialGroups = input.nodes.map(n ⇒ NodeGroup(Set(n)))
           collapseToLimit(initialGroups)
         }
 

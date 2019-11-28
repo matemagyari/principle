@@ -49,6 +49,6 @@ class BlueprintTest {
     result.head.asInstanceOf[SubmodulesBlueprintAnalysisResult]
   }
 
-  def submodulesBlueprint(location: String) = new SubmodulesBlueprint(location, 0)
+  def submodulesBlueprint(location: String) = SubmodulesBlueprint(location, 0)
 
 }

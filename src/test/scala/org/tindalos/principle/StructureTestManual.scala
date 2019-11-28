@@ -42,14 +42,14 @@ object StructureTestManual extends App {
 
   println("\nSources:")
   grouping.labelledSources.sortBy(_._1).foreach {
-    x => println(x)
+    x ⇒ println(x)
   }
   println("\nGroups:")
   grouping.grouping.foreach {
-    kv => {
+    kv ⇒ {
       println(kv._1.foldLeft("Sources: ")(_ + "," + _))
       kv._2.sorted.foreach {
-        x => println("\t" + x)
+        x ⇒ println("\t" + x)
       }
     }
   }
@@ -58,28 +58,28 @@ object StructureTestManual extends App {
 
   val cohesionsForGrouping = for {
     g <- grouping.grouping
-    nodeSet = g._2.map(x => classes.find(n => n.id == x).get).toSet
+    nodeSet = g._2.map(x ⇒ classes.find(n ⇒ n.id == x).get).toSet
     if nodeSet.size > 1
     nodeGroup = NodeGroup(nodeSet)
   } yield (g._1, nodeGroup.cohesion())
 
   cohesionsForGrouping.toList.sortBy(_._2).reverse.foreach {
-    c => println(c._2 + " " + c._1)
+    c ⇒ println(c._2 + " " + c._1)
   }
 
   //val parts = Graph.findDetachableSubgraphs(classes)
   val parts = Graph.findDetachableSubgraphs(MyJDependRunner.createNodesOfClasses("org.tindalos.principle.infrastructure"))
 
   parts.peninsulas.foreach {
-    p => {
+    p ⇒ {
       println("Top: " + p.frontNodes + " " + NodeGroup(p.subgraph).cohesion())
       p.subgraph.map(_.id).toList.sorted.foreach {
-        n => println("\t"+n)
+        n ⇒ println("\t"+n)
       }
     }
   }
 
-  val initialComponents = classes.map(n => NodeGroup(Set(n)))
+  val initialComponents = classes.map(n ⇒ NodeGroup(Set(n)))
 
   start = System.currentTimeMillis()
   val components = CohesiveGroupsDiscoveryModule.collapseToLimit(initialComponents).toList.sortBy(_.nodes.size).reverse

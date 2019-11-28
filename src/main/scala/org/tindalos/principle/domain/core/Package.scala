@@ -52,7 +52,7 @@ abstract class Package(val reference: PackageReference) {
   protected def toMap(accumulatingMap: scala.collection.mutable.Map[PackageReference, Package]): Map[PackageReference, Package] = {
 
     accumulatingMap.put(reference, this)
-    subPackages.foreach(child => child.toMap(accumulatingMap))
+    subPackages.foreach(child ⇒ child.toMap(accumulatingMap))
     accumulatingMap.toMap
   }
 
@@ -69,8 +69,8 @@ abstract class Package(val reference: PackageReference) {
   protected def getSubPackageByRelativeName(relativeName: String) = {
 
     subPackages.find(_.reference.equals(reference.child(relativeName))) match {
-      case Some(subPackage) => subPackage
-      case None =>
+      case Some(subPackage) ⇒ subPackage
+      case None ⇒
         val directSubPackage = createNew(reference.createChild(relativeName))
         _subPackages += directSubPackage
         directSubPackage
@@ -93,8 +93,8 @@ abstract class Package(val reference: PackageReference) {
       }
       // System.err.println("Failed " + traversedPackages + " " + this)
       matchFoundIndex match {
-        case None => -1
-        case Some(index) => index
+        case None ⇒ -1
+        case Some(index) ⇒ index
       }
     }
   }
@@ -114,7 +114,7 @@ abstract class Package(val reference: PackageReference) {
       dependencies.filterNot(_.equals(reference)).toSet
     } else {
       var result = accumulatedPackageReferences
-      accumulatedPackageReferences.foreach({ packageReference =>
+      accumulatedPackageReferences.foreach({ packageReference ⇒
         dependencies.add(packageReference)
         result = result ++: (packageReferenceMap.get(packageReference).get.cumulatedDependenciesAcc(packageReferenceMap, dependencies))
         result = result.filterNot(_.equals(reference))
@@ -140,7 +140,7 @@ abstract class Package(val reference: PackageReference) {
           foundCycles.add(new Cycle(cycleCandidateEndingHere.get))
         }
       } else {
-        accumulatedDirectlyReferredPackages(packageReferences).foreach({ referencedPackage =>
+        accumulatedDirectlyReferredPackages(packageReferences).foreach({ referencedPackage ⇒
         val cyclesInSubgraph = referencedPackage.detectCyclesOnThePathFromHere(traversedPackages.add(reference), foundCycles, packageReferences)
         foundCycles.mergeIn(cyclesInSubgraph)
         })
@@ -167,8 +167,8 @@ abstract class Package(val reference: PackageReference) {
   protected def notEveryNodeUnderFirst(cycleCandidate: Seq[PackageReference]) = {
     val first = cycleCandidate.head
     cycleCandidate.tail.find(!_.isDescendantOf(first)) match {
-      case None => first.equals(reference)
-      case Some(_) => true
+      case None ⇒ first.equals(reference)
+      case Some(_) ⇒ true
     }
   }
 
@@ -188,7 +188,7 @@ abstract class Package(val reference: PackageReference) {
   override def toString() = reference.toString()
 }
 
-class TraversedPackages(val packages: Seq[PackageReference] = List()) {
+class TraversedPackages(val packages: Seq[PackageReference] = Seq.empty) {
 
   def add(reference: PackageReference) = new TraversedPackages(packages :+ reference)
   def from(index: Int) = packages.slice(index, packages.length)

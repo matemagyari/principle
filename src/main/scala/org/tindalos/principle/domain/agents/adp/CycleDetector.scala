@@ -7,7 +7,7 @@ import org.tindalos.principle.domain.expectations.{Checks, PackageCoupling}
 import scala.collection.immutable.Seq
 
 object CycleDetector {
-  def buildAgent(buildPackageStructure: (Seq[Package], String) => Package) = new Agent {
+  def buildAgent(buildPackageStructure: (Seq[Package], String) ⇒ Package) = new Agent {
 
     override def analyze(input: AnalysisInput) = {
 

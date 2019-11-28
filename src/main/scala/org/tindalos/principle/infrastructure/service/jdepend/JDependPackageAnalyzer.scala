@@ -7,10 +7,10 @@ import scala.collection.immutable.Seq
 
 object JDependPackageAnalyzer {
 
-  def buildAnalyzerFn(produceJavaPackageList: (String, Boolean) => Seq[JavaPackage]
-                    , transform: (String, Seq[JavaPackage]) => Seq[Package]) =
+  def buildAnalyzerFn(produceJavaPackageList: (String, Boolean) ⇒ Seq[JavaPackage]
+                    , transform: (String, Seq[JavaPackage]) ⇒ Seq[Package]) =
 
-    (rootPackage: String) => {
+    (rootPackage: String) ⇒ {
       val analyzedPackages = produceJavaPackageList(rootPackage,true)
       transform(rootPackage, analyzedPackages)
     }

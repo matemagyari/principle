@@ -66,7 +66,7 @@ object YAMLBasedSubmodulesBlueprintProvider {
           .map { case (k, v) ⇒ (k, v.asScala.to[List]) }
     }.getOrElse(Map.empty)
 
-    dependencies.foreach { keyVal =>
+    dependencies.foreach { keyVal ⇒
       val submoduleId = new SubmoduleId(keyVal._1)
       checkSubmoduleExists(submoduleDefinitionMap.keySet, submoduleId)
       val submoduleDefinition = submoduleDefinitionMap.get(submoduleId).get
@@ -94,12 +94,12 @@ object YAMLBasedSubmodulesBlueprintProvider {
     }
   }
 
-  private def transformToPackageReferences(packageNames: Seq[String], basePackageName: String) = packageNames.map(x => new PackageReference(basePackageName + "." + x))
+  private def transformToPackageReferences(packageNames: Seq[String], basePackageName: String) = packageNames.map(x ⇒ new PackageReference(basePackageName + "." + x))
 
   protected def getYAML(submodulesDefinitionLocation: String) =
     try {
       FileUtils.readFileToString(new File(submodulesDefinitionLocation))
     } catch {
-      case ex: IOException => throw new InvalidBlueprintDefinitionException("problem with reading file from " + submodulesDefinitionLocation);
+      case ex: IOException ⇒ throw new InvalidBlueprintDefinitionException("problem with reading file from " + submodulesDefinitionLocation);
     }
 }

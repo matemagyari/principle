@@ -29,7 +29,7 @@ object CohesiveGroupsDiscoveryModule {
 
       def overlap(n: ((NodeGroup, NodeGroup), Double)) = Set(n._1._1, n._1._2, max._1._1, max._1._2).size < 4
 
-      val updatedPairMap = pairMap.filterNot(kv => overlap(kv)) ++ newPairs
+      val updatedPairMap = pairMap.filterNot(kv ⇒ overlap(kv)) ++ newPairs
 
       collapse(updatedNs, updatedPairMap)
     }

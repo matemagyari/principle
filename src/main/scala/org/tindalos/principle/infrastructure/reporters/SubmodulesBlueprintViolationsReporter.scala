@@ -19,10 +19,10 @@ object SubmodulesBlueprintViolationsReporter {
     } else if (result.violationsNumber == 0) {
       sb.append("No violations.\n")
     } else {
-      result.illegalDependencies.foreach({ keyVal =>
+      result.illegalDependencies.foreach({ keyVal ⇒
         sb.append(printIllegalDependencies(keyVal._1, keyVal._2) + "\n")
       })
-      result.missingDependencies.foreach({ keyVal =>
+      result.missingDependencies.foreach({ keyVal ⇒
         sb.append(printMissingDependencies(keyVal._1, keyVal._2) + "\n")
       })
     }

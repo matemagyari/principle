@@ -29,14 +29,14 @@ object ExistingPackageCohesionsFileWriter {
       .toList
       .sortBy(_._2.cohesion()).reverse
       .foreach {
-      p => printWriter.append(s"\n ${groupToLine(p._2)}\t${p._1}")
+      p ⇒ printWriter.append(s"\n ${groupToLine(p._2)}\t${p._1}")
     }
 
     printWriter.append("\n"+sectionLine+"\n")
     val minPackages = result.packages.filter(_._2.nodes.size == 1)
     printWriter.append(s"\n${oneElementPackageDesc} (${minPackages.size})\n\n")
     minPackages.toList.map(_._2.nodes.head.id).sorted.foreach {
-      nodeId => printWriter.append( nodeId + "\n")
+      nodeId ⇒ printWriter.append( nodeId + "\n")
     }
 
     printWriter.close()

@@ -23,15 +23,15 @@ object ADPViolationsReporter {
     } else {
       sb.append("The cycles could be broken up refactoring the following packages: \n\n")
 
-      cyclesByBreakingPoints.foreach(keyVal => sb.append(keyVal._1 + " (" + keyVal._2.size + ")\n"))
+      cyclesByBreakingPoints.foreach(keyVal ⇒ sb.append(keyVal._1 + " (" + keyVal._2.size + ")\n"))
       
       val cycleDetailsFileName = ReportsDirectoryManager.reportDirectoryPath + "/cycle_details.txt"
       sb.append(s"\nFor details check file: ${cycleDetailsFileName} \n\n")
       
       val printWriter = new PrintWriter(cycleDetailsFileName)
-      cyclesByBreakingPoints.foreach({ keyVal =>
+      cyclesByBreakingPoints.foreach({ keyVal ⇒
         printWriter.append("\nExample cycles caused by " + keyVal._1 + "\n")
-        keyVal._2.toList.sortBy(_.toString).foreach(cycle => { printWriter.append(print(cycle) + "\n") })
+        keyVal._2.toList.sortBy(_.toString).foreach(cycle ⇒ { printWriter.append(print(cycle) + "\n") })
       })
       printWriter.close()
     }
@@ -44,7 +44,7 @@ object ADPViolationsReporter {
 
     val arrow = "-->"
     val sb = new StringBuffer()
-    cycle.references.foreach(reference => sb.append("\n" + reference + " " + arrow))
+    cycle.references.foreach(reference ⇒ sb.append("\n" + reference + " " + arrow))
 
     sb.append("\n-------------------------------")
     sb.toString()

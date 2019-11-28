@@ -16,19 +16,19 @@ case class ADP(threshold:Int = 0) extends Thresholder(threshold)
 case class SDP(threshold:Int = 0) extends Thresholder(threshold)
 case class SAP(threshold:Int = 0, maxDistance:Double = 0.0) extends Thresholder(threshold)
 
-case class Layering(layers: Seq[String] = List.empty, threshold: Int = 0) extends Thresholder(threshold)
+case class Layering(layers: Seq[String] = Seq.empty, threshold: Int = 0) extends Thresholder(threshold)
 
 
 case class Barrier(layer: String = "", components: String = "") {
 
-  def componentList() =
-    if (components.isEmpty) List()
+  def componentList(): Seq[String] =
+    if (components.isEmpty) Seq.empty
     else components
         .filter(_ >= ' ') //remove whitespaces
         .split(",").to[List].map(_.trim)
 }
 
-case class ThirdParty(barriers: Seq[Barrier] = List.empty, threshold: Int = 0) extends Thresholder(threshold)
+case class ThirdParty(barriers: Seq[Barrier] = Seq.empty, threshold: Int = 0) extends Thresholder(threshold)
 
 case class SubmodulesBlueprint(location:String, threshold:Int = 0) extends Thresholder(threshold)
 

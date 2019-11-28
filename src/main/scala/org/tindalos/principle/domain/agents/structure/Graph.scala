@@ -37,27 +37,27 @@ object Graph {
   }
 
   def isIsland(subgraph: Set[Node]) = {
-    val subgraphDependencies = subgraph.flatMap(n => n.dependants ++ n.dependants)
+    val subgraphDependencies = subgraph.flatMap(n ⇒ n.dependants ++ n.dependants)
     val externalDependencies = subgraphDependencies &~ subgraph.map(_.id)
     externalDependencies.isEmpty
   }
 
   def findDownstreamNodes(n: Node, graph: Set[Node]) = {
 
-    val nodeMap: Map[NodeId, Node] = graph.groupBy(_.id).map(kv => (kv._1, kv._2.toList.head))
+    val nodeMap: Map[NodeId, Node] = graph.groupBy(_.id).map(kv ⇒ (kv._1, kv._2.toList.head))
 
     def helper(node: Node, acc: Set[Node]): Set[Node] = {
 
       val newAcc = acc + node
-      val nextNodes = node.dependencies.flatMap(id => nodeMap.get(id)) -- newAcc
+      val nextNodes = node.dependencies.flatMap(id ⇒ nodeMap.get(id)) -- newAcc
 
       // recursively call on dependencies
-      newAcc ++ nextNodes.flatMap(x => helper(x, newAcc ++ nextNodes))
+      newAcc ++ nextNodes.flatMap(x ⇒ helper(x, newAcc ++ nextNodes))
     }
     helper(n, Set())
   }
 
-  def findSources(graph: Set[Node]) = graph.filter(n => n.dependants.isEmpty)
+  def findSources(graph: Set[Node]) = graph.filter(n ⇒ n.dependants.isEmpty)
 
   private def findDetachableSubgraph(n: Node, graph: Set[Node]) = {
     def helper(startNode: Node, upstreamNodes: Set[Node]): Set[Node] = {
@@ -85,7 +85,7 @@ object Graph {
     val peninsulas = result
       .groupBy(_._2) //Map[Set[Node],Set[(Node,Set[Node])]]
       .toList
-      .map { kv =>
+      .map { kv ⇒
         val subgraph: Set[Node] = kv._1
         val frontNodes: Set[Node] = kv._2.map(_._1)
         Peninsula(frontNodes, subgraph)

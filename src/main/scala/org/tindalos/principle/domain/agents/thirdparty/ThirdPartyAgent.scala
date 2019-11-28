@@ -31,14 +31,14 @@ object ThirdPartyAgent extends Agent {
 
           ThirdPartyViolationsResult(violations, thirdParty)
         }
-        .getOrElse(ThirdPartyViolationsResult(List.empty, null))
+        .getOrElse(ThirdPartyViolationsResult(Seq.empty, null))
 
   private def allowedComponentsForLayer(
       layers: Seq[String],
       layer: String,
       barriers: Seq[Barrier]) = {
     val innerLayers = layers.dropWhile(_ != layer)
-    barriers.filter(b => innerLayers.contains(b.layer)).flatMap(_.componentList())
+    barriers.filter(b ⇒ innerLayers.contains(b.layer)).flatMap(_.componentList())
   }
 
   private def outOfAllowedComponents(layer: String, layers: Seq[String], barriers: Seq[Barrier], referencedPackage: PackageReference) =
@@ -46,7 +46,7 @@ object ThirdPartyAgent extends Agent {
 
 
   private def layerOf(layers: Seq[String], basePackage: String, aPackage: Package) =
-    layers.find(l => aPackage.reference.startsWith(s"${basePackage}.${l}"))
+    layers.find(l ⇒ aPackage.reference.startsWith(s"${basePackage}.${l}"))
 
 
   private def underBasePackage(aPackage: PackageReference, basePackage: String) =

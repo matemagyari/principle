@@ -17,31 +17,31 @@ object AnalysisResultsReporter {
 
   type Report = String
 
-  def buildResultReporter(reportAdpResult: ADPResult => Report,
-                          reportLayerViolationsResult: LayerViolationsResult => Report,
-                          reportThirdPartyViolationsResult: ThirdPartyViolationsResult => Report,
-                          reportSAPResult: SAPResult => Report,
-                          reportACDResult: ACDResult => Report,
-                          reportSubmodulesBlueprintCheckResult: SubmodulesBlueprintAnalysisResult => Report,
-                          reportSDPResult: SDPResult => Report,
-                          reportCohesionResult: CohesionAnalysisResult => Report) = {
+  def buildResultReporter(reportAdpResult: ADPResult ⇒ Report,
+                          reportLayerViolationsResult: LayerViolationsResult ⇒ Report,
+                          reportThirdPartyViolationsResult: ThirdPartyViolationsResult ⇒ Report,
+                          reportSAPResult: SAPResult ⇒ Report,
+                          reportACDResult: ACDResult ⇒ Report,
+                          reportSubmodulesBlueprintCheckResult: SubmodulesBlueprintAnalysisResult ⇒ Report,
+                          reportSDPResult: SDPResult ⇒ Report,
+                          reportCohesionResult: CohesionAnalysisResult ⇒ Report) = {
 
     def toReport(result: AnalysisResult) = {
       val report = result match {
-        case cr: ADPResult => reportAdpResult(cr)
-        case cr: LayerViolationsResult => reportLayerViolationsResult(cr)
-        case cr: ThirdPartyViolationsResult => reportThirdPartyViolationsResult(cr)
-        case cr: SDPResult => reportSDPResult(cr)
-        case cr: SAPResult => reportSAPResult(cr)
-        case cr: ACDResult => reportACDResult(cr)
-        case cr: SubmodulesBlueprintAnalysisResult => reportSubmodulesBlueprintCheckResult(cr)
-        case cr: CohesionAnalysisResult => reportCohesionResult(cr)
-        case _ => throw new RuntimeException("terrible thing - no result type")
+        case cr: ADPResult ⇒ reportAdpResult(cr)
+        case cr: LayerViolationsResult ⇒ reportLayerViolationsResult(cr)
+        case cr: ThirdPartyViolationsResult ⇒ reportThirdPartyViolationsResult(cr)
+        case cr: SDPResult ⇒ reportSDPResult(cr)
+        case cr: SAPResult ⇒ reportSAPResult(cr)
+        case cr: ACDResult ⇒ reportACDResult(cr)
+        case cr: SubmodulesBlueprintAnalysisResult ⇒ reportSubmodulesBlueprintCheckResult(cr)
+        case cr: CohesionAnalysisResult ⇒ reportCohesionResult(cr)
+        case _ ⇒ throw new RuntimeException("terrible thing - no result type")
       }
       (report, result.expectationsFailed())
     }
 
-    (results: Seq[AnalysisResult]) => results map toReport
+    (results: Seq[AnalysisResult]) ⇒ results map toReport
   }
 
 

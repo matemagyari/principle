@@ -8,6 +8,8 @@ import org.tindalos.principle.domain.resultprocessing.thresholdchecker.Threshold
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 
+import scala.collection.immutable.Seq
+
 class ApplicationModuleTest {
 
   @Test
@@ -33,8 +35,8 @@ class ApplicationModuleTest {
     try {
       runAnalysis(new AnalysisPlan(checks, basePackage))
     } catch {
-      case ex: ThresholdTrespassedException =>
-      case ex: Exception =>
+      case ex: ThresholdTrespassedException ⇒
+      case ex: Exception ⇒
         ex.printStackTrace()
         Assert.fail(ex.getMessage())
     }
@@ -42,9 +44,9 @@ class ApplicationModuleTest {
   }
 
   private val submodulesDefinitionLocation = "src/main/resources/principle_blueprint.yaml"
-  private val submodulesBlueprint = new SubmodulesBlueprint(submodulesDefinitionLocation, 0)
+  private val submodulesBlueprint = SubmodulesBlueprint(submodulesDefinitionLocation, 0)
 
-  private def layering() = new Layering(List("infrastructure", "app", "domain"), 0)
+  private def layering() = Layering(Seq("infrastructure", "app", "domain"), 0)
 
   private class ConsolePrinter extends Printer {
 

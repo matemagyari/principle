@@ -23,14 +23,14 @@ object CohesiveGroupsFileWriter {
     cohesiveNodeGroups
       .toList.sortBy(_.cohesion()).reverse.filter(_.nodes.size > 1)
       .foreach {
-      p => printWriter.append(s"\n${groupToLine2(p)} \n${listNodes(p)} \n${subSectionLine}\n")
+      p ⇒ printWriter.append(s"\n${groupToLine2(p)} \n${listNodes(p)} \n${subSectionLine}\n")
     }
 
     printWriter.append("\n"+sectionLine+"\n")
     val orphanNodes = cohesiveNodeGroups.filter(_.nodes.size == 1)
     printWriter.append(s"${orphanNodesDescription} (${orphanNodes.size})\n\n")
     orphanNodes.toList.map(_.nodes.head.id).sorted.foreach {
-      nodeId => printWriter.append( nodeId + "\n")
+      nodeId ⇒ printWriter.append( nodeId + "\n")
     }
 
     printWriter.close()

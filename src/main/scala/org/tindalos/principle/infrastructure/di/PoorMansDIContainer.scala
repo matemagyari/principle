@@ -27,7 +27,7 @@ object PoorMansDIContainer {
 
   def buildAnalyzer(rootPackage: String, printer:Printer) = {
 
-    val buildNodesFn:String => Set[Node] = MyJDependRunner.createNodesOfClasses(_)
+    val buildNodesFn:String ⇒ Set[Node] = MyJDependRunner.createNodesOfClasses(_)
 
     ApplicationModule.buildApplicationFn(
       InputValidator.validate,
@@ -38,20 +38,20 @@ object PoorMansDIContainer {
       printer)
   }
 
-  def buildPackageListProducerFn(rootPackage: String): (String) => Seq[Package] = {
+  def buildPackageListProducerFn(rootPackage: String): (String) ⇒ Seq[Package] = {
     val packageFactory = new PackageFactory(rootPackage)
     val packageListTransformer = packageFactory.buildPackageListFactory(PackageSorterModule.sortByName(_))
     JDependPackageAnalyzer.buildAnalyzerFn(JDependRunner.preparePackages, packageListTransformer)
   }
 
-  def buildRunAnalysisFn(): AnalysisInput => Seq[AnalysisResult] = {
+  def buildRunAnalysisFn(): AnalysisInput ⇒ Seq[AnalysisResult] = {
     val packageStructureBuilder = PackageStructureModule.createBuilder(PackageSorterModule.sortByName(_, _))
     val detectors = createDetectors(packageStructureBuilder)
     AgentsRunner.buildAgentsRunner(detectors)
   }
 
-  private def createDetectors(buildPackageStructure: (Seq[Package], String) => Package) =
-    List(
+  private def createDetectors(buildPackageStructure: (Seq[Package], String) ⇒ Package) =
+    Seq(
       LayerViolationAgent,
       ThirdPartyAgent,
       CycleDetector.buildAgent(buildPackageStructure),
@@ -66,7 +66,7 @@ object PoorMansDIContainer {
       , CohesiveGroupsDiscoveryModule.collapseToLimit))
 
 
-  private def buildSubmodulesBlueprintViolationDetector(buildPackageStructure: (Seq[Package], String) => Package) = {
+  private def buildSubmodulesBlueprintViolationDetector(buildPackageStructure: (Seq[Package], String) ⇒ Package) = {
     val submodulesFactory = SubmodulesFactory.buildInstance(
       buildPackageStructure,
       YAMLBasedSubmodulesBlueprintProvider.readSubmoduleDefinitions,
@@ -75,7 +75,7 @@ object PoorMansDIContainer {
   }
 
 
-  private def buildReporter(): Seq[AnalysisResult] => Seq[(String, Boolean)] = {
+  private def buildReporter(): Seq[AnalysisResult] ⇒ Seq[(String, Boolean)] = {
 
     AnalysisResultsReporter.buildResultReporter(
       ADPViolationsReporter.report,

@@ -8,7 +8,7 @@ import scala.collection.immutable.Seq
 
 object ACDAgent {
   
-  def buildAgent(buildPackageStructure: (Seq[Package], String) => Package) = new Agent {
+  def buildAgent(buildPackageStructure: (Seq[Package], String) ⇒ Package) = new Agent {
 
     override def analyze(checkInput: AnalysisInput) = {
 

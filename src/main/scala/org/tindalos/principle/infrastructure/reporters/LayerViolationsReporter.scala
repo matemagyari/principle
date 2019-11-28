@@ -14,7 +14,7 @@ object LayerViolationsReporter {
 
     def layerRefToStr(lr:LayerReference) = lr.referrer + " -> " + lr.referee
     if (layerReferences.isEmpty) sb.append("No violations.\n")
-    else layerReferences.foreach(layerReference => sb.append(layerRefToStr(layerReference) + "\n"))
+    else layerReferences.foreach(layerReference ⇒ sb.append(layerRefToStr(layerReference) + "\n"))
     
     sb.append(sectionLine + "\n")
     sb.toString()

@@ -15,7 +15,7 @@ object SDPViolationsReporter {
     if (violations.isEmpty)
       sb.append("No violations.\n")
     else
-      violations foreach { violation => sb.append(print(violation) + "\n")}
+      violations foreach { violation ⇒ sb.append(print(violation) + "\n")}
     sb.append(sectionLine + "\n")
     sb.toString()
   }

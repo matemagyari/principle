@@ -8,11 +8,11 @@ object SDPViolationAgent extends Agent {
 
   override def analyze(checkInput: AnalysisInput) = {
 
-    val references = checkInput.packages.map(aPackage => (aPackage.reference -> aPackage)).toMap
+    val references = checkInput.packages.map(aPackage ⇒ (aPackage.reference -> aPackage)).toMap
     val sdpViolations = for (aPackage <- checkInput.packages)
     yield
       aPackage.getOwnPackageReferences()
-        .map(x => references.get(x).get)
+        .map(x ⇒ references.get(x).get)
         .filter(_.instability > aPackage.instability)
         .map(new SDPViolation(aPackage, _))
 

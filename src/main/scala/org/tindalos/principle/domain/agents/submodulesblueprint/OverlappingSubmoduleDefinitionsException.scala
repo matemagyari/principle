@@ -13,9 +13,9 @@ object OverlappingSubmoduleDefinitionsException {
   def toMessage(overlaps: Set[Overlap]) = {
 
     val msg = new StringBuffer("Overlapping submodules: ")
-    overlaps.foreach({ overlap =>
+    overlaps.foreach({ overlap ⇒
       msg.append("\n")
-      overlap.submoduleIds.foreach({ submoduleId => msg.append(submoduleId + " and ") })
+      overlap.submoduleIds.foreach({ submoduleId ⇒ msg.append(submoduleId + " and ") })
       msg.append(msg.substring(0, msg.length() - 4))
 
     })

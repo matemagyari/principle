@@ -34,7 +34,7 @@ object ChecksReader {
       val modules: Option[SubmodulesBlueprint] = getYamlStructure(checksYaml, "modules")
           .map { modules ⇒
             val threshold = modules.get("violation_threshold").map(_.asInstanceOf[Int]).getOrElse(0)
-            new SubmodulesBlueprint(fileLocation, threshold)
+            SubmodulesBlueprint(fileLocation, threshold)
           }
 
       val packageCoupling = {
@@ -105,7 +105,7 @@ object ChecksReader {
     try {
       FileUtils.readFileToString(new File(fileLocation))
     } catch {
-      case ex: Exception =>
+      case ex: Exception ⇒
         ex.printStackTrace()
         throw new InvalidConfigurationException("problem with reading file from " + fileLocation);
     }

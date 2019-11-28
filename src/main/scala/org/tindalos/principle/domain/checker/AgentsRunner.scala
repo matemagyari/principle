@@ -9,7 +9,7 @@ object AgentsRunner {
 
   def buildAgentsRunner(agents: Seq[Agent]) =
 
-    (input: AnalysisInput) => {
+    (input: AnalysisInput) ⇒ {
 
       val results = for {
         agent <- agents if agent.isWanted(input.analysisPlan.expectations)
@@ -23,7 +23,7 @@ object AgentsRunner {
       TheLogger.info(agent + " is running.")
       Some(agent.analyze(input))
     } catch {
-      case unwantedException: RuntimeException => TheLogger.error(unwantedException.getMessage)
+      case unwantedException: RuntimeException ⇒ TheLogger.error(unwantedException.getMessage)
         None
     }
 

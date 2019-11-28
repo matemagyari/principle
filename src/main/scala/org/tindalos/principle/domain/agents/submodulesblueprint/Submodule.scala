@@ -12,14 +12,14 @@ class Submodule(val id: SubmoduleId, val packagesUnderModule: Set[Package], val 
   //TODO move this check to the definition
   if (plannedDependencies.contains(id)) throw new InvalidBlueprintDefinitionException("Submodule should not depend on itself: " + id)
 
-  val outgoingReferences = packagesUnderModule.flatMap(x => x.accumulatedDirectPackageReferences()).toSet
+  val outgoingReferences = packagesUnderModule.flatMap(x ⇒ x.accumulatedDirectPackageReferences()).toSet
 
   def findMissingPredefinedDependencies(otherSubmodules: Set[Submodule]) = {
 
     assert(!otherSubmodules.contains(this))
 
     otherSubmodules
-      .filter(x => plannedDependencies.contains(x.id))
+      .filter(x ⇒ plannedDependencies.contains(x.id))
       .filter(!_.isReferredBy(outgoingReferences))
       .toSet
   }
@@ -28,8 +28,8 @@ class Submodule(val id: SubmoduleId, val packagesUnderModule: Set[Package], val 
 
     assert(!otherSubmodules.contains(this))
 
-    val illegalDependencies = otherSubmodules.filter(x => !plannedDependencies.contains(x.id)).toSet
-    val legalDependencies = otherSubmodules.filter(x => plannedDependencies.contains(x.id)).toSet
+    val illegalDependencies = otherSubmodules.filter(x ⇒ !plannedDependencies.contains(x.id)).toSet
+    val legalDependencies = otherSubmodules.filter(x ⇒ plannedDependencies.contains(x.id)).toSet
 
     if (illegalDependencies.isEmpty) Set()
     else {
@@ -51,17 +51,17 @@ class Submodule(val id: SubmoduleId, val packagesUnderModule: Set[Package], val 
 
   private def calculateExtraReferences(legalDependencies: Set[Submodule]) = {
 
-    //legalDependencies.foldLeft(outgoingReferences)((acc,x) => { acc })
+    //legalDependencies.foldLeft(outgoingReferences)((acc,x) ⇒ { acc })
 
     var potentiallyIllegalReferences = outgoingReferences
-    legalDependencies.foreach({ legalDependency =>
+    legalDependencies.foreach({ legalDependency ⇒
       potentiallyIllegalReferences = legalDependency.removeOutsideReferences(potentiallyIllegalReferences)
     })
     potentiallyIllegalReferences
   }
 
   private def removeOutsideReferences(references: Set[PackageReference]) =
-    references.filterNot(ref => packagesUnderModule.exists(pac => ref.pointsToThatOrInside(pac.reference)))
+    references.filterNot(ref ⇒ packagesUnderModule.exists(pac ⇒ ref.pointsToThatOrInside(pac.reference)))
 
   override def equals(other: Any) =
     if (!other.isInstanceOf[Submodule]) false
