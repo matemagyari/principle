@@ -1,0 +1,142 @@
+plugins {
+    id 'scala'
+    id 'java'
+    id 'maven-publish'
+    id 'signing'
+}
+
+group = 'org.tindalos.principle'
+version = '0.38-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/releases/'
+    }
+}
+
+ext {
+    scalaVersion = '2.12.18'
+    scalaCompatVersion = '2.12'
+}
+
+dependencies {
+    // Scala
+    implementation "org.scala-lang:scala-library:${scalaVersion}"
+
+    // Maven Plugin API (if still needed for plugin development)
+    implementation 'org.apache.maven:maven-plugin-api:3.1.0'
+    compileOnly 'org.apache.maven.plugin-tools:maven-plugin-annotations:3.2'
+
+    // JDepend - source: https://github.com/nidi3/jdepend
+    implementation 'guru.nidi:jdepend:2.9.5'
+
+    // Testing
+    testImplementation 'junit:junit:4.11'
+    testImplementation 'org.scalatest:scalatest_2.11:2.2.4'
+
+    // Utilities
+    implementation 'com.google.guava:guava:14.0.1'
+    implementation 'org.apache.commons:commons-lang3:3.1'
+    implementation 'org.apache.commons:commons-io:1.3.2'
+    implementation 'org.json:json:20090211'
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+    implementation 'org.yaml:snakeyaml:1.5'
+    implementation 'org.specs2:classycle:1.4.1'
+}
+
+tasks.withType(ScalaCompile) {
+    scalaCompileOptions.with {
+        deprecation = true
+        unchecked = true
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xlint:unchecked'
+    options.compilerArgs << '-Xlint:deprecation'
+}
+
+// Custom task to run principle checks (if applicable)
+task principleCheck {
+    group = 'verification'
+    description = 'Run principle architecture checks'
+    doLast {
+        println 'Principle checks would run here - configure based on your needs'
+    }
+}
+
+// Make principleCheck run after compile
+compileScala.finalizedBy principleCheck
+
+// Publishing configuration
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            pom {
+                name = 'Principle Maven Plugin'
+                description = 'Architecture analysis and enforcement tool'
+                url = 'https://github.com/matemagyari/principle'
+
+                licenses {
+                    license {
+                        name = 'The Apache Software License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution = 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'mate.magyari'
+                        name = 'Mate Magyari'
+                        email = 'mate.magyari@gmail.com'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:ssh://git@github.com/matemagyari/principle.git'
+                    developerConnection = 'scm:git:ssh://git@github.com/matemagyari/principle.git'
+                    url = 'https://github.com/matemagyari/principle'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+            def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+            credentials {
+                username = project.hasProperty('ossrhUsername') ? ossrhUsername : ''
+                password = project.hasProperty('ossrhPassword') ? ossrhPassword : ''
+            }
+        }
+    }
+}
+
+// Signing configuration (activated when signing.keyId is set)
+signing {
+    required { gradle.taskGraph.hasTask('publish') && project.hasProperty('signing.keyId') }
+    sign publishing.publications.mavenJava
+}
+
+// Test configuration
+test {
+    useJUnit()
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+    }
+}
+
