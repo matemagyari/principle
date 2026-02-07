@@ -20,7 +20,7 @@ case class ACDResult(
     if (expectation == null || expectation.threshold == Double.NaN) false
     else actual > expectation.threshold
 
-  def getRACDThreshold() =
+  def getRACDThreshold(): Double =
     if (packageCoupling.racd == null) 999d
     else packageCoupling.racd.threshold
 }

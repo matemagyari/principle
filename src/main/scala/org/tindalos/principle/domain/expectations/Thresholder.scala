@@ -1,11 +1,10 @@
 package org.tindalos.principle.domain.expectations
 
-trait DoubleThresholder {
-  val threshold: Double = 0
-}
-case class ACD(override val threshold: Double = 0) extends DoubleThresholder
-case class NCCD(override val threshold: Double = 0) extends DoubleThresholder
-case class RACD(override val threshold: Double = 0) extends DoubleThresholder
+case class ACD(threshold: Double = 0) extends DoubleThresholder
+
+case class NCCD(threshold: Double = 0) extends DoubleThresholder
+
+case class RACD(threshold: Double = 0) extends DoubleThresholder
 
 
 abstract class Thresholder(val violationsThreshold:Int)
