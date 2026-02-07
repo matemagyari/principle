@@ -10,7 +10,7 @@ This is the app entry point. Side effects can happen only here in this layer, un
  */
 object ApplicationModule {
 
-  def buildApplicationFn(validatePlan: AnalysisPlan => (Boolean, String),
+  def buildApplicationFn(validatePlan: AnalysisPlan => ValidationResult,
                          getPackages: String => List[Package],
                          getNodes: String => Set[Node],
                          runAnalysis: AnalysisInput => List[AnalysisResult],
@@ -19,9 +19,9 @@ object ApplicationModule {
 
     (analysisPlan: AnalysisPlan) => {
 
-      val (success, msg) = validatePlan(analysisPlan)
+      val validationResult = validatePlan(analysisPlan)
 
-      if (success) {
+      if (validationResult.success) {
 
         val packages = getPackages(analysisPlan.basePackage)
         val nodes = getNodes(analysisPlan.basePackage)
@@ -36,9 +36,10 @@ object ApplicationModule {
 
         makeReports(analysisResults) foreach printReport
 
-        (!analysisResults.exists(_.expectationsFailed()), "Expectations failed")
+        val success = !analysisResults.exists(_.expectationsFailed())
+        ValidationResult(success, if (success) "" else "Expectations failed")
 
-      } else (success, msg)
+      } else validationResult
 
     }
 

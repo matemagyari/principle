@@ -9,8 +9,9 @@ group = 'org.tindalos.principle'
 version = '0.38-SNAPSHOT'
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 repositories {
@@ -54,6 +55,7 @@ tasks.withType(ScalaCompile) {
     scalaCompileOptions.with {
         deprecation = true
         unchecked = true
+        additionalParameters = ['-target:11']  // Scala 2.12 max support
     }
 }
 
@@ -62,6 +64,27 @@ tasks.withType(JavaCompile) {
     options.compilerArgs << '-Xlint:unchecked'
     options.compilerArgs << '-Xlint:deprecation'
 }
+
+// Configure source sets to separate Java and Scala
+sourceSets {
+    main {
+        scala {
+            srcDirs = ['src/main/scala']
+        }
+        java {
+            srcDirs = ['src/main/java']
+        }
+    }
+    test {
+        scala {
+            srcDirs = ['src/test/scala']
+        }
+        java {
+            srcDirs = ['src/test/java']
+        }
+    }
+}
+
 
 // Custom task to run principle checks (if applicable)
 task principleCheck {

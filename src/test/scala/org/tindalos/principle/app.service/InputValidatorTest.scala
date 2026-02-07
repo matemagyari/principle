@@ -17,9 +17,9 @@ class InputValidatorTest {
     val barriers = List(Barrier("a"),Barrier("c"),Barrier("b"))
     val configuration: AnalysisPlan = config(barriers)
 
-    val (success,msg) = InputValidator.validate(configuration)
+    val result = InputValidator.validate(configuration)
 
-    assertFalse(success)
+    assertFalse(result.success)
   }
 
   @Test
@@ -28,9 +28,9 @@ class InputValidatorTest {
     val barriers = List(Barrier("a"),Barrier("d"))
     val configuration: AnalysisPlan = config(barriers)
 
-    val (success,msg) = InputValidator.validate(configuration)
+    val result = InputValidator.validate(configuration)
 
-    assertFalse(success)
+    assertFalse(result.success)
   }
 
 
@@ -40,9 +40,9 @@ class InputValidatorTest {
     val barriers = List(Barrier("a"),Barrier("b"),Barrier("c"))
     val configuration: AnalysisPlan = config(barriers)
 
-    val (success,msg) = InputValidator.validate(configuration)
+    val result = InputValidator.validate(configuration)
 
-    assertTrue(success)
+    assertTrue(result.success)
   }
 
   @Test
@@ -51,9 +51,9 @@ class InputValidatorTest {
     val barriers = List(Barrier("a"), Barrier("c"))
     val configuration: AnalysisPlan = config(barriers)
 
-    val (success,msg) = InputValidator.validate(configuration)
+    val result = InputValidator.validate(configuration)
 
-    assertTrue(success)
+    assertTrue(result.success)
   }
 
 

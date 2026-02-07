@@ -4,7 +4,7 @@ import org.tindalos.principle.domain.core.AnalysisPlan
 
 object InputValidator {
 
-  def validate(plan: AnalysisPlan): (Boolean, String) =
+  def validate(plan: AnalysisPlan): ValidationResult =
 
     plan.expectations.thirdParty
         .map { thirdParty ⇒
@@ -13,15 +13,15 @@ object InputValidator {
 
           val invalidBarriers = barriers.filterNot { b ⇒ layers.contains(b.layer) }
 
-          if (!invalidBarriers.isEmpty)
-            (false, s"Invalid layers specified under Barriers: ${invalidBarriers}")
+          if (invalidBarriers.nonEmpty)
+            ValidationResult.failure(s"Invalid layers specified under Barriers: ${invalidBarriers}")
           else {
             def layerOrder(a: String, b: String) = layers.indexOf(a) < layers.indexOf(b)
             val layersOfBarriers = barriers.map(_.layer)
             if (!layersOfBarriers.sortWith(layerOrder).equals(layersOfBarriers))
-              (false, "The order of layers in barriers should be the same as of under layering")
-            else (true, "")
+              ValidationResult.failure("The order of layers in barriers should be the same as of under layering")
+            else ValidationResult.successful
           }
         }
-        .getOrElse((true, ""))
+        .getOrElse(ValidationResult.successful)
 }

@@ -37,8 +37,8 @@ class DesignQualityCheckerMojo extends AbstractMojo {
 
     val analyse = PoorMansDIContainer.buildAnalyzer(rootPackage, new LogPrinter(getLog()))
     try {
-      val (success,msg) = analyse(new AnalysisPlan(checks, rootPackage))
-      if (!success) throw new MojoFailureException("\nNumber of violations exceeds allowed limits!")
+      val result = analyse(new AnalysisPlan(checks, rootPackage))
+      if (!result.success) throw new MojoFailureException("\nNumber of violations exceeds allowed limits!")
     } catch {
       case ex: IOException => getLog().error("/target/classes not found! " + ex.getMessage())
       case ex: InvalidConfigurationException => throw new MojoFailureException(ex.getMessage())
