@@ -10,7 +10,7 @@ object BuildPathUtils {
    *
    * @return The path to the classes directory (with trailing slash)
    */
-  def getClassesDirectory: String = {
+  def getClassesDirectory(): String = {
     // Support both Maven and Gradle build directories
     val gradleDir = "./build/classes/scala/main/"
     val mavenDir = "./target/classes/"

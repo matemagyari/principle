@@ -9,7 +9,7 @@ object JDependRunner {
   def preparePackages(rootPackage: String, filterEnabled: Boolean = true): List[JavaPackage] = {
 
     val jDepend = new JDepend()
-    val directory = BuildPathUtils.getClassesDirectory + rootPackage.replaceAll("\\.", "/")
+    val directory = BuildPathUtils.getClassesDirectory() + rootPackage.replaceAll("\\.", "/")
     jDepend.addDirectory(directory)
     if (filterEnabled) {
       val filter = PackageFilter.all()

@@ -9,7 +9,6 @@ object MyJDependRunner {
 
   private case class Clazz1(name: String, dependencies: Set[String])
 
-
   private def recursiveListFiles(f: File): Array[File] = {
     val these = f.listFiles
     these ++ these.filter(_.isDirectory).flatMap(recursiveListFiles)
@@ -38,7 +37,7 @@ object MyJDependRunner {
 
   def createNodesOfClasses(rootPackage: String, targetDir: String = null): Set[Node] = {
 
-    val classesDir = if (targetDir != null) targetDir else BuildPathUtils.getClassesDirectory
+    val classesDir = if (targetDir != null) targetDir else BuildPathUtils.getClassesDirectory()
     val rootDir = new File(classesDir + rootPackage.replaceAll("\\.", "/"))
     //from the 'groupBy' it's needed to handle inner classes
     val clazzes =
