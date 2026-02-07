@@ -37,7 +37,7 @@ object MyJDependRunner {
 
   def createNodesOfClasses(rootPackage: String, targetDir: String = null): Set[Node] = {
 
-    val classesDir = if (targetDir != null) targetDir else BuildPathUtils.getClassesDirectory()
+    val classesDir = if (targetDir != null) targetDir else BuildPathUtils.getClassesDirectoryForPackage(rootPackage)
     val rootDir = new File(classesDir + rootPackage.replaceAll("\\.", "/"))
     //from the 'groupBy' it's needed to handle inner classes
     val clazzes =
