@@ -3,10 +3,12 @@ package org.tindalos.principle.infrastructure.service.jdepend.classdependencies
 import java.io.File
 
 import org.tindalos.principle.domain.agents.structure.Graph.Node
+import org.tindalos.principle.infrastructure.BuildPathUtils
 
 object MyJDependRunner {
 
   private case class Clazz1(name: String, dependencies: Set[String])
+
 
   private def recursiveListFiles(f: File): Array[File] = {
     val these = f.listFiles
@@ -34,9 +36,10 @@ object MyJDependRunner {
     else
       fullName
 
-  def createNodesOfClasses(rootPackage: String, targetDir: String = "./target/classes/"): Set[Node] = {
+  def createNodesOfClasses(rootPackage: String, targetDir: String = null): Set[Node] = {
 
-    val rootDir = new File(targetDir + rootPackage.replaceAll("\\.", "/"))
+    val classesDir = if (targetDir != null) targetDir else BuildPathUtils.getClassesDirectory
+    val rootDir = new File(classesDir + rootPackage.replaceAll("\\.", "/"))
     //from the 'groupBy' it's needed to handle inner classes
     val clazzes =
       recursiveListFiles(rootDir) //Array[File]
