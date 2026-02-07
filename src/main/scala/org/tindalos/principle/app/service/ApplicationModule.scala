@@ -37,7 +37,7 @@ object ApplicationModule {
         makeReports(analysisResults) foreach printReport
 
         val success = !analysisResults.exists(_.expectationsFailed())
-        ValidationResult(success, if (success) "" else "Expectations failed")
+        new ValidationResult(success, if (success) "" else "Expectations failed")
 
       } else validationResult
 
