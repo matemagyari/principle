@@ -44,7 +44,7 @@ object ChecksReader {
             new RACD(threshold.asInstanceOf[Double])
           }
           val adpTh = pc.get("cyclic_dependencies_threshold").map { threshold ⇒
-            ADP(threshold.asInstanceOf[Int])
+            new ADP(threshold.asInstanceOf[Int])
           }
 
           (racdTh, adpTh)

@@ -24,9 +24,9 @@ class ApplicationModuleTest {
     val checks = Checks(
       layering = layering(),
       packageCoupling = Some(PackageCoupling(
-        sap = SAP(0, 0.3d),
-        adp = Some(ADP()),
-        sdp = SDP(),
+        sap = new SAP(0, 0.3d),
+        adp = Some(new ADP()),
+        sdp = new SDP(),
         acd = new ACD(),
         grouping = new Grouping())))
 

@@ -8,7 +8,7 @@ case class ADPResult(
     cyclesByBreakingPoints: Map[PackageReference, Set[Cycle]],
     expectation: ADP) extends AnalysisResult {
 
-  val threshold = expectation.violationsThreshold
+  val threshold = expectation.violationThreshold()
 
   override def expectationsFailed() = cyclesByBreakingPoints.size > threshold
 
