@@ -18,7 +18,7 @@ object LayerViolationAgent extends Agent {
 
   override def analyze(checkInput: AnalysisInput) = {
     val layerReferences = findViolations(checkInput.packages, checkInput.analysisPlan)
-    new LayerViolationsResult(layerReferences, checkInput.layeringExpectations().violationsThreshold)
+    new LayerViolationsResult(layerReferences, checkInput.layeringExpectations().violationThreshold)
   }
 
   override def isWanted(expectations: Checks) = expectations.layering != null

@@ -8,7 +8,7 @@ case class SAPResult(
     outlierPackages: List[Package],
     sapExpectation: SAP) extends AnalysisResult {
 
-  val threshold = sapExpectation.violationsThreshold
+  val threshold = sapExpectation.violationThreshold
 
   override def expectationsFailed() = outlierPackages.length > threshold
 }

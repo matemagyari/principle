@@ -9,7 +9,7 @@ case class SubmodulesBlueprintAnalysisResult(
   missingDependencies: Map[Submodule, Set[Submodule]] = Map(),
   overlaps: Set[Overlap] = Set()) extends AnalysisResult {
 
-  val threshold = submodulesBlueprint.violationsThreshold
+  val threshold = submodulesBlueprint.violationThreshold
   override def expectationsFailed() = violationsNumber > threshold
 
   def violationsNumber = illegalDependencies.size + missingDependencies.size

@@ -8,6 +8,6 @@ case class ThirdPartyViolationsResult(
     violations: List[(PackageReference,PackageReference)],
     thirdPartyExpectations: ThirdParty) extends AnalysisResult {
 
-  val threshold = thirdPartyExpectations.violationsThreshold
+  val threshold = thirdPartyExpectations.violationThreshold
   override def expectationsFailed() = violations.length > threshold
 }

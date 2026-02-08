@@ -10,7 +10,7 @@ case class SDPResult(
     violations: List[SDPViolation],
     expectation: SDP) extends AnalysisResult {
 
-  val threshold = expectation.violationsThreshold
+  val threshold = expectation.violationThreshold
 
   override def expectationsFailed() = violations.length > threshold
 }
