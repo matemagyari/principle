@@ -85,13 +85,13 @@ object ChecksReader {
 
     ThirdParty(
       barriers = barriersYaml.map(toBarrier).to[List],
-      threshold = structure("violation_threshold").asInstanceOf[Int])
+      violationsThreshold = structure("violation_threshold").asInstanceOf[Int])
   }
 
   private def toLayering(structure: Map[String, Object]): Layering =
     new Layering(
       layers = getYamList(structure, "layers").get,
-      threshold = structure.get("violation_threshold").map(_.asInstanceOf[Int]).getOrElse(0))
+      violationsThreshold = structure.get("violation_threshold").map(_.asInstanceOf[Int]).getOrElse(0))
 
   private def getYamList(structure: Map[String, Object], field: String): Option[List[String]] =
     structure.get(field)
