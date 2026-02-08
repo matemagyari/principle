@@ -44,7 +44,7 @@ class ApplicationModuleTest {
   private val submodulesDefinitionLocation = "src/main/resources/principle_blueprint.yaml"
   private val submodulesBlueprint = new SubmodulesBlueprint(submodulesDefinitionLocation, 0)
 
-  private def layering() = new Layering(List("infrastructure", "app", "domain"), 0)
+  private def layering() = new Layering(java.util.List.of("infrastructure", "app", "domain"), 0)
 
   private class ConsolePrinter extends Printer {
 

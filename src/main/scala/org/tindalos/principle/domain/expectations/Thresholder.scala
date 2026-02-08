@@ -1,7 +1,5 @@
 package org.tindalos.principle.domain.expectations
 
-case class Layering(layers: List[String] = List.empty, override val violationThreshold: Int = 0) extends IntThresholder
-
 
 case class Barrier(layer: String = "", components: String = "") {
 

@@ -1,9 +1,11 @@
 package org.tindalos.principle.domain.agents.layering
 
-import org.tindalos.principle.domain.agentscore.{AnalysisResult, AnalysisInput, Agent}
+import org.tindalos.principle.domain.agentscore.{Agent, AnalysisInput, AnalysisResult}
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.expectations.Checks
+
+import scala.collection.JavaConverters.asScalaBufferConverter
 
 case class LayerReference(referrer:String, referee:String)
 
@@ -25,7 +27,7 @@ object LayerViolationAgent extends Agent {
 
   private def findViolations(packages: List[Package], configuration: AnalysisPlan): List[LayerReference] = {
 
-    val layers = configuration.expectations.layering.layers.map(configuration.basePackage + "." + _).toList
+    val layers = configuration.expectations.layering.layers.asScala.map(configuration.basePackage + "." + _).toList
 
     for (aPackage <- packages
             if aPackage.reference.startsWith(configuration.basePackage);

@@ -4,6 +4,8 @@ import org.tindalos.principle.domain.agentscore.{Agent, AnalysisInput}
 import org.tindalos.principle.domain.core.{Package, PackageReference}
 import org.tindalos.principle.domain.expectations.{Barrier, Checks}
 
+import scala.collection.JavaConverters.asScalaBufferConverter
+
 object ThirdPartyAgent extends Agent {
 
   override def analyze(checkInput: AnalysisInput) =
@@ -16,7 +18,7 @@ object ThirdPartyAgent extends Agent {
             if (barriers.isEmpty)
               List[(PackageReference, PackageReference)]()
             else {
-              val layers = checkInput.layeringExpectations().layers
+              val layers = checkInput.layeringExpectations().layers.asScala.toList
               val basePackage = checkInput.analysisPlan.basePackage
               for (aPackage <- checkInput.packages
                    if (underBasePackage(aPackage.reference, basePackage));

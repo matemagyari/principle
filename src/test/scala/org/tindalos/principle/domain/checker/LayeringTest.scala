@@ -52,6 +52,6 @@ class LayeringTest {
 
   private def prepareChecks() = new Checks(layering())
 
-  private def layering() = Layering(List("infrastructure", "app", "domain"))
+  private def layering() = new Layering(java.util.List.of("infrastructure", "app", "domain"), 0)
 
 }

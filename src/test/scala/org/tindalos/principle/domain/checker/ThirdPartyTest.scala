@@ -66,8 +66,7 @@ class ThirdPartyTest {
   }
 
   private def layering() = {
-    val layers = List("infrastructure", "app", "domain")
-    new Layering(layers)
+    new Layering(java.util.List.of("infrastructure", "app", "domain"), 0)
   }
 
 }
