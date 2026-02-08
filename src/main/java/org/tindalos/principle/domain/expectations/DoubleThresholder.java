@@ -6,10 +6,5 @@ package org.tindalos.principle.domain.expectations;
  */
 public interface DoubleThresholder {
 
-    /**
-     * Gets the threshold value.
-     *
-     * @return the threshold value as a double
-     */
     double threshold();
 }

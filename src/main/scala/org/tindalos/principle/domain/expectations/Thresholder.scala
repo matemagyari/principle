@@ -1,12 +1,5 @@
 package org.tindalos.principle.domain.expectations
 
-case class ACD(threshold: Double = 0) extends DoubleThresholder
-
-case class NCCD(threshold: Double = 0) extends DoubleThresholder
-
-case class RACD(threshold: Double = 0) extends DoubleThresholder
-
-
 abstract class Thresholder(val violationsThreshold:Int)
 
 case class ADP(threshold:Int = 0) extends Thresholder(threshold)

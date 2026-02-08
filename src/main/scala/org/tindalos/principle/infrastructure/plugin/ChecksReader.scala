@@ -41,7 +41,7 @@ object ChecksReader {
         val x: Option[(Option[RACD], Option[ADP])] = getYamlStructure(checksYaml, "package_coupling").map { pc ⇒
 
           val racdTh = pc.get("acd_threshold").map { threshold ⇒
-            RACD(threshold.asInstanceOf[Double])
+            new RACD(threshold.asInstanceOf[Double])
           }
           val adpTh = pc.get("cyclic_dependencies_threshold").map { threshold ⇒
             ADP(threshold.asInstanceOf[Int])

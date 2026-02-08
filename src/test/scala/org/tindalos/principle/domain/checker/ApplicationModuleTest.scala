@@ -27,7 +27,7 @@ class ApplicationModuleTest {
         sap = SAP(0, 0.3d),
         adp = Some(ADP()),
         sdp = SDP(),
-        acd = ACD(),
+        acd = new ACD(),
         grouping = new Grouping())))
 
     try {
