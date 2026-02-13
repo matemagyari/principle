@@ -1,6 +1,7 @@
 package org.tindalos.principle.domain.expectations;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -10,30 +11,14 @@ import java.util.List;
  * @param layer the architectural layer (e.g., "app", "domain", "infrastructure")
  * @param components comma-separated list of allowed component packages
  */
-public record Barrier(String layer, String components) {
+public record Barrier(String layer, List<String> components) {
 
     public Barrier {
-        if (layer == null) {
-            layer = "";
-        }
-        if (components == null) {
-            components = "";
-        }
+        components = Collections.unmodifiableList(components);
     }
 
     public static Barrier of(String layer) {
-        return new Barrier(layer, "");
-    }
-
-    public List<String> componentList() {
-        if (components.isEmpty()) {
-            return List.of();
-        }
-
-        return Arrays.stream(components.split(","))
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
-                .toList();
+        return new Barrier(layer, List.of());
     }
 }
 

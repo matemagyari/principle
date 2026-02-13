@@ -38,7 +38,7 @@ object ThirdPartyAgent extends Agent {
       layer: String,
       barriers: List[Barrier]) = {
     val innerLayers = layers.dropWhile(_ != layer)
-    barriers.filter(b => innerLayers.contains(b.layer)).flatMap(_.componentList().asScala)
+    barriers.filter(b => innerLayers.contains(b.layer)).flatMap(_.components().asScala)
   }
 
   private def outOfAllowedComponents(layer: String, layers: List[String], barriers: List[Barrier], referencedPackage: PackageReference) =

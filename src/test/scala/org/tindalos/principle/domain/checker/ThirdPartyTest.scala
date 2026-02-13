@@ -8,6 +8,8 @@ import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.domain.agents.thirdparty.ThirdPartyViolationsResult
 
+import java.util.Collections
+
 class ThirdPartyTest {
 
   val runAnalysis= PoorMansDIContainer.buildRunAnalysisFn()
@@ -20,7 +22,7 @@ class ThirdPartyTest {
   @Test
   def simple() {
 
-    val barriers = List(new Barrier("app", "org.apache.commons.lang3"))
+    val barriers = List(new Barrier("app", Collections.singletonList("org.apache.commons.lang3")))
     val thirdParty = ThirdParty(barriers)
 
     val result = run("org.tindalos.principletest.thirdparty.simple",thirdParty).asInstanceOf[ThirdPartyViolationsResult]
@@ -32,7 +34,7 @@ class ThirdPartyTest {
   @Test
   def allowBoth() {
 
-    val barriers = List(new Barrier("app", "org.apache.commons.lang3,org.apache.commons.io"))
+    val barriers = List(new Barrier("app", java.util.List.of("org.apache.commons.lang3","org.apache.commons.io")))
     val thirdParty = ThirdParty(barriers)
 
     val result = run("org.tindalos.principletest.thirdparty.simple2",thirdParty).asInstanceOf[ThirdPartyViolationsResult]
@@ -44,7 +46,7 @@ class ThirdPartyTest {
   @Test
   def allowOneRejectTheOther() {
 
-    val barriers = List(new Barrier("app", "org.apache.commons.lang3"))
+    val barriers = List(new Barrier("app", Collections.singletonList("org.apache.commons.lang3")))
     val thirdParty = ThirdParty(barriers)
 
     val result = run("org.tindalos.principletest.thirdparty.simple2",thirdParty).asInstanceOf[ThirdPartyViolationsResult]

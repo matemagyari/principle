@@ -79,9 +79,7 @@ object ChecksReader {
     def toBarrier(m: Map[String, Object]): Barrier =
       new Barrier(
         m("layer").asInstanceOf[String],
-        m("libraries")
-            .asInstanceOf[java.util.List[String]]
-            .asScala.to[Seq].mkString(","))
+        m("libraries").asInstanceOf[java.util.List[String]])
 
     ThirdParty(
       barriers = barriersYaml.map(toBarrier).to[List],
