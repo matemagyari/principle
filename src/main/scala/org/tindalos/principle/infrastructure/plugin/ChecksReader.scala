@@ -52,7 +52,7 @@ object ChecksReader {
 
         val grouping = yamlObject.get("structure_analysis_enabled")
             .filter(_.asInstanceOf[Boolean])
-            .map { _ ⇒ new Grouping() }
+            .map { _ ⇒ Grouping.of()}
             .getOrElse(null)
 
         PackageCoupling(

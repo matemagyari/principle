@@ -28,7 +28,7 @@ class ApplicationModuleTest {
         adp = Some(new ADP()),
         sdp = new SDP(),
         acd = new ACD(),
-        grouping = new Grouping())))
+        grouping = Grouping.of())))
 
     try {
       runAnalysis(new AnalysisPlan(checks, basePackage))

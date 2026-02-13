@@ -9,5 +9,3 @@ case class PackageCoupling(
   racd: RACD = null,
   nccd: NCCD = null,
   grouping: Grouping = null)
-
-case class Grouping()

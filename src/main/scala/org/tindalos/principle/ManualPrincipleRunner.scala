@@ -23,7 +23,7 @@ object ManualPrincipleRunner extends App {
 
   val basePackage = "org.tindalos.principle"
   val runAnalysis = PoorMansDIContainer.buildAnalyzer(basePackage, printer)
-  val checks = Checks(packageCoupling = Some(PackageCoupling(grouping = Grouping())))
+  val checks = Checks(packageCoupling = Some(PackageCoupling(grouping = Grouping.of())))
 
   runAnalysis(new AnalysisPlan(checks, basePackage))
 
