@@ -8,12 +8,12 @@ import scala.collection.JavaConverters.asScalaBufferConverter
 
 object ThirdPartyAgent extends Agent {
 
-  override def analyze(checkInput: AnalysisInput) =
+  override def analyze(checkInput: AnalysisInput): ThirdPartyViolationsResult =
 
     checkInput.thirdPartyExpectations()
         .map { thirdParty ⇒
 
-          val barriers = thirdParty.barriers
+          val barriers = thirdParty.barriers.asScala.toList
           val violations =
             if (barriers.isEmpty)
               List[(PackageReference, PackageReference)]()

@@ -81,9 +81,9 @@ object ChecksReader {
         m("layer").asInstanceOf[String],
         m("libraries").asInstanceOf[java.util.List[String]])
 
-    ThirdParty(
-      barriers = barriersYaml.map(toBarrier).to[List],
-      violationThreshold = structure("violation_threshold").asInstanceOf[Int])
+    new ThirdParty(
+      barriersYaml.map(toBarrier).asJava,
+      structure("violation_threshold").asInstanceOf[Int])
   }
 
   private def toLayering(structure: Map[String, Object]): Layering =

@@ -14,7 +14,7 @@ class InputValidatorTest {
   @Test
   def wrongOrder() {
 
-    val barriers = List(Barrier.of("a"),Barrier.of("c"),Barrier.of("b"))
+    val barriers = java.util.List.of(Barrier.of("a"),Barrier.of("c"),Barrier.of("b"))
     val configuration: AnalysisPlan = config(barriers)
 
     val result = InputValidator.validate(configuration)
@@ -25,7 +25,7 @@ class InputValidatorTest {
   @Test
   def invalidBarrier() {
 
-    val barriers = List(Barrier.of("a"),Barrier.of("d"))
+    val barriers = java.util.List.of(Barrier.of("a"),Barrier.of("d"))
     val configuration: AnalysisPlan = config(barriers)
 
     val result = InputValidator.validate(configuration)
@@ -37,7 +37,7 @@ class InputValidatorTest {
   @Test
   def fullCover() {
 
-    val barriers = List(Barrier.of("a"),Barrier.of("b"),Barrier.of("c"))
+    val barriers = java.util.List.of(Barrier.of("a"),Barrier.of("b"),Barrier.of("c"))
     val configuration: AnalysisPlan = config(barriers)
 
     val result = InputValidator.validate(configuration)
@@ -48,7 +48,7 @@ class InputValidatorTest {
   @Test
   def partialCover() {
 
-    val barriers = List(Barrier.of("a"), Barrier.of("c"))
+    val barriers = java.util.List.of(Barrier.of("a"), Barrier.of("c"))
     val configuration: AnalysisPlan = config(barriers)
 
     val result = InputValidator.validate(configuration)
@@ -57,8 +57,8 @@ class InputValidatorTest {
   }
 
 
-  private def config(barriers: List[Barrier]): AnalysisPlan = {
-    val aThirdParty = ThirdParty(barriers)
+  private def config(barriers: java.util.List[Barrier]): AnalysisPlan = {
+    val aThirdParty = new ThirdParty(barriers, 0)
 
     val expectations = new Checks(layering = aLayering, thirdParty = Some(aThirdParty))
     new AnalysisPlan(expectations, basePackage)

@@ -2,6 +2,8 @@ package org.tindalos.principle.app.service
 
 import org.tindalos.principle.domain.core.AnalysisPlan
 
+import scala.collection.JavaConverters.asScalaBufferConverter
+
 object InputValidator {
 
   def validate(plan: AnalysisPlan): ValidationResult =
@@ -9,7 +11,7 @@ object InputValidator {
     plan.expectations.thirdParty
         .map { thirdParty ⇒
           val layers = plan.expectations.layering.layers
-          val barriers = thirdParty.barriers
+          val barriers = thirdParty.barriers.asScala.toList
 
           val invalidBarriers = barriers.filterNot { b ⇒ layers.contains(b.layer) }
 
