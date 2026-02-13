@@ -2,14 +2,17 @@ package org.tindalos.principle.domain.agents.sap
 
 import org.tindalos.principle.domain.agentscore.Agent
 import org.tindalos.principle.domain.expectations.Checks
-import org.tindalos.principle.domain.expectations.PackageCoupling
 import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.core.Package
 
 object SAPViolationAgent extends Agent {
 
+  private def toScalaOption[T](javaOptional: java.util.Optional[T]): Option[T] = {
+    if (javaOptional.isPresent) Some(javaOptional.get()) else None
+  }
+
   override def analyze(checkInput: AnalysisInput) = {
-    val sapExpectation = checkInput.packageCouplingExpectations().get.sap
+    val sapExpectation = checkInput.packageCouplingExpectations().flatMap(pc => toScalaOption(pc.sap())).get
     val maxDistance = sapExpectation.maxDistance
 
     val outlierPackages = removeRootPackageIfEmpty(checkInput.packages).filter(_.distance > maxDistance)
@@ -23,6 +26,6 @@ object SAPViolationAgent extends Agent {
     else packages
   }
 
-  override def isWanted(expectations: Checks) = expectations.packageCoupling.exists(_.sap != null)
+  override def isWanted(expectations: Checks) = expectations.packageCoupling.exists(pc => pc.sap().isPresent)
 
 }

@@ -13,14 +13,13 @@ case class ACDResult(
   val nCcd = acd / numOfComponents.toDouble
 
   override def expectationsFailed() =
-    greaterIfExists(rAcd, packageCoupling.racd) ||
-    greaterIfExists(nCcd, packageCoupling.nccd)
+    greaterIfExists(rAcd, packageCoupling.racd().map[DoubleExpectation](r => r).orElse(null)) ||
+    greaterIfExists(nCcd, packageCoupling.nccd().map[DoubleExpectation](n => n).orElse(null))
 
   private def greaterIfExists(actual: Double, expectation: DoubleExpectation) =
     if (expectation == null || expectation.threshold == Double.NaN) false
     else actual > expectation.threshold
 
   def getRACDThreshold(): Double =
-    if (packageCoupling.racd == null) 999d
-    else packageCoupling.racd.threshold
+    packageCoupling.racd().map[java.lang.Double](r => r.threshold).orElse(999.0)
 }

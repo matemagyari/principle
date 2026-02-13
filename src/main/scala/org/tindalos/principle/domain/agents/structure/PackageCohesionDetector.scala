@@ -29,9 +29,8 @@ object PackageCohesionDetector {
       CohesionAnalysisResult(packagesWithCohesions, cohesiveGroups, structureHints1, structureHints2)
     }
 
-    override def isWanted(expectations: Checks) =  expectations.packageCoupling
-        .map(_.grouping != null)
-        .getOrElse(false)
+    override def isWanted(expectations: Checks) = expectations.packageCoupling
+        .exists(pc => pc.grouping().isPresent)
   }
 
 

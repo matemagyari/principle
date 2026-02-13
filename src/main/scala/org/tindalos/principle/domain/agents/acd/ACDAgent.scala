@@ -29,9 +29,9 @@ object ACDAgent {
 
     override def isWanted(expectations: Checks) = expectations.packageCoupling
         .exists { packageCoupling ⇒
-          (packageCoupling.acd != null) ||
-              (packageCoupling.racd != null) ||
-              (packageCoupling.nccd != null)
+          packageCoupling.acd().isPresent ||
+              packageCoupling.racd().isPresent ||
+              packageCoupling.nccd().isPresent
         }
   }
 }

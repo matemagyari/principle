@@ -53,12 +53,12 @@ object ChecksReader {
         val grouping = yamlObject.get("structure_analysis_enabled")
             .filter(_.asInstanceOf[Boolean])
             .map { _ ⇒ Grouping.of()}
-            .getOrElse(null)
 
-        PackageCoupling(
-          racd = x.flatMap(_._1).getOrElse(null),
-          adp = x.flatMap(_._2),
-          grouping = grouping)
+        val builder = PackageCoupling.builder()
+        x.flatMap(_._2).foreach(adp => builder.adp(adp))
+        x.flatMap(_._1).foreach(racd => builder.racd(racd))
+        grouping.foreach(g => builder.grouping(g))
+        builder.build()
       }
 
       new Checks(

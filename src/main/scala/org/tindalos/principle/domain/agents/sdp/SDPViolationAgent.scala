@@ -2,9 +2,13 @@ package org.tindalos.principle.domain.agents.sdp
 
 import org.tindalos.principle.domain.core.{Package, PackageReference}
 import org.tindalos.principle.domain.agentscore.{AnalysisInput, Agent}
-import org.tindalos.principle.domain.expectations.{Checks, PackageCoupling}
+import org.tindalos.principle.domain.expectations.Checks
 
 object SDPViolationAgent extends Agent {
+
+  private def toScalaOption[T](javaOptional: java.util.Optional[T]): Option[T] = {
+    if (javaOptional.isPresent) Some(javaOptional.get()) else None
+  }
 
   override def analyze(checkInput: AnalysisInput) = {
 
@@ -17,9 +21,9 @@ object SDPViolationAgent extends Agent {
         .map(new SDPViolation(aPackage, _))
 
 
-    new SDPResult(sdpViolations.flatten, checkInput.packageCouplingExpectations().get.sdp)
+    new SDPResult(sdpViolations.flatten, checkInput.packageCouplingExpectations().flatMap(pc => toScalaOption(pc.sdp())).get)
   }
 
-  override def isWanted(expectations: Checks) = expectations.packageCoupling.exists(_.sdp != null)
+  override def isWanted(expectations: Checks) = expectations.packageCoupling.exists(pc => pc.sdp().isPresent)
 
 }

@@ -23,12 +23,13 @@ class ApplicationModuleTest {
 
     val checks = Checks(
       layering = layering(),
-      packageCoupling = Some(PackageCoupling(
-        sap = new SAP(0, 0.3d),
-        adp = Some(new ADP()),
-        sdp = new SDP(),
-        acd = new ACD(),
-        grouping = Grouping.of())))
+      packageCoupling = Some(PackageCoupling.builder()
+        .sap(new SAP(0, 0.3d))
+        .adp(new ADP())
+        .sdp(new SDP())
+        .acd(new ACD())
+        .grouping(Grouping.of())
+        .build()))
 
     try {
       runAnalysis(new AnalysisPlan(checks, basePackage))
