@@ -6,9 +6,13 @@ import scala.collection.JavaConverters.asScalaBufferConverter
 
 object InputValidator {
 
+  private def toScalaOption[T](javaOptional: java.util.Optional[T]): Option[T] = {
+    if (javaOptional.isPresent) Some(javaOptional.get()) else None
+  }
+
   def validate(plan: AnalysisPlan): ValidationResult =
 
-    plan.expectations.thirdParty
+    toScalaOption(plan.expectations.thirdParty())
         .map { thirdParty ⇒
           val layers = plan.expectations.layering.layers
           val barriers = thirdParty.barriers.asScala.toList

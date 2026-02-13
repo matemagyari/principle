@@ -52,5 +52,5 @@ object ThirdPartyAgent extends Agent {
   private def underBasePackage(aPackage: PackageReference, basePackage: String) =
     aPackage.startsWith(basePackage)
 
-  override def isWanted(designQualityChecks: Checks) = designQualityChecks.thirdParty.nonEmpty
+  override def isWanted(designQualityChecks: Checks) = designQualityChecks.thirdParty().isPresent
 }

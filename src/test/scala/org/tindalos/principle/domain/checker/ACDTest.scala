@@ -80,5 +80,5 @@ class ACDTest {
     result.head.asInstanceOf[ACDResult].acd
   }
 
-  private def prepareChecks() = Checks(packageCoupling = Some(PackageCoupling.builder().acd(new ACD()).build()))
+  private def prepareChecks() = Checks.builder().packageCoupling(PackageCoupling.builder().acd(new ACD()).build()).build()
 }

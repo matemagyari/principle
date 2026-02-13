@@ -39,7 +39,7 @@ class BlueprintTest {
   }
 
   private def run(basePackage: String, location: String) = {
-    val expectations = Checks(submodulesBlueprint = Some(submodulesBlueprint(location)))
+    val expectations = Checks.builder().submodulesBlueprint(submodulesBlueprint(location)).build()
     val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
     val packageList = packageListProducer(basePackage)
     val runAnalysis= PoorMansDIContainer.buildRunAnalysisFn()

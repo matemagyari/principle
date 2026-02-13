@@ -10,7 +10,7 @@ object SubmodulesBlueprintAgent {
 
   def buildInstance(buildSubmodules: (String, List[Package], String) => Set[Submodule]) = new Agent {
 
-    override def isWanted(designQualityChecks: Checks) = designQualityChecks.submodulesBlueprint.nonEmpty
+    override def isWanted(designQualityChecks: Checks) = designQualityChecks.submodulesBlueprint().isPresent
 
     override def analyze(checkInput: AnalysisInput) =
 

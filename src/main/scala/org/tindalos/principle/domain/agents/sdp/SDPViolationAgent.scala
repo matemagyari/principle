@@ -24,6 +24,7 @@ object SDPViolationAgent extends Agent {
     new SDPResult(sdpViolations.flatten, checkInput.packageCouplingExpectations().flatMap(pc => toScalaOption(pc.sdp())).get)
   }
 
-  override def isWanted(expectations: Checks) = expectations.packageCoupling.exists(pc => pc.sdp().isPresent)
+  override def isWanted(expectations: Checks) =
+    expectations.packageCoupling().isPresent && expectations.packageCoupling().get().sdp().isPresent
 
 }

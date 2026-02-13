@@ -20,7 +20,7 @@ object PackageCohesionDetector {
       val structureHints1 = makeStructureHints1(input.nodes)
       val structureHints2 = findDetachableSubgraphs(input.nodes)
 
-      val cohesiveGroups =
+      val cohesiveGroups: Option[Set[NodeGroup]] =
         input.packageCouplingExpectations().map { _ ⇒
           val initialGroups = input.nodes.map(n => NodeGroup(Set(n)))
           collapseToLimit(initialGroups)
@@ -29,8 +29,8 @@ object PackageCohesionDetector {
       CohesionAnalysisResult(packagesWithCohesions, cohesiveGroups, structureHints1, structureHints2)
     }
 
-    override def isWanted(expectations: Checks) = expectations.packageCoupling
-        .exists(pc => pc.grouping().isPresent)
+    override def isWanted(expectations: Checks) =
+      expectations.packageCoupling().isPresent && expectations.packageCoupling().get().grouping().isPresent
   }
 
 

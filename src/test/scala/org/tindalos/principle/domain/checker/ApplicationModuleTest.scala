@@ -21,15 +21,16 @@ class ApplicationModuleTest {
 
     val runAnalysis = PoorMansDIContainer.buildAnalyzer(basePackage, new ConsolePrinter())
 
-    val checks = Checks(
-      layering = layering(),
-      packageCoupling = Some(PackageCoupling.builder()
+    val checks = Checks.builder()
+      .layering(layering())
+      .packageCoupling(PackageCoupling.builder()
         .sap(new SAP(0, 0.3d))
         .adp(new ADP())
         .sdp(new SDP())
         .acd(new ACD())
         .grouping(Grouping.of())
-        .build()))
+        .build())
+      .build()
 
     try {
       runAnalysis(new AnalysisPlan(checks, basePackage))

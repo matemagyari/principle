@@ -50,7 +50,7 @@ class LayeringTest {
     result.head.asInstanceOf[LayerViolationsResult].violations
   }
 
-  private def prepareChecks() = new Checks(layering())
+  private def prepareChecks() = Checks.builder().layering(layering()).build()
 
   private def layering() = new Layering(java.util.List.of("infrastructure", "app", "domain"), 0)
 

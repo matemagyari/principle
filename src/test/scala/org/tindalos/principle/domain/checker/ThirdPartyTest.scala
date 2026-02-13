@@ -59,7 +59,7 @@ class ThirdPartyTest {
 
 
   private def run(basePackage: String, thirdParty:ThirdParty) = {
-    val expectations: Checks = Checks(layering = layering(), thirdParty = Some(thirdParty))
+    val expectations: Checks = Checks.builder().layering(layering()).thirdParty(thirdParty).build()
     val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
     val packageList = packageListProducer(basePackage)
     val plan = new AnalysisPlan(expectations, basePackage)

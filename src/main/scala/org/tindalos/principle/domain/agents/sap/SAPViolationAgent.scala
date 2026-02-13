@@ -26,6 +26,7 @@ object SAPViolationAgent extends Agent {
     else packages
   }
 
-  override def isWanted(expectations: Checks) = expectations.packageCoupling.exists(pc => pc.sap().isPresent)
+  override def isWanted(expectations: Checks) =
+    expectations.packageCoupling().isPresent && expectations.packageCoupling().get().sap().isPresent
 
 }

@@ -27,11 +27,15 @@ object ACDAgent {
       new ACDResult(cumulatedComponentDependency, relevantPackages.length, checkInput.packageCouplingExpectations().get)
     }
 
-    override def isWanted(expectations: Checks) = expectations.packageCoupling
-        .exists { packageCoupling ⇒
-          packageCoupling.acd().isPresent ||
-              packageCoupling.racd().isPresent ||
-              packageCoupling.nccd().isPresent
-        }
+    override def isWanted(expectations: Checks) = {
+      if (expectations.packageCoupling().isPresent) {
+        val packageCoupling = expectations.packageCoupling().get()
+        packageCoupling.acd().isPresent ||
+            packageCoupling.racd().isPresent ||
+            packageCoupling.nccd().isPresent
+      } else {
+        false
+      }
+    }
   }
 }
