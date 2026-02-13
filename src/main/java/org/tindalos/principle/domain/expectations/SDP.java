@@ -25,7 +25,7 @@ package org.tindalos.principle.domain.expectations;
  *
  * @param violationThreshold the maximum number of SDP violations allowed (default is 0)
  */
-public record SDP(int violationThreshold) implements IntThresholder {
+public record SDP(int violationThreshold) implements IntExpectation {
 
     public SDP() {
         this(0);

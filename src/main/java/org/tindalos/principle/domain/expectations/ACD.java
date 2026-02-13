@@ -12,7 +12,7 @@ package org.tindalos.principle.domain.expectations;
  *
  * @param threshold the maximum allowed ACD value (default is 0.0)
  */
-public record ACD(double threshold) implements DoubleThresholder {
+public record ACD(double threshold) implements DoubleExpectation {
     public ACD() {
         this(0.0);
     }

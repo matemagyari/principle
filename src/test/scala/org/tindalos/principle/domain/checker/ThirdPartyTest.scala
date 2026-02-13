@@ -20,7 +20,7 @@ class ThirdPartyTest {
   @Test
   def simple() {
 
-    val barriers = List(Barrier("app", "org.apache.commons.lang3"))
+    val barriers = List(new Barrier("app", "org.apache.commons.lang3"))
     val thirdParty = ThirdParty(barriers)
 
     val result = run("org.tindalos.principletest.thirdparty.simple",thirdParty).asInstanceOf[ThirdPartyViolationsResult]
@@ -32,7 +32,7 @@ class ThirdPartyTest {
   @Test
   def allowBoth() {
 
-    val barriers = List(Barrier("app", "org.apache.commons.lang3,org.apache.commons.io"))
+    val barriers = List(new Barrier("app", "org.apache.commons.lang3,org.apache.commons.io"))
     val thirdParty = ThirdParty(barriers)
 
     val result = run("org.tindalos.principletest.thirdparty.simple2",thirdParty).asInstanceOf[ThirdPartyViolationsResult]
@@ -44,7 +44,7 @@ class ThirdPartyTest {
   @Test
   def allowOneRejectTheOther() {
 
-    val barriers = List(Barrier("app", "org.apache.commons.lang3"))
+    val barriers = List(new Barrier("app", "org.apache.commons.lang3"))
     val thirdParty = ThirdParty(barriers)
 
     val result = run("org.tindalos.principletest.thirdparty.simple2",thirdParty).asInstanceOf[ThirdPartyViolationsResult]

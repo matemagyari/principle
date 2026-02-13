@@ -15,7 +15,7 @@ package org.tindalos.principle.domain.expectations;
  *
  * @param threshold the maximum allowed RACD value (default is 0.0)
  */
-public record RACD(double threshold) implements DoubleThresholder {
+public record RACD(double threshold) implements DoubleExpectation {
     public RACD() {
         this(0.0);
     }

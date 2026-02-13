@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.agents.acd
 
-import org.tindalos.principle.domain.expectations.{DoubleThresholder, PackageCoupling}
+import org.tindalos.principle.domain.expectations.{DoubleExpectation, PackageCoupling}
 import org.tindalos.principle.domain.agentscore.AnalysisResult
 
 case class ACDResult(
@@ -16,7 +16,7 @@ case class ACDResult(
     greaterIfExists(rAcd, packageCoupling.racd) ||
     greaterIfExists(nCcd, packageCoupling.nccd)
 
-  private def greaterIfExists(actual: Double, expectation: DoubleThresholder) =
+  private def greaterIfExists(actual: Double, expectation: DoubleExpectation) =
     if (expectation == null || expectation.threshold == Double.NaN) false
     else actual > expectation.threshold
 

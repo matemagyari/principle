@@ -25,7 +25,7 @@ package org.tindalos.principle.domain.expectations;
  *
  * @param violationThreshold the maximum number of cycles allowed (default is 0)
  */
-public record ADP(int violationThreshold) implements IntThresholder {
+public record ADP(int violationThreshold) implements IntExpectation {
 
     /**
      * Creates an ADP expectation with default threshold of 0 (no cycles allowed).

@@ -77,9 +77,9 @@ object ChecksReader {
         .asScala.to[Seq].map(javaMap ⇒ javaMap.asScala.toMap)
 
     def toBarrier(m: Map[String, Object]): Barrier =
-      Barrier(
-        layer = m("layer").asInstanceOf[String],
-        components = m("libraries")
+      new Barrier(
+        m("layer").asInstanceOf[String],
+        m("libraries")
             .asInstanceOf[java.util.List[String]]
             .asScala.to[Seq].mkString(","))
 
