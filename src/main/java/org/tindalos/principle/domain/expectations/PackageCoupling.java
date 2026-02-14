@@ -16,33 +16,6 @@ public record PackageCoupling(
         Optional<NCCD> nccd,
         Optional<Grouping> grouping) {
 
-    public PackageCoupling {
-        adp = adp != null ? adp : Optional.empty();
-        sdp = sdp != null ? sdp : Optional.empty();
-        sap = sap != null ? sap : Optional.empty();
-        acd = acd != null ? acd : Optional.empty();
-        racd = racd != null ? racd : Optional.empty();
-        nccd = nccd != null ? nccd : Optional.empty();
-        grouping = grouping != null ? grouping : Optional.empty();
-    }
-
-    /**
-     * Factory method to create PackageCoupling with all fields empty.
-     *
-     * @return a new PackageCoupling with all optional fields empty
-     */
-    public static PackageCoupling empty() {
-        return new PackageCoupling(
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty()
-        );
-    }
-
     /**
      * Builder for creating PackageCoupling instances with a fluent API.
      */

@@ -16,7 +16,7 @@ package org.tindalos.principle.domain.expectations;
  *
  * @param threshold the maximum allowed NCCD value (default is 0.0)
  */
-public record NCCD(double threshold) implements DoubleExpectation {
+public record NCCD(double threshold) implements ComponentDependency {
     public NCCD() {
         this(0.0);
     }
