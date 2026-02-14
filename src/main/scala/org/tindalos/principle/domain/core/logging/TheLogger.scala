@@ -1,16 +1,11 @@
 package org.tindalos.principle.domain.core.logging
 
-trait ScalaLogger {
-
-  def info(msg: String)
-  def error(msg: String)
-}
 
 object TheLogger {
 
-  var logger: ScalaLogger = _
+  var logger: SimpleLogger = _
   
-  def setLogger(aLogger:ScalaLogger) = {
+  def setLogger(aLogger:SimpleLogger) = {
     logger = aLogger
   }
 

@@ -5,7 +5,7 @@ import java.io.IOException
 import org.apache.maven.plugin.{AbstractMojo, MojoFailureException}
 import org.apache.maven.plugins.annotations.{Mojo, Parameter}
 import org.tindalos.principle.domain.core.AnalysisPlan
-import org.tindalos.principle.domain.core.logging.{ScalaLogger, TheLogger}
+import org.tindalos.principle.domain.core.logging.{SimpleLogger, TheLogger}
 import org.tindalos.principle.domain.expectations.exception.InvalidConfigurationException
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
@@ -18,7 +18,7 @@ class DesignQualityCheckerMojo extends AbstractMojo {
 
   def execute(): Unit = {
 
-    TheLogger.setLogger(new ScalaLogger() {
+    TheLogger.setLogger(new SimpleLogger() {
       override def info(msg: String) = {
         getLog().info(msg)
       }

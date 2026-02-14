@@ -1,12 +1,12 @@
 package org.tindalos.principle.domain.checker
 
 import org.tindalos.principle.domain.core.logging.TheLogger
-import org.tindalos.principle.domain.core.logging.ScalaLogger
+import org.tindalos.principle.domain.core.logging.SimpleLogger
 
 object TestFixture {
 
   def setLogger() = {
-    TheLogger.setLogger(new ScalaLogger() {
+    TheLogger.setLogger(new SimpleLogger() {
       override def info(msg: String) = {
         System.out.println(msg)
       }

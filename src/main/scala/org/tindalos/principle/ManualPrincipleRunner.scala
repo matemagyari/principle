@@ -1,7 +1,7 @@
 package org.tindalos.principle
 
 import org.tindalos.principle.domain.core.AnalysisPlan
-import org.tindalos.principle.domain.core.logging.{ScalaLogger, TheLogger}
+import org.tindalos.principle.domain.core.logging.{SimpleLogger, TheLogger}
 import org.tindalos.principle.domain.expectations._
 import org.tindalos.principle.domain.resultprocessing.reporter.Printer
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
@@ -11,7 +11,7 @@ object ManualPrincipleRunner extends App {
 
   val printer = new ConsolePrinter()
 
-  TheLogger.setLogger(new ScalaLogger() {
+  TheLogger.setLogger(new SimpleLogger() {
     override def info(msg: String) = {
       printer.printInfo(msg)
     }
