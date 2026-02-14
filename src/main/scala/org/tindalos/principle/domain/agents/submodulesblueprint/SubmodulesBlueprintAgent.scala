@@ -12,7 +12,7 @@ object SubmodulesBlueprintAgent {
 
     override def isWanted(designQualityChecks: Checks) = designQualityChecks.submodulesBlueprint().isPresent
 
-    override def analyze(checkInput: AnalysisInput) =
+    override def analyze(checkInput: AnalysisInput): SubmodulesBlueprintAnalysisResult =
 
       checkInput.submodulesBlueprint().map { submodulesBlueprint ⇒
 

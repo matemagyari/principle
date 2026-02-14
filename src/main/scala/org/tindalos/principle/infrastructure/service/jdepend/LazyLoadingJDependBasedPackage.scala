@@ -3,12 +3,12 @@ package org.tindalos.principle.infrastructure.service.jdepend
 import java.util.Collection
 
 import jdepend.framework.JavaPackage
-import org.tindalos.principle.domain.core.{Metrics, Package, PackageReference}
+import org.tindalos.principle.domain.core.{PackageMetrics, Package, PackageReference}
 
 import scala.collection.JavaConversions._
 
-class LazyLoadingJDependBasedPackage(val javaPackage: JavaPackage, val metrics: Metrics, val packageFactory: PackageFactory,
-                                      val isRelevant: JavaPackage => Boolean)
+class LazyLoadingJDependBasedPackage(val javaPackage: JavaPackage, val metrics: PackageMetrics, val packageFactory: PackageFactory,
+                                     val isRelevant: JavaPackage => Boolean)
   extends Package(javaPackage.getName()) {
 
   private val validExternalEfferents = Set("java", "scala")

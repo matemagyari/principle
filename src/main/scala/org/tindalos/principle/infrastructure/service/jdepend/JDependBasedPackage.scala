@@ -3,11 +3,11 @@ package org.tindalos.principle.infrastructure.service.jdepend
 import java.util.Collection
 
 import jdepend.framework.JavaPackage
-import org.tindalos.principle.domain.core.{Metrics, Package, PackageReference}
+import org.tindalos.principle.domain.core.{PackageMetrics, Package, PackageReference}
 
 import scala.collection.JavaConversions._
 
-class JDependBasedPackage(val javaPackage: JavaPackage, val basePackage: String, val metrics: Metrics)
+class JDependBasedPackage(val javaPackage: JavaPackage, val basePackage: String, val metrics: PackageMetrics)
   extends Package(javaPackage.getName()) {
 
   private val validExternalEfferents = Set("java", "scala")

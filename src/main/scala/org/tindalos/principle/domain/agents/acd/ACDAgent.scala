@@ -8,7 +8,7 @@ object ACDAgent {
   
   def buildAgent(buildPackageStructure: (List[Package], String) => Package) = new Agent {
 
-    override def analyze(checkInput: AnalysisInput) = {
+    override def analyze(checkInput: AnalysisInput): ACDResult = {
 
       val basePackage = buildPackageStructure(checkInput.packages, checkInput.analysisPlan.basePackage)
 

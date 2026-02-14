@@ -15,7 +15,7 @@ abstract class Package(val reference: PackageReference) {
   def this(referenceName: String) = this(new PackageReference(referenceName))
 
   def isUnreferred(): Boolean
-  def getMetrics(): Metrics
+  def getMetrics(): PackageMetrics
   def getOwnPackageReferences(): Set[PackageReference]
   def getOwnExternalPackageReferences(): Set[PackageReference]
   def instability = getMetrics().instability
@@ -58,7 +58,7 @@ abstract class Package(val reference: PackageReference) {
     new Package(name) {
       override def getOwnPackageReferences() = Set()
       override def getOwnExternalPackageReferences() = Set()
-      override def getMetrics() = UndefinedMetrics
+      override def getMetrics() = PackageMetrics.UNDEFINED
       override def isUnreferred() = true
       override def isIsolated() = true
     }
