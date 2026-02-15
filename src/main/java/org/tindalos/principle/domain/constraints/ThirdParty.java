@@ -11,7 +11,7 @@ import java.util.List;
  * @param barriers list of barriers defining allowed libraries per layer
  * @param violationThreshold maximum number of violations allowed before failing
  */
-public record ThirdParty(List<Barrier> barriers, int violationThreshold) implements IntExpectation {
+public record ThirdParty(List<Barrier> barriers, int violationThreshold) implements IntConstraint {
 
     public ThirdParty {
         barriers = Collections.unmodifiableList(barriers);

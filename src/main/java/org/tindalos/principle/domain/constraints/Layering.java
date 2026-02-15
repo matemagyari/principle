@@ -29,7 +29,7 @@ import java.util.List;
  * @param layers the list of layer names in order from highest to lowest
  * @param violationThreshold the maximum number of layering violations allowed (default is 0)
  */
-public record Layering(List<String> layers, int violationThreshold) implements IntExpectation {
+public record Layering(List<String> layers, int violationThreshold) implements IntConstraint {
 
     public Layering() {
         this(List.of(), 0);

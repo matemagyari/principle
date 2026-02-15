@@ -25,7 +25,7 @@ package org.tindalos.principle.domain.constraints;
  *                    A package with distance D > maxDistance is considered a violation.
  *                    Typical values range from 0.0 (strict) to 0.3 (more lenient).
  */
-public record SAP(int violationThreshold, double maxDistance) implements IntExpectation {
+public record SAP(int violationThreshold, double maxDistance) implements IntConstraint {
     public SAP() {
         this(0, 0.0);
     }

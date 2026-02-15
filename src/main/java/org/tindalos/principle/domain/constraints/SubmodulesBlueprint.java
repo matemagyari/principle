@@ -8,7 +8,7 @@ package org.tindalos.principle.domain.constraints;
  * @param location path to the blueprint YAML file
  * @param violationThreshold maximum number of violations allowed before failing
  */
-public record SubmodulesBlueprint(String location, int violationThreshold) implements IntExpectation {
+public record SubmodulesBlueprint(String location, int violationThreshold) implements IntConstraint {
 
     public static SubmodulesBlueprint of(String location) {
         return new SubmodulesBlueprint(location, 0);

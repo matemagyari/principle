@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.constraints;
 
-public interface IntExpectation {
+public interface IntConstraint {
 
     int violationThreshold();
 }
