@@ -16,7 +16,7 @@ package org.tindalos.principle.domain.constraints;
  *
  * @param threshold the maximum allowed NCCD value (default is 0.0)
  */
-public record NCCD(double threshold) implements ComponentDependency {
+public record NCCD(double threshold) implements ComponentDependencyConstraint {
     public NCCD() {
         this(0.0);
     }

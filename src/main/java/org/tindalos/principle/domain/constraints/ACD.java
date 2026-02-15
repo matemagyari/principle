@@ -12,7 +12,7 @@ package org.tindalos.principle.domain.constraints;
  *
  * @param threshold the maximum allowed ACD value (default is 0.0)
  */
-public record ACD(double threshold) implements ComponentDependency {
+public record ACD(double threshold) implements ComponentDependencyConstraint {
     public ACD() {
         this(0.0);
     }

@@ -15,7 +15,7 @@ package org.tindalos.principle.domain.constraints;
  *
  * @param threshold the maximum allowed RACD value (default is 0.0)
  */
-public record RACD(double threshold) implements ComponentDependency {
+public record RACD(double threshold) implements ComponentDependencyConstraint {
     public RACD() {
         this(0.0);
     }
