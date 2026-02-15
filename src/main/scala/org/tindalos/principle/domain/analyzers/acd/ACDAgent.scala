@@ -27,7 +27,7 @@ object ACDAgent {
       new ACDResult(cumulatedComponentDependency, relevantPackages.length, checkInput.packageCouplingExpectations().get)
     }
 
-    override def isWanted(expectations: Constraints) = {
+    override def isEnabled(expectations: Constraints) = {
       if (expectations.packageCoupling().isPresent) {
         val packageCoupling = expectations.packageCoupling().get()
         packageCoupling.acd().isPresent ||

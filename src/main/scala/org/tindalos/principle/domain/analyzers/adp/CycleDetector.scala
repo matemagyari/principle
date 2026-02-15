@@ -35,6 +35,6 @@ object CycleDetector {
       new ADPResult(cycles, input.packageCouplingExpectations().flatMap(pc => toScalaOption(pc.adp())).get)
     }
 
-    override def isWanted(expectations: Constraints) = expectations.packageCoupling.flatMap(pc => pc.adp()).isPresent
+    override def isEnabled(expectations: Constraints) = expectations.packageCoupling.flatMap(pc => pc.adp()).isPresent
   }
 }

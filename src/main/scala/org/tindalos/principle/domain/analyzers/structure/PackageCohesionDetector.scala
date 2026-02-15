@@ -29,7 +29,7 @@ object PackageCohesionDetector {
       CohesionAnalysisResult(packagesWithCohesions, cohesiveGroups, structureHints1, structureHints2)
     }
 
-    override def isWanted(expectations: Constraints) =
+    override def isEnabled(expectations: Constraints) =
       expectations.packageCoupling().isPresent && expectations.packageCoupling().get().grouping().isPresent
   }
 

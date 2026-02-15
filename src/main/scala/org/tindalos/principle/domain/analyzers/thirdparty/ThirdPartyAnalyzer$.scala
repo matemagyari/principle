@@ -52,5 +52,5 @@ object ThirdPartyAnalyzer extends Analyzer {
   private def underBasePackage(aPackage: PackageReference, basePackage: String) =
     aPackage.startsWith(basePackage)
 
-  override def isWanted(designQualityChecks: Constraints) = designQualityChecks.thirdParty().isPresent
+  override def isEnabled(designQualityChecks: Constraints) = designQualityChecks.thirdParty().isPresent
 }

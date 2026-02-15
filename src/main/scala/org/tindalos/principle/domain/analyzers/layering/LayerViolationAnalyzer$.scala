@@ -23,7 +23,7 @@ object LayerViolationAnalyzer extends Analyzer {
     new LayerViolationsResult(layerReferences, checkInput.layeringExpectations().violationThreshold)
   }
 
-  override def isWanted(expectations: Constraints) = expectations.layering != null
+  override def isEnabled(expectations: Constraints) = expectations.layering != null
 
   private def findViolations(packages: List[Package], configuration: AnalysisPlan): List[LayerReference] = {
 

@@ -26,7 +26,7 @@ object SAPViolationAnalyzer extends Analyzer {
     else packages
   }
 
-  override def isWanted(expectations: Constraints) =
+  override def isEnabled(expectations: Constraints) =
     expectations.packageCoupling().isPresent && expectations.packageCoupling().get().sap().isPresent
 
 }

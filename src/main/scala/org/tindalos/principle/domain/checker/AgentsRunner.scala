@@ -10,7 +10,7 @@ object AgentsRunner {
     (input: AnalysisInput) => {
 
       val results = for {
-        agent <- agents if agent.isWanted(input.analysisPlan.expectations)
+        agent <- agents if agent.isEnabled(input.analysisPlan.expectations)
       } yield runDetector(input, agent)
 
       results.flatten

@@ -10,7 +10,7 @@ object SubmodulesBlueprintAgent {
 
   def buildInstance(buildSubmodules: (String, List[Package], String) => Set[Submodule]) = new Analyzer {
 
-    override def isWanted(designQualityChecks: Constraints) = designQualityChecks.submodulesBlueprint().isPresent
+    override def isEnabled(designQualityChecks: Constraints) = designQualityChecks.submodulesBlueprint().isPresent
 
     override def analyze(checkInput: AnalysisInput): SubmodulesBlueprintAnalysisResult =
 
