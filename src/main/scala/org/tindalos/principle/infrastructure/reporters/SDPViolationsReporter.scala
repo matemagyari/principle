@@ -1,6 +1,6 @@
 package org.tindalos.principle.infrastructure.reporters
 
-import org.tindalos.principle.domain.agents.sdp.{SDPViolation, SDPResult}
+import org.tindalos.principle.domain.analyzers.sdp.{SDPViolation, SDPResult}
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
 object SDPViolationsReporter {

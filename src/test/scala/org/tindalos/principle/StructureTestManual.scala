@@ -1,7 +1,7 @@
 package org.tindalos.principle
 
-import org.tindalos.principle.domain.agents.structure.Structure.NodeGroup
-import org.tindalos.principle.domain.agents.structure.{CohesiveGroupsDiscoveryModule, Graph, PackageCohesionModule, PackageStructureHints1Finder}
+import org.tindalos.principle.domain.analyzers.structure.Structure.NodeGroup
+import org.tindalos.principle.domain.analyzers.structure.{CohesiveGroupsDiscoveryModule, Graph, PackageCohesionModule, PackageStructureHints1Finder}
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
 
 /**

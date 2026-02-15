@@ -2,8 +2,8 @@ package org.tindalos.principle.infrastructure.reporters.packagestructure
 
 import java.io.PrintWriter
 
-import org.tindalos.principle.domain.agents.structure.CohesionAnalysisResult
-import org.tindalos.principle.domain.agents.structure.Structure.NodeGroup
+import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult
+import org.tindalos.principle.domain.analyzers.structure.Structure.NodeGroup
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter.{packageCohesionsFileName, generalDescription, round, sectionLine, subSectionLine}
 

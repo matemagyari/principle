@@ -2,8 +2,8 @@ package org.tindalos.principle.infrastructure.reporters.packagestructure
 
 import java.io.PrintWriter
 
-import org.tindalos.principle.domain.agents.structure.Graph.NodeId
-import org.tindalos.principle.domain.agents.structure.PackageStructureHints1Finder.GroupingResult
+import org.tindalos.principle.domain.analyzers.structure.Graph.NodeId
+import org.tindalos.principle.domain.analyzers.structure.PackageStructureHints1Finder.GroupingResult
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter._
 

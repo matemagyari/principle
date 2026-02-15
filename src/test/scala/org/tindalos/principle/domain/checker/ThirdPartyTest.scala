@@ -6,7 +6,7 @@ import org.tindalos.principle.domain.core.{AnalysisPlan, PackageReference}
 import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
-import org.tindalos.principle.domain.agents.thirdparty.ThirdPartyViolationsResult
+import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyViolationsResult
 
 import java.util.Collections
 

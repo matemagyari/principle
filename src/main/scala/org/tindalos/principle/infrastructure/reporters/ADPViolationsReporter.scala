@@ -2,7 +2,7 @@ package org.tindalos.principle.infrastructure.reporters
 
 import java.io.PrintWriter
 
-import org.tindalos.principle.domain.agents.adp.ADPResult
+import org.tindalos.principle.domain.analyzers.adp.ADPResult
 import org.tindalos.principle.domain.core.Cycle
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 

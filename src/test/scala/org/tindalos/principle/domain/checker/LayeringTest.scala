@@ -4,7 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit._
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.agentscore.{AnalysisInput, AnalysisResult}
-import org.tindalos.principle.domain.agents.layering.{LayerReference, LayerViolationsResult}
+import org.tindalos.principle.domain.analyzers.layering.{LayerReference, LayerViolationsResult}
 import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 

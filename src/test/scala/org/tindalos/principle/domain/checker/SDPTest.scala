@@ -4,7 +4,7 @@ import org.junit._
 import org.junit.Assert.assertEquals
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.agentscore.AnalysisInput
-import org.tindalos.principle.domain.agents.sdp.SDPResult
+import org.tindalos.principle.domain.analyzers.sdp.SDPResult
 import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 

@@ -1,14 +1,14 @@
 package org.tindalos.principle.domain.resultprocessing.reporter
 
 import org.tindalos.principle.domain.agentscore.AnalysisResult
-import org.tindalos.principle.domain.agents.acd.ACDResult
-import org.tindalos.principle.domain.agents.adp.ADPResult
-import org.tindalos.principle.domain.agents.layering.LayerViolationsResult
-import org.tindalos.principle.domain.agents.sap.SAPResult
-import org.tindalos.principle.domain.agents.sdp.SDPResult
-import org.tindalos.principle.domain.agents.structure.CohesionAnalysisResult
-import org.tindalos.principle.domain.agents.submodulesblueprint.SubmodulesBlueprintAnalysisResult
-import org.tindalos.principle.domain.agents.thirdparty.ThirdPartyViolationsResult
+import org.tindalos.principle.domain.analyzers.acd.ACDResult
+import org.tindalos.principle.domain.analyzers.adp.ADPResult
+import org.tindalos.principle.domain.analyzers.layering.LayerViolationsResult
+import org.tindalos.principle.domain.analyzers.sap.SAPResult
+import org.tindalos.principle.domain.analyzers.sdp.SDPResult
+import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult
+import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmodulesBlueprintAnalysisResult
+import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyViolationsResult
 
 //couldn't figure out how to inject reporter functions in a Map
 object AnalysisResultsReporter {

@@ -2,7 +2,7 @@ package org.tindalos.principle.infrastructure.service.jdepend.classdependencies
 
 import java.io.File
 
-import org.tindalos.principle.domain.agents.structure.Graph.Node
+import org.tindalos.principle.domain.analyzers.structure.Graph.Node
 import org.tindalos.principle.infrastructure.BuildPathUtils
 
 object MyJDependRunner {

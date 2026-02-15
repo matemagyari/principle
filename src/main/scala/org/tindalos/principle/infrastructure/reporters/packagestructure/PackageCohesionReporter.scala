@@ -1,6 +1,6 @@
 package org.tindalos.principle.infrastructure.reporters.packagestructure
 
-import org.tindalos.principle.domain.agents.structure.CohesionAnalysisResult
+import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 

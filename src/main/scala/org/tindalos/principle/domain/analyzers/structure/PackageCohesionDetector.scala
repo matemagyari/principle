@@ -1,0 +1,37 @@
+package org.tindalos.principle.domain.analyzers.structure
+
+import org.tindalos.principle.domain.agentscore.{AnalysisResult, AnalysisInput, Analyzer}
+import org.tindalos.principle.domain.analyzers.structure.Graph.{SubgraphDecomposition, Peninsula, Node}
+import org.tindalos.principle.domain.analyzers.structure.PackageCohesionModule.PackageName
+import org.tindalos.principle.domain.analyzers.structure.PackageStructureHints1Finder.GroupingResult
+import org.tindalos.principle.domain.analyzers.structure.Structure.NodeGroup
+import org.tindalos.principle.domain.constraints.{PackageCouplingConstraints, Constraints}
+
+object PackageCohesionDetector {
+  
+  def buildAgent(buildComponents:(PackageName, Set[Node]) => Set[(PackageName, NodeGroup)]
+             , makeStructureHints1: Set[Node] => GroupingResult
+             , findDetachableSubgraphs: Set[Node] => SubgraphDecomposition
+             , collapseToLimit: Set[NodeGroup] => Set[NodeGroup]) = new Analyzer {
+    
+    override def analyze(input: AnalysisInput) = {
+
+      val packagesWithCohesions = buildComponents(input.analysisPlan.basePackage, input.nodes) 
+      val structureHints1 = makeStructureHints1(input.nodes)
+      val structureHints2 = findDetachableSubgraphs(input.nodes)
+
+      val cohesiveGroups: Option[Set[NodeGroup]] =
+        input.packageCouplingExpectations().map { _ ⇒
+          val initialGroups = input.nodes.map(n => NodeGroup(Set(n)))
+          collapseToLimit(initialGroups)
+        }
+
+      CohesionAnalysisResult(packagesWithCohesions, cohesiveGroups, structureHints1, structureHints2)
+    }
+
+    override def isWanted(expectations: Constraints) =
+      expectations.packageCoupling().isPresent && expectations.packageCoupling().get().grouping().isPresent
+  }
+
+
+}
