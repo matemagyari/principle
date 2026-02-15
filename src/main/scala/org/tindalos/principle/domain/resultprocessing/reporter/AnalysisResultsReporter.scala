@@ -36,7 +36,7 @@ object AnalysisResultsReporter {
         case cr: CohesionAnalysisResult => reportCohesionResult(cr)
         case _ => throw new RuntimeException("terrible thing - no result type")
       }
-      (report, result.expectationsFailed())
+      (report, result.constraintViolated())
     }
 
     (results: List[AnalysisResult]) => results map toReport

@@ -10,7 +10,7 @@ case class SubmodulesBlueprintAnalysisResult(
   overlaps: Set[Overlap] = Set()) extends AnalysisResult {
 
   val threshold = submodulesBlueprint.violationThreshold
-  override def expectationsFailed() = violationsNumber > threshold
+  override def constraintViolated() = violationsNumber > threshold
 
   def violationsNumber = illegalDependencies.size + missingDependencies.size
 

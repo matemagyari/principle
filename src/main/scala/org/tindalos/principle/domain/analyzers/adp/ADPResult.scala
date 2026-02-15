@@ -10,6 +10,6 @@ case class ADPResult(
 
   val threshold = expectation.violationThreshold()
 
-  override def expectationsFailed() = cyclesByBreakingPoints.size > threshold
+  override def constraintViolated() = cyclesByBreakingPoints.size > threshold
 
 }

@@ -12,5 +12,5 @@ case class CohesionAnalysisResult(
     groupingResult:GroupingResult,
     subgraphDecomposition:SubgraphDecomposition) extends AnalysisResult {
 
-  override def expectationsFailed(): Boolean = false
+  override def constraintViolated(): Boolean = false
 }

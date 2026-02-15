@@ -9,5 +9,5 @@ case class ThirdPartyViolationsResult(
     thirdPartyExpectations: ThirdParty) extends AnalysisResult {
 
   val threshold = thirdPartyExpectations.violationThreshold
-  override def expectationsFailed() = violations.length > threshold
+  override def constraintViolated() = violations.length > threshold
 }

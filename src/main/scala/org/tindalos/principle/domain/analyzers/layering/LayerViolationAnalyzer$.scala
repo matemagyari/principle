@@ -13,7 +13,7 @@ case class LayerViolationsResult(
     violations: List[LayerReference],
     threshold: Int) extends AnalysisResult {
 
-  override def expectationsFailed() = violations.length > threshold
+  override def constraintViolated() = violations.length > threshold
 }
 
 object LayerViolationAnalyzer extends Analyzer {

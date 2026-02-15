@@ -10,6 +10,6 @@ case class SAPResult(
 
   val threshold = sapExpectation.violationThreshold
 
-  override def expectationsFailed() = outlierPackages.length > threshold
+  override def constraintViolated() = outlierPackages.length > threshold
 }
 

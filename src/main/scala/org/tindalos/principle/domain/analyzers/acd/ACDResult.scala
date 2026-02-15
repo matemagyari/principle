@@ -12,7 +12,7 @@ case class ACDResult(
   val rAcd = acd / numOfComponents.toDouble
   val nCcd = acd / numOfComponents.toDouble
 
-  override def expectationsFailed() =
+  override def constraintViolated() =
     greaterIfExists(rAcd, packageCoupling.racd().map[DoubleExpectation](r => r).orElse(null)) ||
     greaterIfExists(nCcd, packageCoupling.nccd().map[DoubleExpectation](n => n).orElse(null))
 

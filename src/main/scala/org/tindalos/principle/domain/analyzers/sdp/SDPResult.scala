@@ -12,5 +12,5 @@ case class SDPResult(
 
   val threshold = expectation.violationThreshold
 
-  override def expectationsFailed() = violations.length > threshold
+  override def constraintViolated() = violations.length > threshold
 }
