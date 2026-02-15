@@ -1,9 +1,9 @@
 package org.tindalos.principle.domain.agents.layering
 
 import org.tindalos.principle.domain.agentscore.{Agent, AnalysisInput, AnalysisResult}
+import org.tindalos.principle.domain.constraints.Constraints
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.core.Package
-import org.tindalos.principle.domain.expectations.Checks
 
 import scala.collection.JavaConverters.asScalaBufferConverter
 
@@ -23,7 +23,7 @@ object LayerViolationAgent extends Agent {
     new LayerViolationsResult(layerReferences, checkInput.layeringExpectations().violationThreshold)
   }
 
-  override def isWanted(expectations: Checks) = expectations.layering != null
+  override def isWanted(expectations: Constraints) = expectations.layering != null
 
   private def findViolations(packages: List[Package], configuration: AnalysisPlan): List[LayerReference] = {
 

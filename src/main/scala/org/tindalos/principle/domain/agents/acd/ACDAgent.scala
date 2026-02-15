@@ -1,8 +1,8 @@
 package org.tindalos.principle.domain.agents.acd
 
 import org.tindalos.principle.domain.agentscore.{Agent, AnalysisInput}
+import org.tindalos.principle.domain.constraints.Constraints
 import org.tindalos.principle.domain.core.Package
-import org.tindalos.principle.domain.expectations.Checks
 
 object ACDAgent {
   
@@ -27,7 +27,7 @@ object ACDAgent {
       new ACDResult(cumulatedComponentDependency, relevantPackages.length, checkInput.packageCouplingExpectations().get)
     }
 
-    override def isWanted(expectations: Checks) = {
+    override def isWanted(expectations: Constraints) = {
       if (expectations.packageCoupling().isPresent) {
         val packageCoupling = expectations.packageCoupling().get()
         packageCoupling.acd().isPresent ||

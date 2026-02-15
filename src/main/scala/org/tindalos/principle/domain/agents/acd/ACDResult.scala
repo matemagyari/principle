@@ -1,12 +1,12 @@
 package org.tindalos.principle.domain.agents.acd
 
-import org.tindalos.principle.domain.expectations.{DoubleExpectation, PackageCoupling}
+import org.tindalos.principle.domain.constraints.{DoubleExpectation, PackageCouplingConstraints}
 import org.tindalos.principle.domain.agentscore.AnalysisResult
 
 case class ACDResult(
     cumulatedComponentDependency: Int,
     numOfComponents: Int,
-    packageCoupling: PackageCoupling) extends AnalysisResult {
+    packageCoupling: PackageCouplingConstraints) extends AnalysisResult {
 
   val acd = cumulatedComponentDependency.toDouble / numOfComponents.toDouble
   val rAcd = acd / numOfComponents.toDouble

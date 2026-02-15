@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.expectations;
+package org.tindalos.principle.domain.constraints;
 
 /**
  * Interface for thresholders that use a double value as threshold.

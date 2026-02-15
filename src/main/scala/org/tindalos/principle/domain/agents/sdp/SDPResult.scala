@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.agents.sdp
 
 import org.tindalos.principle.domain.agentscore.AnalysisResult
 import org.tindalos.principle.domain.core.Package
-import org.tindalos.principle.domain.expectations.SDP
+import org.tindalos.principle.domain.constraints.SDP
 
 case class SDPViolation(depender:Package, dependee:Package)
 

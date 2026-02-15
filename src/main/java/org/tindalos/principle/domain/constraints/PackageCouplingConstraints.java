@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.expectations;
+package org.tindalos.principle.domain.constraints;
 
 import java.util.Optional;
 
@@ -7,7 +7,7 @@ import java.util.Optional;
  * Encapsulates various coupling-related checks including ADP, SDP, SAP, ACD, RACD, NCCD,
  * and package structure grouping analysis.
  */
-public record PackageCoupling(
+public record PackageCouplingConstraints(
         Optional<ADP> adp,
         Optional<SDP> sdp,
         Optional<SAP> sap,
@@ -63,8 +63,8 @@ public record PackageCoupling(
             return this;
         }
 
-        public PackageCoupling build() {
-            return new PackageCoupling(adp, sdp, sap, acd, racd, nccd, grouping);
+        public PackageCouplingConstraints build() {
+            return new PackageCouplingConstraints(adp, sdp, sap, acd, racd, nccd, grouping);
         }
     }
 

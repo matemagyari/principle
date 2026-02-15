@@ -3,8 +3,8 @@ package org.tindalos.principle.infrastructure.plugin
 import java.io.File
 
 import org.apache.commons.io.FileUtils
-import org.tindalos.principle.domain.expectations._
-import org.tindalos.principle.domain.expectations.exception.InvalidConfigurationException
+import org.tindalos.principle.domain.constraints._
+import org.tindalos.principle.domain.constraints.exception.InvalidConfigurationException
 import org.yaml.snakeyaml.Yaml
 
 import scala.collection.JavaConverters._
@@ -16,12 +16,12 @@ object ChecksReader {
   //under src/main/resources
   private val defaultFileLocation = "/principle.yml"
 
-  def readFromFile(fileLocation: Option[String]): (Checks, String) = {
+  def readFromFile(fileLocation: Option[String]): (Constraints, String) = {
     val location = fileLocation.getOrElse(defaultFileLocation)
     fromYaml(readYAML(location), location)
   }
 
-  private def fromYaml(yamlText: String, fileLocation: String): (Checks, String) = {
+  private def fromYaml(yamlText: String, fileLocation: String): (Constraints, String) = {
     val yamlObject =
       new Yaml().load(yamlText).asInstanceOf[java.util.Map[String, Object]].asScala.toMap
 
@@ -54,14 +54,14 @@ object ChecksReader {
             .filter(_.asInstanceOf[Boolean])
             .map { _ ⇒ Grouping.of()}
 
-        val builder = PackageCoupling.builder()
+        val builder = PackageCouplingConstraints.builder()
         x.flatMap(_._2).foreach(adp => builder.adp(adp))
         x.flatMap(_._1).foreach(racd => builder.racd(racd))
         grouping.foreach(g => builder.grouping(g))
         builder.build()
       }
 
-      new Checks(
+      new Constraints(
         getYamlStructure(checksYaml, "layering").map(toLayering).orNull,
         getYamlStructure(checksYaml, "third_party_restrictions").map(toThirdParty).map(tp => java.util.Optional.of(tp)).getOrElse(java.util.Optional.empty()),
         java.util.Optional.of(packageCoupling),

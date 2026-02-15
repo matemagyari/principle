@@ -2,7 +2,7 @@ package org.tindalos.principle
 
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.core.logging.{SimpleLogger, TheLogger}
-import org.tindalos.principle.domain.expectations._
+import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.domain.resultprocessing.reporter.Printer
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 
@@ -23,7 +23,7 @@ object ManualPrincipleRunner extends App {
 
   val basePackage = "org.tindalos.principle"
   val runAnalysis = PoorMansDIContainer.buildAnalyzer(basePackage, printer)
-  val checks = Checks.builder().packageCoupling(PackageCoupling.builder().grouping(Grouping.of()).build()).build()
+  val checks = Constraints.builder().packageCoupling(PackageCouplingConstraints.builder().grouping(Grouping.of()).build()).build()
 
   runAnalysis(new AnalysisPlan(checks, basePackage))
 

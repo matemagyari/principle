@@ -5,7 +5,7 @@ import org.junit._
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.agents.submodulesblueprint._
-import org.tindalos.principle.domain.expectations._
+import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 
 class BlueprintTest {
@@ -39,7 +39,7 @@ class BlueprintTest {
   }
 
   private def run(basePackage: String, location: String) = {
-    val expectations = Checks.builder().submodulesBlueprint(submodulesBlueprint(location)).build()
+    val expectations = Constraints.builder().submodulesBlueprint(submodulesBlueprint(location)).build()
     val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
     val packageList = packageListProducer(basePackage)
     val runAnalysis= PoorMansDIContainer.buildRunAnalysisFn()

@@ -3,9 +3,9 @@ package org.tindalos.principle.domain.checker
 import org.junit.Assert.assertEquals
 import org.junit._
 import org.tindalos.principle.domain.core.{Cycle, AnalysisPlan, PackageReference}
-import org.tindalos.principle.domain.agentscore.{AnalysisInput}
+import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.agents.adp._
-import org.tindalos.principle.domain.expectations._
+import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
 
@@ -13,7 +13,7 @@ class ADPTest {
 
   var plan: AnalysisPlan = null
   var runAnalysis = PoorMansDIContainer.buildRunAnalysisFn()
-  val checks = Checks.builder().packageCoupling(PackageCoupling.builder().adp(new ADP()).build()).build()
+  val checks = Constraints.builder().packageCoupling(PackageCouplingConstraints.builder().adp(new ADP()).build()).build()
 
   @Before
   def setup() = {

@@ -3,7 +3,7 @@ package org.tindalos.principle.domain.agentscore
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.agents.structure.Graph.Node
-import org.tindalos.principle.domain.expectations.{SubmodulesBlueprint, ThirdParty, PackageCoupling}
+import org.tindalos.principle.domain.constraints.{SubmodulesBlueprint, ThirdParty, PackageCouplingConstraints}
 
 case class AnalysisInput(
     packages: List[Package],
@@ -16,7 +16,7 @@ case class AnalysisInput(
     if (javaOptional.isPresent) Some(javaOptional.get()) else None
   }
 
-  def packageCouplingExpectations(): Option[PackageCoupling] = toScalaOption(expectations.packageCoupling())
+  def packageCouplingExpectations(): Option[PackageCouplingConstraints] = toScalaOption(expectations.packageCoupling())
 
   def layeringExpectations() = expectations.layering
 

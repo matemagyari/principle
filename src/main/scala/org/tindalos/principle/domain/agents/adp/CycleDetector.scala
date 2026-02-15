@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.agents.adp
 
 import org.tindalos.principle.domain.core.{Cycle, Package, PackageReference}
 import org.tindalos.principle.domain.agentscore.{AnalysisInput, Agent}
-import org.tindalos.principle.domain.expectations.Checks
+import org.tindalos.principle.domain.constraints.Constraints
 
 object CycleDetector {
 
@@ -35,6 +35,6 @@ object CycleDetector {
       new ADPResult(cycles, input.packageCouplingExpectations().flatMap(pc => toScalaOption(pc.adp())).get)
     }
 
-    override def isWanted(expectations: Checks) = expectations.packageCoupling.flatMap(pc => pc.adp()).isPresent
+    override def isWanted(expectations: Constraints) = expectations.packageCoupling.flatMap(pc => pc.adp()).isPresent
   }
 }

@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.expectations;
+package org.tindalos.principle.domain.constraints;
 
 import java.util.Optional;
 
@@ -7,10 +7,10 @@ import java.util.Optional;
  * Contains configuration for layering, third-party dependencies, package coupling metrics,
  * and submodule blueprint validation.
  */
-public record Checks(
+public record Constraints(
         Layering layering,
         Optional<ThirdParty> thirdParty,
-        Optional<PackageCoupling> packageCoupling,
+        Optional<PackageCouplingConstraints> packageCoupling,
         Optional<SubmodulesBlueprint> submodulesBlueprint) {
 
     /**
@@ -19,7 +19,7 @@ public record Checks(
     public static class Builder {
         private Layering layering = null;
         private Optional<ThirdParty> thirdParty = Optional.empty();
-        private Optional<PackageCoupling> packageCoupling = Optional.empty();
+        private Optional<PackageCouplingConstraints> packageCoupling = Optional.empty();
         private Optional<SubmodulesBlueprint> submodulesBlueprint = Optional.empty();
 
         public Builder layering(Layering layering) {
@@ -32,8 +32,8 @@ public record Checks(
             return this;
         }
 
-        public Builder packageCoupling(PackageCoupling packageCoupling) {
-            this.packageCoupling = Optional.ofNullable(packageCoupling);
+        public Builder packageCoupling(PackageCouplingConstraints packageCouplingConstraints) {
+            this.packageCoupling = Optional.ofNullable(packageCouplingConstraints);
             return this;
         }
 
@@ -42,8 +42,8 @@ public record Checks(
             return this;
         }
 
-        public Checks build() {
-            return new Checks(layering, thirdParty, packageCoupling, submodulesBlueprint);
+        public Constraints build() {
+            return new Constraints(layering, thirdParty, packageCoupling, submodulesBlueprint);
         }
     }
 

@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.expectations;
+package org.tindalos.principle.domain.constraints;
 
 import java.util.List;
 

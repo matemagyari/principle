@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.checker
 
 import org.junit.{Assert, Test}
 import org.tindalos.principle.domain.core.AnalysisPlan
-import org.tindalos.principle.domain.expectations._
+import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.domain.resultprocessing.reporter.Printer
 import org.tindalos.principle.domain.resultprocessing.thresholdchecker.ThresholdTrespassedException
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
@@ -21,9 +21,9 @@ class ApplicationModuleTest {
 
     val runAnalysis = PoorMansDIContainer.buildAnalyzer(basePackage, new ConsolePrinter())
 
-    val checks = Checks.builder()
+    val checks = Constraints.builder()
       .layering(layering())
-      .packageCoupling(PackageCoupling.builder()
+      .packageCoupling(PackageCouplingConstraints.builder()
         .sap(new SAP(0, 0.3d))
         .adp(new ADP())
         .sdp(new SDP())

@@ -4,7 +4,7 @@ import org.junit.Assert._
 import org.junit._
 import org.tindalos.principle.domain.core.{AnalysisPlan, PackageReference}
 import org.tindalos.principle.domain.agentscore.AnalysisInput
-import org.tindalos.principle.domain.expectations._
+import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.domain.agents.thirdparty.ThirdPartyViolationsResult
 
@@ -59,7 +59,7 @@ class ThirdPartyTest {
 
 
   private def run(basePackage: String, thirdParty:ThirdParty) = {
-    val expectations: Checks = Checks.builder().layering(layering()).thirdParty(thirdParty).build()
+    val expectations: Constraints = Constraints.builder().layering(layering()).thirdParty(thirdParty).build()
     val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
     val packageList = packageListProducer(basePackage)
     val plan = new AnalysisPlan(expectations, basePackage)

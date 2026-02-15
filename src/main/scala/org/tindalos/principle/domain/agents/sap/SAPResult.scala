@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.agents.sap
 
 import org.tindalos.principle.domain.agentscore.AnalysisResult
 import org.tindalos.principle.domain.core.Package
-import org.tindalos.principle.domain.expectations.SAP
+import org.tindalos.principle.domain.constraints.SAP
 
 case class SAPResult(
     outlierPackages: List[Package],

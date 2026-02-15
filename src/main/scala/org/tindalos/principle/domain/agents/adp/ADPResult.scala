@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.agents.adp
 
 import org.tindalos.principle.domain.core.{Cycle, PackageReference}
 import org.tindalos.principle.domain.agentscore.AnalysisResult
-import org.tindalos.principle.domain.expectations.ADP
+import org.tindalos.principle.domain.constraints.ADP
 
 case class ADPResult(
     cyclesByBreakingPoints: Map[PackageReference, Set[Cycle]],

@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.expectations;
+package org.tindalos.principle.domain.constraints;
 
 /**
  * Stable Dependencies Principle (SDP) threshold expectation.

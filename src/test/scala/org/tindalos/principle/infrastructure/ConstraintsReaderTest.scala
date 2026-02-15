@@ -4,7 +4,7 @@ import org.junit.Test
 import org.scalatest.{Matchers, FlatSpec}
 import org.tindalos.principle.infrastructure.plugin.ChecksReader
 
-class ChecksReaderTest
+class ConstraintsReaderTest
 //    extends FlatSpec with Matchers
 {
 

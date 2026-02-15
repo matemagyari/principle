@@ -3,7 +3,7 @@ package org.tindalos.principle.app.service
 import org.junit.Assert._
 import org.junit.Test
 import org.tindalos.principle.domain.core.AnalysisPlan
-import org.tindalos.principle.domain.expectations._
+import org.tindalos.principle.domain.constraints._
 
 class InputValidatorTest {
 
@@ -60,7 +60,7 @@ class InputValidatorTest {
   private def config(barriers: java.util.List[Barrier]): AnalysisPlan = {
     val aThirdParty = new ThirdParty(barriers, 0)
 
-    val expectations = Checks.builder().layering(aLayering).thirdParty(aThirdParty).build()
+    val expectations = Constraints.builder().layering(aLayering).thirdParty(aThirdParty).build()
     new AnalysisPlan(expectations, basePackage)
   }
 }

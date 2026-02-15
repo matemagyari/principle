@@ -5,14 +5,14 @@ import org.junit._
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.agentscore.{AnalysisInput, AnalysisResult}
 import org.tindalos.principle.domain.agents.layering.{LayerReference, LayerViolationsResult}
-import org.tindalos.principle.domain.expectations._
+import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 
 class LayeringTest {
 
   var plan: AnalysisPlan = null
   var runAnalysis = PoorMansDIContainer.buildRunAnalysisFn()
-  var expectations: Checks = prepareChecks()
+  var expectations: Constraints = prepareChecks()
 
   @Before
   def setup() = {
@@ -50,7 +50,7 @@ class LayeringTest {
     result.head.asInstanceOf[LayerViolationsResult].violations
   }
 
-  private def prepareChecks() = Checks.builder().layering(layering()).build()
+  private def prepareChecks() = Constraints.builder().layering(layering()).build()
 
   private def layering() = new Layering(java.util.List.of("infrastructure", "app", "domain"), 0)
 

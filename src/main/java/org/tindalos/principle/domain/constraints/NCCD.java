@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.expectations;
+package org.tindalos.principle.domain.constraints;
 
 /**
  * Normalized Cumulative Component Dependency (NCCD) threshold expectation.

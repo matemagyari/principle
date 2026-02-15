@@ -5,14 +5,14 @@ import org.junit.Assert.assertEquals
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.agents.sdp.SDPResult
-import org.tindalos.principle.domain.expectations._
+import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 
 class SDPTest {
 
   var plan: AnalysisPlan = _
   val runAnalysis= PoorMansDIContainer.buildRunAnalysisFn()
-  val checks = Checks.builder().packageCoupling(PackageCoupling.builder().sdp(new SDP()).build()).build()
+  val checks = Constraints.builder().packageCoupling(PackageCouplingConstraints.builder().sdp(new SDP()).build()).build()
 
   @Before
   def setup() = {

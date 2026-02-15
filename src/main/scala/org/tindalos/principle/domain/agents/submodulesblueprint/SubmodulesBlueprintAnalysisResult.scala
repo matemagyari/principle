@@ -1,7 +1,7 @@
 package org.tindalos.principle.domain.agents.submodulesblueprint
 
 import org.tindalos.principle.domain.agentscore.AnalysisResult
-import org.tindalos.principle.domain.expectations.SubmodulesBlueprint
+import org.tindalos.principle.domain.constraints.SubmodulesBlueprint
 
 case class SubmodulesBlueprintAnalysisResult(
   submodulesBlueprint: SubmodulesBlueprint,

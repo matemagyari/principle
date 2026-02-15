@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.expectations;
+package org.tindalos.principle.domain.constraints;
 
 /**
  * Average Component Dependency (ACD) threshold expectation.

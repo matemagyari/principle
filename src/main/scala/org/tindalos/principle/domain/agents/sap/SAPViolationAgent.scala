@@ -1,8 +1,8 @@
 package org.tindalos.principle.domain.agents.sap
 
 import org.tindalos.principle.domain.agentscore.Agent
-import org.tindalos.principle.domain.expectations.Checks
 import org.tindalos.principle.domain.agentscore.AnalysisInput
+import org.tindalos.principle.domain.constraints.Constraints
 import org.tindalos.principle.domain.core.Package
 
 object SAPViolationAgent extends Agent {
@@ -26,7 +26,7 @@ object SAPViolationAgent extends Agent {
     else packages
   }
 
-  override def isWanted(expectations: Checks) =
+  override def isWanted(expectations: Constraints) =
     expectations.packageCoupling().isPresent && expectations.packageCoupling().get().sap().isPresent
 
 }

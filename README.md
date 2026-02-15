@@ -257,8 +257,8 @@ Simply put the following xml-snippet into the plugins section of your pom.xml. K
         </barriers>
         <violationsThreshold>0</violationsThreshold>
       </thirdParty>
-      <!-- Some Constraints are grouped under 'packageCoupling'--> 
-      <packageCoupling>
+      <!-- Some Constraints are grouped under 'packageCouplingConstraints'--> 
+      <packageCouplingConstraints>
         <!-- Acyclic Dependency Principle.The build will break if the number of cycles detected exceeds 4. -->
         <adp>
           <violationsThreshold>4</violationsThreshold>
@@ -278,7 +278,7 @@ Simply put the following xml-snippet into the plugins section of your pom.xml. K
         <racd>
            <threshold>0.15</threshold>
         </racd>
-    </packageCoupling>
+    </packageCouplingConstraints>
     <!-- the vertical slices (sub-modules)-->
     <submodulesBlueprint>
       <!-- the relative path of the YAML file containing the definitions -->

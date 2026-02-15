@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.core;
 
-import org.tindalos.principle.domain.expectations.Checks;
+import org.tindalos.principle.domain.constraints.Constraints;
 
 /**
  * Represents a plan for architectural analysis.
@@ -9,6 +9,6 @@ import org.tindalos.principle.domain.expectations.Checks;
  * @param expectations the architectural checks and expectations to validate
  * @param basePackage the root package to analyze
  */
-public record AnalysisPlan(Checks expectations, String basePackage) {
+public record AnalysisPlan(Constraints expectations, String basePackage) {
 }
 

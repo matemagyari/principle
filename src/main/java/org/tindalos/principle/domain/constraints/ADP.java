@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.expectations;
+package org.tindalos.principle.domain.constraints;
 
 /**
  * Acyclic Dependency Principle (ADP) threshold expectation.

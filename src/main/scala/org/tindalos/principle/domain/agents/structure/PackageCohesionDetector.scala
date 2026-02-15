@@ -5,7 +5,7 @@ import org.tindalos.principle.domain.agents.structure.Graph.{SubgraphDecompositi
 import org.tindalos.principle.domain.agents.structure.PackageCohesionModule.PackageName
 import org.tindalos.principle.domain.agents.structure.PackageStructureHints1Finder.GroupingResult
 import org.tindalos.principle.domain.agents.structure.Structure.NodeGroup
-import org.tindalos.principle.domain.expectations.{PackageCoupling, Checks}
+import org.tindalos.principle.domain.constraints.{PackageCouplingConstraints, Constraints}
 
 object PackageCohesionDetector {
   
@@ -29,7 +29,7 @@ object PackageCohesionDetector {
       CohesionAnalysisResult(packagesWithCohesions, cohesiveGroups, structureHints1, structureHints2)
     }
 
-    override def isWanted(expectations: Checks) =
+    override def isWanted(expectations: Constraints) =
       expectations.packageCoupling().isPresent && expectations.packageCoupling().get().grouping().isPresent
   }
 
