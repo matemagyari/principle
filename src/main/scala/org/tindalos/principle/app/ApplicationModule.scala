@@ -1,4 +1,4 @@
-package org.tindalos.principle.app.service
+package org.tindalos.principle.app
 
 import org.tindalos.principle.domain.{AnalysisResult, AnalysisRunner}
 import org.tindalos.principle.domain.core.{AnalysisPlan, Package}
@@ -12,7 +12,7 @@ This is the app entry point. Side effects can happen only here in this layer, un
  */
 object ApplicationModule {
 
-  def buildApplicationFn(inputValidator: InputValidator,
+  def buildApplicationFn(inputValidator: AnalysisPlanValidator,
                          packageListBuilder: PackageListBuilder,
                          getNodes: String => Set[Node],
                          analysisRunner: AnalysisRunner,

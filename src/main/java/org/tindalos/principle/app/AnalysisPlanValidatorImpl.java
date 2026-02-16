@@ -1,4 +1,4 @@
-package org.tindalos.principle.app.service;
+package org.tindalos.principle.app;
 
 import org.tindalos.principle.domain.constraints.Barrier;
 import org.tindalos.principle.domain.constraints.ThirdParty;
@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Implementation of InputValidator that validates analysis plan configuration,
+ * Implementation of AnalysisPlanValidator that validates analysis plan configuration,
  * specifically checking that barrier layers are valid and properly ordered.
  */
-public class InputValidatorImpl implements InputValidator {
+public class AnalysisPlanValidatorImpl implements AnalysisPlanValidator {
 
     @Override
     public ValidationResult validate(AnalysisPlan plan) {

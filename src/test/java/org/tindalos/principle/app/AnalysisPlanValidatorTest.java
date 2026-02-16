@@ -1,4 +1,4 @@
-package org.tindalos.principle.app.service;
+package org.tindalos.principle.app;
 
 import org.junit.Test;
 import org.tindalos.principle.domain.constraints.Barrier;
@@ -12,11 +12,11 @@ import java.util.List;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class InputValidatorTest {
+public class AnalysisPlanValidatorTest {
 
     private final String basePackage = "xx";
     private final Layering aLayering = new Layering(List.of("a", "b", "c"), 0);
-    private final InputValidatorImpl testObj = new InputValidatorImpl();
+    private final AnalysisPlanValidatorImpl testObj = new AnalysisPlanValidatorImpl();
 
     @Test
     public void wrongOrder() {

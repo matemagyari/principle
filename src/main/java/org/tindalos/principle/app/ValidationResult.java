@@ -1,4 +1,4 @@
-package org.tindalos.principle.app.service;
+package org.tindalos.principle.app;
 
 public record ValidationResult(boolean success, String message) {
 

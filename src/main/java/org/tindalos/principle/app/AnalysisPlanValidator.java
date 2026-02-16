@@ -1,12 +1,12 @@
-package org.tindalos.principle.app.service;
+package org.tindalos.principle.app;
 
 import org.tindalos.principle.domain.core.AnalysisPlan;
 
 /**
- * Validates analysis plan inputs to ensure consistency and correctness
+ * Validates analysis plan to ensure consistency and correctness
  * of configuration before running architectural analysis.
  */
-public interface InputValidator {
+public interface AnalysisPlanValidator {
 
     /**
      * Validates the analysis plan configuration.
