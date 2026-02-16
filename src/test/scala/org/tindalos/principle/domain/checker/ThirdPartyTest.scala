@@ -7,6 +7,7 @@ import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyViolationsResult
+import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder
 
 import java.util.Collections
 
@@ -60,8 +61,8 @@ class ThirdPartyTest {
 
   private def run(basePackage: String, thirdParty:ThirdParty) = {
     val expectations: Constraints = Constraints.builder().layering(layering()).thirdParty(thirdParty).build()
-    val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
-    val packageList = packageListProducer(basePackage)
+    val packageListProducer = new JDependBasedPackageListBuilder(basePackage)
+    val packageList = packageListProducer.build()
     val plan = new AnalysisPlan(expectations, basePackage)
     val result = analysisRunner.run(new AnalysisInput(packageList, Set(), plan))
     result(1)

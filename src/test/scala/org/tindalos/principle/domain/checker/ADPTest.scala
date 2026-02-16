@@ -2,10 +2,11 @@ package org.tindalos.principle.domain.checker
 
 import org.junit.Assert.assertEquals
 import org.junit._
-import org.tindalos.principle.domain.core.{Cycle, AnalysisPlan, PackageReference}
+import org.tindalos.principle.domain.core.{AnalysisPlan, Cycle, PackageReference}
 import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.analyzers.adp._
 import org.tindalos.principle.domain.constraints._
+import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
 
@@ -91,8 +92,8 @@ class ADPTest {
 
   private def run(basePackage: String) = {
     init(basePackage)
-    val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
-    val packageList = packageListProducer(basePackage)
+    val packageListProducer = new JDependBasedPackageListBuilder(basePackage)
+    val packageList = packageListProducer.build()
     val classes = MyJDependRunner.createNodesOfClasses(basePackage)
     val result = analysisRunner.run(new AnalysisInput(packageList, classes, plan))
     assertEquals(1, result.length)

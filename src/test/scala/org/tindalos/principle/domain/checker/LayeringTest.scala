@@ -7,6 +7,7 @@ import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.analyzers.layering.{LayerReference, LayerViolationsResult}
 import org.tindalos.principle.domain.constraints._
+import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 
 class LayeringTest {
@@ -44,8 +45,8 @@ class LayeringTest {
 
   private def run(basePackage: String) = {
     init(basePackage)
-    val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
-    val packageList = packageListProducer(basePackage)
+    val packageListProducer = new JDependBasedPackageListBuilder(basePackage)
+    val packageList = packageListProducer.build()
     val result = analysisRunner.run(new AnalysisInput(packageList, Set(), plan))
     assertEquals(1, result.length)
     result.head.asInstanceOf[LayerViolationsResult].violations

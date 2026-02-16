@@ -5,14 +5,15 @@ import org.tindalos.principle.domain.core.{AnalysisPlan, Package}
 import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.analyzers.structure.Graph.Node
 import org.tindalos.principle.domain.resultprocessing.reporter.Printer
+import org.tindalos.principle.infrastructure.{PackageListBuilder, JDependBasedPackageListBuilder}
 
 /*
 This is the app entry point. Side effects can happen only here in this layer, underneath the code must be pure.
  */
 object ApplicationModule {
 
-  def buildApplicationFn(validatePlan: AnalysisPlan => ValidationResult,
-                         getPackages: String => List[Package],
+  def buildApplicationFn(inputValidator: InputValidator,
+                         packageListBuilder: PackageListBuilder,
                          getNodes: String => Set[Node],
                          analysisRunner: AnalysisRunner,
                          makeReports: List[AnalysisResult] => List[(String, Boolean)],
@@ -20,11 +21,11 @@ object ApplicationModule {
 
     (analysisPlan: AnalysisPlan) => {
 
-      val validationResult = validatePlan(analysisPlan)
+      val validationResult = inputValidator.validate(analysisPlan)
 
       if (validationResult.success) {
 
-        val packages = getPackages(analysisPlan.basePackage)
+        val packages = packageListBuilder.build()
         val nodes = getNodes(analysisPlan.basePackage)
 
         val analysisResults = analysisRunner.run(new AnalysisInput(packages, nodes, analysisPlan))
