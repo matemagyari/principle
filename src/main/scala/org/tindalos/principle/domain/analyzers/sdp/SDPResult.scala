@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.analyzers.sdp
 
-import org.tindalos.principle.domain.analyzers.AnalysisResult
+import org.tindalos.principle.domain.AnalysisResult
 import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.constraints.SDP
 

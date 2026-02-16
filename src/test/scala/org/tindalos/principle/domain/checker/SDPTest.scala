@@ -11,7 +11,7 @@ import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 class SDPTest {
 
   var plan: AnalysisPlan = _
-  val runAnalysis= PoorMansDIContainer.buildRunAnalysisFn()
+  val analysisRunner= PoorMansDIContainer.buildAnalysisRunner()
   val checks = Constraints.builder().packageCoupling(PackageCouplingConstraints.builder().sdp(new SDP()).build()).build()
 
   @Before
@@ -37,7 +37,7 @@ class SDPTest {
     init(basePackage)
     val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
     val packageList = packageListProducer(basePackage)
-    val result = runAnalysis(new AnalysisInput(packageList, Set(), plan))
+    val result = analysisRunner.run(new AnalysisInput(packageList, Set(), plan))
     println(s"result: $result")
     assertEquals(1, result.length)
     result.head.asInstanceOf[SDPResult]

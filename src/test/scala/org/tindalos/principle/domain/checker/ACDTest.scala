@@ -11,7 +11,7 @@ import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 class ACDTest {
 
   var plan: AnalysisPlan = null
-  val runAnalysis = PoorMansDIContainer.buildRunAnalysisFn()
+  val analysisRunner = PoorMansDIContainer.buildAnalysisRunner()
   var expectations: Constraints = prepareChecks()
 
   @Before
@@ -75,7 +75,7 @@ class ACDTest {
     init(basePackage)
     val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
     val packageList = packageListProducer(basePackage)
-    val result = runAnalysis(new AnalysisInput(packageList, Set(), plan))
+    val result = analysisRunner.run(new AnalysisInput(packageList, Set(), plan))
     assertEquals(1, result.length)
     result.head.asInstanceOf[ACDResult].acd
   }

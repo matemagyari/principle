@@ -1,8 +1,8 @@
 package org.tindalos.principle.infrastructure.di
 
 import org.tindalos.principle.app.service.{ApplicationModule, InputValidator}
+import org.tindalos.principle.domain.{AnalysisResult, AnalysisRunner}
 import org.tindalos.principle.domain.agentscore.AnalysisInput
-import org.tindalos.principle.domain.analyzers.AnalysisResult
 import org.tindalos.principle.domain.analyzers.acd.ACDAgent
 import org.tindalos.principle.domain.analyzers.adp.{CycleDetector, PackageStructureModule}
 import org.tindalos.principle.domain.analyzers.layering.LayerViolationAnalyzer
@@ -32,7 +32,7 @@ object PoorMansDIContainer {
       InputValidator.validate,
       buildPackageListProducerFn(rootPackage),
       buildNodesFn,
-      buildRunAnalysisFn(),
+      buildAnalysisRunner(),
       buildReporter(),
       printer)
   }
@@ -43,10 +43,14 @@ object PoorMansDIContainer {
     JDependPackageAnalyzer.buildAnalyzerFn(JDependRunner.preparePackages, packageListTransformer)
   }
 
-  def buildRunAnalysisFn(): AnalysisInput => List[AnalysisResult] = {
+  def buildAnalysisRunner(): AnalysisRunner = {
     val packageStructureBuilder = PackageStructureModule.createBuilder(PackageSorterModule.sortByName(_, _))
     val detectors = createDetectors(packageStructureBuilder)
-    AgentsRunner.buildAgentsRunner(detectors)
+    val fn = AgentsRunner.buildAgentsRunner(detectors)
+
+    new AnalysisRunner {
+      override def run(input: AnalysisInput): List[AnalysisResult] = fn.apply(input)
+    }
   }
 
   private def createDetectors(buildPackageStructure: (List[Package], String) => Package) =

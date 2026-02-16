@@ -2,9 +2,9 @@ package org.tindalos.principle.domain.checker
 
 import org.junit.Assert.assertEquals
 import org.junit._
+import org.tindalos.principle.domain.AnalysisResult
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.agentscore.AnalysisInput
-import org.tindalos.principle.domain.analyzers.AnalysisResult
 import org.tindalos.principle.domain.analyzers.layering.{LayerReference, LayerViolationsResult}
 import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
@@ -12,7 +12,7 @@ import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 class LayeringTest {
 
   var plan: AnalysisPlan = null
-  var runAnalysis = PoorMansDIContainer.buildRunAnalysisFn()
+  var analysisRunner = PoorMansDIContainer.buildAnalysisRunner()
   var expectations: Constraints = prepareChecks()
 
   @Before
@@ -46,7 +46,7 @@ class LayeringTest {
     init(basePackage)
     val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
     val packageList = packageListProducer(basePackage)
-    val result = runAnalysis(new AnalysisInput(packageList, Set(), plan))
+    val result = analysisRunner.run(new AnalysisInput(packageList, Set(), plan))
     assertEquals(1, result.length)
     result.head.asInstanceOf[LayerViolationsResult].violations
   }

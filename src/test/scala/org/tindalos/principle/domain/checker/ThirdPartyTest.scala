@@ -12,7 +12,7 @@ import java.util.Collections
 
 class ThirdPartyTest {
 
-  val runAnalysis= PoorMansDIContainer.buildRunAnalysisFn()
+  val analysisRunner = PoorMansDIContainer.buildAnalysisRunner()
 
   @Before
   def setup() = {
@@ -63,7 +63,7 @@ class ThirdPartyTest {
     val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
     val packageList = packageListProducer(basePackage)
     val plan = new AnalysisPlan(expectations, basePackage)
-    val result = runAnalysis(new AnalysisInput(packageList, Set(), plan))
+    val result = analysisRunner.run(new AnalysisInput(packageList, Set(), plan))
     result(1)
   }
 

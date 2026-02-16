@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.analyzers.acd
 
-import org.tindalos.principle.domain.analyzers.AnalysisResult
+import org.tindalos.principle.domain.AnalysisResult
 import org.tindalos.principle.domain.constraints.{DoubleExpectation, PackageCouplingConstraints}
 
 case class ACDResult(

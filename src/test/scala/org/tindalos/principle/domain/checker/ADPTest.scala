@@ -12,7 +12,7 @@ import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.M
 class ADPTest {
 
   var plan: AnalysisPlan = null
-  var runAnalysis = PoorMansDIContainer.buildRunAnalysisFn()
+  var analysisRunner = PoorMansDIContainer.buildAnalysisRunner()
   val checks = Constraints.builder().packageCoupling(PackageCouplingConstraints.builder().adp(new ADP()).build()).build()
 
   @Before
@@ -94,7 +94,7 @@ class ADPTest {
     val packageListProducer = PoorMansDIContainer.buildPackageListProducerFn(basePackage)
     val packageList = packageListProducer(basePackage)
     val classes = MyJDependRunner.createNodesOfClasses(basePackage)
-    val result = runAnalysis(new AnalysisInput(packageList, classes, plan))
+    val result = analysisRunner.run(new AnalysisInput(packageList, classes, plan))
     assertEquals(1, result.length)
     result.head.asInstanceOf[ADPResult].cyclesByBreakingPoints
   }
