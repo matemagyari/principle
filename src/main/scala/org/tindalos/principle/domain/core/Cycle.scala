@@ -2,12 +2,13 @@ package org.tindalos.principle.domain.core
 
 import org.apache.commons.lang3.builder.HashCodeBuilder
 
+import scala.collection.JavaConverters._
+
 class Cycle(val references: List[PackageReference]) extends Comparable[Cycle] {
   
   //var x:org.tindalos.principle.domain.expectations.Checks = null
   def this(refs:PackageReference*) = this(refs.toList)
-  def this(ref1:PackageReference,ref2:PackageReference) = this(List(ref1, ref2))
-  def this(ref1:PackageReference,ref2:PackageReference,ref3:PackageReference) = this(List(ref1, ref2, ref3))
+  def this(refs:java.util.List[PackageReference]) = this(refs.asScala.toList)
 
   if (references == null || references.length < 2) throw new DomainException("Invalid cycle " + references)
 
