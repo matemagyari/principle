@@ -2,9 +2,8 @@ package org.tindalos.principle.domain.core
 
 import scala.collection.mutable.ListBuffer
 import org.apache.commons.lang3.builder.HashCodeBuilder
-import com.google.common.collect.Lists
-import com.google.common.collect.Sets
-import com.google.common.base.Optional
+
+import scala.collection.JavaConverters._
 
 abstract class Package(val reference: PackageReference) {
 
@@ -135,7 +134,8 @@ abstract class Package(val reference: PackageReference) {
       val cycleCandidateEndingHere = findCycleCandidateEndingHere(traversedPackages)
       if (cycleCandidateEndingHere.isDefined) {
         if (isValid(cycleCandidateEndingHere.get)) {
-          foundCycles.add(new Cycle(cycleCandidateEndingHere.get))
+          val list: java.util.List[PackageReference] = cycleCandidateEndingHere.get.asJava
+          foundCycles.add(new Cycle(list))
         }
       } else {
         accumulatedDirectlyReferredPackages(packageReferences).foreach({ referencedPackage =>

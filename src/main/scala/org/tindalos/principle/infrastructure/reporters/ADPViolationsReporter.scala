@@ -1,10 +1,11 @@
 package org.tindalos.principle.infrastructure.reporters
 
 import java.io.PrintWriter
-
 import org.tindalos.principle.domain.analyzers.adp.ADPResult
 import org.tindalos.principle.domain.core.Cycle
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
+
+import scala.collection.JavaConverters.asScalaBufferConverter
 
 object ADPViolationsReporter {
 
@@ -44,7 +45,7 @@ object ADPViolationsReporter {
 
     val arrow = "-->"
     val sb = new StringBuffer()
-    cycle.references.foreach(reference => sb.append("\n" + reference + " " + arrow))
+    cycle.references().asScala.foreach(reference => sb.append("\n" + reference + " " + arrow))
 
     sb.append("\n-------------------------------")
     sb.toString()
