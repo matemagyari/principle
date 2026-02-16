@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.resultprocessing.reporter
 
-import org.tindalos.principle.domain.agentscore.AnalysisResult
+import org.tindalos.principle.domain.analyzers.AnalysisResult
 import org.tindalos.principle.domain.analyzers.acd.ACDResult
 import org.tindalos.principle.domain.analyzers.adp.ADPResult
 import org.tindalos.principle.domain.analyzers.layering.LayerViolationsResult

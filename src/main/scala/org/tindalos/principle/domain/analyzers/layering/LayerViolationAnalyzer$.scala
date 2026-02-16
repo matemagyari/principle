@@ -1,6 +1,7 @@
 package org.tindalos.principle.domain.analyzers.layering
 
-import org.tindalos.principle.domain.agentscore.{Analyzer, AnalysisInput, AnalysisResult}
+import org.tindalos.principle.domain.agentscore.{Analyzer, AnalysisInput}
+import org.tindalos.principle.domain.analyzers.AnalysisResult
 import org.tindalos.principle.domain.constraints.Constraints
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.core.Package

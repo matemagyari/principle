@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.agentscore;
+package org.tindalos.principle.domain.analyzers;
 
 /**
  * Represents the result of an architectural analysis.

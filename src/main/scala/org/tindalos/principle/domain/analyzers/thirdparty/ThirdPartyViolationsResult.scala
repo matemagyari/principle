@@ -1,7 +1,7 @@
 package org.tindalos.principle.domain.analyzers.thirdparty
 
+import org.tindalos.principle.domain.analyzers.AnalysisResult
 import org.tindalos.principle.domain.core.PackageReference
-import org.tindalos.principle.domain.agentscore.AnalysisResult
 import org.tindalos.principle.domain.constraints.ThirdParty
 
 case class ThirdPartyViolationsResult(

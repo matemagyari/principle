@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.analyzers.submodulesblueprint
 
-import org.tindalos.principle.domain.agentscore.AnalysisResult
+import org.tindalos.principle.domain.analyzers.AnalysisResult
 import org.tindalos.principle.domain.constraints.SubmodulesBlueprint
 
 case class SubmodulesBlueprintAnalysisResult(

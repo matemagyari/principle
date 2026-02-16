@@ -1,7 +1,8 @@
 package org.tindalos.principle.app.service
 
 import org.tindalos.principle.domain.core.{AnalysisPlan, Package}
-import org.tindalos.principle.domain.agentscore.{AnalysisInput, AnalysisResult}
+import org.tindalos.principle.domain.agentscore.AnalysisInput
+import org.tindalos.principle.domain.analyzers.AnalysisResult
 import org.tindalos.principle.domain.analyzers.structure.Graph.Node
 import org.tindalos.principle.domain.resultprocessing.reporter.Printer
 

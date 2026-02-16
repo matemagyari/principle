@@ -1,6 +1,7 @@
 package org.tindalos.principle.domain.analyzers.structure
 
-import org.tindalos.principle.domain.agentscore.{AnalysisResult, AnalysisInput, Analyzer}
+import org.tindalos.principle.domain.agentscore.{AnalysisInput, Analyzer}
+import org.tindalos.principle.domain.analyzers.AnalysisResult
 import org.tindalos.principle.domain.analyzers.structure.Graph.{SubgraphDecomposition, Peninsula, Node}
 import org.tindalos.principle.domain.analyzers.structure.PackageCohesionModule.PackageName
 import org.tindalos.principle.domain.analyzers.structure.PackageStructureHints1Finder.GroupingResult

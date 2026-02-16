@@ -1,7 +1,7 @@
 package org.tindalos.principle.domain.analyzers.acd
 
+import org.tindalos.principle.domain.analyzers.AnalysisResult
 import org.tindalos.principle.domain.constraints.{DoubleExpectation, PackageCouplingConstraints}
-import org.tindalos.principle.domain.agentscore.AnalysisResult
 
 case class ACDResult(
     cumulatedComponentDependency: Int,

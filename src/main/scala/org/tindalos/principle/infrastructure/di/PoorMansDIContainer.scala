@@ -1,7 +1,8 @@
 package org.tindalos.principle.infrastructure.di
 
 import org.tindalos.principle.app.service.{ApplicationModule, InputValidator}
-import org.tindalos.principle.domain.agentscore.{AnalysisInput, AnalysisResult}
+import org.tindalos.principle.domain.agentscore.AnalysisInput
+import org.tindalos.principle.domain.analyzers.AnalysisResult
 import org.tindalos.principle.domain.analyzers.acd.ACDAgent
 import org.tindalos.principle.domain.analyzers.adp.{CycleDetector, PackageStructureModule}
 import org.tindalos.principle.domain.analyzers.layering.LayerViolationAnalyzer

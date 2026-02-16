@@ -1,5 +1,6 @@
 package org.tindalos.principle.domain.agentscore
 
+import org.tindalos.principle.domain.analyzers.AnalysisResult
 import org.tindalos.principle.domain.constraints.Constraints
 
 trait Analyzer {
