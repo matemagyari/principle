@@ -1,8 +1,8 @@
 package org.tindalos.principle.infrastructure.di
 
 import org.tindalos.principle.app.service.{ApplicationModule, InputValidator}
-import org.tindalos.principle.domain.{AnalysisResult, AnalysisRunner}
-import org.tindalos.principle.domain.agentscore.AnalysisInput
+import org.tindalos.principle.domain.{AnalysisResult, AnalysisRunner, AnalysisRunnerImpl}
+import org.tindalos.principle.domain.agentscore.{AnalysisInput, Analyzer}
 import org.tindalos.principle.domain.analyzers.acd.ACDAgent
 import org.tindalos.principle.domain.analyzers.adp.{CycleDetector, PackageStructureModule}
 import org.tindalos.principle.domain.analyzers.layering.LayerViolationAnalyzer
@@ -12,7 +12,7 @@ import org.tindalos.principle.domain.analyzers.structure.Graph.Node
 import org.tindalos.principle.domain.analyzers.structure._
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.{SubmoduleFactory, SubmodulesBlueprintAgent, SubmodulesFactory}
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyAnalyzer
-import org.tindalos.principle.domain.checker.AgentsRunner
+import org.tindalos.principle.domain.core.logging.TheLogger
 import org.tindalos.principle.domain.core.{Package, PackageSorterModule}
 import org.tindalos.principle.domain.resultprocessing.reporter.{AnalysisResultsReporter, Printer}
 import org.tindalos.principle.infrastructure.detector.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider
@@ -45,15 +45,11 @@ object PoorMansDIContainer {
 
   def buildAnalysisRunner(): AnalysisRunner = {
     val packageStructureBuilder = PackageStructureModule.createBuilder(PackageSorterModule.sortByName(_, _))
-    val detectors = createDetectors(packageStructureBuilder)
-    val fn = AgentsRunner.buildAgentsRunner(detectors)
-
-    new AnalysisRunner {
-      override def run(input: AnalysisInput): List[AnalysisResult] = fn.apply(input)
-    }
+    val analyzers: List[Analyzer] = createAnalyzers(packageStructureBuilder)
+    new AnalysisRunnerImpl(analyzers)
   }
 
-  private def createDetectors(buildPackageStructure: (List[Package], String) => Package) =
+  private def createAnalyzers(buildPackageStructure: (List[Package], String) => Package) =
     List(
       LayerViolationAnalyzer,
       ThirdPartyAnalyzer,
