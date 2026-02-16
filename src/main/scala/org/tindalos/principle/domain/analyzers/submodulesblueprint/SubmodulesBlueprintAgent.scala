@@ -4,6 +4,7 @@ import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.agentscore.{AnalysisInput, Analyzer}
 import org.tindalos.principle.domain.constraints.Constraints
 
+import scala.collection.JavaConverters.asScalaSetConverter
 import scala.collection.immutable.Map
 
 object SubmodulesBlueprintAgent {
@@ -27,7 +28,7 @@ object SubmodulesBlueprintAgent {
         }
         catch {
           case ex: OverlappingSubmoduleDefinitionsException =>
-            new SubmodulesBlueprintAnalysisResult(submodulesBlueprint, overlaps = ex.overlaps)
+            new SubmodulesBlueprintAnalysisResult(submodulesBlueprint, overlaps = ex.getOverlaps().asScala.toSet)
         }
       }
       .getOrElse(new SubmodulesBlueprintAnalysisResult(submodulesBlueprint = null))

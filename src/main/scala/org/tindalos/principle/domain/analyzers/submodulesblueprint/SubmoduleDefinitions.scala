@@ -1,4 +1,7 @@
 package org.tindalos.principle.domain.analyzers.submodulesblueprint
+
+import scala.collection.JavaConverters.setAsJavaSetConverter
+
 class SubmoduleDefinitions(val definitions: Map[SubmoduleId, SubmoduleDefinition]) {
   checkNoOverlaps(definitions.values.toList)
   private def checkNoOverlaps(definitions: List[SubmoduleDefinition]) {
@@ -6,7 +9,7 @@ class SubmoduleDefinitions(val definitions: Map[SubmoduleId, SubmoduleDefinition
       submoduleDefinition <- definitions; anOtherDefinition <- definitions.filterNot(_.equals(submoduleDefinition))
       if submoduleDefinition.overlapsWith(anOtherDefinition)
     ) yield new Overlap(submoduleDefinition.id, anOtherDefinition.id)
-    if (!overlaps.isEmpty) throw new OverlappingSubmoduleDefinitionsException(overlaps.toSet)
+    if (!overlaps.isEmpty) throw new OverlappingSubmoduleDefinitionsException(overlaps.toSet.asJava)
   }
   def getPackages(submoduleId: SubmoduleId) = definitions.get(submoduleId).get.packages
 }
