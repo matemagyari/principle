@@ -11,13 +11,15 @@ class InputValidatorTest {
 
   val aLayering = new Layering(java.util.List.of("a","b","c"), 0)
 
+  val testObj = new InputValidatorImpl
+
   @Test
   def wrongOrder() {
 
     val barriers = java.util.List.of(Barrier.of("a"),Barrier.of("c"),Barrier.of("b"))
     val configuration: AnalysisPlan = config(barriers)
 
-    val result = InputValidator.validate(configuration)
+    val result = testObj.validate(configuration)
 
     assertFalse(result.success)
   }
@@ -28,7 +30,7 @@ class InputValidatorTest {
     val barriers = java.util.List.of(Barrier.of("a"),Barrier.of("d"))
     val configuration: AnalysisPlan = config(barriers)
 
-    val result = InputValidator.validate(configuration)
+    val result = testObj.validate(configuration)
 
     assertFalse(result.success)
   }
@@ -40,7 +42,7 @@ class InputValidatorTest {
     val barriers = java.util.List.of(Barrier.of("a"),Barrier.of("b"),Barrier.of("c"))
     val configuration: AnalysisPlan = config(barriers)
 
-    val result = InputValidator.validate(configuration)
+    val result = testObj.validate(configuration)
 
     assertTrue(result.success)
   }
@@ -51,7 +53,7 @@ class InputValidatorTest {
     val barriers = java.util.List.of(Barrier.of("a"), Barrier.of("c"))
     val configuration: AnalysisPlan = config(barriers)
 
-    val result = InputValidator.validate(configuration)
+    val result = testObj.validate(configuration)
 
     assertTrue(result.success)
   }

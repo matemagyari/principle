@@ -1,6 +1,6 @@
 package org.tindalos.principle.infrastructure.di
 
-import org.tindalos.principle.app.service.{ApplicationModule, InputValidator}
+import org.tindalos.principle.app.service.{ApplicationModule, InputValidator, InputValidatorImpl}
 import org.tindalos.principle.domain.{AnalysisResult, AnalysisRunner, AnalysisRunnerImpl}
 import org.tindalos.principle.domain.agentscore.{AnalysisInput, Analyzer}
 import org.tindalos.principle.domain.analyzers.acd.ACDAgent
@@ -28,8 +28,9 @@ object PoorMansDIContainer {
 
     val buildNodesFn:String => Set[Node] = MyJDependRunner.createNodesOfClasses(_)
 
+    val inputValidator = new InputValidatorImpl
     ApplicationModule.buildApplicationFn(
-      InputValidator.validate,
+      inputValidator.validate,
       buildPackageListProducerFn(rootPackage),
       buildNodesFn,
       buildAnalysisRunner(),

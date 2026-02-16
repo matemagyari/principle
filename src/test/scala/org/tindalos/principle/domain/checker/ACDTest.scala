@@ -12,7 +12,7 @@ class ACDTest {
 
   var plan: AnalysisPlan = null
   val analysisRunner = PoorMansDIContainer.buildAnalysisRunner()
-  var expectations: Constraints = prepareChecks()
+  var expectations: Constraints = prepareConstraints()
 
   @Before
   def setup() = {
@@ -80,5 +80,5 @@ class ACDTest {
     result.head.asInstanceOf[ACDResult].acd
   }
 
-  private def prepareChecks() = Constraints.builder().packageCoupling(PackageCouplingConstraints.builder().acd(new ACD()).build()).build()
+  private def prepareConstraints() = Constraints.builder().packageCoupling(PackageCouplingConstraints.builder().acd(new ACD()).build()).build()
 }
