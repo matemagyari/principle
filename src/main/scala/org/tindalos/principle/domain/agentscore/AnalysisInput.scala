@@ -10,7 +10,7 @@ case class AnalysisInput(
     nodes: Set[Node] = Set(),
     analysisPlan: AnalysisPlan) {
 
-  private val expectations = analysisPlan.expectations
+  private val expectations = analysisPlan.constraints
 
   private def toScalaOption[T](javaOptional: java.util.Optional[T]): Option[T] = {
     if (javaOptional.isPresent) Some(javaOptional.get()) else None

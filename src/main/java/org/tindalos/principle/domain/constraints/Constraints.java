@@ -3,7 +3,7 @@ package org.tindalos.principle.domain.constraints;
 import java.util.Optional;
 
 /**
- * Represents the complete set of architectural checks and expectations to be analyzed.
+ * Represents the complete set of architectural checks and constraints to be analyzed.
  * Contains configuration for layering, third-party dependencies, package coupling metrics,
  * and submodule blueprint validation.
  */

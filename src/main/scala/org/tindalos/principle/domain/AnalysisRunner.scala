@@ -11,7 +11,7 @@ class AnalysisRunnerImpl(analyzers: List[Analyzer]) extends AnalysisRunner {
 
   override def run(input: AnalysisInput): List[AnalysisResult] =
     analyzers
-      .filter(_.isEnabled(input.analysisPlan.expectations))
+      .filter(_.isEnabled(input.analysisPlan.constraints))
       .flatMap(runAnalyzer(input, _))
 
 

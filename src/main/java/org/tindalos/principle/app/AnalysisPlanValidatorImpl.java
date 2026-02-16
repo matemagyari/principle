@@ -16,14 +16,14 @@ public class AnalysisPlanValidatorImpl implements AnalysisPlanValidator {
 
     @Override
     public ValidationResult validate(AnalysisPlan plan) {
-        Optional<ThirdParty> thirdPartyOpt = plan.expectations().thirdParty();
+        Optional<ThirdParty> thirdPartyOpt = plan.constraints().thirdParty();
 
         if (thirdPartyOpt.isEmpty()) {
             return ValidationResult.successful();
         }
 
         ThirdParty thirdParty = thirdPartyOpt.get();
-        List<String> layers = plan.expectations().layering().layers();
+        List<String> layers = plan.constraints().layering().layers();
         List<Barrier> barriers = thirdParty.barriers();
 
         // Check if all barrier layers are valid (exist in layering definition)

@@ -28,7 +28,7 @@ object LayerViolationAnalyzer extends Analyzer {
 
   private def findViolations(packages: List[Package], configuration: AnalysisPlan): List[LayerReference] = {
 
-    val layers = configuration.expectations.layering.layers.asScala.map(configuration.basePackage + "." + _).toList
+    val layers = configuration.constraints.layering.layers.asScala.map(configuration.basePackage + "." + _).toList
 
     for (aPackage <- packages
             if aPackage.reference.startsWith(configuration.basePackage);
