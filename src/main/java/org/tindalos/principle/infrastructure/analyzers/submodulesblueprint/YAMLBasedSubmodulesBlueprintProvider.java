@@ -22,17 +22,7 @@ public class YAMLBasedSubmodulesBlueprintProvider {
 
     public static SubmoduleDefinitions readSubmoduleDefinitions(String submodulesDefinitionLocation, String basePackageName) {
         String yaml = getYAML(submodulesDefinitionLocation);
-        return processYAML(yaml, basePackageName);
-    }
-
-    protected static SubmoduleDefinitions processYAML(String yamlText, String basePackageName) {
-        @SuppressWarnings("unchecked")
-        Map<String, Object> yamlObject = (Map<String, Object>) new Yaml().load(yamlText);
-        return processYaml(basePackageName, yamlObject);
-    }
-
-    private static SubmoduleDefinitions processYaml(String basePackageName, Map<String, Object> yamlObject) {
-        @SuppressWarnings("unchecked")
+        Map<String, Object> yamlObject = (Map<String, Object>) new Yaml().load(yaml);
         Map<String, Object> checks = (Map<String, Object>) yamlObject.get("checks");
 
         @SuppressWarnings("unchecked")
