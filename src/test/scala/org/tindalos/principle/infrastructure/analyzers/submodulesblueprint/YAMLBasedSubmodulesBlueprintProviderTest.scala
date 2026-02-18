@@ -3,13 +3,37 @@ package org.tindalos.principle.infrastructure.analyzers.submodulesblueprint
 import org.junit.Assert._
 import org.junit._
 import org.tindalos.principle.domain.analyzers.submodulesblueprint._
+import java.io.File
+import org.apache.commons.io.FileUtils
 
 class YAMLBasedSubmodulesBlueprintProviderTest {
 
+  private def createTempYamlFile(content: String): String = {
+    val tempFile = File.createTempFile("test_blueprint_", ".yaml")
+    tempFile.deleteOnExit()
+    FileUtils.writeStringToFile(tempFile, content)
+    tempFile.getAbsolutePath
+  }
+
   @Test
   def readSubmoduleDefinitions_validYaml_parsesSuccessfully(): Unit = {
+    val yaml = """
+      |checks:
+      |  modules:
+      |    module-definitions:
+      |      MOD1: [domain.mod1, app.mod1]
+      |      MOD2: [domain.mod2, app.mod2]
+      |      MOD3: [domain.mod3, app.mod3]
+      |    module-dependencies:
+      |      MOD1: [MOD2]
+      |      MOD2: [MOD1]
+      |      MOD3: []
+      |    violation_threshold: 0
+    """.stripMargin
+
+    val yamlFile = createTempYamlFile(yaml)
     val result = YAMLBasedSubmodulesBlueprintProvider.readSubmoduleDefinitions(
-      "src/test/resources/principle_blueprint_ok.yaml",
+      yamlFile,
       "org.tindalos.principletest.submodulesblueprint"
     )
 
@@ -20,8 +44,23 @@ class YAMLBasedSubmodulesBlueprintProviderTest {
 
   @Test
   def readSubmoduleDefinitions_validYaml_containsExpectedModules(): Unit = {
+    val yaml = """
+      |checks:
+      |  modules:
+      |    module-definitions:
+      |      MOD1: [domain.mod1, app.mod1]
+      |      MOD2: [domain.mod2, app.mod2]
+      |      MOD3: [domain.mod3, app.mod3]
+      |    module-dependencies:
+      |      MOD1: [MOD2]
+      |      MOD2: [MOD1]
+      |      MOD3: []
+      |    violation_threshold: 0
+    """.stripMargin
+
+    val yamlFile = createTempYamlFile(yaml)
     val result = YAMLBasedSubmodulesBlueprintProvider.readSubmoduleDefinitions(
-      "src/test/resources/principle_blueprint_ok.yaml",
+      yamlFile,
       "org.tindalos.principletest.submodulesblueprint"
     )
 
@@ -42,8 +81,23 @@ class YAMLBasedSubmodulesBlueprintProviderTest {
 
   @Test
   def readSubmoduleDefinitions_validYaml_modulesHaveCorrectPackages(): Unit = {
+    val yaml = """
+      |checks:
+      |  modules:
+      |    module-definitions:
+      |      MOD1: [domain.mod1, app.mod1]
+      |      MOD2: [domain.mod2, app.mod2]
+      |      MOD3: [domain.mod3, app.mod3]
+      |    module-dependencies:
+      |      MOD1: [MOD2]
+      |      MOD2: [MOD1]
+      |      MOD3: []
+      |    violation_threshold: 0
+    """.stripMargin
+
+    val yamlFile = createTempYamlFile(yaml)
     val result = YAMLBasedSubmodulesBlueprintProvider.readSubmoduleDefinitions(
-      "src/test/resources/principle_blueprint_ok.yaml",
+      yamlFile,
       "org.tindalos.principletest.submodulesblueprint"
     )
 
@@ -64,8 +118,23 @@ class YAMLBasedSubmodulesBlueprintProviderTest {
 
   @Test
   def readSubmoduleDefinitions_validYaml_modulesHaveCorrectDependencies(): Unit = {
+    val yaml = """
+      |checks:
+      |  modules:
+      |    module-definitions:
+      |      MOD1: [domain.mod1, app.mod1]
+      |      MOD2: [domain.mod2, app.mod2]
+      |      MOD3: [domain.mod3, app.mod3]
+      |    module-dependencies:
+      |      MOD1: [MOD2]
+      |      MOD2: [MOD1]
+      |      MOD3: []
+      |    violation_threshold: 0
+    """.stripMargin
+
+    val yamlFile = createTempYamlFile(yaml)
     val result = YAMLBasedSubmodulesBlueprintProvider.readSubmoduleDefinitions(
-      "src/test/resources/principle_blueprint_ok.yaml",
+      yamlFile,
       "org.tindalos.principletest.submodulesblueprint"
     )
 
@@ -87,8 +156,23 @@ class YAMLBasedSubmodulesBlueprintProviderTest {
 
   @Test
   def readSubmoduleDefinitions_validYaml_mod3HasNoDependencies(): Unit = {
+    val yaml = """
+      |checks:
+      |  modules:
+      |    module-definitions:
+      |      MOD1: [domain.mod1, app.mod1]
+      |      MOD2: [domain.mod2, app.mod2]
+      |      MOD3: [domain.mod3, app.mod3]
+      |    module-dependencies:
+      |      MOD1: [MOD2]
+      |      MOD2: [MOD1]
+      |      MOD3: []
+      |    violation_threshold: 0
+    """.stripMargin
+
+    val yamlFile = createTempYamlFile(yaml)
     val result = YAMLBasedSubmodulesBlueprintProvider.readSubmoduleDefinitions(
-      "src/test/resources/principle_blueprint_ok.yaml",
+      yamlFile,
       "org.tindalos.principletest.submodulesblueprint"
     )
 
@@ -109,32 +193,79 @@ class YAMLBasedSubmodulesBlueprintProviderTest {
 
   @Test(expected = classOf[InvalidBlueprintDefinitionException])
   def readSubmoduleDefinitions_missingModuleDefinitions_throwsException(): Unit = {
+    val yaml = """
+      |checks:
+      |  modules:
+      |    module-dependencies:
+      |      MOD1: [MOD2]
+      |    violation_threshold: 0
+    """.stripMargin
+
+    val yamlFile = createTempYamlFile(yaml)
     YAMLBasedSubmodulesBlueprintProvider.readSubmoduleDefinitions(
-      "src/test/resources/principle_blueprint_missing_definitions.yaml",
+      yamlFile,
       "org.tindalos.principletest.submodulesblueprint"
     )
   }
 
   @Test(expected = classOf[InvalidBlueprintDefinitionException])
   def readSubmoduleDefinitions_missingModuleDependencies_throwsException(): Unit = {
+    val yaml = """
+      |checks:
+      |  modules:
+      |    module-definitions:
+      |      MOD1: [domain.mod1, app.mod1]
+      |      MOD2: [domain.mod2, app.mod2]
+      |    violation_threshold: 0
+    """.stripMargin
+
+    val yamlFile = createTempYamlFile(yaml)
     YAMLBasedSubmodulesBlueprintProvider.readSubmoduleDefinitions(
-      "src/test/resources/principle_blueprint_missing_dependencies.yaml",
+      yamlFile,
       "org.tindalos.principletest.submodulesblueprint"
     )
   }
 
   @Test(expected = classOf[OverlappingSubmoduleDefinitionsException])
   def readSubmoduleDefinitions_overlappingModules_throwsException(): Unit = {
+    val yaml = """
+      |checks:
+      |  modules:
+      |    module-definitions:
+      |      MOD1: [domain]
+      |      MOD2: [domain.mod2]
+      |    module-dependencies:
+      |      MOD1: []
+      |      MOD2: []
+      |    violation_threshold: 0
+    """.stripMargin
+
+    val yamlFile = createTempYamlFile(yaml)
     YAMLBasedSubmodulesBlueprintProvider.readSubmoduleDefinitions(
-      "src/test/resources/principle_blueprint_test_overlapping.yaml",
+      yamlFile,
       "org.tindalos.principletest.submodulesblueprint"
     )
   }
 
   @Test
   def readSubmoduleDefinitions_basePackageNamePrependedCorrectly(): Unit = {
+    val yaml = """
+      |checks:
+      |  modules:
+      |    module-definitions:
+      |      MOD1: [domain.mod1, app.mod1]
+      |      MOD2: [domain.mod2, app.mod2]
+      |      MOD3: [domain.mod3, app.mod3]
+      |    module-dependencies:
+      |      MOD1: [MOD2]
+      |      MOD2: [MOD1]
+      |      MOD3: []
+      |    violation_threshold: 0
+    """.stripMargin
+
+    val yamlFile = createTempYamlFile(yaml)
     val result = YAMLBasedSubmodulesBlueprintProvider.readSubmoduleDefinitions(
-      "src/test/resources/principle_blueprint_ok.yaml",
+      yamlFile,
       "org.tindalos.principletest.submodulesblueprint"
     )
 
