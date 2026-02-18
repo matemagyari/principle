@@ -9,13 +9,13 @@ import org.tindalos.principle.domain.analyzers.sap.SAPViolationAnalyzer
 import org.tindalos.principle.domain.analyzers.sdp.SDPViolationAnalyzer
 import org.tindalos.principle.domain.analyzers.structure.Graph.Node
 import org.tindalos.principle.domain.analyzers.structure._
-import org.tindalos.principle.domain.analyzers.submodulesblueprint.{SubmoduleFactory, SubmodulesBlueprintAgent, SubmodulesFactory}
+import org.tindalos.principle.domain.analyzers.submodulesblueprint.{SubmoduleFactory, SubmodulesBlueprintAnalyzer, SubmodulesFactory}
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyAnalyzer
 import org.tindalos.principle.domain.core.{Package, PackageSorterModule}
 import org.tindalos.principle.domain.resultprocessing.reporter.{AnalysisResultsReporter, Printer}
 import org.tindalos.principle.domain.{AnalysisResult, AnalysisRunner, AnalysisRunnerImpl}
 import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder
-import org.tindalos.principle.infrastructure.detector.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider
+import org.tindalos.principle.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider
 import org.tindalos.principle.infrastructure.reporters._
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
@@ -63,7 +63,7 @@ object PoorMansDIContainer {
       buildPackageStructure,
       YAMLBasedSubmodulesBlueprintProvider.readSubmoduleDefinitions,
       SubmoduleFactory.buildModules)
-    SubmodulesBlueprintAgent.buildInstance(submodulesFactory)
+    SubmodulesBlueprintAnalyzer.buildInstance(submodulesFactory)
   }
 
 

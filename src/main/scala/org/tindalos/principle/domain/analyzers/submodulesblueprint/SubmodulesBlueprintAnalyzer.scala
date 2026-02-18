@@ -7,7 +7,7 @@ import org.tindalos.principle.domain.constraints.Constraints
 import scala.collection.JavaConverters.asScalaSetConverter
 import scala.collection.immutable.Map
 
-object SubmodulesBlueprintAgent {
+object SubmodulesBlueprintAnalyzer {
 
   def buildInstance(buildSubmodules: (String, List[Package], String) => Set[Submodule]) = new Analyzer {
 

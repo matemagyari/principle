@@ -1,4 +1,4 @@
-package org.tindalos.principle.infrastructure.detector.submodulesblueprint
+package org.tindalos.principle.infrastructure.analyzers.submodulesblueprint
 
 import java.util
 
@@ -15,7 +15,7 @@ import scala.collection.JavaConverters._
 
 object YAMLBasedSubmodulesBlueprintProvider {
 
-  def readSubmoduleDefinitions(submodulesDefinitionLocation: String, basePackageName: String) = {
+  def readSubmoduleDefinitions(submodulesDefinitionLocation: String, basePackageName: String): SubmoduleDefinitions = {
     val yaml = getYAML(submodulesDefinitionLocation)
     processYAML(yaml, basePackageName)
   }
@@ -26,7 +26,7 @@ object YAMLBasedSubmodulesBlueprintProvider {
     processYaml(basePackageName, yamlObject)
   }
 
-  def processYaml(basePackageName: String, yamlObject: Map[String, Object]): SubmoduleDefinitions = {
+  private def processYaml(basePackageName: String, yamlObject: Map[String, Object]): SubmoduleDefinitions = {
 
     val checks: Map[String, Object] =
       yamlObject("checks")
