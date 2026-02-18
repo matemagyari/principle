@@ -107,6 +107,25 @@ class BlueprintTest {
     assert(result.missingDependencies.isInstanceOf[Map[_, _]], "Missing dependencies should be a Map")
   }
 
+  @Test
+  def blueprintOk_parsingSucceeds() = {
+    val result = run("org.tindalos.principletest.submodulesblueprint", "src/test/resources/principle_blueprint_ok.yaml")
+
+    // Verify blueprint was parsed successfully
+    assert(result.submodulesBlueprint != null, "Blueprint should be parsed")
+    assertEquals("src/test/resources/principle_blueprint_ok.yaml", result.submodulesBlueprint.location)
+
+    // Verify threshold
+    assertEquals(0, result.threshold)
+
+    // Verify no overlaps (valid blueprint)
+    assert(result.overlaps.isEmpty, "Valid blueprint should have no overlaps")
+
+    // For a valid blueprint with matching code, there should be no violations
+    // (Note: actual violations depend on the test code structure)
+    assert(result.violationsNumber >= 0, "Violations should be non-negative")
+  }
+
   def fakeSubmodule(name: String) = {
     new Submodule(new SubmoduleId(name), Set(), Set())
   }

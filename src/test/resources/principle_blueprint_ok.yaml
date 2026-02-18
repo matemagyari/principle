@@ -1,0 +1,16 @@
+checks:
+
+  modules:
+  # Map submodules to packages
+
+    module-definitions:
+
+      MOD1: [domain.mod1, app.mod1]
+      MOD2: [domain.mod2, app.mod2]
+      MOD3: [domain.mod3, app.mod3]
+
+    module-dependencies:
+      MOD1: [MOD2]
+      MOD2: [MOD1]
+
+    violation_threshold: 0
