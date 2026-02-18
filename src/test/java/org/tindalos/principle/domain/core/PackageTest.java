@@ -9,8 +9,9 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
+import org.tindalos.principle.domain.core.packages.PackageMetrics;
+import org.tindalos.principle.domain.core.packages.PackageReference;
 import scala.collection.JavaConverters;
-import scala.collection.JavaConverters.*;
 
 public class PackageTest {
 

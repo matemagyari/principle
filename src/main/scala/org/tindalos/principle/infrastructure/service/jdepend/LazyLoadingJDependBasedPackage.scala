@@ -3,7 +3,8 @@ package org.tindalos.principle.infrastructure.service.jdepend
 import java.util.Collection
 
 import jdepend.framework.JavaPackage
-import org.tindalos.principle.domain.core.{PackageMetrics, Package, PackageReference}
+import org.tindalos.principle.domain.core.packages.{PackageMetrics, PackageReference}
+import org.tindalos.principle.domain.core.Package
 
 import scala.collection.JavaConversions._
 

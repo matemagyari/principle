@@ -1,7 +1,7 @@
 package org.tindalos.principle.domain.analyzers.submodulesblueprint
 
-import org.tindalos.principle.domain.core.PackageReference
 import org.tindalos.principle.domain.core.Package
+import org.tindalos.principle.domain.core.packages.PackageReference
 
 object SubmoduleFactory {
 

@@ -2,6 +2,7 @@ package org.tindalos.principle.domain.core
 
 import org.junit.{Before, Test}
 import org.junit.Assert._
+import org.tindalos.principle.domain.core.packages.{PackageMetrics, PackageReference}
 
 class CyclesInSubgraphTest {
 

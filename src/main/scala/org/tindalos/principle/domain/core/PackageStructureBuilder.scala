@@ -6,10 +6,4 @@ trait PackageStructureBuilder {
 
 }
 
-class PackageStructureBuilderImpl() extends PackageStructureBuilder {
 
-  override def build(packages: List[Package], basePackage: String): Package = {
-???
-  }
-
-}

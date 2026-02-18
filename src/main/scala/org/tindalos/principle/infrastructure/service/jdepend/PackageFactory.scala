@@ -1,7 +1,8 @@
 package org.tindalos.principle.infrastructure.service.jdepend
 
 import jdepend.framework.JavaPackage
-import org.tindalos.principle.domain.core.{PackageMetrics, Package}
+import org.tindalos.principle.domain.core.Package
+import org.tindalos.principle.domain.core.packages.PackageMetrics
 
 import scala.collection.immutable.List
 

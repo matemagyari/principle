@@ -1,5 +1,7 @@
 package org.tindalos.principle.domain.core
 
+import org.tindalos.principle.domain.core.packages.PackageReference
+
 import scala.collection.mutable.Set
 import scala.collection.mutable.Map
 

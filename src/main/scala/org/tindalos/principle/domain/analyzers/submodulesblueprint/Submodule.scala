@@ -1,9 +1,9 @@
 package org.tindalos.principle.domain.analyzers.submodulesblueprint
 
 import org.tindalos.principle.domain.core.Package
-import org.tindalos.principle.domain.core.PackageReference
 import scala.collection.immutable.Set
 import org.apache.commons.lang3.builder.HashCodeBuilder
+import org.tindalos.principle.domain.core.packages.PackageReference
 
 
 class Submodule(val id: SubmoduleId, val packagesUnderModule: Set[Package], val plannedDependencies: Set[SubmoduleId]) {

@@ -4,7 +4,8 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
-import scala.collection.JavaConverters.*;
+
+import org.tindalos.principle.domain.core.packages.PackageReference;
 
 import static org.junit.Assert.*;
 

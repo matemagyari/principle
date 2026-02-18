@@ -1,8 +1,9 @@
 package org.tindalos.principle.domain.analyzers.thirdparty
 
 import org.tindalos.principle.domain.agentscore.{Analyzer, AnalysisInput}
-import org.tindalos.principle.domain.core.{Package, PackageReference}
+import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.constraints.{Barrier, Constraints}
+import org.tindalos.principle.domain.core.packages.PackageReference
 
 import scala.collection.JavaConverters.asScalaBufferConverter
 

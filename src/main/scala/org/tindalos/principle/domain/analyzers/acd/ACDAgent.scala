@@ -1,16 +1,17 @@
 package org.tindalos.principle.domain.analyzers.acd
 
-import org.tindalos.principle.domain.agentscore.{Analyzer, AnalysisInput}
+import org.tindalos.principle.domain.agentscore.{AnalysisInput, Analyzer}
 import org.tindalos.principle.domain.constraints.Constraints
 import org.tindalos.principle.domain.core.Package
+import org.tindalos.principle.domain.core.PackageStructureBuilder
 
 object ACDAgent {
   
-  def buildAgent(buildPackageStructure: (List[Package], String) => Package) = new Analyzer {
+  def buildAgent(packageStructureBuilder: PackageStructureBuilder) = new Analyzer {
 
     override def analyze(checkInput: AnalysisInput): ACDResult = {
 
-      val basePackage = buildPackageStructure(checkInput.packages, checkInput.analysisPlan.basePackage)
+      val basePackage = packageStructureBuilder.build(checkInput.packages, checkInput.analysisPlan.basePackage)
 
       val referenceMap = basePackage.toMap()
 

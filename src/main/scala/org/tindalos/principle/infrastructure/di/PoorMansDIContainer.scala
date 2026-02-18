@@ -1,9 +1,9 @@
 package org.tindalos.principle.infrastructure.di
 
-import org.tindalos.principle.app.{ApplicationModule, AnalysisPlanValidatorImpl}
+import org.tindalos.principle.app.{AnalysisPlanValidatorImpl, ApplicationModule}
 import org.tindalos.principle.domain.agentscore.Analyzer
 import org.tindalos.principle.domain.analyzers.acd.ACDAgent
-import org.tindalos.principle.domain.analyzers.adp.{CycleDetector, PackageStructureModule}
+import org.tindalos.principle.domain.analyzers.adp.CycleDetector
 import org.tindalos.principle.domain.analyzers.layering.LayerViolationAnalyzer
 import org.tindalos.principle.domain.analyzers.sap.SAPViolationAnalyzer
 import org.tindalos.principle.domain.analyzers.sdp.SDPViolationAnalyzer
@@ -11,14 +11,14 @@ import org.tindalos.principle.domain.analyzers.structure.Graph.Node
 import org.tindalos.principle.domain.analyzers.structure._
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.{SubmoduleFactory, SubmodulesBlueprintAnalyzer, SubmodulesFactory}
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyAnalyzer
-import org.tindalos.principle.domain.core.{Package, PackageSorterModule}
+import org.tindalos.principle.domain.core.PackageStructureBuilder
 import org.tindalos.principle.domain.resultprocessing.reporter.{AnalysisResultsReporter, Printer}
 import org.tindalos.principle.domain.{AnalysisResult, AnalysisRunner, AnalysisRunnerImpl}
-import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder
 import org.tindalos.principle.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider
 import org.tindalos.principle.infrastructure.reporters._
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
+import org.tindalos.principle.infrastructure.{JDependBasedPackageListBuilder, PackageStructureBuilderImpl}
 
 object PoorMansDIContainer {
 
@@ -37,20 +37,20 @@ object PoorMansDIContainer {
   }
 
   def buildAnalysisRunner(): AnalysisRunner = {
-    val packageStructureBuilder = PackageStructureModule.createBuilder(PackageSorterModule.sortByName(_, _))
+    val packageStructureBuilder = new PackageStructureBuilderImpl()
     val analyzers: List[Analyzer] = createAnalyzers(packageStructureBuilder)
     new AnalysisRunnerImpl(analyzers)
   }
 
-  private def createAnalyzers(buildPackageStructure: (List[Package], String) => Package) =
+  private def createAnalyzers(packageStructureBuilder: PackageStructureBuilder) =
     List(
       LayerViolationAnalyzer,
       ThirdPartyAnalyzer,
-      CycleDetector.buildAgent(buildPackageStructure),
+      CycleDetector.buildAgent(packageStructureBuilder),
       SDPViolationAnalyzer,
       SAPViolationAnalyzer,
-      ACDAgent.buildAgent(buildPackageStructure),
-      buildSubmodulesBlueprintViolationDetector(buildPackageStructure),
+      ACDAgent.buildAgent(packageStructureBuilder),
+      buildSubmodulesBlueprintViolationDetector(packageStructureBuilder),
       PackageCohesionDetector.buildAgent(
         PackageCohesionModule.componentsFromPackages
       , PackageStructureHints1Finder.makeGroups
@@ -58,12 +58,12 @@ object PoorMansDIContainer {
       , CohesiveGroupsDiscoveryModule.collapseToLimit))
 
 
-  private def buildSubmodulesBlueprintViolationDetector(buildPackageStructure: (List[Package], String) => Package) = {
+  private def buildSubmodulesBlueprintViolationDetector(packageStructureBuilder: PackageStructureBuilder) = {
     val readSubmoduleDefinitions = (submodulesDefinitionLocation: String, basePackageName: String) => {
       new YAMLBasedSubmodulesBlueprintProvider(basePackageName).readSubmoduleDefinitions(submodulesDefinitionLocation)
     }
     val submodulesFactory = SubmodulesFactory.buildInstance(
-      buildPackageStructure,
+      packageStructureBuilder,
       readSubmoduleDefinitions,
       SubmoduleFactory.buildModules)
     SubmodulesBlueprintAnalyzer.buildInstance(submodulesFactory)

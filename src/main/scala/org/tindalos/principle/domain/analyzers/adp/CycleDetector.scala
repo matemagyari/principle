@@ -1,8 +1,9 @@
 package org.tindalos.principle.domain.analyzers.adp
 
-import org.tindalos.principle.domain.core.{Cycle, Package, PackageReference}
 import org.tindalos.principle.domain.agentscore.{AnalysisInput, Analyzer}
 import org.tindalos.principle.domain.constraints.Constraints
+import org.tindalos.principle.domain.core.packages.PackageReference
+import org.tindalos.principle.domain.core.{Cycle, PackageStructureBuilder}
 
 object CycleDetector {
 
@@ -10,11 +11,11 @@ object CycleDetector {
     if (javaOptional.isPresent) Some(javaOptional.get()) else None
   }
 
-  def buildAgent(buildPackageStructure: (List[Package], String) => Package) = new Analyzer {
+  def buildAgent(packageStructureBuilder: PackageStructureBuilder) = new Analyzer {
 
     override def analyze(input: AnalysisInput) = {
 
-      val basePackage = buildPackageStructure(input.packages, input.analysisPlan.basePackage)
+      val basePackage = packageStructureBuilder.build(input.packages, input.analysisPlan.basePackage)
 
       val references = basePackage.toMap()
 

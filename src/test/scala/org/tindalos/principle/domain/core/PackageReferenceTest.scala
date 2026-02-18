@@ -1,8 +1,8 @@
 package org.tindalos.principle.domain.core
 
 import org.junit.Test
-
 import org.junit.Assert._
+import org.tindalos.principle.domain.core.packages.PackageReference
 
 class PackageReferenceTest {
 

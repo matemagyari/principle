@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.core;
+package org.tindalos.principle.domain.core.packages;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**

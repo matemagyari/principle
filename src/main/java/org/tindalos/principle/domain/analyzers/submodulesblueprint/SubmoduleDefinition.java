@@ -1,7 +1,7 @@
 package org.tindalos.principle.domain.analyzers.submodulesblueprint;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.tindalos.principle.domain.core.PackageReference;
+import org.tindalos.principle.domain.core.packages.PackageReference;
 
 import java.util.HashSet;
 import java.util.List;

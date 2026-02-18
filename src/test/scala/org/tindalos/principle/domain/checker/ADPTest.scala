@@ -2,10 +2,11 @@ package org.tindalos.principle.domain.checker
 
 import org.junit.Assert.assertEquals
 import org.junit._
-import org.tindalos.principle.domain.core.{AnalysisPlan, Cycle, PackageReference}
+import org.tindalos.principle.domain.core.{AnalysisPlan, Cycle}
 import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.analyzers.adp._
 import org.tindalos.principle.domain.constraints._
+import org.tindalos.principle.domain.core.packages.PackageReference
 import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner

@@ -5,7 +5,7 @@ import org.tindalos.principle.domain.analyzers.submodulesblueprint.InvalidBluepr
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmoduleDefinition;
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmoduleDefinitions;
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmoduleId;
-import org.tindalos.principle.domain.core.PackageReference;
+import org.tindalos.principle.domain.core.packages.PackageReference;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;

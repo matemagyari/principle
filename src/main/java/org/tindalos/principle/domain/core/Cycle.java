@@ -1,6 +1,7 @@
 package org.tindalos.principle.domain.core;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.tindalos.principle.domain.core.packages.PackageReference;
 
 import java.util.Arrays;
 import java.util.HashSet;
