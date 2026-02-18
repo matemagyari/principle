@@ -70,7 +70,8 @@ object YAMLBasedSubmodulesBlueprintProvider {
       checkSubmoduleExists(submoduleDefinitionMap.keySet, submoduleId)
       val submoduleDefinition = submoduleDefinitionMap.get(submoduleId).get
       val plannedDependencies = transformToSubmoduleIds(keyVal._2, submoduleDefinitionMap.keySet)
-      submoduleDefinition.addPlannedDependencies(plannedDependencies)
+      import scala.collection.JavaConverters._
+      submoduleDefinition.addPlannedDependencies(plannedDependencies.asJava)
     }
   }
 
@@ -88,7 +89,9 @@ object YAMLBasedSubmodulesBlueprintProvider {
     definitions.map { definition ⇒
       val submoduleId = new SubmoduleId(definition._1)
       val packages = transformToPackageReferences(definition._2, basePackageName)
-      val submoduleDefinition = new SubmoduleDefinition(submoduleId, packages.toSet)
+      import scala.collection.JavaConverters._
+      val javaPackages: java.util.Set[PackageReference] = packages.toSet.asJava
+      val submoduleDefinition = new SubmoduleDefinition(submoduleId, javaPackages)
       (submoduleId, submoduleDefinition)
     }
   }

@@ -6,14 +6,15 @@ import org.tindalos.principle.domain.core.Package
 object SubmoduleFactory {
 
   def buildModules(submoduleDefinitions: SubmoduleDefinitions, packageMap: Map[PackageReference, Package]) = {
+    import scala.collection.JavaConverters._
 
     def convert(submoduleDefinition: SubmoduleDefinition): Submodule = {
-      val packages = submoduleDefinition.packages.map(reference => packageMap.get(reference) match {
+      val packages = submoduleDefinition.packages().asScala.map(reference => packageMap.get(reference) match {
         case None => throw new InvalidBlueprintDefinitionException("Package does not exist: " + reference)
         case Some(aPackage) => aPackage
       })
-      new Submodule(submoduleDefinition.id, packages, submoduleDefinition.getLegalDependencies)
+      new Submodule(submoduleDefinition.id, packages.toSet, submoduleDefinition.getLegalDependencies.asScala.toSet)
     }
-    submoduleDefinitions.definitions.values.map(convert(_)).toSet
+    submoduleDefinitions.definitions.values.map(convert).toSet
   }
 }
