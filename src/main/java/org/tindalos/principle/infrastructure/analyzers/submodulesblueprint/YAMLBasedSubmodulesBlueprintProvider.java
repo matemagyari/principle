@@ -20,7 +20,13 @@ import java.util.stream.Collectors;
  */
 public class YAMLBasedSubmodulesBlueprintProvider {
 
-    public static SubmoduleDefinitions readSubmoduleDefinitions(String submodulesDefinitionLocation, String basePackageName) {
+    private final String basePackageName;
+
+    public YAMLBasedSubmodulesBlueprintProvider(String basePackageName) {
+        this.basePackageName = basePackageName;
+    }
+
+    public SubmoduleDefinitions readSubmoduleDefinitions(String submodulesDefinitionLocation) {
         String yaml = getYAML(submodulesDefinitionLocation);
         Map<String, Object> yamlObject = (Map<String, Object>) new Yaml().load(yaml);
         Map<String, Object> checks = (Map<String, Object>) yamlObject.get("checks");
@@ -28,19 +34,19 @@ public class YAMLBasedSubmodulesBlueprintProvider {
         @SuppressWarnings("unchecked")
         Map<String, Object> modules = (Map<String, Object>) checks.get("modules");
 
-        Map<SubmoduleId, SubmoduleDefinition> submoduleDefinitionMap = buildSubmoduleDefinitions(modules, basePackageName);
+        Map<SubmoduleId, SubmoduleDefinition> submoduleDefinitionMap = buildSubmoduleDefinitions(modules);
         addDependencies(modules, submoduleDefinitionMap);
 
         return new SubmoduleDefinitions(submoduleDefinitionMap);
     }
 
-    private static void checkSubmoduleExists(Set<SubmoduleId> validSubmodules, SubmoduleId submoduleId) {
+    private void checkSubmoduleExists(Set<SubmoduleId> validSubmodules, SubmoduleId submoduleId) {
         if (!validSubmodules.contains(submoduleId)) {
             throw new InvalidBlueprintDefinitionException("No submodules defined with id " + submoduleId);
         }
     }
 
-    private static List<SubmoduleId> transformToSubmoduleIds(List<String> dependencies, Set<SubmoduleId> validSubmodules) {
+    private List<SubmoduleId> transformToSubmoduleIds(List<String> dependencies, Set<SubmoduleId> validSubmodules) {
         List<SubmoduleId> ids = dependencies.stream()
                 .map(SubmoduleId::new)
                 .collect(Collectors.toList());
@@ -49,7 +55,7 @@ public class YAMLBasedSubmodulesBlueprintProvider {
         return ids;
     }
 
-    private static void addDependencies(Map<String, Object> yamlObject, Map<SubmoduleId, SubmoduleDefinition> submoduleDefinitionMap) {
+    private void addDependencies(Map<String, Object> yamlObject, Map<SubmoduleId, SubmoduleDefinition> submoduleDefinitionMap) {
         Object dependenciesObj = yamlObject.get("module-dependencies");
         if (dependenciesObj == null) {
             throw new InvalidBlueprintDefinitionException("Submodule dependencies not defined!");
@@ -67,7 +73,7 @@ public class YAMLBasedSubmodulesBlueprintProvider {
         });
     }
 
-    private static Map<SubmoduleId, SubmoduleDefinition> buildSubmoduleDefinitions(Map<String, Object> yamlObject, String basePackageName) {
+    private Map<SubmoduleId, SubmoduleDefinition> buildSubmoduleDefinitions(Map<String, Object> yamlObject) {
         Object definitionsObj = yamlObject.get("module-definitions");
         if (definitionsObj == null) {
             throw new InvalidBlueprintDefinitionException("Submodules not defined!");
@@ -81,19 +87,19 @@ public class YAMLBasedSubmodulesBlueprintProvider {
                         entry -> new SubmoduleId(entry.getKey()),
                         entry -> {
                             SubmoduleId submoduleId = new SubmoduleId(entry.getKey());
-                            Set<PackageReference> packages = transformToPackageReferences(entry.getValue(), basePackageName);
+                            Set<PackageReference> packages = transformToPackageReferences(entry.getValue());
                             return new SubmoduleDefinition(submoduleId, packages);
                         }
                 ));
     }
 
-    private static Set<PackageReference> transformToPackageReferences(List<String> packageNames, String basePackageName) {
+    private Set<PackageReference> transformToPackageReferences(List<String> packageNames) {
         return packageNames.stream()
                 .map(name -> new PackageReference(basePackageName + "." + name))
                 .collect(Collectors.toSet());
     }
 
-    protected static String getYAML(String submodulesDefinitionLocation) {
+    protected String getYAML(String submodulesDefinitionLocation) {
         try {
             return FileUtils.readFileToString(new File(submodulesDefinitionLocation));
         } catch (IOException ex) {

@@ -7,7 +7,7 @@ import org.tindalos.principle.domain.analyzers.submodulesblueprint._
 import java.io.File
 import org.tindalos.principle.domain.core.PackageReference
 
-import java.util.{Collections, Set}
+import java.util.{Collections}
 import org.apache.commons.io.FileUtils
 
 import java.util
@@ -29,6 +29,8 @@ class YAMLBasedSubmodulesBlueprintProviderTest {
       |    violation_threshold: 0
     """.stripMargin)
 
+  private val provider = new YAMLBasedSubmodulesBlueprintProvider("com")
+
   private def createTempYamlFile(content: String): String = {
     val tempFile = File.createTempFile("test_blueprint_", ".yaml")
     tempFile.deleteOnExit()
@@ -39,10 +41,7 @@ class YAMLBasedSubmodulesBlueprintProviderTest {
   @Test
   def readSubmoduleDefinitions_validYaml_parsesSuccessfully(): Unit = {
 
-    val result = YAMLBasedSubmodulesBlueprintProvider.readSubmoduleDefinitions(
-      yamlFile,
-      "com"
-    )
+    val result = provider.readSubmoduleDefinitions(yamlFile)
 
     assertNotNull("SubmoduleDefinitions should not be null", result)
 
@@ -70,10 +69,7 @@ class YAMLBasedSubmodulesBlueprintProviderTest {
 
   @Test(expected = classOf[InvalidBlueprintDefinitionException])
   def readSubmoduleDefinitions_missingFile_throwsException(): Unit = {
-    YAMLBasedSubmodulesBlueprintProvider.readSubmoduleDefinitions(
-      "src/test/resources/non_existent_file.yaml",
-      "com"
-    )
+    provider.readSubmoduleDefinitions("src/test/resources/non_existent_file.yaml")
   }
 
   @Test(expected = classOf[InvalidBlueprintDefinitionException])
@@ -85,10 +81,7 @@ class YAMLBasedSubmodulesBlueprintProviderTest {
                                         |      MOD1: [MOD2]
                                         |    violation_threshold: 0
     """.stripMargin)
-    YAMLBasedSubmodulesBlueprintProvider.readSubmoduleDefinitions(
-      yamlFile,
-      "com"
-    )
+    provider.readSubmoduleDefinitions(yamlFile)
   }
 
   @Test(expected = classOf[InvalidBlueprintDefinitionException])
@@ -104,10 +97,7 @@ class YAMLBasedSubmodulesBlueprintProviderTest {
     """.stripMargin
 
     val yamlFile = createTempYamlFile(yaml)
-    YAMLBasedSubmodulesBlueprintProvider.readSubmoduleDefinitions(
-      yamlFile,
-      "com"
-    )
+    provider.readSubmoduleDefinitions(yamlFile)
   }
 
   @Test(expected = classOf[OverlappingSubmoduleDefinitionsException])
@@ -123,10 +113,7 @@ class YAMLBasedSubmodulesBlueprintProviderTest {
                                         |      MOD2: []
                                         |    violation_threshold: 0
     """.stripMargin)
-    YAMLBasedSubmodulesBlueprintProvider.readSubmoduleDefinitions(
-      yamlFile,
-      "org.tindalos.principletest.submodulesblueprint"
-    )
+    provider.readSubmoduleDefinitions(yamlFile)
   }
 }
 
