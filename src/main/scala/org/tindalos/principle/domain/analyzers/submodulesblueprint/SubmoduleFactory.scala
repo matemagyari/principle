@@ -15,6 +15,6 @@ object SubmoduleFactory {
       })
       new Submodule(submoduleDefinition.id, packages.toSet, submoduleDefinition.getLegalDependencies.asScala.toSet)
     }
-    submoduleDefinitions.definitions.values.map(convert).toSet
+    submoduleDefinitions.getDefinitions().asScala.values.map(convert).toSet
   }
 }

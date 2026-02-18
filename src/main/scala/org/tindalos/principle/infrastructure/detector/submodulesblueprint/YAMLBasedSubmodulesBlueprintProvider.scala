@@ -41,7 +41,8 @@ object YAMLBasedSubmodulesBlueprintProvider {
     val submoduleDefinitionMap = buildSubmoduleDefinitions(modules, basePackageName)
     addDependencies(modules, submoduleDefinitionMap)
 
-    new SubmoduleDefinitions(submoduleDefinitionMap)
+    import scala.collection.JavaConverters._
+    new SubmoduleDefinitions(submoduleDefinitionMap.asJava)
   }
 
   private def checkSubmoduleExists(validSubmodules: Set[SubmoduleId], submoduleId: SubmoduleId) =
