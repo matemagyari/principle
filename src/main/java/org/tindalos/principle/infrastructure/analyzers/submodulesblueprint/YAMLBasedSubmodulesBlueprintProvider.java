@@ -87,16 +87,13 @@ public class YAMLBasedSubmodulesBlueprintProvider {
                         entry -> new SubmoduleId(entry.getKey()),
                         entry -> {
                             SubmoduleId submoduleId = new SubmoduleId(entry.getKey());
-                            Set<PackageReference> packages = transformToPackageReferences(entry.getValue());
+                            List<String> packageNames = entry.getValue();
+                            Set<PackageReference> packages = packageNames.stream()
+                                    .map(name -> new PackageReference(basePackageName + "." + name))
+                                    .collect(Collectors.toSet());
                             return new SubmoduleDefinition(submoduleId, packages);
                         }
                 ));
-    }
-
-    private Set<PackageReference> transformToPackageReferences(List<String> packageNames) {
-        return packageNames.stream()
-                .map(name -> new PackageReference(basePackageName + "." + name))
-                .collect(Collectors.toSet());
     }
 
     protected String getYAML(String submodulesDefinitionLocation) {
