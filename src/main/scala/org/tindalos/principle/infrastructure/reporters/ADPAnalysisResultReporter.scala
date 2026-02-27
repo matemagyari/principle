@@ -7,10 +7,12 @@ import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsRe
 
 import scala.collection.JavaConverters.asScalaBufferConverter
 
+import scala.collection.JavaConverters._
+
 object ADPAnalysisResultReporter {
 
   def report(result: ADPResult):AnalysisResultsReporter.Report = {
-    val cyclesByBreakingPoints = result.cyclesByBreakingPoints
+    val cyclesByBreakingPoints = result.cyclesByBreakingPoints.asScala
     val sectionLine = "=============================================================="
     val sb = new StringBuffer("\n" + sectionLine + "\n")
     sb.append("\tAcyclic Package Dependency Principle violations (" + cyclesByBreakingPoints.size + " of the allowed "
@@ -32,7 +34,7 @@ object ADPAnalysisResultReporter {
       val printWriter = new PrintWriter(cycleDetailsFileName)
       cyclesByBreakingPoints.foreach({ keyVal =>
         printWriter.append("\nExample cycles caused by " + keyVal._1 + "\n")
-        keyVal._2.toList.sortBy(_.toString).foreach(cycle => { printWriter.append(print(cycle) + "\n") })
+        keyVal._2.asScala.toList.sortBy(_.toString).foreach(cycle => printWriter.append(print(cycle) + "\n"))
       })
       printWriter.close()
     }

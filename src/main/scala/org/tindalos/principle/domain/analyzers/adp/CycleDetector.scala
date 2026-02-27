@@ -5,6 +5,8 @@ import org.tindalos.principle.domain.constraints.Constraints
 import org.tindalos.principle.domain.core.packages.PackageReference
 import org.tindalos.principle.domain.core.{Cycle, PackageStructureBuilder}
 
+import scala.collection.JavaConverters._
+
 class CycleDetector(packageStructureBuilder: PackageStructureBuilder) extends Analyzer {
 
   private def toScalaOption[T](javaOptional: java.util.Optional[T]): Option[T] = {
@@ -31,7 +33,8 @@ class CycleDetector(packageStructureBuilder: PackageStructureBuilder) extends An
         sortedByAfferents = sortedByAfferents.filterNot(cyclesInSubgraph.investigatedPackages.contains(_))
       }
 
-      new ADPResult(cycles, input.packageCouplingExpectations().flatMap(pc => toScalaOption(pc.adp())).get)
+      val javaCycles = cycles.map { case (k, v) => k -> v.asJava }.asJava
+      new ADPResult(javaCycles, input.packageCouplingExpectations().flatMap(pc => toScalaOption(pc.adp())).get)
     }
 
     override def isEnabled(expectations: Constraints) = expectations.packageCoupling.flatMap(pc => pc.adp()).isPresent

@@ -11,6 +11,8 @@ import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
 
+import scala.collection.JavaConverters._
+
 class ADPTest {
 
   var plan: AnalysisPlan = null
@@ -26,64 +28,59 @@ class ADPTest {
   def simple() = {
     val result = run("org.tindalos.principletest.cycle.simple")
     val expectedCycle = new Cycle(ref("org.tindalos.principletest.cycle.simple.left"), ref("org.tindalos.principletest.cycle.simple.right"))
-    val expected = Map(ref("org.tindalos.principletest.cycle.simple.left") -> Set(expectedCycle))
+    val expected = Map(ref("org.tindalos.principletest.cycle.simple.left") -> Set(expectedCycle).asJava).asJava
     assertEquals(expected, result)
   }
 
   @Test
   def transitive() = {
-
     val result = run("org.tindalos.principletest.cycle.transitive")
     val expectedCycle = new Cycle(
       ref("org.tindalos.principletest.cycle.transitive.a"),
       ref("org.tindalos.principletest.cycle.transitive.b"),
       ref("org.tindalos.principletest.cycle.transitive.c"))
-    val expected = Map(ref("org.tindalos.principletest.cycle.transitive.a") -> Set(expectedCycle))
+    val expected = Map(ref("org.tindalos.principletest.cycle.transitive.a") -> Set(expectedCycle).asJava).asJava
     assertEquals(expected, result)
   }
   
   @Test
   def transitive2() = {
-
     val result = run("org.tindalos.principletest.cycle.transitive2")
     val expectedCycle = new Cycle(
       ref("org.tindalos.principletest.cycle.transitive2.a"),
       ref("org.tindalos.principletest.cycle.transitive2.b"),
       ref("org.tindalos.principletest.cycle.transitive2.c"))
-    val expected = Map(ref("org.tindalos.principletest.cycle.transitive2.b") -> Set(expectedCycle))
+    val expected = Map(ref("org.tindalos.principletest.cycle.transitive2.b") -> Set(expectedCycle).asJava).asJava
     assertEquals(expected, result)
   }
 
   @Test
   def btwParentAndChild() = {
-
     val result = run("org.tindalos.principletest.cycle.btwparentandchild")
     val expectedCycle = new Cycle(
       ref("org.tindalos.principletest.cycle.btwparentandchild"),
       ref("org.tindalos.principletest.cycle.btwparentandchild.child"))
-    val expected = Map(ref("org.tindalos.principletest.cycle.btwparentandchild") -> Set(expectedCycle))
+    val expected = Map(ref("org.tindalos.principletest.cycle.btwparentandchild") -> Set(expectedCycle).asJava).asJava
     assertEquals(expected, result)
   }
 
   @Test
   def complex1() = {
-
     val result = run("org.tindalos.principletest.cycle.complex1")
     val expectedCycle = new Cycle(
       ref("org.tindalos.principletest.cycle.complex1.left"),
       ref("org.tindalos.principletest.cycle.complex1.right"))
-    val expected = Map(ref("org.tindalos.principletest.cycle.complex1.right") -> Set(expectedCycle))
+    val expected = Map(ref("org.tindalos.principletest.cycle.complex1.right") -> Set(expectedCycle).asJava).asJava
     assertEquals(expected, result)
   }
 
   @Test
   def complex2() = {
-
     val result = run("org.tindalos.principletest.cycle.complex2")
     val expectedCycle = new Cycle(
       ref("org.tindalos.principletest.cycle.complex2.left"),
       ref("org.tindalos.principletest.cycle.complex2.right.right"))
-    val expected = Map(ref("org.tindalos.principletest.cycle.complex2.right.right") -> Set(expectedCycle))
+    val expected = Map(ref("org.tindalos.principletest.cycle.complex2.right.right") -> Set(expectedCycle).asJava).asJava
     assertEquals(expected, result)
   }
 
