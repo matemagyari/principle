@@ -7,7 +7,7 @@ import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsRe
 
 import scala.collection.JavaConverters.asScalaBufferConverter
 
-object ADPViolationsReporter {
+object ADPAnalysisResultReporter {
 
   def report(result: ADPResult):AnalysisResultsReporter.Report = {
     val cyclesByBreakingPoints = result.cyclesByBreakingPoints

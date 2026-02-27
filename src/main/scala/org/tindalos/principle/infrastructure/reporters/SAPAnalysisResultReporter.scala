@@ -4,7 +4,7 @@ import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.analyzers.sap.SAPResult
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
-object SAPViolationsReporter {
+object SAPAnalysisResultReporter {
 
   def report(result: SAPResult):AnalysisResultsReporter.Report = {
     val outlierPackages = result.outlierPackages

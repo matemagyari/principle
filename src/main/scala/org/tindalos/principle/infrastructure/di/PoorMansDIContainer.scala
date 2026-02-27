@@ -65,13 +65,13 @@ object PoorMansDIContainer {
   private def buildReporter(): List[AnalysisResult] => List[(String, Boolean)] = {
 
     AnalysisResultsReporter.buildResultReporter(
-      ADPViolationsReporter.report,
-      LayerViolationsReporter.report,
-      ThirdPartyViolationsReporter.report,
-      SAPViolationsReporter.report,
-      ACDViolationsReporter.report,
-      SubmodulesBlueprintViolationsReporter.report,
-      SDPViolationsReporter.report,
+      ADPAnalysisResultReporter.report,
+      LayerAnalysisResultReporter.report,
+      ThirdPartyAnalysisResultReporter.report,
+      SAPAnalysisResultReporter.report,
+      ACDAnalysisResultReporter.report,
+      SubmodulesBlueprintAnalysisResultReporter.report,
+      SDPAnalysisResultReporter.report,
       PackageCohesionReporter.report
     )
   }

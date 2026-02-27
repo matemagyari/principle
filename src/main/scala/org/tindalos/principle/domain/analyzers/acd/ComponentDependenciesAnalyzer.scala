@@ -25,14 +25,7 @@ class ComponentDependenciesAnalyzer(packageStructureBuilder: PackageStructureBui
       new ComponentDependenciesResult(cumulatedComponentDependency, relevantPackages.length, checkInput.packageCouplingExpectations().get)
     }
 
-    override def isEnabled(expectations: Constraints): Boolean = {
-      if (expectations.packageCoupling().isPresent) {
-        val packageCoupling = expectations.packageCoupling().get()
-        packageCoupling.acd().isPresent ||
-            packageCoupling.racd().isPresent ||
-            packageCoupling.nccd().isPresent
-      } else {
-        false
-      }
-    }
+    override def isEnabled(expectations: Constraints): Boolean =
+      Option(expectations.packageCoupling().orElse(null))
+        .exists(pc => pc.acd().isPresent || pc.racd().isPresent || pc.nccd().isPresent)
 }
