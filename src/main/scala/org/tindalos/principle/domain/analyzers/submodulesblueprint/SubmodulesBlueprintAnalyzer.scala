@@ -1,15 +1,36 @@
 package org.tindalos.principle.domain.analyzers.submodulesblueprint
 
-import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.agentscore.{AnalysisInput, Analyzer}
 import org.tindalos.principle.domain.constraints.Constraints
+import org.tindalos.principle.domain.core.{Package, PackageStructureBuilder}
+import org.tindalos.principle.infrastructure.analyzers.submodulesblueprint.SubmodulesBlueprintProvider
 
 import scala.collection.JavaConverters.asScalaSetConverter
-import scala.collection.immutable.Map
+
+class SubmodulesBuilder(packageStructureBuilder: PackageStructureBuilder,
+                        submodulesBlueprintProvider: SubmodulesBlueprintProvider) {
+  def build(submodulesDefinitionLocation: String, packages: List[Package], basePackageName: String): Set[Submodule] = {
+
+    val submoduleDefinitions = submodulesBlueprintProvider.readSubmoduleDefinitions(basePackageName, submodulesDefinitionLocation)
+    val basePackage = packageStructureBuilder.build(packages, basePackageName)
+
+    import scala.collection.JavaConverters._
+
+    def convert(submoduleDefinition: SubmoduleDefinition): Submodule = {
+      val packages = submoduleDefinition.packages().asScala.map(reference => basePackage.toMap().get(reference) match {
+        case None => throw new InvalidBlueprintDefinitionException("Package does not exist: " + reference)
+        case Some(aPackage) => aPackage
+      })
+      new Submodule(submoduleDefinition.id, packages.toSet, submoduleDefinition.getLegalDependencies.asScala.toSet)
+    }
+    submoduleDefinitions.getDefinitions().asScala.values.map(convert).toSet
+
+  }
+}
 
 object SubmodulesBlueprintAnalyzer {
 
-  def buildInstance(buildSubmodules: (String, List[Package], String) => Set[Submodule]) = new Analyzer {
+  def buildInstance(submodulesBuilder: SubmodulesBuilder) = new Analyzer {
 
     override def isEnabled(designQualityChecks: Constraints) = designQualityChecks.submodulesBlueprint().isPresent
 
@@ -18,7 +39,7 @@ object SubmodulesBlueprintAnalyzer {
       checkInput.submodulesBlueprint().map { submodulesBlueprint ⇒
 
         try {
-          val submodules = buildSubmodules(
+          val submodules = submodulesBuilder.build(
             submodulesBlueprint.location,
             checkInput.packages, checkInput.analysisPlan.basePackage)
 
