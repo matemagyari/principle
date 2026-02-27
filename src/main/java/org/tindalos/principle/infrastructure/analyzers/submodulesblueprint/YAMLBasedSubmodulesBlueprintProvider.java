@@ -18,15 +18,9 @@ import java.util.stream.Collectors;
  * Converts YAML configuration into SubmoduleDefinitions objects that define module
  * structure, packages, and dependencies.
  */
-public class YAMLBasedSubmodulesBlueprintProvider {
+public class YAMLBasedSubmodulesBlueprintProvider implements SubmodulesBlueprintProvider {
 
-    private final String basePackageName;
-
-    public YAMLBasedSubmodulesBlueprintProvider(String basePackageName) {
-        this.basePackageName = basePackageName;
-    }
-
-    public SubmoduleDefinitions readSubmoduleDefinitions(String submodulesDefinitionLocation) {
+    public SubmoduleDefinitions readSubmoduleDefinitions(String basePackageName, String submodulesDefinitionLocation) {
         String yaml = getYAML(submodulesDefinitionLocation);
         Map<String, Object> yamlObject = (Map<String, Object>) new Yaml().load(yaml);
         Map<String, Object> checks = (Map<String, Object>) yamlObject.get("checks");
@@ -34,7 +28,7 @@ public class YAMLBasedSubmodulesBlueprintProvider {
         @SuppressWarnings("unchecked")
         Map<String, Object> modules = (Map<String, Object>) checks.get("modules");
 
-        Map<SubmoduleId, SubmoduleDefinition> submoduleDefinitionMap = buildSubmoduleDefinitions(modules);
+        Map<SubmoduleId, SubmoduleDefinition> submoduleDefinitionMap = buildSubmoduleDefinitions(basePackageName, modules);
         addDependencies(modules, submoduleDefinitionMap);
 
         return new SubmoduleDefinitions(submoduleDefinitionMap);
@@ -73,7 +67,7 @@ public class YAMLBasedSubmodulesBlueprintProvider {
         });
     }
 
-    private Map<SubmoduleId, SubmoduleDefinition> buildSubmoduleDefinitions(Map<String, Object> yamlObject) {
+    private Map<SubmoduleId, SubmoduleDefinition> buildSubmoduleDefinitions(String basePackageName, Map<String, Object> yamlObject) {
         Object definitionsObj = yamlObject.get("module-definitions");
         if (definitionsObj == null) {
             throw new InvalidBlueprintDefinitionException("Submodules not defined!");

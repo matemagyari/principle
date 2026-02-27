@@ -9,7 +9,7 @@ import org.tindalos.principle.domain.analyzers.sap.SAPViolationAnalyzer
 import org.tindalos.principle.domain.analyzers.sdp.SDPViolationAnalyzer
 import org.tindalos.principle.domain.analyzers.structure.Graph.Node
 import org.tindalos.principle.domain.analyzers.structure._
-import org.tindalos.principle.domain.analyzers.submodulesblueprint.{SubmoduleFactory, SubmodulesBlueprintAnalyzer, SubmodulesFactory}
+import org.tindalos.principle.domain.analyzers.submodulesblueprint.{SubmoduleFactory, SubmodulesBlueprintAnalyzer, SubmodulesFactoryBuilder}
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyAnalyzer
 import org.tindalos.principle.domain.core.PackageStructureBuilder
 import org.tindalos.principle.domain.resultprocessing.reporter.{AnalysisResultsReporter, Printer}
@@ -59,12 +59,9 @@ object PoorMansDIContainer {
 
 
   private def buildSubmodulesBlueprintViolationDetector(packageStructureBuilder: PackageStructureBuilder) = {
-    val readSubmoduleDefinitions = (submodulesDefinitionLocation: String, basePackageName: String) => {
-      new YAMLBasedSubmodulesBlueprintProvider(basePackageName).readSubmoduleDefinitions(submodulesDefinitionLocation)
-    }
-    val submodulesFactory = SubmodulesFactory.buildInstance(
+    val submodulesFactory = SubmodulesFactoryBuilder.buildInstance(
       packageStructureBuilder,
-      readSubmoduleDefinitions,
+      new YAMLBasedSubmodulesBlueprintProvider(),
       SubmoduleFactory.buildModules)
     SubmodulesBlueprintAnalyzer.buildInstance(submodulesFactory)
   }

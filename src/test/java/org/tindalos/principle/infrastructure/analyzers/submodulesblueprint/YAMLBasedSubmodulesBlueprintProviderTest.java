@@ -39,7 +39,7 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
             """;
 
         yamlFile = createTempYamlFile(yaml);
-        provider = new YAMLBasedSubmodulesBlueprintProvider("com");
+        provider = new YAMLBasedSubmodulesBlueprintProvider();
     }
 
     private String createTempYamlFile(String content) {
@@ -55,7 +55,7 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
 
     @Test
     public void readSubmoduleDefinitions_validYaml_parsesSuccessfully() {
-        SubmoduleDefinitions result = provider.readSubmoduleDefinitions(yamlFile);
+        SubmoduleDefinitions result = provider.readSubmoduleDefinitions("com", yamlFile);
 
         assertNotNull("SubmoduleDefinitions should not be null", result);
 
@@ -96,7 +96,7 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
 
     @Test(expected = InvalidBlueprintDefinitionException.class)
     public void readSubmoduleDefinitions_missingFile_throwsException() {
-        provider.readSubmoduleDefinitions("src/test/resources/non_existent_file.yaml");
+        provider.readSubmoduleDefinitions("com", "src/test/resources/non_existent_file.yaml");
     }
 
     @Test(expected = InvalidBlueprintDefinitionException.class)
@@ -110,7 +110,7 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
             """;
 
         String yamlFile = createTempYamlFile(yaml);
-        provider.readSubmoduleDefinitions(yamlFile);
+        provider.readSubmoduleDefinitions("com", yamlFile);
     }
 
     @Test(expected = InvalidBlueprintDefinitionException.class)
@@ -125,7 +125,7 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
             """;
 
         String yamlFile = createTempYamlFile(yaml);
-        provider.readSubmoduleDefinitions(yamlFile);
+        provider.readSubmoduleDefinitions("com", yamlFile);
     }
 
     @Test(expected = OverlappingSubmoduleDefinitionsException.class)
@@ -143,7 +143,7 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
             """;
 
         String yamlFile = createTempYamlFile(yaml);
-        provider.readSubmoduleDefinitions(yamlFile);
+        provider.readSubmoduleDefinitions("com", yamlFile);
     }
 }
 
