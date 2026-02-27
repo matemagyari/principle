@@ -59,7 +59,7 @@ object PoorMansDIContainer {
 
 
   private def buildSubmodulesBlueprintViolationDetector(packageStructureBuilder: PackageStructureBuilder) = {
-    SubmodulesBlueprintAnalyzer.buildInstance(new SubmodulesBuilder(packageStructureBuilder,
+    new SubmodulesBlueprintAnalyzer(new SubmodulesBuilder(packageStructureBuilder,
       new YAMLBasedSubmodulesBlueprintProvider()))
   }
 
