@@ -3,13 +3,15 @@ package org.tindalos.principle.infrastructure.reporters
 import org.tindalos.principle.domain.analyzers.layering.{LayerReference, LayerViolationsResult}
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
+import scala.collection.JavaConverters._
+
 object LayerAnalysisResultReporter {
 
   def report(result: LayerViolationsResult):AnalysisResultsReporter.Report = {
-    val layerReferences = result.violations
+    val layerReferences = result.violations.asScala
     val sectionLine = "=============================================================="
     val sb = new StringBuffer("\n" + sectionLine + "\n")
-    sb.append("\tLayering violations (" + layerReferences.length + " of allowed " + result.threshold + " )\t")
+    sb.append("\tLayering violations (" + layerReferences.size + " of allowed " + result.threshold + " )\t")
     sb.append("\n" + sectionLine + "\n")
 
     def layerRefToStr(lr:LayerReference) = lr.referrer + " -> " + lr.referee
@@ -20,6 +22,5 @@ object LayerAnalysisResultReporter {
     sb.toString()
   }
 
-  //override def getType() = classOf[LayerViolationsResult]
 
 }

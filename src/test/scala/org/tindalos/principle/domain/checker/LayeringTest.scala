@@ -2,13 +2,14 @@ package org.tindalos.principle.domain.checker
 
 import org.junit.Assert.assertEquals
 import org.junit._
-import org.tindalos.principle.domain.AnalysisResult
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.analyzers.layering.{LayerReference, LayerViolationsResult}
 import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
+
+import scala.collection.JavaConverters._
 
 class LayeringTest {
 
@@ -25,18 +26,18 @@ class LayeringTest {
   def simple() = {
 
     val result = run("org.tindalos.principletest.layering.simple")
-    val expected = Set(LayerReference("org.tindalos.principletest.layering.simple.domain", "org.tindalos.principletest.layering.simple.app"),
-      LayerReference("org.tindalos.principletest.layering.simple.domain", "org.tindalos.principletest.layering.simple.infrastructure"),
-      LayerReference("org.tindalos.principletest.layering.simple.app", "org.tindalos.principletest.layering.simple.infrastructure"))
-    assertEquals(expected, result.toSet)
+    val expected = Set(new LayerReference("org.tindalos.principletest.layering.simple.domain", "org.tindalos.principletest.layering.simple.app"),
+      new LayerReference("org.tindalos.principletest.layering.simple.domain", "org.tindalos.principletest.layering.simple.infrastructure"),
+      new LayerReference("org.tindalos.principletest.layering.simple.app", "org.tindalos.principletest.layering.simple.infrastructure"))
+    assertEquals(expected, result.asScala.toSet)
   }
 
   @Test
   def deeper() = {
 
     val result = run("org.tindalos.principletest.layering.deeper")
-    val expected = Set(LayerReference("org.tindalos.principletest.layering.deeper.domain.aaa", "org.tindalos.principletest.layering.deeper.app.bbb.ccc"))
-    assertEquals(expected, result.toSet)
+    val expected = Set(new LayerReference("org.tindalos.principletest.layering.deeper.domain.aaa", "org.tindalos.principletest.layering.deeper.app.bbb.ccc"))
+    assertEquals(expected, result.asScala.toSet)
   }
 
   def init(basePackage: String) = {

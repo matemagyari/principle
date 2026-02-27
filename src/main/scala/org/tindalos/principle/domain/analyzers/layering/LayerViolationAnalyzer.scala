@@ -1,27 +1,17 @@
 package org.tindalos.principle.domain.analyzers.layering
 
-import org.tindalos.principle.domain.AnalysisResult
 import org.tindalos.principle.domain.agentscore.{Analyzer, AnalysisInput}
 import org.tindalos.principle.domain.constraints.Constraints
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.core.Package
 
-import scala.collection.JavaConverters.asScalaBufferConverter
-
-case class LayerReference(referrer:String, referee:String)
-
-case class LayerViolationsResult(
-    violations: List[LayerReference],
-    threshold: Int) extends AnalysisResult {
-
-  override def constraintViolated() = violations.length > threshold
-}
+import scala.collection.JavaConverters._
 
 object LayerViolationAnalyzer extends Analyzer {
 
   override def analyze(checkInput: AnalysisInput): LayerViolationsResult = {
     val layerReferences = findViolations(checkInput.packages, checkInput.analysisPlan)
-    new LayerViolationsResult(layerReferences, checkInput.layeringExpectations().violationThreshold)
+    new LayerViolationsResult(layerReferences.asJava, checkInput.layeringExpectations().violationThreshold)
   }
 
   override def isEnabled(expectations: Constraints) = expectations.layering != null
@@ -38,7 +28,7 @@ object LayerViolationAnalyzer extends Analyzer {
             if referencedPackage.startsWith(configuration.basePackage);
          referencedLayer <- layers.slice(0, layers.indexOf(layer.get))
             if referencedPackage.startsWith(referencedLayer)
-    ) yield LayerReference(aPackage.reference.name, referencedPackage.name)
+    ) yield new LayerReference(aPackage.reference.name, referencedPackage.name)
   }
 
 }
