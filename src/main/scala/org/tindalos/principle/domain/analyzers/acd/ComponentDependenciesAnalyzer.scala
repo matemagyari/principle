@@ -2,14 +2,11 @@ package org.tindalos.principle.domain.analyzers.acd
 
 import org.tindalos.principle.domain.agentscore.{AnalysisInput, Analyzer}
 import org.tindalos.principle.domain.constraints.Constraints
-import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.core.PackageStructureBuilder
 
-object ACDAgent {
-  
-  def buildAgent(packageStructureBuilder: PackageStructureBuilder) = new Analyzer {
+class ComponentDependenciesAnalyzer(packageStructureBuilder: PackageStructureBuilder) extends Analyzer {
 
-    override def analyze(checkInput: AnalysisInput): ACDResult = {
+    override def analyze(checkInput: AnalysisInput): ComponentDependenciesResult = {
 
       val basePackage = packageStructureBuilder.build(checkInput.packages, checkInput.analysisPlan.basePackage)
 
@@ -25,7 +22,7 @@ object ACDAgent {
         }
 
       //todo - remove .get
-      new ACDResult(cumulatedComponentDependency, relevantPackages.length, checkInput.packageCouplingExpectations().get)
+      new ComponentDependenciesResult(cumulatedComponentDependency, relevantPackages.length, checkInput.packageCouplingExpectations().get)
     }
 
     override def isEnabled(expectations: Constraints) = {
@@ -38,5 +35,4 @@ object ACDAgent {
         false
       }
     }
-  }
 }

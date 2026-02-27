@@ -19,7 +19,7 @@ case class LayerViolationsResult(
 
 object LayerViolationAnalyzer extends Analyzer {
 
-  override def analyze(checkInput: AnalysisInput) = {
+  override def analyze(checkInput: AnalysisInput): LayerViolationsResult = {
     val layerReferences = findViolations(checkInput.packages, checkInput.analysisPlan)
     new LayerViolationsResult(layerReferences, checkInput.layeringExpectations().violationThreshold)
   }

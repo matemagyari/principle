@@ -2,7 +2,7 @@ package org.tindalos.principle.infrastructure.di
 
 import org.tindalos.principle.app.{AnalysisPlanValidatorImpl, ApplicationModule}
 import org.tindalos.principle.domain.agentscore.Analyzer
-import org.tindalos.principle.domain.analyzers.acd.ACDAgent
+import org.tindalos.principle.domain.analyzers.acd.ComponentDependenciesAnalyzer
 import org.tindalos.principle.domain.analyzers.adp.CycleDetector
 import org.tindalos.principle.domain.analyzers.layering.LayerViolationAnalyzer
 import org.tindalos.principle.domain.analyzers.sap.SAPViolationAnalyzer
@@ -42,26 +42,24 @@ object PoorMansDIContainer {
     new AnalysisRunnerImpl(analyzers)
   }
 
-  private def createAnalyzers(packageStructureBuilder: PackageStructureBuilder) =
+  private def createAnalyzers(packageStructureBuilder: PackageStructureBuilder) = {
+    val submodulesBlueprintAnalyzer = new SubmodulesBlueprintAnalyzer(new SubmodulesBuilder(packageStructureBuilder,
+      new YAMLBasedSubmodulesBlueprintProvider()))
     List(
       LayerViolationAnalyzer,
       ThirdPartyAnalyzer,
       CycleDetector.buildAgent(packageStructureBuilder),
       SDPViolationAnalyzer,
       SAPViolationAnalyzer,
-      ACDAgent.buildAgent(packageStructureBuilder),
-      buildSubmodulesBlueprintViolationDetector(packageStructureBuilder),
+      new ComponentDependenciesAnalyzer(packageStructureBuilder),
+      submodulesBlueprintAnalyzer,
       PackageCohesionDetector.buildAgent(
         PackageCohesionModule.componentsFromPackages
-      , PackageStructureHints1Finder.makeGroups
-      , Graph.findDetachableSubgraphs
-      , CohesiveGroupsDiscoveryModule.collapseToLimit))
-
-
-  private def buildSubmodulesBlueprintViolationDetector(packageStructureBuilder: PackageStructureBuilder) = {
-    new SubmodulesBlueprintAnalyzer(new SubmodulesBuilder(packageStructureBuilder,
-      new YAMLBasedSubmodulesBlueprintProvider()))
+        , PackageStructureHints1Finder.makeGroups
+        , Graph.findDetachableSubgraphs
+        , CohesiveGroupsDiscoveryModule.collapseToLimit))
   }
+
 
 
   private def buildReporter(): List[AnalysisResult] => List[(String, Boolean)] = {

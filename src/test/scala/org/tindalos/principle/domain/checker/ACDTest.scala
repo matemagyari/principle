@@ -78,7 +78,7 @@ class ACDTest {
     val packageList = packageListProducer.build()
     val result = analysisRunner.run(new AnalysisInput(packageList, Set(), plan))
     assertEquals(1, result.length)
-    result.head.asInstanceOf[ACDResult].acd
+    result.head.asInstanceOf[ComponentDependenciesResult].acd
   }
 
   private def prepareConstraints() = Constraints.builder().packageCoupling(PackageCouplingConstraints.builder().acd(new ACD()).build()).build()

@@ -1,7 +1,7 @@
 package org.tindalos.principle.domain.resultprocessing.reporter
 
 import org.tindalos.principle.domain.AnalysisResult
-import org.tindalos.principle.domain.analyzers.acd.ACDResult
+import org.tindalos.principle.domain.analyzers.acd.ComponentDependenciesResult
 import org.tindalos.principle.domain.analyzers.adp.ADPResult
 import org.tindalos.principle.domain.analyzers.layering.LayerViolationsResult
 import org.tindalos.principle.domain.analyzers.sap.SAPResult
@@ -19,7 +19,7 @@ object AnalysisResultsReporter {
                           reportLayerViolationsResult: LayerViolationsResult => Report,
                           reportThirdPartyViolationsResult: ThirdPartyViolationsResult => Report,
                           reportSAPResult: SAPResult => Report,
-                          reportACDResult: ACDResult => Report,
+                          reportACDResult: ComponentDependenciesResult => Report,
                           reportSubmodulesBlueprintCheckResult: SubmodulesBlueprintAnalysisResult => Report,
                           reportSDPResult: SDPResult => Report,
                           reportCohesionResult: CohesionAnalysisResult => Report) = {
@@ -31,7 +31,7 @@ object AnalysisResultsReporter {
         case cr: ThirdPartyViolationsResult => reportThirdPartyViolationsResult(cr)
         case cr: SDPResult => reportSDPResult(cr)
         case cr: SAPResult => reportSAPResult(cr)
-        case cr: ACDResult => reportACDResult(cr)
+        case cr: ComponentDependenciesResult => reportACDResult(cr)
         case cr: SubmodulesBlueprintAnalysisResult => reportSubmodulesBlueprintCheckResult(cr)
         case cr: CohesionAnalysisResult => reportCohesionResult(cr)
         case _ => throw new RuntimeException("terrible thing - no result type")
