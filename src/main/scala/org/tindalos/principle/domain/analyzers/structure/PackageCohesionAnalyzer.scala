@@ -1,19 +1,16 @@
 package org.tindalos.principle.domain.analyzers.structure
 
-import org.tindalos.principle.domain.AnalysisResult
 import org.tindalos.principle.domain.agentscore.{AnalysisInput, Analyzer}
-import org.tindalos.principle.domain.analyzers.structure.Graph.{SubgraphDecomposition, Peninsula, Node}
+import org.tindalos.principle.domain.analyzers.structure.Graph.{Node, SubgraphDecomposition}
 import org.tindalos.principle.domain.analyzers.structure.PackageCohesionModule.PackageName
 import org.tindalos.principle.domain.analyzers.structure.PackageStructureHints1Finder.GroupingResult
 import org.tindalos.principle.domain.analyzers.structure.Structure.NodeGroup
-import org.tindalos.principle.domain.constraints.{PackageCouplingConstraints, Constraints}
+import org.tindalos.principle.domain.constraints.Constraints
 
-object PackageCohesionDetector {
-  
-  def buildAgent(buildComponents:(PackageName, Set[Node]) => Set[(PackageName, NodeGroup)]
-             , makeStructureHints1: Set[Node] => GroupingResult
-             , findDetachableSubgraphs: Set[Node] => SubgraphDecomposition
-             , collapseToLimit: Set[NodeGroup] => Set[NodeGroup]) = new Analyzer {
+class PackageCohesionAnalyzer(buildComponents:(PackageName, Set[Node]) => Set[(PackageName, NodeGroup)]
+                              , makeStructureHints1: Set[Node] => GroupingResult
+                              , findDetachableSubgraphs: Set[Node] => SubgraphDecomposition
+                              , collapseToLimit: Set[NodeGroup] => Set[NodeGroup]) extends Analyzer {
     
     override def analyze(input: AnalysisInput) = {
 
@@ -32,7 +29,5 @@ object PackageCohesionDetector {
 
     override def isEnabled(expectations: Constraints) =
       expectations.packageCoupling().isPresent && expectations.packageCoupling().get().grouping().isPresent
-  }
-
 
 }

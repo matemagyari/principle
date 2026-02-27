@@ -5,13 +5,11 @@ import org.tindalos.principle.domain.constraints.Constraints
 import org.tindalos.principle.domain.core.packages.PackageReference
 import org.tindalos.principle.domain.core.{Cycle, PackageStructureBuilder}
 
-object CycleDetector {
+class CycleDetector(packageStructureBuilder: PackageStructureBuilder) extends Analyzer {
 
   private def toScalaOption[T](javaOptional: java.util.Optional[T]): Option[T] = {
     if (javaOptional.isPresent) Some(javaOptional.get()) else None
   }
-
-  def buildAgent(packageStructureBuilder: PackageStructureBuilder) = new Analyzer {
 
     override def analyze(input: AnalysisInput) = {
 
@@ -37,5 +35,4 @@ object CycleDetector {
     }
 
     override def isEnabled(expectations: Constraints) = expectations.packageCoupling.flatMap(pc => pc.adp()).isPresent
-  }
 }

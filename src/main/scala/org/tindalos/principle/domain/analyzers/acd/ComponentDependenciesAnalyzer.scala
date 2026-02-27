@@ -25,7 +25,7 @@ class ComponentDependenciesAnalyzer(packageStructureBuilder: PackageStructureBui
       new ComponentDependenciesResult(cumulatedComponentDependency, relevantPackages.length, checkInput.packageCouplingExpectations().get)
     }
 
-    override def isEnabled(expectations: Constraints) = {
+    override def isEnabled(expectations: Constraints): Boolean = {
       if (expectations.packageCoupling().isPresent) {
         val packageCoupling = expectations.packageCoupling().get()
         packageCoupling.acd().isPresent ||

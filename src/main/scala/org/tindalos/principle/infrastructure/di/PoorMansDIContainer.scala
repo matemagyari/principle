@@ -48,12 +48,12 @@ object PoorMansDIContainer {
     List(
       LayerViolationAnalyzer,
       ThirdPartyAnalyzer,
-      CycleDetector.buildAgent(packageStructureBuilder),
+      new CycleDetector(packageStructureBuilder),
       SDPViolationAnalyzer,
       SAPViolationAnalyzer,
       new ComponentDependenciesAnalyzer(packageStructureBuilder),
       submodulesBlueprintAnalyzer,
-      PackageCohesionDetector.buildAgent(
+      new PackageCohesionAnalyzer(
         PackageCohesionModule.componentsFromPackages
         , PackageStructureHints1Finder.makeGroups
         , Graph.findDetachableSubgraphs
