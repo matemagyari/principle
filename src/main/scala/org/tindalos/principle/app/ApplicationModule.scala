@@ -4,8 +4,8 @@ import org.tindalos.principle.domain.{AnalysisResult, AnalysisRunner}
 import org.tindalos.principle.domain.core.{AnalysisPlan, Package}
 import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.analyzers.structure.Graph.Node
-import org.tindalos.principle.domain.resultprocessing.reporter.Printer
-import org.tindalos.principle.infrastructure.{PackageListBuilder, JDependBasedPackageListBuilder}
+import org.tindalos.principle.domain.resultprocessing.reporter.{AnalysisResultsReporter, Printer}
+import org.tindalos.principle.infrastructure.{JDependBasedPackageListBuilder, PackageListBuilder}
 
 /*
 This is the app entry point. Side effects can happen only here in this layer, underneath the code must be pure.
@@ -16,7 +16,7 @@ object ApplicationModule {
                          packageListBuilder: PackageListBuilder,
                          getNodes: String => Set[Node],
                          analysisRunner: AnalysisRunner,
-                         makeReports: List[AnalysisResult] => List[(String, Boolean)],
+                         analysisResultsReporter: AnalysisResultsReporter,
                          printer: Printer) =
 
     (analysisPlan: AnalysisPlan) => {
@@ -36,7 +36,7 @@ object ApplicationModule {
           else
             printer.printInfo(report._1)
 
-        makeReports(analysisResults) foreach printReport
+        analysisResultsReporter.toReports(analysisResults) foreach printReport
 
         val success = !analysisResults.exists(_.constraintViolated())
         new ValidationResult(success, if (success) "" else "Expectations failed")

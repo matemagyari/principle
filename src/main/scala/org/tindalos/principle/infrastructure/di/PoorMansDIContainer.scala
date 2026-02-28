@@ -1,7 +1,6 @@
 package org.tindalos.principle.infrastructure.di
 
 import org.tindalos.principle.app.{AnalysisPlanValidatorImpl, ApplicationModule}
-import org.tindalos.principle.domain.agentscore.Analyzer
 import org.tindalos.principle.domain.analyzers.acd.ComponentDependenciesAnalyzer
 import org.tindalos.principle.domain.analyzers.adp.CycleDetector
 import org.tindalos.principle.domain.analyzers.layering.LayerViolationAnalyzer
@@ -13,7 +12,7 @@ import org.tindalos.principle.domain.analyzers.submodulesblueprint.{SubmodulesBl
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyAnalyzer
 import org.tindalos.principle.domain.core.PackageStructureBuilder
 import org.tindalos.principle.domain.resultprocessing.reporter.{AnalysisResultsReporter, Printer}
-import org.tindalos.principle.domain.{AnalysisResult, AnalysisRunner, AnalysisRunnerImpl}
+import org.tindalos.principle.domain.{AnalysisRunner, AnalysisRunnerImpl}
 import org.tindalos.principle.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider
 import org.tindalos.principle.infrastructure.reporters._
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PlainEnglishPackageCohesionReporter
@@ -27,20 +26,28 @@ object PoorMansDIContainer {
 
     val buildNodesFn:String => Set[Node] = MyJDependRunner.createNodesOfClasses(_)
 
+    val reporter = new AnalysisResultsReporter(
+      new PlainEnglishADPAnalysisResultReporter(),
+      new PlainEnglishLayerAnalysisResultReporter(),
+      new PlainEnglishThirdPartyAnalysisResultReporter(),
+      new PlainEnglishSAPAnalysisResultReporter(),
+      new PlainEnglishComponentDependencyAnalysisResultReporter(),
+      new PlainEnglishSubmodulesBlueprintAnalysisResultReporter(),
+      new PlainEnglishSDPAnalysisResultReporter(),
+      new PlainEnglishPackageCohesionReporter()
+    )
+
     ApplicationModule.buildApplicationFn(
       new AnalysisPlanValidatorImpl,
       new JDependBasedPackageListBuilder(rootPackage),
       buildNodesFn,
       buildAnalysisRunner(),
-      buildReporter(),
+      reporter,
       printer)
   }
 
-  def buildAnalysisRunner(): AnalysisRunner = {
-    val packageStructureBuilder = new PackageStructureBuilderImpl()
-    val analyzers: List[Analyzer] = createAnalyzers(packageStructureBuilder)
-    new AnalysisRunnerImpl(analyzers)
-  }
+  def buildAnalysisRunner(): AnalysisRunner =
+    new AnalysisRunnerImpl(createAnalyzers(new PackageStructureBuilderImpl()))
 
   private def createAnalyzers(packageStructureBuilder: PackageStructureBuilder) = {
     val submodulesBlueprintAnalyzer = new SubmodulesBlueprintAnalyzer(new SubmodulesBuilder(packageStructureBuilder,
@@ -61,18 +68,5 @@ object PoorMansDIContainer {
   }
 
 
-
-  private def buildReporter(): List[AnalysisResult] => List[(String, Boolean)] = {
-    new AnalysisResultsReporter(
-      new PlainEnglishADPAnalysisResultReporter(),
-      new PlainEnglishLayerAnalysisResultReporter(),
-      new PlainEnglishThirdPartyAnalysisResultReporter(),
-      new PlainEnglishSAPAnalysisResultReporter(),
-      new PlainEnglishComponentDependencyAnalysisResultReporter(),
-      new PlainEnglishSubmodulesBlueprintAnalysisResultReporter(),
-      new PlainEnglishSDPAnalysisResultReporter(),
-      new PlainEnglishPackageCohesionReporter()
-    ).toReports
-  }
 
 }
