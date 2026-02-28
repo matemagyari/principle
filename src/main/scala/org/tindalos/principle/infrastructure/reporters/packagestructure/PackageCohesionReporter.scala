@@ -25,31 +25,32 @@ object PackageCohesionReporter {
     " E2 would be the number of edges belonging to the new vertex if the vertices in the group collapsed into one. So all internal edges would disappear and multiple external edges might collapse into each other as well. " +
     "\nThe cohesion measures how much relative decrease in the number of edges would a grouping of a given set of vertices cause. 0.0 means the collapsing wouldn't decrease the number of edges at all, while 1 means would be no edge left."
 
+  def round(d: Double) = BigDecimal(d).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
+}
+
+class PackageCohesionReporter {
 
   def report(result: CohesionAnalysisResult): AnalysisResultsReporter.Report = {
 
-    var fileNames = s"${packageCohesionsFileName}, ${packageStructureHints1FileName}, ${packageStructureHints2FileName}"
+    var fileNames = s"${PackageCohesionReporter.packageCohesionsFileName}, ${PackageCohesionReporter.packageStructureHints1FileName}, ${PackageCohesionReporter.packageStructureHints2FileName}"
 
     ExistingPackageCohesionsFileWriter.writeToFile(result)
     PackageStructureHints1FileWriter.writeToFile(result.groupingResult)
-    
+
     PackageStructureHints2FileWriter.writeToFile(result.subgraphDecomposition)
     if (result.cohesiveNodeGroups.isDefined) {
       CohesiveGroupsFileWriter.writeToFile(result.cohesiveNodeGroups.get)
-      fileNames += s", ${cohesiveGroupsFileName}"
+      fileNames += s", ${PackageCohesionReporter.cohesiveGroupsFileName}"
     }
 
-    val sb = new StringBuffer("\n" + sectionLine + "\n")
+    val sb = new StringBuffer("\n" + PackageCohesionReporter.sectionLine + "\n")
     sb.append("\tPackage Cohesion Analysis\t")
-    sb.append("\n" + sectionLine + "\n")
+    sb.append("\n" + PackageCohesionReporter.sectionLine + "\n")
     sb.append(s"\nFor details check files: ${fileNames} in ${ReportsDirectoryManager.ensureReportsDirectoryExists()}\n\n")
 
-    sb.append(sectionLine + "\n")
+    sb.append(PackageCohesionReporter.sectionLine + "\n")
 
     sb.toString()
   }
-
-  def round(d: Double) = BigDecimal(d).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
-
 
 }

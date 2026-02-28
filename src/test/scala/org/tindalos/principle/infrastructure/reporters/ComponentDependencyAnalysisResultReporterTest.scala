@@ -8,6 +8,7 @@ import org.tindalos.principle.domain.constraints.{PackageCouplingConstraints, RA
 class ComponentDependencyAnalysisResultReporterTest {
 
   private val SEP = "=============================================================="
+  private val reporter = new ComponentDependencyAnalysisResultReporter()
 
   private def buildResult(cumulatedDeps: Int, numComponents: Int,
                           racdThreshold: Option[Double] = None): ComponentDependenciesResult = {
@@ -20,7 +21,7 @@ class ComponentDependencyAnalysisResultReporterTest {
   def noRacdThreshold_reportsDefaultThreshold(): Unit = {
     val result = buildResult(cumulatedDeps = 10, numComponents = 5)
 
-    val report = ComponentDependencyAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""
@@ -37,7 +38,7 @@ class ComponentDependencyAnalysisResultReporterTest {
   def withRacdThreshold_reportsConfiguredThreshold(): Unit = {
     val result = buildResult(cumulatedDeps = 10, numComponents = 5, racdThreshold = Some(0.5))
 
-    val report = ComponentDependencyAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""
@@ -54,7 +55,7 @@ class ComponentDependencyAnalysisResultReporterTest {
   def singleComponent_reportsRacdOfOne(): Unit = {
     val result = buildResult(cumulatedDeps = 1, numComponents = 1)
 
-    val report = ComponentDependencyAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""

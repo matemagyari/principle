@@ -12,12 +12,13 @@ class ThirdPartyAnalysisResultReporterTest {
 
   private val thirdParty = new ThirdParty(Collections.emptyList(), 0)
   private val SEP = "=============================================================="
+  private val reporter = new ThirdPartyAnalysisResultReporter()
 
   @Test
   def noViolations_containsNoViolationsMessage(): Unit = {
     val result = ThirdPartyViolationsResult(Map.empty, thirdParty)
 
-    val report = ThirdPartyAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""
@@ -37,7 +38,7 @@ class ThirdPartyAnalysisResultReporterTest {
     val dependency = new PackageReference("org.apache.commons.io")
     val result = ThirdPartyViolationsResult(Map(referrer -> Set(dependency)), thirdParty)
 
-    val report = ThirdPartyAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""
@@ -58,7 +59,7 @@ class ThirdPartyAnalysisResultReporterTest {
     val dependency = new PackageReference("org.apache.commons.io")
     val result = ThirdPartyViolationsResult(Map(referrer -> Set(dependency)), thirdPartyWith3)
 
-    val report = ThirdPartyAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""
@@ -80,7 +81,7 @@ class ThirdPartyAnalysisResultReporterTest {
     )
     val result = ThirdPartyViolationsResult(violations, thirdParty)
 
-    val report = ThirdPartyAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""
@@ -106,7 +107,7 @@ class ThirdPartyAnalysisResultReporterTest {
     )
     val result = ThirdPartyViolationsResult(violations, thirdParty)
 
-    val report = ThirdPartyAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""

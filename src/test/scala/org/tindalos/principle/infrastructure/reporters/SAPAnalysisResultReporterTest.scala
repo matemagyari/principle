@@ -11,6 +11,7 @@ class SAPAnalysisResultReporterTest {
 
   private val SEP = "=============================================================="
   private val sap = new SAP(0, 0.25)
+  private val reporter = new SAPAnalysisResultReporter()
 
   private def testPackage(name: String, distance: Float): Package = {
     val m = new PackageMetrics(0, 0, 0, 0, distance)
@@ -26,7 +27,7 @@ class SAPAnalysisResultReporterTest {
   def noViolations_reportsNoViolations(): Unit = {
     val result = SAPResult(List.empty, sap)
 
-    val report = SAPAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""
@@ -44,7 +45,7 @@ class SAPAnalysisResultReporterTest {
     val pkg = testPackage("com.example.domain", 0.7f)
     val result = SAPResult(List(pkg), sap)
 
-    val report = SAPAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""
@@ -62,7 +63,7 @@ class SAPAnalysisResultReporterTest {
     val pkg = testPackage("com.example.domain", 0.7f)
     val result = SAPResult(List(pkg), new SAP(3, 0.25))
 
-    val report = SAPAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""
@@ -81,7 +82,7 @@ class SAPAnalysisResultReporterTest {
     val pkg2 = testPackage("com.example.app", 0.5f)
     val result = SAPResult(List(pkg1, pkg2), sap)
 
-    val report = SAPAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""

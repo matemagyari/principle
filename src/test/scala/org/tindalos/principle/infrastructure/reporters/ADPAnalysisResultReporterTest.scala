@@ -14,6 +14,7 @@ class ADPAnalysisResultReporterTest {
 
   private val SEP = "=============================================================="
   private val adp = new ADP(0)
+  private val reporter = new ADPAnalysisResultReporter()
 
   private def ref(name: String) = new PackageReference(name)
 
@@ -21,7 +22,7 @@ class ADPAnalysisResultReporterTest {
   def noViolations_reportsNoViolations(): Unit = {
     val result = new ADPResult(Map.empty[PackageReference, util.Set[Cycle]].asJava, adp)
 
-    val report = ADPAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""
@@ -39,7 +40,7 @@ class ADPAnalysisResultReporterTest {
   def withThreshold_reportsThreshold(): Unit = {
     val result = new ADPResult(Map.empty[PackageReference, util.Set[Cycle]].asJava, new ADP(3))
 
-    val report = ADPAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""
@@ -60,7 +61,7 @@ class ADPAnalysisResultReporterTest {
     val cycles: util.Set[Cycle] = Set(cycle).asJava
     val result = new ADPResult(Map(ref("com.example.a") -> cycles).asJava, adp)
 
-    val report = ADPAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val cycleDetailsFile = s"${ReportsDirectoryManager.reportDirectoryPath}/cycle_details.txt"
     val sp = " "

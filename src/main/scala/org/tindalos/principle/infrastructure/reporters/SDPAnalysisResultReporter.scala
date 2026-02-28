@@ -3,7 +3,7 @@ package org.tindalos.principle.infrastructure.reporters
 import org.tindalos.principle.domain.analyzers.sdp.{SDPViolation, SDPResult}
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
-object SDPAnalysisResultReporter {
+class SDPAnalysisResultReporter {
 
   def report(result: SDPResult):AnalysisResultsReporter.Report = {
     val violations = result.violations

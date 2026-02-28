@@ -10,6 +10,7 @@ class SubmodulesBlueprintAnalysisResultReporterTest {
 
   private val SEP = "=============================================================="
   private val blueprint = new SubmodulesBlueprint("some/path", 0)
+  private val reporter = new SubmodulesBlueprintAnalysisResultReporter()
 
   private def submodule(id: String): Submodule =
     new Submodule(new SubmoduleId(id), Set.empty[Package], Set.empty[SubmoduleId])
@@ -18,7 +19,7 @@ class SubmodulesBlueprintAnalysisResultReporterTest {
   def noViolations_reportsNoViolations(): Unit = {
     val result = SubmodulesBlueprintAnalysisResult(blueprint)
 
-    val report = SubmodulesBlueprintAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""
@@ -36,7 +37,7 @@ class SubmodulesBlueprintAnalysisResultReporterTest {
     val overlap = new Overlap(new SubmoduleId("MOD1"), new SubmoduleId("MOD2"))
     val result = SubmodulesBlueprintAnalysisResult(blueprint, overlaps = Set(overlap))
 
-    val report = SubmodulesBlueprintAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""
@@ -55,7 +56,7 @@ class SubmodulesBlueprintAnalysisResultReporterTest {
     val mod2 = submodule("MOD2")
     val result = SubmodulesBlueprintAnalysisResult(blueprint, illegalDependencies = Map(mod1 -> Set(mod2)))
 
-    val report = SubmodulesBlueprintAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""
@@ -74,7 +75,7 @@ class SubmodulesBlueprintAnalysisResultReporterTest {
     val mod2 = submodule("MOD2")
     val result = SubmodulesBlueprintAnalysisResult(blueprint, missingDependencies = Map(mod1 -> Set(mod2)))
 
-    val report = SubmodulesBlueprintAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""
@@ -98,7 +99,7 @@ class SubmodulesBlueprintAnalysisResultReporterTest {
       missingDependencies = Map(mod1 -> Set(mod3))
     )
 
-    val report = SubmodulesBlueprintAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""

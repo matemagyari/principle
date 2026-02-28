@@ -6,7 +6,7 @@ import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsRe
 
 import scala.collection.JavaConversions._
 
-object SubmodulesBlueprintAnalysisResultReporter {
+class SubmodulesBlueprintAnalysisResultReporter {
 
   def report(result: SubmodulesBlueprintAnalysisResult):AnalysisResultsReporter.Report = {
     val sectionLine = "=============================================================="

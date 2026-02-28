@@ -11,6 +11,7 @@ class SDPAnalysisResultReporterTest {
 
   private val SEP = "=============================================================="
   private val sdp = new SDP(0)
+  private val reporter = new SDPAnalysisResultReporter()
 
   private def testPackage(name: String, instability: Float): Package = {
     val m = new PackageMetrics(0, 0, 0, instability, 0)
@@ -26,7 +27,7 @@ class SDPAnalysisResultReporterTest {
   def noViolations_reportsNoViolations(): Unit = {
     val result = SDPResult(List.empty, sdp)
 
-    val report = SDPAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""
@@ -45,7 +46,7 @@ class SDPAnalysisResultReporterTest {
     val dependee = testPackage("com.example.domain", 0.3f)
     val result = SDPResult(List(SDPViolation(depender, dependee)), sdp)
 
-    val report = SDPAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val sp = " "
     val expected =
@@ -66,7 +67,7 @@ class SDPAnalysisResultReporterTest {
     val dependee = testPackage("com.example.domain", 0.3f)
     val result = SDPResult(List(SDPViolation(depender, dependee)), new SDP(3))
 
-    val report = SDPAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val sp = " "
     val expected =
@@ -88,7 +89,7 @@ class SDPAnalysisResultReporterTest {
     val pkg3 = testPackage("com.example.infrastructure", 0.5f)
     val result = SDPResult(List(SDPViolation(pkg1, pkg2), SDPViolation(pkg3, pkg2)), sdp)
 
-    val report = SDPAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val sp = " "
     val expected =

@@ -9,7 +9,7 @@ import scala.collection.JavaConverters.asScalaBufferConverter
 
 import scala.collection.JavaConverters._
 
-object ADPAnalysisResultReporter {
+class ADPAnalysisResultReporter {
 
   def report(result: ADPResult):AnalysisResultsReporter.Report = {
     val cyclesByBreakingPoints = result.cyclesByBreakingPoints.asScala

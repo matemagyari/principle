@@ -5,7 +5,7 @@ import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsRe
 
 import scala.collection.JavaConverters._
 
-object LayerAnalysisResultReporter {
+class LayerAnalysisResultReporter {
 
   def report(result: LayerViolationsResult):AnalysisResultsReporter.Report = {
     val layerReferences = result.violations.asScala

@@ -9,12 +9,13 @@ import scala.collection.JavaConverters._
 class LayerAnalysisResultReporterTest {
 
   private val SEP = "=============================================================="
+  private val reporter = new LayerAnalysisResultReporter()
 
   @Test
   def noViolations_reportsNoViolations(): Unit = {
     val result = new LayerViolationsResult(List.empty[LayerReference].asJava, 0)
 
-    val report = LayerAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""
@@ -32,7 +33,7 @@ class LayerAnalysisResultReporterTest {
     val violation = new LayerReference("com.example.domain", "com.example.infrastructure")
     val result = new LayerViolationsResult(List(violation).asJava, 0)
 
-    val report = LayerAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""
@@ -50,7 +51,7 @@ class LayerAnalysisResultReporterTest {
     val violation = new LayerReference("com.example.domain", "com.example.infrastructure")
     val result = new LayerViolationsResult(List(violation).asJava, 3)
 
-    val report = LayerAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""
@@ -72,7 +73,7 @@ class LayerAnalysisResultReporterTest {
     )
     val result = new LayerViolationsResult(violations.asJava, 0)
 
-    val report = LayerAnalysisResultReporter.report(result)
+    val report = reporter.report(result)
 
     val expected =
       s"""
