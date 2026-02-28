@@ -95,4 +95,29 @@ class ThirdPartyAnalysisResultReporterTest {
          |""".stripMargin
     assertEquals(expected, report)
   }
+
+  @Test
+  def twoReferrersOneWithTwoDependencies_allListedInReport(): Unit = {
+    val violations = List(
+      (new PackageReference("com.example.app"), new PackageReference("org.apache.commons.io")),
+      (new PackageReference("com.example.app"), new PackageReference("org.apache.commons.lang3")),
+      (new PackageReference("com.example.domain"), new PackageReference("org.apache.commons.io"))
+    )
+    val result = ThirdPartyViolationsResult(violations, thirdParty)
+
+    val report = ThirdPartyAnalysisResultReporter.report(result)
+
+    val expected =
+      s"""
+         |$SEP
+         |
+         |Third party violations (3 of allowed 0 )\t
+         |$SEP
+         |com.example.app refers to org.apache.commons.io
+         |com.example.app refers to org.apache.commons.lang3
+         |com.example.domain refers to org.apache.commons.io
+         |$SEP
+         |""".stripMargin
+    assertEquals(expected, report)
+  }
 }
