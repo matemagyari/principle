@@ -11,12 +11,11 @@ import java.util.Collections
 class ThirdPartyAnalysisResultReporterTest {
 
   private val thirdParty = new ThirdParty(Collections.emptyList(), 0)
-
   private val SEP = "=============================================================="
 
   @Test
   def noViolations_containsNoViolationsMessage(): Unit = {
-    val result = ThirdPartyViolationsResult(List.empty, thirdParty)
+    val result = ThirdPartyViolationsResult(Map.empty, thirdParty)
 
     val report = ThirdPartyAnalysisResultReporter.report(result)
 
@@ -36,7 +35,7 @@ class ThirdPartyAnalysisResultReporterTest {
   def withViolation_containsReferrerAndDependency(): Unit = {
     val referrer = new PackageReference("com.example.app")
     val dependency = new PackageReference("org.apache.commons.io")
-    val result = ThirdPartyViolationsResult(List((referrer, dependency)), thirdParty)
+    val result = ThirdPartyViolationsResult(Map(referrer -> Set(dependency)), thirdParty)
 
     val report = ThirdPartyAnalysisResultReporter.report(result)
 
@@ -57,7 +56,7 @@ class ThirdPartyAnalysisResultReporterTest {
     val thirdPartyWith3 = new ThirdParty(Collections.emptyList(), 3)
     val referrer = new PackageReference("com.example.app")
     val dependency = new PackageReference("org.apache.commons.io")
-    val result = ThirdPartyViolationsResult(List((referrer, dependency)), thirdPartyWith3)
+    val result = ThirdPartyViolationsResult(Map(referrer -> Set(dependency)), thirdPartyWith3)
 
     val report = ThirdPartyAnalysisResultReporter.report(result)
 
@@ -75,9 +74,9 @@ class ThirdPartyAnalysisResultReporterTest {
 
   @Test
   def multipleViolations_allListedInReport(): Unit = {
-    val violations = List(
-      (new PackageReference("com.example.app"), new PackageReference("org.apache.commons.io")),
-      (new PackageReference("com.example.domain"), new PackageReference("org.apache.commons.lang3"))
+    val violations = Map(
+      new PackageReference("com.example.app") -> Set(new PackageReference("org.apache.commons.io")),
+      new PackageReference("com.example.domain") -> Set(new PackageReference("org.apache.commons.lang3"))
     )
     val result = ThirdPartyViolationsResult(violations, thirdParty)
 
@@ -98,10 +97,12 @@ class ThirdPartyAnalysisResultReporterTest {
 
   @Test
   def twoReferrersOneWithTwoDependencies_allListedInReport(): Unit = {
-    val violations = List(
-      (new PackageReference("com.example.app"), new PackageReference("org.apache.commons.io")),
-      (new PackageReference("com.example.app"), new PackageReference("org.apache.commons.lang3")),
-      (new PackageReference("com.example.domain"), new PackageReference("org.apache.commons.io"))
+    val violations = Map(
+      new PackageReference("com.example.app") -> Set(
+        new PackageReference("org.apache.commons.io"),
+        new PackageReference("org.apache.commons.lang3")
+      ),
+      new PackageReference("com.example.domain") -> Set(new PackageReference("org.apache.commons.io"))
     )
     val result = ThirdPartyViolationsResult(violations, thirdParty)
 

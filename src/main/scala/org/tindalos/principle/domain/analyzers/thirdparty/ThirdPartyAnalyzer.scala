@@ -15,7 +15,7 @@ object ThirdPartyAnalyzer extends Analyzer {
         .map { thirdParty ⇒
 
           val barriers = thirdParty.barriers.asScala.toList
-          val violations =
+          val violationsList =
             if (barriers.isEmpty)
               List[(PackageReference, PackageReference)]()
             else {
@@ -30,9 +30,11 @@ object ThirdPartyAnalyzer extends Analyzer {
               ) yield (aPackage.reference, referencedPackage)
             }
 
+          val violations = violationsList.groupBy(_._1).map { case (k, vs) => k -> vs.map(_._2).toSet }
+
           ThirdPartyViolationsResult(violations, thirdParty)
         }
-        .getOrElse(ThirdPartyViolationsResult(List.empty, null))
+        .getOrElse(ThirdPartyViolationsResult(Map.empty, null))
 
   private def allowedComponentsForLayer(
       layers: List[String],

@@ -28,9 +28,9 @@ class ThirdPartyTest {
     val thirdParty = new ThirdParty(barriers, 0)
 
     val result = run("org.tindalos.principletest.thirdparty.simple",thirdParty).asInstanceOf[ThirdPartyViolationsResult]
-    val expected = Set((new PackageReference("org.tindalos.principletest.thirdparty.simple.domain")
-      , new PackageReference("org.apache.commons.lang3")))
-    assertEquals(expected, result.violations.toSet)
+    val expected = Map(new PackageReference("org.tindalos.principletest.thirdparty.simple.domain") ->
+      Set(new PackageReference("org.apache.commons.lang3")))
+    assertEquals(expected, result.violations)
   }
 
   @Test
@@ -41,7 +41,7 @@ class ThirdPartyTest {
 
     val result = run("org.tindalos.principletest.thirdparty.simple2",thirdParty).asInstanceOf[ThirdPartyViolationsResult]
 
-    assertTrue(result.violations.toSet.isEmpty)
+    assertTrue(result.violations.isEmpty)
   }
 
 
@@ -53,10 +53,9 @@ class ThirdPartyTest {
 
     val result = run("org.tindalos.principletest.thirdparty.simple2",thirdParty).asInstanceOf[ThirdPartyViolationsResult]
 
-    val expected = Set((new PackageReference("org.tindalos.principletest.thirdparty.simple2.app")
-      , new PackageReference("org.apache.commons.io")))
-
-    assertEquals(expected, result.violations.toSet)
+    val expected = Map(new PackageReference("org.tindalos.principletest.thirdparty.simple2.app") ->
+      Set(new PackageReference("org.apache.commons.io")))
+    assertEquals(expected, result.violations)
   }
 
 
