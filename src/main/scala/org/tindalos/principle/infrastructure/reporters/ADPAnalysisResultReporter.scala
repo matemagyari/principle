@@ -27,10 +27,10 @@ object ADPAnalysisResultReporter {
       sb.append("The cycles could be broken up refactoring the following packages: \n\n")
 
       cyclesByBreakingPoints.foreach(keyVal => sb.append(keyVal._1 + " (" + keyVal._2.size + ")\n"))
-      
+
       val cycleDetailsFileName = ReportsDirectoryManager.reportDirectoryPath + "/cycle_details.txt"
       sb.append(s"\nFor details check file: ${cycleDetailsFileName} \n\n")
-      
+
       val printWriter = new PrintWriter(cycleDetailsFileName)
       cyclesByBreakingPoints.foreach({ keyVal =>
         printWriter.append("\nExample cycles caused by " + keyVal._1 + "\n")
