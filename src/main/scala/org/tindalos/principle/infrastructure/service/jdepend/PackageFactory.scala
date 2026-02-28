@@ -8,18 +8,18 @@ import scala.collection.immutable.List
 
 class PackageFactory(rootPackage: String) {
 
-  def isRelevant(javaPackage: JavaPackage) = javaPackage.getName().startsWith(rootPackage)
+  def isRelevant(javaPackage: JavaPackage): Boolean = javaPackage.getName().startsWith(rootPackage)
 
   def transform(javaPackage: JavaPackage): Package = {
     val metrics = calculateMetrics(javaPackage)
     new LazyLoadingJDependBasedPackage(javaPackage, metrics, this, isRelevant)
   }
 
-  def calculateMetrics(jPackage: JavaPackage) =
+  private def calculateMetrics(jPackage: JavaPackage) =
     new PackageMetrics(jPackage.afferentCoupling(), jPackage.efferentCoupling(), jPackage.abstractness(), jPackage.instability(), jPackage.distance())
 
 
-  def buildPackageListFactory(sortByName: List[Package] => List[Package]) =
+  def buildPackageListFactory(sortByName: List[Package] => List[Package]): (String, List[JavaPackage]) => List[Package] =
 
     (rootPackage:String, analyzedPackages: List[JavaPackage]) => {
 

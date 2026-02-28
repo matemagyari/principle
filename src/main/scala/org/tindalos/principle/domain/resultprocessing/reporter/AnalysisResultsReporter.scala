@@ -9,6 +9,19 @@ import org.tindalos.principle.domain.analyzers.sdp.SDPResult
 import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmodulesBlueprintAnalysisResult
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyViolationsResult
+import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter
+import org.tindalos.principle.infrastructure.reporters.{ComponentDependencyAnalysisResultReporter, LayerAnalysisResultReporter, SAPAnalysisResultReporter, SDPAnalysisResultReporter, SubmodulesBlueprintAnalysisResultReporter, ThirdPartyAnalysisResultReporter}
+
+//class AnalysisResultsReporter(
+//                               adpAnalysisResultReporter: ADPAnalysisResultReporter,
+//                               layerAnalysisResultReporter: LayerAnalysisResultReporter,
+//ThirdPartyAnalysisResultReporter,
+//SAPAnalysisResultReporter,
+//ComponentDependencyAnalysisResultReporter,
+//SubmodulesBlueprintAnalysisResultReporter,
+//SDPAnalysisResultReporter,
+//PackageCohesionReporter
+//                             )
 
 //couldn't figure out how to inject reporter functions in a Map
 object AnalysisResultsReporter {

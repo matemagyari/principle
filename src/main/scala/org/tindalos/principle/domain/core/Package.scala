@@ -97,7 +97,7 @@ abstract class Package(val reference: PackageReference) {
     }
   }
 
-  def detectCycles(packageReferences: Map[PackageReference, Package]) =
+  def detectCycles(packageReferences: Map[PackageReference, Package]): CyclesInSubgraph =
     detectCyclesOnThePathFromHere(TraversedPackages.empty(), CyclesInSubgraph.empty(), packageReferences)
 
   // it dies if there are cycles
@@ -135,7 +135,7 @@ abstract class Package(val reference: PackageReference) {
       val cycleCandidateEndingHere = findCycleCandidateEndingHere(traversedPackages)
       if (cycleCandidateEndingHere.isDefined) {
         if (isValid(cycleCandidateEndingHere.get)) {
-          val list: java.util.List[PackageReference] = cycleCandidateEndingHere.get.asJava
+          val list: java.util.List[PackageReference] = cycleCandidateEndingHere.getOrElse(List.empty).asJava
           foundCycles.add(new Cycle(list))
         }
       } else {

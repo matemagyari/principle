@@ -11,6 +11,7 @@ import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
 
+import java.util
 import scala.collection.JavaConverters._
 
 class ADPTest {
@@ -88,7 +89,7 @@ class ADPTest {
     plan = new AnalysisPlan(checks, basePackage)
   }
 
-  private def run(basePackage: String) = {
+  private def run(basePackage: String): util.Map[PackageReference, util.Set[Cycle]] = {
     init(basePackage)
     val packageListProducer = new JDependBasedPackageListBuilder(basePackage)
     val packageList = packageListProducer.build()

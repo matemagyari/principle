@@ -27,7 +27,7 @@ class CycleDetector(packageStructureBuilder: PackageStructureBuilder) extends An
         sortedByAfferents = sortedByAfferents.filterNot(_ equals basePackage)
       }
 
-      while (!sortedByAfferents.isEmpty) {
+      while (sortedByAfferents.nonEmpty) {
         val cyclesInSubgraph = sortedByAfferents.head.detectCycles(references)
         cycles = cyclesInSubgraph.mergeBreakingPoints2(cycles)
         sortedByAfferents = sortedByAfferents.filterNot(cyclesInSubgraph.investigatedPackages.contains(_))

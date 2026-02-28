@@ -1,7 +1,5 @@
 package org.tindalos.principle.infrastructure.service.jdepend
 
-import java.util.Collection
-
 import jdepend.framework.JavaPackage
 import org.tindalos.principle.domain.core.packages.{PackageMetrics, PackageReference}
 import org.tindalos.principle.domain.core.Package
@@ -20,7 +18,7 @@ class LazyLoadingJDependBasedPackage(val javaPackage: JavaPackage, val metrics: 
 
   override def getOwnPackageReferences(): Set[PackageReference] = {
 
-    javaPackage.getEfferents().asInstanceOf[Collection[JavaPackage]]
+    javaPackage.getEfferents()
       .filter(isRelevant(_))
       .map(packageFactory.transform(_).reference)
       .toSet
@@ -28,7 +26,7 @@ class LazyLoadingJDependBasedPackage(val javaPackage: JavaPackage, val metrics: 
 
   override def getOwnExternalPackageReferences() =
 
-    javaPackage.getEfferents().asInstanceOf[Collection[JavaPackage]]
+    javaPackage.getEfferents()
       .filter(p => !isRelevant(p) && isNotValidExternalEfferent(p))
       .map(packageFactory.transform(_).reference)
       .toSet
