@@ -1,9 +1,9 @@
 package org.tindalos.principle.infrastructure.reporters
 
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyViolationsResult
-import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
+import org.tindalos.principle.domain.resultprocessing.reporter.{AnalysisResultsReporter}
 
-class ThirdPartyAnalysisResultReporter {
+class ThirdPartyAnalysisResultReporter extends AnalysisResultReporter[ThirdPartyViolationsResult] {
 
   def report(result: ThirdPartyViolationsResult):AnalysisResultsReporter.Report = {
     val violations = result.violations

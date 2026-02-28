@@ -3,7 +3,7 @@ package org.tindalos.principle.infrastructure.reporters
 import org.tindalos.principle.domain.analyzers.acd.ComponentDependenciesResult
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
-class ComponentDependencyAnalysisResultReporter {
+class ComponentDependencyAnalysisResultReporter extends AnalysisResultReporter[ComponentDependenciesResult] {
 
   def report(result: ComponentDependenciesResult): AnalysisResultsReporter.Report = {
     val sectionLine = "=============================================================="

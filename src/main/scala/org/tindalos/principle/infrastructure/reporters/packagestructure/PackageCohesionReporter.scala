@@ -28,7 +28,9 @@ object PackageCohesionReporter {
   def round(d: Double) = BigDecimal(d).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
 }
 
-class PackageCohesionReporter {
+import org.tindalos.principle.infrastructure.reporters.AnalysisResultReporter
+
+class PackageCohesionReporter extends AnalysisResultReporter[CohesionAnalysisResult] {
 
   def report(result: CohesionAnalysisResult): AnalysisResultsReporter.Report = {
 

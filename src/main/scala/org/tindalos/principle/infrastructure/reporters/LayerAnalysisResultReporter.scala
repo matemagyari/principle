@@ -1,11 +1,11 @@
 package org.tindalos.principle.infrastructure.reporters
 
 import org.tindalos.principle.domain.analyzers.layering.{LayerReference, LayerViolationsResult}
-import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
+import org.tindalos.principle.domain.resultprocessing.reporter.{AnalysisResultsReporter}
 
 import scala.collection.JavaConverters._
 
-class LayerAnalysisResultReporter {
+class LayerAnalysisResultReporter extends AnalysisResultReporter[LayerViolationsResult] {
 
   def report(result: LayerViolationsResult):AnalysisResultsReporter.Report = {
     val layerReferences = result.violations.asScala
