@@ -69,7 +69,7 @@ object PoorMansDIContainer {
       LayerAnalysisResultReporter.report,
       ThirdPartyAnalysisResultReporter.report,
       SAPAnalysisResultReporter.report,
-      ACDAnalysisResultReporter.report,
+      ComponentDependencyAnalysisResultReporter.report,
       SubmodulesBlueprintAnalysisResultReporter.report,
       SDPAnalysisResultReporter.report,
       PackageCohesionReporter.report
