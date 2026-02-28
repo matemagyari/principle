@@ -9,49 +9,39 @@ import org.tindalos.principle.domain.analyzers.sdp.SDPResult
 import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmodulesBlueprintAnalysisResult
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyViolationsResult
+import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter.Report
+import org.tindalos.principle.infrastructure.reporters._
+import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter
 
-//class AnalysisResultsReporter(
-//                               adpAnalysisResultReporter: ADPAnalysisResultReporter,
-//                               layerAnalysisResultReporter: LayerAnalysisResultReporter,
-//ThirdPartyAnalysisResultReporter,
-//SAPAnalysisResultReporter,
-//ComponentDependencyAnalysisResultReporter,
-//SubmodulesBlueprintAnalysisResultReporter,
-//SDPAnalysisResultReporter,
-//PackageCohesionReporter
-//                             )
-
-//couldn't figure out how to inject reporter functions in a Map
 object AnalysisResultsReporter {
-
   type Report = String
+}
+class AnalysisResultsReporter(
+    adpReporter: ADPAnalysisResultReporter,
+    layerReporter: LayerAnalysisResultReporter,
+    thirdPartyReporter: ThirdPartyAnalysisResultReporter,
+    sapReporter: SAPAnalysisResultReporter,
+    componentDependencyReporter: ComponentDependencyAnalysisResultReporter,
+    submodulesBlueprintReporter: SubmodulesBlueprintAnalysisResultReporter,
+    sdpReporter: SDPAnalysisResultReporter,
+    cohesionReporter: PackageCohesionReporter) {
 
-  def buildResultReporter(reportAdpResult: ADPResult => Report,
-                          reportLayerViolationsResult: LayerViolationsResult => Report,
-                          reportThirdPartyViolationsResult: ThirdPartyViolationsResult => Report,
-                          reportSAPResult: SAPResult => Report,
-                          reportACDResult: ComponentDependenciesResult => Report,
-                          reportSubmodulesBlueprintCheckResult: SubmodulesBlueprintAnalysisResult => Report,
-                          reportSDPResult: SDPResult => Report,
-                          reportCohesionResult: CohesionAnalysisResult => Report) = {
 
-    def toReport(result: AnalysisResult) = {
-      val report = result match {
-        case cr: ADPResult => reportAdpResult(cr)
-        case cr: LayerViolationsResult => reportLayerViolationsResult(cr)
-        case cr: ThirdPartyViolationsResult => reportThirdPartyViolationsResult(cr)
-        case cr: SDPResult => reportSDPResult(cr)
-        case cr: SAPResult => reportSAPResult(cr)
-        case cr: ComponentDependenciesResult => reportACDResult(cr)
-        case cr: SubmodulesBlueprintAnalysisResult => reportSubmodulesBlueprintCheckResult(cr)
-        case cr: CohesionAnalysisResult => reportCohesionResult(cr)
-        case _ => throw new RuntimeException("terrible thing - no result type")
-      }
-      (report, result.constraintViolated())
+  def toReports(results: List[AnalysisResult]): List[(String, Boolean)] = results.map(toReport)
+
+  private def toReport(result: AnalysisResult): (Report, Boolean) = {
+    val report = result match {
+      case cr: ADPResult                       => adpReporter.report(cr)
+      case cr: LayerViolationsResult           => layerReporter.report(cr)
+      case cr: ThirdPartyViolationsResult      => thirdPartyReporter.report(cr)
+      case cr: SDPResult                       => sdpReporter.report(cr)
+      case cr: SAPResult                       => sapReporter.report(cr)
+      case cr: ComponentDependenciesResult     => componentDependencyReporter.report(cr)
+      case cr: SubmodulesBlueprintAnalysisResult => submodulesBlueprintReporter.report(cr)
+      case cr: CohesionAnalysisResult          => cohesionReporter.report(cr)
+      case _ => throw new RuntimeException("terrible thing - no result type")
     }
-
-    (results: List[AnalysisResult]) => results map toReport
+    (report, result.constraintViolated())
   }
-
 
 }
