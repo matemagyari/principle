@@ -7,18 +7,20 @@ import org.tindalos.principle.domain.constraints.ThirdParty
 import org.tindalos.principle.domain.core.packages.PackageReference
 
 import java.util.Collections
+import scala.collection.JavaConverters._
 
 class ThirdPartyAnalysisResultReporterTest {
 
   private val thirdParty = new ThirdParty(Collections.emptyList(), 0)
   private val SEP = "=============================================================="
-  private val reporter = new ThirdPartyAnalysisResultReporter()
+  private val reporter = new PlainEnglishThirdPartyAnalysisResultReporter()
+
+  private def result(violations: Map[PackageReference, Set[PackageReference]], tp: ThirdParty = thirdParty) =
+    new ThirdPartyViolationsResult(violations.map { case (k, v) => k -> v.asJava }.asJava, tp)
 
   @Test
   def noViolations_containsNoViolationsMessage(): Unit = {
-    val result = ThirdPartyViolationsResult(Map.empty, thirdParty)
-
-    val report = reporter.report(result)
+    val report = reporter.report(result(Map.empty))
 
     val expected =
       s"""
@@ -36,9 +38,7 @@ class ThirdPartyAnalysisResultReporterTest {
   def withViolation_containsReferrerAndDependency(): Unit = {
     val referrer = new PackageReference("com.example.app")
     val dependency = new PackageReference("org.apache.commons.io")
-    val result = ThirdPartyViolationsResult(Map(referrer -> Set(dependency)), thirdParty)
-
-    val report = reporter.report(result)
+    val report = reporter.report(result(Map(referrer -> Set(dependency))))
 
     val expected =
       s"""
@@ -57,9 +57,7 @@ class ThirdPartyAnalysisResultReporterTest {
     val thirdPartyWith3 = new ThirdParty(Collections.emptyList(), 3)
     val referrer = new PackageReference("com.example.app")
     val dependency = new PackageReference("org.apache.commons.io")
-    val result = ThirdPartyViolationsResult(Map(referrer -> Set(dependency)), thirdPartyWith3)
-
-    val report = reporter.report(result)
+    val report = reporter.report(result(Map(referrer -> Set(dependency)), thirdPartyWith3))
 
     val expected =
       s"""
@@ -79,9 +77,7 @@ class ThirdPartyAnalysisResultReporterTest {
       new PackageReference("com.example.app") -> Set(new PackageReference("org.apache.commons.io")),
       new PackageReference("com.example.domain") -> Set(new PackageReference("org.apache.commons.lang3"))
     )
-    val result = ThirdPartyViolationsResult(violations, thirdParty)
-
-    val report = reporter.report(result)
+    val report = reporter.report(result(violations))
 
     val expected =
       s"""
@@ -105,9 +101,7 @@ class ThirdPartyAnalysisResultReporterTest {
       ),
       new PackageReference("com.example.domain") -> Set(new PackageReference("org.apache.commons.io"))
     )
-    val result = ThirdPartyViolationsResult(violations, thirdParty)
-
-    val report = reporter.report(result)
+    val report = reporter.report(result(violations))
 
     val expected =
       s"""

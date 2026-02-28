@@ -11,7 +11,7 @@ class SDPAnalysisResultReporterTest {
 
   private val SEP = "=============================================================="
   private val sdp = new SDP(0)
-  private val reporter = new SDPAnalysisResultReporter()
+  private val reporter = new PlainEnglishSDPAnalysisResultReporter()
 
   private def testPackage(name: String, instability: Float): Package = {
     val m = new PackageMetrics(0, 0, 0, instability, 0)

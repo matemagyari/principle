@@ -14,7 +14,7 @@ class ADPAnalysisResultReporterTest {
 
   private val SEP = "=============================================================="
   private val adp = new ADP(0)
-  private val reporter = new ADPAnalysisResultReporter()
+  private val reporter = new PlainEnglishADPAnalysisResultReporter()
 
   private def ref(name: String) = new PackageReference(name)
 

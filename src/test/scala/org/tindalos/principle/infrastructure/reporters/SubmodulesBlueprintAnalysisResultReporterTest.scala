@@ -10,7 +10,7 @@ class SubmodulesBlueprintAnalysisResultReporterTest {
 
   private val SEP = "=============================================================="
   private val blueprint = new SubmodulesBlueprint("some/path", 0)
-  private val reporter = new SubmodulesBlueprintAnalysisResultReporter()
+  private val reporter = new PlainEnglishSubmodulesBlueprintAnalysisResultReporter()
 
   private def submodule(id: String): Submodule =
     new Submodule(new SubmoduleId(id), Set.empty[Package], Set.empty[SubmoduleId])

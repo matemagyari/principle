@@ -5,7 +5,7 @@ import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.constraints.{Barrier, Constraints}
 import org.tindalos.principle.domain.core.packages.PackageReference
 
-import scala.collection.JavaConverters.asScalaBufferConverter
+import scala.collection.JavaConverters._
 
 object ThirdPartyAnalyzer extends Analyzer {
 
@@ -31,10 +31,11 @@ object ThirdPartyAnalyzer extends Analyzer {
             }
 
           val violations = violationsList.groupBy(_._1).map { case (k, vs) => k -> vs.map(_._2).toSet }
+          val javaViolations = violations.map { case (k, v) => k -> v.asJava }.asJava
 
-          ThirdPartyViolationsResult(violations, thirdParty)
+          new ThirdPartyViolationsResult(javaViolations, thirdParty)
         }
-        .getOrElse(ThirdPartyViolationsResult(Map.empty, null))
+        .getOrElse(new ThirdPartyViolationsResult(java.util.Collections.emptyMap(), null))
 
   private def allowedComponentsForLayer(
       layers: List[String],

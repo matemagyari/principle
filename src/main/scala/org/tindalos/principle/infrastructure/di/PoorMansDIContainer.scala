@@ -16,7 +16,7 @@ import org.tindalos.principle.domain.resultprocessing.reporter.{AnalysisResultsR
 import org.tindalos.principle.domain.{AnalysisResult, AnalysisRunner, AnalysisRunnerImpl}
 import org.tindalos.principle.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider
 import org.tindalos.principle.infrastructure.reporters._
-import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter
+import org.tindalos.principle.infrastructure.reporters.packagestructure.{PackageCohesionReporter, PlainEnglishPackageCohesionReporter}
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
 import org.tindalos.principle.infrastructure.{JDependBasedPackageListBuilder, PackageStructureBuilderImpl}
 
@@ -65,14 +65,14 @@ object PoorMansDIContainer {
   private def buildReporter(): List[AnalysisResult] => List[(String, Boolean)] = {
 
     AnalysisResultsReporter.buildResultReporter(
-      new ADPAnalysisResultReporter().report,
-      new LayerAnalysisResultReporter().report,
-      new ThirdPartyAnalysisResultReporter().report,
-      new SAPAnalysisResultReporter().report,
-      new ComponentDependencyAnalysisResultReporter().report,
-      new SubmodulesBlueprintAnalysisResultReporter().report,
-      new SDPAnalysisResultReporter().report,
-      new PackageCohesionReporter().report
+      new PlainEnglishADPAnalysisResultReporter().report,
+      new PlainEnglishLayerAnalysisResultReporter().report,
+      new PlainEnglishThirdPartyAnalysisResultReporter().report,
+      new PlainEnglishSAPAnalysisResultReporter().report,
+      new PlainEnglishComponentDependencyAnalysisResultReporter().report,
+      new PlainEnglishSubmodulesBlueprintAnalysisResultReporter().report,
+      new PlainEnglishSDPAnalysisResultReporter().report,
+      new PlainEnglishPackageCohesionReporter().report
     )
   }
 

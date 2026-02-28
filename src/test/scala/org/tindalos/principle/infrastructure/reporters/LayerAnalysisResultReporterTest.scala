@@ -9,7 +9,7 @@ import scala.collection.JavaConverters._
 class LayerAnalysisResultReporterTest {
 
   private val SEP = "=============================================================="
-  private val reporter = new LayerAnalysisResultReporter()
+  private val reporter = new PlainEnglishLayerAnalysisResultReporter()
 
   @Test
   def noViolations_reportsNoViolations(): Unit = {

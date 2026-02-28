@@ -11,6 +11,7 @@ import org.tindalos.principle.domain.core.packages.PackageReference
 import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder
 
 import java.util.Collections
+import scala.collection.JavaConverters._
 
 class ThirdPartyTest {
 
@@ -29,7 +30,7 @@ class ThirdPartyTest {
 
     val result = run("org.tindalos.principletest.thirdparty.simple",thirdParty).asInstanceOf[ThirdPartyViolationsResult]
     val expected = Map(new PackageReference("org.tindalos.principletest.thirdparty.simple.domain") ->
-      Set(new PackageReference("org.apache.commons.lang3")))
+      Set(new PackageReference("org.apache.commons.lang3")).asJava).asJava
     assertEquals(expected, result.violations)
   }
 
@@ -54,7 +55,7 @@ class ThirdPartyTest {
     val result = run("org.tindalos.principletest.thirdparty.simple2",thirdParty).asInstanceOf[ThirdPartyViolationsResult]
 
     val expected = Map(new PackageReference("org.tindalos.principletest.thirdparty.simple2.app") ->
-      Set(new PackageReference("org.apache.commons.io")))
+      Set(new PackageReference("org.apache.commons.io")).asJava).asJava
     assertEquals(expected, result.violations)
   }
 

@@ -8,7 +8,7 @@ import org.tindalos.principle.domain.constraints.{PackageCouplingConstraints, RA
 class ComponentDependencyAnalysisResultReporterTest {
 
   private val SEP = "=============================================================="
-  private val reporter = new ComponentDependencyAnalysisResultReporter()
+  private val reporter = new PlainEnglishComponentDependencyAnalysisResultReporter()
 
   private def buildResult(cumulatedDeps: Int, numComponents: Int,
                           racdThreshold: Option[Double] = None): ComponentDependenciesResult = {

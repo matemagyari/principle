@@ -10,7 +10,7 @@ import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 class PackageCohesionReporterTest {
 
   private val SEP = "================================================================================"
-  private val reporter = new PackageCohesionReporter()
+  private val reporter = new PlainEnglishPackageCohesionReporter()
 
   private val emptyResult = CohesionAnalysisResult(
     packages = Set.empty,

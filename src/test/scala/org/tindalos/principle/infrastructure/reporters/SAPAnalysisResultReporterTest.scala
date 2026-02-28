@@ -11,7 +11,7 @@ class SAPAnalysisResultReporterTest {
 
   private val SEP = "=============================================================="
   private val sap = new SAP(0, 0.25)
-  private val reporter = new SAPAnalysisResultReporter()
+  private val reporter = new PlainEnglishSAPAnalysisResultReporter()
 
   private def testPackage(name: String, distance: Float): Package = {
     val m = new PackageMetrics(0, 0, 0, 0, distance)
