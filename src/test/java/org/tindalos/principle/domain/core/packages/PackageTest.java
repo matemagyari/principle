@@ -1,5 +1,6 @@
-package org.tindalos.principle.domain.core;
+package org.tindalos.principle.domain.core.packages;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,8 +10,8 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
-import org.tindalos.principle.domain.core.packages.PackageMetrics;
-import org.tindalos.principle.domain.core.packages.PackageReference;
+import org.tindalos.principle.domain.core.Package;
+import org.tindalos.principle.domain.core.PackageStructureBuildingException;
 import scala.collection.JavaConverters;
 
 public class PackageTest {
@@ -29,15 +30,15 @@ public class PackageTest {
     @Test
     public void testPackageCreation() {
         TestPackage pkg = new TestPackage("org.example.test");
-        assertEquals("org.example.test", pkg.reference().name());
+        Assert.assertEquals("org.example.test", pkg.reference().name());
         assertFalse(pkg.isUnreferred());
-        assertEquals(0, pkg.subPackages().size());
+        Assert.assertEquals(0, pkg.subPackages().size());
     }
 
     @Test
     public void testPackageCreationWithString() {
         TestPackage pkg = new TestPackage("org.example.test");
-        assertEquals("org.example.test", pkg.reference().name());
+        Assert.assertEquals("org.example.test", pkg.reference().name());
     }
 
     @Test
@@ -47,7 +48,7 @@ public class PackageTest {
 
         parent.insert(child);
 
-        assertEquals(1, parent.subPackages().size());
+        Assert.assertEquals(1, parent.subPackages().size());
         assertTrue(parent.subPackages().contains(child));
     }
 
@@ -58,8 +59,8 @@ public class PackageTest {
 
         parent.insert(grandchild);
 
-        assertEquals(1, parent.subPackages().size());
-        Package child = parent.subPackages().head();
+        Assert.assertEquals(1, parent.subPackages().size());
+        org.tindalos.principle.domain.core.Package child = parent.subPackages().head();
         assertEquals("org.example.child", child.reference().name());
         assertEquals(1, child.subPackages().size());
         assertEquals("org.example.child.grandchild", child.subPackages().head().reference().name());
@@ -88,7 +89,7 @@ public class PackageTest {
         parent.insert(child1);
         parent.insert(child2);
 
-        Map<PackageReference, Package> map = JavaConverters.mapAsJavaMap(parent.toMap());
+        Map<PackageReference, org.tindalos.principle.domain.core.Package> map = JavaConverters.mapAsJavaMap(parent.toMap());
 
         assertEquals(3, map.size());
         assertTrue(map.containsKey(parent.reference()));
@@ -130,7 +131,7 @@ public class PackageTest {
         TestPackage pkg = new TestPackage("org.example");
         pkg.setMetrics(new PackageMetrics(2, 3, 0.5f, 0.6f, 0.1f));
 
-        assertEquals(0.6f, pkg.instability(), 0.001);
+        Assert.assertEquals(0.6f, pkg.instability(), 0.001);
     }
 
     @Test
@@ -138,7 +139,7 @@ public class PackageTest {
         TestPackage pkg = new TestPackage("org.example");
         pkg.setMetrics(new PackageMetrics(2, 3, 0.5f, 0.6f, 0.1f));
 
-        assertEquals(0.1f, pkg.distance(), 0.001);
+        Assert.assertEquals(0.1f, pkg.distance(), 0.001);
     }
 
     @Test
@@ -205,12 +206,12 @@ public class PackageTest {
 
         root.insert(level3);
 
-        assertEquals(1, root.subPackages().size());
-        Package org_example = root.subPackages().head();
+        Assert.assertEquals(1, root.subPackages().size());
+        org.tindalos.principle.domain.core.Package org_example = root.subPackages().head();
         assertEquals("org.example", org_example.reference().name());
 
         assertEquals(1, org_example.subPackages().size());
-        Package org_example_app = org_example.subPackages().head();
+        org.tindalos.principle.domain.core.Package org_example_app = org_example.subPackages().head();
         assertEquals("org.example.app", org_example_app.reference().name());
 
         assertEquals(1, org_example_app.subPackages().size());
