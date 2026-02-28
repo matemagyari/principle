@@ -11,11 +11,11 @@ object SubmodulesBlueprintAnalysisResultReporter {
   def report(result: SubmodulesBlueprintAnalysisResult):AnalysisResultsReporter.Report = {
     val sectionLine = "=============================================================="
     val sb = new StringBuffer("\n" + sectionLine + "\n")
-    sb.append("\tSubmodules Blueprint violations (" + result.violationsNumber + " of the allowed " + result.threshold + ")\t")
+    sb.append("Submodules Blueprint violations (" + result.violationsNumber + " of the allowed " + result.threshold + ")")
     sb.append("\n" + sectionLine + "\n")
 
     if (!result.overlaps.isEmpty) {
-      sb.append("Invalid blueprint definition, overlapping modulules")
+      sb.append("Invalid blueprint definition, overlapping modules" + "\n")
     } else if (result.violationsNumber == 0) {
       sb.append("No violations.\n")
     } else {
@@ -30,8 +30,8 @@ object SubmodulesBlueprintAnalysisResultReporter {
     sb.toString()
   }
 
-  private def printIllegalDependencies(submodule: Submodule, dependencies: Set[Submodule]) = "Illegal dependency: " + submodule + " -> " + dependencies
+  private def printIllegalDependencies(submodule: Submodule, dependencies: Set[Submodule]) = "Illegal dependency: " + submodule.id.value() + " -> " + dependencies.map(_.id.value())
 
-  private def printMissingDependencies(submodule: Submodule, dependencies: Set[Submodule]) = "Missing dependency: " + submodule + " -> " + dependencies
+  private def printMissingDependencies(submodule: Submodule, dependencies: Set[Submodule]) = "Missing dependency: " + submodule.id.value() + " -> " + dependencies.map(_.id.value())
 
 }
