@@ -21,7 +21,7 @@ class ApplicationModuleTest {
 
     val runAnalysis = PoorMansDIContainer.buildAnalyzer(basePackage, new ConsolePrinter())
 
-    val checks = Constraints.builder()
+    val constraints = Constraints.builder()
       .layering(layering())
       .packageCoupling(PackageCouplingConstraints.builder()
         .sap(new SAP(0, 0.3d))
@@ -33,7 +33,7 @@ class ApplicationModuleTest {
       .build()
 
     try {
-      runAnalysis(new AnalysisPlan(checks, basePackage))
+      runAnalysis(new AnalysisPlan(constraints, basePackage))
     } catch {
       case ex: ThresholdTrespassedException =>
       case ex: Exception =>

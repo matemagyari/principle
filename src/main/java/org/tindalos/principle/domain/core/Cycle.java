@@ -22,6 +22,9 @@ public class Cycle implements Comparable<Cycle> {
         if (references == null || references.size() < 2) {
             throw new DomainException("Invalid cycle " + references);
         }
+        if (new HashSet<>(references).size() < references.size()) {
+            throw new DomainException("Cycle contains duplicate references: " + references);
+        }
         this.references = List.copyOf(references);
         this.end = references.getLast();
     }
