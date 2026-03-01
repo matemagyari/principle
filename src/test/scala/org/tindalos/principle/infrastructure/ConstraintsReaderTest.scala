@@ -33,7 +33,8 @@ class ConstraintsReaderTest {
         |    cyclic_dependencies_threshold: 0
         |""".stripMargin)
 
-    val (_, rootPackage) = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Some(path))
+    val rootPackage = plan.basePackage()
 
     assertEquals("com.example", rootPackage)
   }
@@ -51,7 +52,8 @@ class ConstraintsReaderTest {
         |    cyclic_dependencies_threshold: 0
         |""".stripMargin)
 
-    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Some(path))
+    val constraints = plan.constraints()
 
     val layering = constraints.layering()
     assertEquals(java.util.List.of("infrastructure", "app", "domain"), layering.layers())
@@ -70,7 +72,8 @@ class ConstraintsReaderTest {
         |    cyclic_dependencies_threshold: 0
         |""".stripMargin)
 
-    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Some(path))
+    val constraints = plan.constraints()
 
     assertEquals(0, constraints.layering().violationThreshold())
   }
@@ -85,7 +88,8 @@ class ConstraintsReaderTest {
         |    cyclic_dependencies_threshold: 0
         |""".stripMargin)
 
-    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Some(path))
+    val constraints = plan.constraints()
 
     assertNull(constraints.layering())
   }
@@ -100,7 +104,8 @@ class ConstraintsReaderTest {
         |    cyclic_dependencies_threshold: 5
         |""".stripMargin)
 
-    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Some(path))
+    val constraints = plan.constraints()
 
     val adp = constraints.packageCoupling().get().adp()
     assertTrue(adp.isPresent)
@@ -117,7 +122,8 @@ class ConstraintsReaderTest {
         |    acd_threshold: 0.35
         |""".stripMargin)
 
-    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Some(path))
+    val constraints = plan.constraints()
 
     val racd = constraints.packageCoupling().get().racd()
     assertTrue(racd.isPresent)
@@ -135,7 +141,8 @@ class ConstraintsReaderTest {
         |structure_analysis_enabled: true
         |""".stripMargin)
 
-    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Some(path))
+    val constraints = plan.constraints()
 
     assertTrue(constraints.packageCoupling().get().grouping().isPresent)
   }
@@ -151,7 +158,8 @@ class ConstraintsReaderTest {
         |structure_analysis_enabled: false
         |""".stripMargin)
 
-    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Some(path))
+    val constraints = plan.constraints()
 
     assertFalse(constraints.packageCoupling().get().grouping().isPresent)
   }
@@ -173,7 +181,8 @@ class ConstraintsReaderTest {
         |    violation_threshold: 3
         |""".stripMargin)
 
-    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Some(path))
+    val constraints = plan.constraints()
 
     val tp = constraints.thirdParty()
     assertTrue(tp.isPresent)
@@ -193,7 +202,8 @@ class ConstraintsReaderTest {
         |    cyclic_dependencies_threshold: 0
         |""".stripMargin)
 
-    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Some(path))
+    val constraints = plan.constraints()
 
     assertFalse(constraints.thirdParty().isPresent)
   }
@@ -210,7 +220,8 @@ class ConstraintsReaderTest {
         |    violation_threshold: 1
         |""".stripMargin)
 
-    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Some(path))
+    val constraints = plan.constraints()
 
     assertTrue(constraints.submodulesBlueprint().isPresent)
     assertEquals(1, constraints.submodulesBlueprint().get().violationThreshold())
@@ -226,7 +237,8 @@ class ConstraintsReaderTest {
         |    cyclic_dependencies_threshold: 0
         |""".stripMargin)
 
-    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Some(path))
+    val constraints = plan.constraints()
 
     assertFalse(constraints.submodulesBlueprint().isPresent)
   }
@@ -258,7 +270,9 @@ class ConstraintsReaderTest {
         |structure_analysis_enabled: true
         |""".stripMargin)
 
-    val (constraints, rootPackage) = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Some(path))
+    val constraints = plan.constraints()
+    val rootPackage = plan.basePackage()
 
     assertEquals("org.example.myapp", rootPackage)
     assertNotNull(constraints.layering())

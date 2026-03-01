@@ -5,6 +5,7 @@ import java.io.File
 import org.apache.commons.io.FileUtils
 import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.domain.constraints.exception.InvalidConfigurationException
+import org.tindalos.principle.domain.core.AnalysisPlan
 import org.yaml.snakeyaml.Yaml
 
 import scala.collection.JavaConverters._
@@ -15,12 +16,12 @@ object ConstraintsReader {
   //under src/main/resources
   private val defaultFileLocation = "/principle.yml"
 
-  def readFromFile(fileLocation: Option[String]): (Constraints, String) = {
+  def readFromFile(fileLocation: Option[String]): AnalysisPlan = {
     val location = fileLocation.getOrElse(defaultFileLocation)
     fromYaml(readYAML(location), location)
   }
 
-  private def fromYaml(yamlText: String, fileLocation: String): (Constraints, String) = {
+  private def fromYaml(yamlText: String, fileLocation: String): AnalysisPlan = {
     val yamlObject =
       new Yaml().load(yamlText).asInstanceOf[java.util.Map[String, Object]].asScala.toMap
 
@@ -67,7 +68,7 @@ object ConstraintsReader {
         modules.map(sm => java.util.Optional.of(sm)).getOrElse(java.util.Optional.empty()))
     }
 
-    (checks, rootPackage)
+    new AnalysisPlan(checks, rootPackage)
   }
 
   private def toThirdParty(structure: Map[String, Object]): ThirdParty = {
