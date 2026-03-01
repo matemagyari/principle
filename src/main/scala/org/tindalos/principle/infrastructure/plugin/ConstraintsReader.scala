@@ -8,10 +8,9 @@ import org.tindalos.principle.domain.constraints.exception.InvalidConfigurationE
 import org.yaml.snakeyaml.Yaml
 
 import scala.collection.JavaConverters._
-import scala.collection.immutable.Seq
 
 
-object ChecksReader {
+object ConstraintsReader {
 
   //under src/main/resources
   private val defaultFileLocation = "/principle.yml"

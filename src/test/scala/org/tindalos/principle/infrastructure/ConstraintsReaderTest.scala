@@ -1,21 +1,272 @@
 package org.tindalos.principle.infrastructure
 
-import org.junit.Test
-import org.scalatest.{Matchers, FlatSpec}
-import org.tindalos.principle.infrastructure.plugin.ChecksReader
+import org.junit.Assert._
+import org.junit.{After, Test}
+import org.tindalos.principle.domain.constraints.exception.InvalidConfigurationException
+import org.tindalos.principle.infrastructure.plugin.ConstraintsReader
 
-class ConstraintsReaderTest
-//    extends FlatSpec with Matchers
-{
+import java.io.File
+import java.nio.file.Files
 
-  //  "ChecksReader" should "read up configuration file" in {
-  //    ChecksReader.readFromFile()
-  //  }
+class ConstraintsReaderTest {
 
-  @Test
-  def readerTest() {
-    val r = ChecksReader.readFromFile(Some("principle.yml"))
-    println(s"RESULT: $r")
+  private var tempFile: File = _
+
+  @After
+  def cleanup(): Unit = {
+    if (tempFile != null && tempFile.exists()) tempFile.delete()
   }
 
+  private def writeTempYaml(content: String): String = {
+    tempFile = Files.createTempFile("principle_test_", ".yml").toFile
+    Files.writeString(tempFile.toPath, content)
+    tempFile.getAbsolutePath
+  }
+
+  @Test
+  def rootPackage_isParsed(): Unit = {
+    val path = writeTempYaml(
+      """
+        |root_package: com.example
+        |checks:
+        |  package_coupling:
+        |    cyclic_dependencies_threshold: 0
+        |""".stripMargin)
+
+    val (_, rootPackage) = ConstraintsReader.readFromFile(Some(path))
+
+    assertEquals("com.example", rootPackage)
+  }
+
+  @Test
+  def layering_isParsed(): Unit = {
+    val path = writeTempYaml(
+      """
+        |root_package: com.example
+        |checks:
+        |  layering:
+        |    layers: [infrastructure, app, domain]
+        |    violation_threshold: 2
+        |  package_coupling:
+        |    cyclic_dependencies_threshold: 0
+        |""".stripMargin)
+
+    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+
+    val layering = constraints.layering()
+    assertEquals(java.util.List.of("infrastructure", "app", "domain"), layering.layers())
+    assertEquals(2, layering.violationThreshold())
+  }
+
+  @Test
+  def layering_defaultThresholdIsZero(): Unit = {
+    val path = writeTempYaml(
+      """
+        |root_package: com.example
+        |checks:
+        |  layering:
+        |    layers: [a, b]
+        |  package_coupling:
+        |    cyclic_dependencies_threshold: 0
+        |""".stripMargin)
+
+    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+
+    assertEquals(0, constraints.layering().violationThreshold())
+  }
+
+  @Test
+  def noLayering_layeringIsNull(): Unit = {
+    val path = writeTempYaml(
+      """
+        |root_package: com.example
+        |checks:
+        |  package_coupling:
+        |    cyclic_dependencies_threshold: 0
+        |""".stripMargin)
+
+    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+
+    assertNull(constraints.layering())
+  }
+
+  @Test
+  def packageCoupling_adpThreshold_isParsed(): Unit = {
+    val path = writeTempYaml(
+      """
+        |root_package: com.example
+        |checks:
+        |  package_coupling:
+        |    cyclic_dependencies_threshold: 5
+        |""".stripMargin)
+
+    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+
+    val adp = constraints.packageCoupling().get().adp()
+    assertTrue(adp.isPresent)
+    assertEquals(5, adp.get().violationThreshold())
+  }
+
+  @Test
+  def packageCoupling_racdThreshold_isParsed(): Unit = {
+    val path = writeTempYaml(
+      """
+        |root_package: com.example
+        |checks:
+        |  package_coupling:
+        |    acd_threshold: 0.35
+        |""".stripMargin)
+
+    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+
+    val racd = constraints.packageCoupling().get().racd()
+    assertTrue(racd.isPresent)
+    assertEquals(0.35, racd.get().threshold(), 0.001)
+  }
+
+  @Test
+  def structureAnalysisEnabled_groupingIsPresent(): Unit = {
+    val path = writeTempYaml(
+      """
+        |root_package: com.example
+        |checks:
+        |  package_coupling:
+        |    cyclic_dependencies_threshold: 0
+        |structure_analysis_enabled: true
+        |""".stripMargin)
+
+    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+
+    assertTrue(constraints.packageCoupling().get().grouping().isPresent)
+  }
+
+  @Test
+  def structureAnalysisDisabled_groupingIsAbsent(): Unit = {
+    val path = writeTempYaml(
+      """
+        |root_package: com.example
+        |checks:
+        |  package_coupling:
+        |    cyclic_dependencies_threshold: 0
+        |structure_analysis_enabled: false
+        |""".stripMargin)
+
+    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+
+    assertFalse(constraints.packageCoupling().get().grouping().isPresent)
+  }
+
+  @Test
+  def thirdPartyRestrictions_isParsed(): Unit = {
+    val path = writeTempYaml(
+      """
+        |root_package: com.example
+        |checks:
+        |  package_coupling:
+        |    cyclic_dependencies_threshold: 0
+        |  third_party_restrictions:
+        |    allowed_libraries:
+        |      - layer: infrastructure
+        |        libraries: [org.apache.commons, com.google]
+        |      - layer: app
+        |        libraries: [org.apache.commons]
+        |    violation_threshold: 3
+        |""".stripMargin)
+
+    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+
+    val tp = constraints.thirdParty()
+    assertTrue(tp.isPresent)
+    assertEquals(3, tp.get().violationThreshold())
+    assertEquals(2, tp.get().barriers().size())
+    assertEquals("infrastructure", tp.get().barriers().get(0).layer())
+    assertEquals(java.util.List.of("org.apache.commons", "com.google"), tp.get().barriers().get(0).components())
+  }
+
+  @Test
+  def noThirdPartyRestrictions_thirdPartyIsAbsent(): Unit = {
+    val path = writeTempYaml(
+      """
+        |root_package: com.example
+        |checks:
+        |  package_coupling:
+        |    cyclic_dependencies_threshold: 0
+        |""".stripMargin)
+
+    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+
+    assertFalse(constraints.thirdParty().isPresent)
+  }
+
+  @Test
+  def modules_isParsed(): Unit = {
+    val path = writeTempYaml(
+      """
+        |root_package: com.example
+        |checks:
+        |  package_coupling:
+        |    cyclic_dependencies_threshold: 0
+        |  modules:
+        |    violation_threshold: 1
+        |""".stripMargin)
+
+    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+
+    assertTrue(constraints.submodulesBlueprint().isPresent)
+    assertEquals(1, constraints.submodulesBlueprint().get().violationThreshold())
+  }
+
+  @Test
+  def noModules_submodulesBlueprintIsAbsent(): Unit = {
+    val path = writeTempYaml(
+      """
+        |root_package: com.example
+        |checks:
+        |  package_coupling:
+        |    cyclic_dependencies_threshold: 0
+        |""".stripMargin)
+
+    val (constraints, _) = ConstraintsReader.readFromFile(Some(path))
+
+    assertFalse(constraints.submodulesBlueprint().isPresent)
+  }
+
+  @Test(expected = classOf[InvalidConfigurationException])
+  def missingFile_throwsInvalidConfigurationException(): Unit = {
+    ConstraintsReader.readFromFile(Some("/non/existent/path/principle.yml"))
+  }
+
+  @Test
+  def fullConfig_isParsedCorrectly(): Unit = {
+    val path = writeTempYaml(
+      """
+        |root_package: org.example.myapp
+        |checks:
+        |  layering:
+        |    layers: [infrastructure, app, domain]
+        |    violation_threshold: 0
+        |  third_party_restrictions:
+        |    allowed_libraries:
+        |      - layer: infrastructure
+        |        libraries: [org.apache.commons]
+        |    violation_threshold: 0
+        |  package_coupling:
+        |    cyclic_dependencies_threshold: 0
+        |    acd_threshold: 0.5
+        |  modules:
+        |    violation_threshold: 0
+        |structure_analysis_enabled: true
+        |""".stripMargin)
+
+    val (constraints, rootPackage) = ConstraintsReader.readFromFile(Some(path))
+
+    assertEquals("org.example.myapp", rootPackage)
+    assertNotNull(constraints.layering())
+    assertTrue(constraints.thirdParty().isPresent)
+    assertTrue(constraints.packageCoupling().isPresent)
+    assertTrue(constraints.packageCoupling().get().adp().isPresent)
+    assertTrue(constraints.packageCoupling().get().racd().isPresent)
+    assertTrue(constraints.packageCoupling().get().grouping().isPresent)
+    assertTrue(constraints.submodulesBlueprint().isPresent)
+  }
 }

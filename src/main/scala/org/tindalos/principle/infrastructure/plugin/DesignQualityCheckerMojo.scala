@@ -32,7 +32,7 @@ class DesignQualityCheckerMojo extends AbstractMojo {
 
     val (checks, rootPackage) = {
       val cl = if (location == null) None else Some(location)
-      ChecksReader.readFromFile(cl)
+      ConstraintsReader.readFromFile(cl)
     }
 
     val analyse = PoorMansDIContainer.buildAnalyzer(rootPackage, new LogPrinter(getLog()))
