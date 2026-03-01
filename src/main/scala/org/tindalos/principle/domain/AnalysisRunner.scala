@@ -1,7 +1,7 @@
 package org.tindalos.principle.domain
 
 import org.tindalos.principle.domain.analyzers.Analyzer
-import org.tindalos.principle.domain.core.logging.TheLogger
+import org.tindalos.principle.utils.logging.TheLogger
 
 trait AnalysisRunner {
   def run(input: AnalysisInput): List[AnalysisResult]

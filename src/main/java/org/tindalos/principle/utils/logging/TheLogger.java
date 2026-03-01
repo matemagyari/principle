@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.core.logging;
+package org.tindalos.principle.utils.logging;
 
 /**
  * Singleton logger instance for the application.

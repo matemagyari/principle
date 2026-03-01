@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.core.logging;
+package org.tindalos.principle.utils.logging;
 
 /**
  * Simple logging interface for architecture analysis output.

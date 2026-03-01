@@ -5,10 +5,10 @@ import java.io.IOException
 import org.apache.maven.plugin.{AbstractMojo, MojoFailureException}
 import org.apache.maven.plugins.annotations.{Mojo, Parameter}
 import org.tindalos.principle.domain.core.AnalysisPlan
-import org.tindalos.principle.domain.core.logging.{SimpleLogger, TheLogger}
 import org.tindalos.principle.domain.constraints.exception.InvalidConfigurationException
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
+import org.tindalos.principle.utils.logging.{SimpleLogger, TheLogger}
 
 @Mojo(name = "check")
 class DesignQualityCheckerMojo extends AbstractMojo {

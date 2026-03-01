@@ -1,7 +1,6 @@
 package org.tindalos.principle.domain.checker
 
-import org.tindalos.principle.domain.core.logging.TheLogger
-import org.tindalos.principle.domain.core.logging.SimpleLogger
+import org.tindalos.principle.utils.logging.{SimpleLogger, TheLogger}
 
 object TestFixture {
 
