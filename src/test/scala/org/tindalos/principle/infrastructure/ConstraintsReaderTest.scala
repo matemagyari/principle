@@ -7,6 +7,7 @@ import org.tindalos.principle.infrastructure.plugin.ConstraintsReader
 
 import java.io.File
 import java.nio.file.Files
+import java.util.Collections
 
 class ConstraintsReaderTest {
 
@@ -190,6 +191,8 @@ class ConstraintsReaderTest {
     assertEquals(2, tp.get().barriers().size())
     assertEquals("infrastructure", tp.get().barriers().get(0).layer())
     assertEquals(java.util.List.of("org.apache.commons", "com.google"), tp.get().barriers().get(0).components())
+    assertEquals("app", tp.get().barriers().get(1).layer())
+    assertEquals(Collections.singletonList("org.apache.commons"), tp.get().barriers().get(1).components())
   }
 
   @Test
