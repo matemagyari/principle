@@ -3,7 +3,7 @@ package org.tindalos.principle
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.core.logging.{SimpleLogger, TheLogger}
 import org.tindalos.principle.domain.constraints._
-import org.tindalos.principle.domain.resultprocessing.reporter.Printer
+import org.tindalos.principle.infrastructure.{ConsolePrinter}
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 
 object ManualPrincipleRunner extends App {
@@ -41,15 +41,5 @@ object ManualPrincipleRunner extends App {
 
   private def layering() = new Layering(java.util.List.of("infrastructure", "app", "domain"), 0)
 
-  class ConsolePrinter extends Printer {
-
-    def printWarning(text: String) = {
-      System.err.println(text)
-    }
-
-    def printInfo(text: String) = {
-      System.out.println(text)
-    }
-  }
 
 }

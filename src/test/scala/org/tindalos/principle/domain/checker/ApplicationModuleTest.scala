@@ -3,8 +3,8 @@ package org.tindalos.principle.domain.checker
 import org.junit.{Assert, Test}
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.constraints._
-import org.tindalos.principle.domain.resultprocessing.reporter.Printer
 import org.tindalos.principle.domain.resultprocessing.thresholdchecker.ThresholdTrespassedException
+import org.tindalos.principle.infrastructure.ConsolePrinter
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 
@@ -48,15 +48,5 @@ class ApplicationModuleTest {
 
   private def layering() = new Layering(java.util.List.of("infrastructure", "app", "domain"), 0)
 
-  private class ConsolePrinter extends Printer {
-
-    def printWarning(text: String) = {
-      System.err.println(text)
-    }
-
-    def printInfo(text: String) = {
-      System.out.println(text)
-    }
-  }
 
 }

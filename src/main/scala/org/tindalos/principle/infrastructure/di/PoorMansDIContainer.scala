@@ -11,8 +11,8 @@ import org.tindalos.principle.domain.analyzers.structure._
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.{SubmodulesBlueprintAnalyzer, SubmodulesBuilder}
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyAnalyzer
 import org.tindalos.principle.domain.core.PackageStructureBuilder
-import org.tindalos.principle.domain.resultprocessing.reporter.{AnalysisResultsReporter, Printer}
-import org.tindalos.principle.domain.{AnalysisRunner, AnalysisRunnerImpl}
+import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
+import org.tindalos.principle.domain.{AnalysisRunner, AnalysisRunnerImpl, Printer}
 import org.tindalos.principle.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider
 import org.tindalos.principle.infrastructure.reporters._
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PlainEnglishPackageCohesionReporter

@@ -1,10 +1,10 @@
 package org.tindalos.principle.app
 
-import org.tindalos.principle.domain.{AnalysisResult, AnalysisRunner}
+import org.tindalos.principle.domain.{AnalysisResult, AnalysisRunner, Printer}
 import org.tindalos.principle.domain.core.{AnalysisPlan, Package}
 import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.analyzers.structure.Graph.Node
-import org.tindalos.principle.domain.resultprocessing.reporter.{AnalysisResultsReporter, Printer}
+import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 import org.tindalos.principle.infrastructure.{JDependBasedPackageListBuilder, PackageListBuilder}
 
 /*
