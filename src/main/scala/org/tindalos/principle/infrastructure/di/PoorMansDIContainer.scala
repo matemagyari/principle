@@ -1,6 +1,7 @@
 package org.tindalos.principle.infrastructure.di
 
 import org.tindalos.principle.app.{AnalysisPlanValidatorImpl, ApplicationModule, Printer}
+import org.tindalos.principle.domain.analyzers.Analyzer
 import org.tindalos.principle.domain.analyzers.acd.ComponentDependenciesAnalyzer
 import org.tindalos.principle.domain.analyzers.adp.CycleDetector
 import org.tindalos.principle.domain.analyzers.layering.LayerViolationAnalyzer
@@ -37,19 +38,22 @@ object PoorMansDIContainer {
       new PlainEnglishPackageCohesionReporter()
     )
 
+    val analysisRunner = buildAnalysisRunner()
+
     ApplicationModule.buildApplicationFn(
       new AnalysisPlanValidatorImpl,
       new JDependBasedPackageListBuilder(rootPackage),
       buildNodesFn,
-      buildAnalysisRunner(),
+      analysisRunner,
       reporter,
       printer)
   }
 
-  def buildAnalysisRunner(): AnalysisRunner =
+  def buildAnalysisRunner(): AnalysisRunner = {
     new AnalysisRunnerImpl(createAnalyzers(new PackageStructureBuilderImpl()))
+  }
 
-  private def createAnalyzers(packageStructureBuilder: PackageStructureBuilder) = {
+  private def createAnalyzers(packageStructureBuilder: PackageStructureBuilder): List[Analyzer] = {
     val submodulesBlueprintAnalyzer = new SubmodulesBlueprintAnalyzer(new SubmodulesBuilder(packageStructureBuilder,
       new YAMLBasedSubmodulesBlueprintProvider()))
     List(

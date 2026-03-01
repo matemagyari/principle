@@ -58,6 +58,68 @@ public class AnalysisPlanValidatorTest {
         assertTrue(result.success());
     }
 
+    @Test
+    public void noThirdParty_isValid() {
+        Constraints expectations = Constraints.builder()
+                .layering(aLayering)
+                .build();
+        AnalysisPlan plan = new AnalysisPlan(expectations, basePackage);
+
+        ValidationResult result = testObj.validate(plan);
+
+        assertTrue(result.success());
+    }
+
+    @Test
+    public void emptyBarriers_isValid() {
+        ValidationResult result = testObj.validate(config(List.of()));
+
+        assertTrue(result.success());
+    }
+
+    @Test
+    public void singleValidBarrier_isValid() {
+        ValidationResult result = testObj.validate(config(List.of(Barrier.of("b"))));
+
+        assertTrue(result.success());
+    }
+
+    @Test
+    public void singleInvalidBarrier_fails() {
+        ValidationResult result = testObj.validate(config(List.of(Barrier.of("z"))));
+
+        assertFalse(result.success());
+    }
+
+    @Test
+    public void allInvalidBarriers_fails() {
+        List<Barrier> barriers = List.of(Barrier.of("x"), Barrier.of("y"), Barrier.of("z"));
+
+        ValidationResult result = testObj.validate(config(barriers));
+
+        assertFalse(result.success());
+    }
+
+    @Test
+    public void wrongOrder_failureMessageMentionsOrder() {
+        List<Barrier> barriers = List.of(Barrier.of("c"), Barrier.of("a"));
+
+        ValidationResult result = testObj.validate(config(barriers));
+
+        assertFalse(result.success());
+        assertTrue(result.message().contains("order"));
+    }
+
+    @Test
+    public void invalidBarrier_failureMessageMentionsInvalidLayer() {
+        List<Barrier> barriers = List.of(Barrier.of("z"));
+
+        ValidationResult result = testObj.validate(config(barriers));
+
+        assertFalse(result.success());
+        assertTrue(result.message().contains("z"));
+    }
+
     private AnalysisPlan config(List<Barrier> barriers) {
         ThirdParty aThirdParty = new ThirdParty(barriers, 0);
         Constraints expectations = Constraints.builder()
