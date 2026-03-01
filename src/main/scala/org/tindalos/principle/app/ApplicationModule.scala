@@ -1,6 +1,6 @@
 package org.tindalos.principle.app
 
-import org.tindalos.principle.domain.{AnalysisInput, AnalysisResult, AnalysisRunner, Printer}
+import org.tindalos.principle.domain.{AnalysisInput, AnalysisResult, AnalysisRunner}
 import org.tindalos.principle.domain.core.{AnalysisPlan, Package}
 import org.tindalos.principle.domain.analyzers.structure.Graph.Node
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter

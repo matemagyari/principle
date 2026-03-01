@@ -1,6 +1,6 @@
 package org.tindalos.principle.infrastructure;
 
-import org.tindalos.principle.domain.Printer;
+import org.tindalos.principle.app.Printer;
 
 public class ConsolePrinter implements Printer {
 

@@ -1,6 +1,6 @@
 package org.tindalos.principle.infrastructure.di
 
-import org.tindalos.principle.app.{AnalysisPlanValidatorImpl, ApplicationModule}
+import org.tindalos.principle.app.{AnalysisPlanValidatorImpl, ApplicationModule, Printer}
 import org.tindalos.principle.domain.analyzers.acd.ComponentDependenciesAnalyzer
 import org.tindalos.principle.domain.analyzers.adp.CycleDetector
 import org.tindalos.principle.domain.analyzers.layering.LayerViolationAnalyzer
@@ -12,7 +12,7 @@ import org.tindalos.principle.domain.analyzers.submodulesblueprint.{SubmodulesBl
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyAnalyzer
 import org.tindalos.principle.domain.core.PackageStructureBuilder
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
-import org.tindalos.principle.domain.{AnalysisRunner, AnalysisRunnerImpl, Printer}
+import org.tindalos.principle.domain.{AnalysisRunner, AnalysisRunnerImpl}
 import org.tindalos.principle.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider
 import org.tindalos.principle.infrastructure.reporters._
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PlainEnglishPackageCohesionReporter
