@@ -1,12 +1,13 @@
 package org.tindalos.principle.infrastructure.reporters
 
+import org.tindalos.principle.app.reporters.ADPAnalysisResultReporter
+
 import java.io.PrintWriter
 import org.tindalos.principle.domain.analyzers.adp.ADPResult
 import org.tindalos.principle.domain.core.Cycle
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
 import scala.collection.JavaConverters.asScalaBufferConverter
-
 import scala.collection.JavaConverters._
 
 class PlainEnglishADPAnalysisResultReporter extends ADPAnalysisResultReporter {

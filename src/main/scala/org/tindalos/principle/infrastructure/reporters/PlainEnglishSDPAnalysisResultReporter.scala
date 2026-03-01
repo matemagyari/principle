@@ -1,6 +1,7 @@
 package org.tindalos.principle.infrastructure.reporters
 
-import org.tindalos.principle.domain.analyzers.sdp.{SDPViolation, SDPResult}
+import org.tindalos.principle.app.reporters.SDPAnalysisResultReporter
+import org.tindalos.principle.domain.analyzers.sdp.{SDPResult, SDPViolation}
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
 class PlainEnglishSDPAnalysisResultReporter extends SDPAnalysisResultReporter {

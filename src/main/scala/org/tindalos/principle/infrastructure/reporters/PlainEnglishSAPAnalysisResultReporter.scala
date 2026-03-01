@@ -1,5 +1,6 @@
 package org.tindalos.principle.infrastructure.reporters
 
+import org.tindalos.principle.app.reporters.SAPAnalysisResultReporter
 import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.analyzers.sap.SAPResult
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter

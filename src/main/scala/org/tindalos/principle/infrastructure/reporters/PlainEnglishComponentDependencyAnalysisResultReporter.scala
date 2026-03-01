@@ -1,5 +1,6 @@
 package org.tindalos.principle.infrastructure.reporters
 
+import org.tindalos.principle.app.reporters.ComponentDependencyAnalysisResultReporter
 import org.tindalos.principle.domain.analyzers.acd.ComponentDependenciesResult
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 

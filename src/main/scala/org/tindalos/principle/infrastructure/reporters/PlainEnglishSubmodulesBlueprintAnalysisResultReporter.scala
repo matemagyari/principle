@@ -1,5 +1,6 @@
 package org.tindalos.principle.infrastructure.reporters
 
+import org.tindalos.principle.app.reporters.SubmodulesBlueprintAnalysisResultReporter
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmodulesBlueprintAnalysisResult
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.Submodule
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter

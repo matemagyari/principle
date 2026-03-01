@@ -1,5 +1,6 @@
 package org.tindalos.principle.domain.resultprocessing.reporter
 
+import org.tindalos.principle.app.reporters.{ADPAnalysisResultReporter, ComponentDependencyAnalysisResultReporter, LayerAnalysisResultReporter, SAPAnalysisResultReporter, SDPAnalysisResultReporter, SubmodulesBlueprintAnalysisResultReporter, ThirdPartyAnalysisResultReporter}
 import org.tindalos.principle.domain.AnalysisResult
 import org.tindalos.principle.domain.analyzers.acd.ComponentDependenciesResult
 import org.tindalos.principle.domain.analyzers.adp.ADPResult

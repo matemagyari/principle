@@ -1,7 +1,8 @@
 package org.tindalos.principle.infrastructure.reporters
 
+import org.tindalos.principle.app.reporters.LayerAnalysisResultReporter
 import org.tindalos.principle.domain.analyzers.layering.{LayerReference, LayerViolationsResult}
-import org.tindalos.principle.domain.resultprocessing.reporter.{AnalysisResultsReporter}
+import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
 import scala.collection.JavaConverters._
 

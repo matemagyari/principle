@@ -1,5 +1,6 @@
 package org.tindalos.principle.infrastructure.reporters
 
+import org.tindalos.principle.app.reporters.ThirdPartyAnalysisResultReporter
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyViolationsResult
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
