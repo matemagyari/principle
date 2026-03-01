@@ -1,6 +1,7 @@
 package org.tindalos.principle.domain.analyzers.thirdparty
 
-import org.tindalos.principle.domain.agentscore.{Analyzer, AnalysisInput}
+import org.tindalos.principle.domain.AnalysisInput
+import org.tindalos.principle.domain.analyzers.Analyzer
 import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.constraints.{Barrier, Constraints}
 import org.tindalos.principle.domain.core.packages.PackageReference

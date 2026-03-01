@@ -1,6 +1,7 @@
 package org.tindalos.principle.domain.analyzers.submodulesblueprint
 
-import org.tindalos.principle.domain.agentscore.{AnalysisInput, Analyzer}
+import org.tindalos.principle.domain.AnalysisInput
+import org.tindalos.principle.domain.analyzers.Analyzer
 import org.tindalos.principle.domain.constraints.Constraints
 import org.tindalos.principle.domain.core.{Package, PackageStructureBuilder}
 import org.tindalos.principle.infrastructure.analyzers.submodulesblueprint.SubmodulesBlueprintProvider

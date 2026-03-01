@@ -1,6 +1,7 @@
 package org.tindalos.principle.domain.analyzers.adp
 
-import org.tindalos.principle.domain.agentscore.{AnalysisInput, Analyzer}
+import org.tindalos.principle.domain.AnalysisInput
+import org.tindalos.principle.domain.analyzers.Analyzer
 import org.tindalos.principle.domain.constraints.Constraints
 import org.tindalos.principle.domain.core.packages.PackageReference
 import org.tindalos.principle.domain.core.{Cycle, PackageStructureBuilder}

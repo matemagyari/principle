@@ -1,3 +1,0 @@
-package org.tindalos.principle.domain.resultprocessing.thresholdchecker
-
-class ThresholdTrespassedException extends RuntimeException

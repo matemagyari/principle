@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain
 
-import org.tindalos.principle.domain.agentscore.{AnalysisInput, Analyzer}
+import org.tindalos.principle.domain.analyzers.Analyzer
 import org.tindalos.principle.domain.core.logging.TheLogger
 
 trait AnalysisRunner {

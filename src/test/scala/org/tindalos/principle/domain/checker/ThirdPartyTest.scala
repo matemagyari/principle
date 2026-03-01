@@ -2,8 +2,8 @@ package org.tindalos.principle.domain.checker
 
 import org.junit.Assert._
 import org.junit._
+import org.tindalos.principle.domain.AnalysisInput
 import org.tindalos.principle.domain.core.AnalysisPlan
-import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyViolationsResult

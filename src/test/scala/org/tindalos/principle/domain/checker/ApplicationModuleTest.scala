@@ -3,7 +3,6 @@ package org.tindalos.principle.domain.checker
 import org.junit.{Assert, Test}
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.constraints._
-import org.tindalos.principle.domain.resultprocessing.thresholdchecker.ThresholdTrespassedException
 import org.tindalos.principle.infrastructure.ConsolePrinter
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
@@ -35,7 +34,6 @@ class ApplicationModuleTest {
     try {
       runAnalysis(new AnalysisPlan(constraints, basePackage))
     } catch {
-      case ex: ThresholdTrespassedException =>
       case ex: Exception =>
         ex.printStackTrace()
         Assert.fail(ex.getMessage())

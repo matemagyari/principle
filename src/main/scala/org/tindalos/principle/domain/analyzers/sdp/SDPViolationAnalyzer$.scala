@@ -1,6 +1,7 @@
 package org.tindalos.principle.domain.analyzers.sdp
 
-import org.tindalos.principle.domain.agentscore.{AnalysisInput, Analyzer}
+import org.tindalos.principle.domain.AnalysisInput
+import org.tindalos.principle.domain.analyzers.Analyzer
 import org.tindalos.principle.domain.constraints.Constraints
 
 object SDPViolationAnalyzer extends Analyzer {

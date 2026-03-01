@@ -1,9 +1,8 @@
-package org.tindalos.principle.domain.agentscore
+package org.tindalos.principle.domain
 
-import org.tindalos.principle.domain.core.AnalysisPlan
-import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.analyzers.structure.Graph.Node
-import org.tindalos.principle.domain.constraints.{SubmodulesBlueprint, ThirdParty, PackageCouplingConstraints}
+import org.tindalos.principle.domain.constraints.{PackageCouplingConstraints, SubmodulesBlueprint, ThirdParty}
+import org.tindalos.principle.domain.core.{AnalysisPlan, Package}
 
 case class AnalysisInput(
     packages: List[Package],

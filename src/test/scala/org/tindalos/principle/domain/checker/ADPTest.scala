@@ -2,8 +2,8 @@ package org.tindalos.principle.domain.checker
 
 import org.junit.Assert.assertEquals
 import org.junit._
+import org.tindalos.principle.domain.AnalysisInput
 import org.tindalos.principle.domain.core.{AnalysisPlan, Cycle}
-import org.tindalos.principle.domain.agentscore.AnalysisInput
 import org.tindalos.principle.domain.analyzers.adp._
 import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.domain.core.packages.PackageReference
