@@ -5,13 +5,11 @@ import org.tindalos.principle.domain.analyzers.adp.ADPResult;
 import org.tindalos.principle.domain.constraints.ADP;
 import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.packages.PackageReference;
-import org.yaml.snakeyaml.Yaml;
-
 import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.tindalos.principle.infrastructure.reporters.YamlAssertions.assertValidYaml;
 
 /**
  * Tests for YAMLADPAnalysisResultReporter verifying correct YAML output
@@ -25,11 +23,6 @@ public class YAMLADPAnalysisResultReporterTest {
         return new PackageReference(name);
     }
 
-    private void assertValidYaml(String yaml) {
-        assertNotNull("YAML output must not be null", yaml);
-        Object parsed = new Yaml().load(yaml);
-        assertNotNull("YAML must parse to a non-null object", parsed);
-    }
 
     @Test
     public void noViolations_reportsEmptyBreakingPoints() {

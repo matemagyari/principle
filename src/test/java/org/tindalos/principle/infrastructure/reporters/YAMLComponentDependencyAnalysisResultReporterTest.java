@@ -5,10 +5,8 @@ import org.tindalos.principle.domain.analyzers.acd.ComponentDependenciesResult;
 import org.tindalos.principle.domain.constraints.NCCD;
 import org.tindalos.principle.domain.constraints.PackageCouplingConstraints;
 import org.tindalos.principle.domain.constraints.RACD;
-import org.yaml.snakeyaml.Yaml;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.tindalos.principle.infrastructure.reporters.YamlAssertions.assertValidYaml;
 
 /**
  * Tests for YAMLComponentDependencyAnalysisResultReporter verifying correct YAML output
@@ -34,11 +32,6 @@ public class YAMLComponentDependencyAnalysisResultReporterTest {
         return PackageCouplingConstraints.builder().build();
     }
 
-    private void assertValidYaml(String yaml) {
-        assertNotNull("YAML output must not be null", yaml);
-        Object parsed = new Yaml().load(yaml);
-        assertNotNull("YAML must parse to a non-null object", parsed);
-    }
 
     @Test
     public void noThresholds_reportsNullThresholds() {
