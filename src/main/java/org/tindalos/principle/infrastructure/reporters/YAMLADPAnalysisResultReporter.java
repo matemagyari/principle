@@ -5,7 +5,6 @@ import org.tindalos.principle.domain.analyzers.adp.ADPResult;
 import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.packages.PackageReference;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,6 +20,7 @@ public class YAMLADPAnalysisResultReporter implements ADPAnalysisResultReporter 
     public String report(ADPResult result) {
         var sb = new StringBuilder();
         sb.append("adp_result:\n");
+        sb.append("  description: Acyclic Package Dependency Principle constraint\n");
         sb.append("  violation_count: ").append(result.cyclesByBreakingPoints().size()).append("\n");
         sb.append("  threshold: ").append(result.threshold()).append("\n");
         sb.append("  constraint_violated: ").append(result.constraintViolated()).append("\n");

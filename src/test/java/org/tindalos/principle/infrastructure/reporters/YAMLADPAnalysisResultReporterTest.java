@@ -31,6 +31,7 @@ public class YAMLADPAnalysisResultReporterTest {
 
         var expected = """
                 adp_result:
+                  description: Acyclic Package Dependency Principle constraint
                   violation_count: 0
                   threshold: 0
                   constraint_violated: false
@@ -47,6 +48,7 @@ public class YAMLADPAnalysisResultReporterTest {
 
         var expected = """
                 adp_result:
+                  description: Acyclic Package Dependency Principle constraint
                   violation_count: 0
                   threshold: 5
                   constraint_violated: false
@@ -66,6 +68,7 @@ public class YAMLADPAnalysisResultReporterTest {
 
         var expected = """
                 adp_result:
+                  description: Acyclic Package Dependency Principle constraint
                   violation_count: 1
                   threshold: 0
                   constraint_violated: true
@@ -92,6 +95,7 @@ public class YAMLADPAnalysisResultReporterTest {
 
         var expected = """
                 adp_result:
+                  description: Acyclic Package Dependency Principle constraint
                   violation_count: 2
                   threshold: 0
                   constraint_violated: true
@@ -119,6 +123,7 @@ public class YAMLADPAnalysisResultReporterTest {
 
         var expected = """
                 adp_result:
+                  description: Acyclic Package Dependency Principle constraint
                   violation_count: 1
                   threshold: 5
                   constraint_violated: false
@@ -131,4 +136,3 @@ public class YAMLADPAnalysisResultReporterTest {
         assertEquals(expected, report);
     }
 }
-
