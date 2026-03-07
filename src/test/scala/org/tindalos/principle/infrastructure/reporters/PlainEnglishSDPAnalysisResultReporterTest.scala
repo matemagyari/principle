@@ -6,6 +6,8 @@ import org.tindalos.principle.domain.analyzers.sdp.{SDPResult, SDPViolation}
 import org.tindalos.principle.domain.constraints.SDP
 import org.tindalos.principle.domain.core.packages.{PackageMetrics, PackageReference, PackageWithMetrics}
 
+import scala.collection.JavaConverters._
+
 class PlainEnglishSDPAnalysisResultReporterTest {
 
   private val SEP = "=============================================================="
@@ -19,7 +21,7 @@ class PlainEnglishSDPAnalysisResultReporterTest {
 
   @Test
   def noViolations_reportsNoViolations(): Unit = {
-    val result = SDPResult(List.empty, sdp)
+    val result = new SDPResult(List.empty[SDPViolation].asJava, sdp)
 
     val report = reporter.report(result)
 
@@ -38,7 +40,7 @@ class PlainEnglishSDPAnalysisResultReporterTest {
   def withViolation_reportsDependerAndDependee(): Unit = {
     val depender = testPackage("com.example.app", 0.8f)
     val dependee = testPackage("com.example.domain", 0.3f)
-    val result = SDPResult(List(new SDPViolation(depender, dependee)), sdp)
+    val result = new SDPResult(List(new SDPViolation(depender, dependee)).asJava, sdp)
 
     val report = reporter.report(result)
 
@@ -59,7 +61,7 @@ class PlainEnglishSDPAnalysisResultReporterTest {
   def withThreshold_reportsThreshold(): Unit = {
     val depender = testPackage("com.example.app", 0.8f)
     val dependee = testPackage("com.example.domain", 0.3f)
-    val result = SDPResult(List(new SDPViolation(depender, dependee)), new SDP(3))
+    val result = new SDPResult(List(new SDPViolation(depender, dependee)).asJava, new SDP(3))
 
     val report = reporter.report(result)
 
@@ -81,7 +83,7 @@ class PlainEnglishSDPAnalysisResultReporterTest {
     val pkg1 = testPackage("com.example.app", 0.8f)
     val pkg2 = testPackage("com.example.domain", 0.3f)
     val pkg3 = testPackage("com.example.infrastructure", 0.5f)
-    val result = SDPResult(List(new SDPViolation(pkg1, pkg2), new SDPViolation(pkg3, pkg2)), sdp)
+    val result = new SDPResult(List(new SDPViolation(pkg1, pkg2), new SDPViolation(pkg3, pkg2)).asJava, sdp)
 
     val report = reporter.report(result)
 

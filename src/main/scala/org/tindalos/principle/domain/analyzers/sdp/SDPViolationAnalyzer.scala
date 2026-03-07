@@ -4,6 +4,8 @@ import org.tindalos.principle.domain.AnalysisInput
 import org.tindalos.principle.domain.analyzers.Analyzer
 import org.tindalos.principle.domain.constraints.Constraints
 
+import scala.collection.JavaConverters._
+
 object SDPViolationAnalyzer extends Analyzer {
 
   private def toScalaOption[T](javaOptional: java.util.Optional[T]): Option[T] = {
@@ -21,7 +23,7 @@ object SDPViolationAnalyzer extends Analyzer {
         .map(new SDPViolation(aPackage, _))
 
 
-    new SDPResult(sdpViolations.flatten, checkInput.packageCouplingExpectations().flatMap(pc => toScalaOption(pc.sdp())).get)
+    new SDPResult(sdpViolations.flatten.asJava, checkInput.packageCouplingExpectations().flatMap(pc => toScalaOption(pc.sdp())).get)
   }
 
   override def isEnabled(expectations: Constraints) =

@@ -9,11 +9,13 @@ import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 
+import scala.collection.JavaConverters._
+
 class SDPTest {
 
   var plan: AnalysisPlan = _
   val analysisRunner= PoorMansDIContainer.buildAnalysisRunner()
-  val checks = Constraints.builder().packageCoupling(PackageCouplingConstraints.builder().sdp(new SDP()).build()).build()
+  val checks = Constraints.builder().packageCoupling(PackageCouplingConstraints.builder().sdp(new SDP(0)).build()).build()
 
   @Before
   def setup() = {
@@ -29,7 +31,7 @@ class SDPTest {
 
     val result = run("org.tindalos.principletest.sdp")
 
-    result.violations.foreach({
+    result.violations.asScala.foreach({
       println(_)
     })
   }
