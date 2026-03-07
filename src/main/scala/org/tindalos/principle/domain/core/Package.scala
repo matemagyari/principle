@@ -2,11 +2,11 @@ package org.tindalos.principle.domain.core
 
 import scala.collection.mutable.ListBuffer
 import org.apache.commons.lang3.builder.HashCodeBuilder
-import org.tindalos.principle.domain.core.packages.{PackageMetrics, PackageReference}
+import org.tindalos.principle.domain.core.packages.{PackageMetrics, PackageReference, PackageWithMetrics}
 
 import scala.collection.JavaConverters._
 
-abstract class Package(val reference: PackageReference) {
+abstract class Package(val reference: PackageReference) extends PackageWithMetrics {
 
   val _subPackages: ListBuffer[Package] = ListBuffer()
 
