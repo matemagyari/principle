@@ -25,9 +25,9 @@ class PlainEnglishSDPAnalysisResultReporter extends SDPAnalysisResultReporter {
 
     val arrow = "-->"
     val sb = new StringBuffer("")
-    sb.append("\n " + violation.depender.reference + "[" + violation.depender.instability + "] ")
+    sb.append("\n " + violation.depender.reference() + "[" + violation.depender.getMetrics().instability() + "] ")
     sb.append(arrow)
-    sb.append(" " + violation.dependee.reference + "[" + violation.dependee.instability + "] ")
+    sb.append(" " + violation.dependee.reference() + "[" + violation.dependee.getMetrics().instability() + "] ")
     sb.toString()
   }
 

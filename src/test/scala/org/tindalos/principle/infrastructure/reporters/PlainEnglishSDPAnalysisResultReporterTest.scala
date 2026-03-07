@@ -4,8 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.tindalos.principle.domain.analyzers.sdp.{SDPResult, SDPViolation}
 import org.tindalos.principle.domain.constraints.SDP
-import org.tindalos.principle.domain.core.Package
-import org.tindalos.principle.domain.core.packages.{PackageMetrics, PackageReference}
+import org.tindalos.principle.domain.core.packages.{PackageMetrics, PackageReference, PackageWithMetrics}
 
 class PlainEnglishSDPAnalysisResultReporterTest {
 
@@ -13,14 +12,9 @@ class PlainEnglishSDPAnalysisResultReporterTest {
   private val sdp = new SDP(0)
   private val reporter = new PlainEnglishSDPAnalysisResultReporter()
 
-  private def testPackage(name: String, instability: Float): Package = {
-    val m = new PackageMetrics(0, 0, 0, instability, 0)
-    new Package(name) {
-      override def isUnreferred() = false
-      override def getMetrics() = m
-      override def getOwnPackageReferences() = Set.empty[PackageReference]
-      override def getOwnExternalPackageReferences() = Set.empty[PackageReference]
-    }
+  private def testPackage(name: String, instability: Float): PackageWithMetrics = new PackageWithMetrics {
+    override def reference() = new PackageReference(name)
+    override def getMetrics() = new PackageMetrics(0, 0, 0, instability, 0)
   }
 
   @Test
