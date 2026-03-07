@@ -38,7 +38,7 @@ class PlainEnglishSDPAnalysisResultReporterTest {
   def withViolation_reportsDependerAndDependee(): Unit = {
     val depender = testPackage("com.example.app", 0.8f)
     val dependee = testPackage("com.example.domain", 0.3f)
-    val result = SDPResult(List(SDPViolation(depender, dependee)), sdp)
+    val result = SDPResult(List(new SDPViolation(depender, dependee)), sdp)
 
     val report = reporter.report(result)
 
@@ -59,7 +59,7 @@ class PlainEnglishSDPAnalysisResultReporterTest {
   def withThreshold_reportsThreshold(): Unit = {
     val depender = testPackage("com.example.app", 0.8f)
     val dependee = testPackage("com.example.domain", 0.3f)
-    val result = SDPResult(List(SDPViolation(depender, dependee)), new SDP(3))
+    val result = SDPResult(List(new SDPViolation(depender, dependee)), new SDP(3))
 
     val report = reporter.report(result)
 
@@ -81,7 +81,7 @@ class PlainEnglishSDPAnalysisResultReporterTest {
     val pkg1 = testPackage("com.example.app", 0.8f)
     val pkg2 = testPackage("com.example.domain", 0.3f)
     val pkg3 = testPackage("com.example.infrastructure", 0.5f)
-    val result = SDPResult(List(SDPViolation(pkg1, pkg2), SDPViolation(pkg3, pkg2)), sdp)
+    val result = SDPResult(List(new SDPViolation(pkg1, pkg2), new SDPViolation(pkg3, pkg2)), sdp)
 
     val report = reporter.report(result)
 

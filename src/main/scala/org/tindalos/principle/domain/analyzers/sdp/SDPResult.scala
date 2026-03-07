@@ -2,9 +2,6 @@ package org.tindalos.principle.domain.analyzers.sdp
 
 import org.tindalos.principle.domain.AnalysisResult
 import org.tindalos.principle.domain.constraints.SDP
-import org.tindalos.principle.domain.core.packages.PackageWithMetrics
-
-case class SDPViolation(depender: PackageWithMetrics, dependee: PackageWithMetrics)
 
 case class SDPResult(
     violations: List[SDPViolation],
