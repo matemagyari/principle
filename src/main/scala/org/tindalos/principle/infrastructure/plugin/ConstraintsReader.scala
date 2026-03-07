@@ -62,7 +62,7 @@ object ConstraintsReader {
       }
 
       new Constraints(
-        getYamlStructure(checksYaml, "layering").map(toLayering).orNull,
+        getYamlStructure(checksYaml, "layering").map(toLayering).map(l => java.util.Optional.of(l)).getOrElse(java.util.Optional.empty()),
         getYamlStructure(checksYaml, "third_party_restrictions").map(toThirdParty).map(tp => java.util.Optional.of(tp)).getOrElse(java.util.Optional.empty()),
         java.util.Optional.of(packageCoupling),
         modules.map(sm => java.util.Optional.of(sm)).getOrElse(java.util.Optional.empty()))

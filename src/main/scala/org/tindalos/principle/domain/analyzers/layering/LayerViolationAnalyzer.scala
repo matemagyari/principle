@@ -11,15 +11,16 @@ import scala.collection.JavaConverters._
 object LayerViolationAnalyzer extends Analyzer {
 
   override def analyze(checkInput: AnalysisInput): LayerViolationsResult = {
+    val layering = checkInput.layeringExpectations().get
     val layerReferences = findViolations(checkInput.packages, checkInput.analysisPlan)
-    new LayerViolationsResult(layerReferences.asJava, checkInput.layeringExpectations().violationThreshold)
+    new LayerViolationsResult(layerReferences.asJava, layering.violationThreshold)
   }
 
-  override def isEnabled(expectations: Constraints) = expectations.layering != null
+  override def isEnabled(expectations: Constraints) = expectations.layering.isPresent
 
   private def findViolations(packages: List[Package], configuration: AnalysisPlan): List[LayerReference] = {
 
-    val layers = configuration.constraints.layering.layers.asScala.map(configuration.basePackage + "." + _).toList
+    val layers = configuration.constraints.layering.get.layers.asScala.map(configuration.basePackage + "." + _).toList
 
     for (aPackage <- packages
             if aPackage.reference.startsWith(configuration.basePackage);

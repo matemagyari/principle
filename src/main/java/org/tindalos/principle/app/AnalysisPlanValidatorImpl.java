@@ -23,7 +23,10 @@ public class AnalysisPlanValidatorImpl implements AnalysisPlanValidator {
         }
 
         ThirdParty thirdParty = thirdPartyOpt.get();
-        List<String> layers = plan.constraints().layering().layers();
+        if (plan.constraints().layering().isEmpty()) {
+            return ValidationResult.failure("Layering must be defined when third-party restrictions are specified");
+        }
+        List<String> layers = plan.constraints().layering().get().layers();
         List<Barrier> barriers = thirdParty.barriers();
 
         // Check if all barrier layers are valid (exist in layering definition)

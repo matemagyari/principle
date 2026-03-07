@@ -8,22 +8,22 @@ import java.util.Optional;
  * and submodule blueprint validation.
  */
 public record Constraints(
-        Layering layering,
+        Optional<Layering> layering,
         Optional<ThirdParty> thirdParty,
         Optional<PackageCouplingConstraints> packageCoupling,
         Optional<SubmodulesBlueprint> submodulesBlueprint) {
 
     /**
-     * Builder for creating Checks instances with a fluent API.
+     * Builder for creating Constraints instances with a fluent API.
      */
     public static class Builder {
-        private Layering layering = null;
+        private Optional<Layering> layering = Optional.empty();
         private Optional<ThirdParty> thirdParty = Optional.empty();
         private Optional<PackageCouplingConstraints> packageCoupling = Optional.empty();
         private Optional<SubmodulesBlueprint> submodulesBlueprint = Optional.empty();
 
         public Builder layering(Layering layering) {
-            this.layering = layering;
+            this.layering = Optional.ofNullable(layering);
             return this;
         }
 

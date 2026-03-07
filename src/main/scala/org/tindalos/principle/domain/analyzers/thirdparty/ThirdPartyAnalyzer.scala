@@ -20,7 +20,7 @@ object ThirdPartyAnalyzer extends Analyzer {
             if (barriers.isEmpty)
               List[(PackageReference, PackageReference)]()
             else {
-              val layers = checkInput.layeringExpectations().layers.asScala.toList
+              val layers = checkInput.layeringExpectations().get.layers.asScala.toList
               val basePackage = checkInput.analysisPlan.basePackage
               for (aPackage <- checkInput.packages
                    if (underBasePackage(aPackage.reference, basePackage));

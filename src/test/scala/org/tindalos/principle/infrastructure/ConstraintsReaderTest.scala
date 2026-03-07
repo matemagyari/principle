@@ -49,14 +49,12 @@ class ConstraintsReaderTest {
         |  layering:
         |    layers: [infrastructure, app, domain]
         |    violation_threshold: 2
-        |  package_coupling:
-        |    cyclic_dependencies_threshold: 0
         |""".stripMargin)
 
     val plan = ConstraintsReader.readFromFile(Some(path))
     val constraints = plan.constraints()
 
-    val layering = constraints.layering()
+    val layering = constraints.layering().get()
     assertEquals(java.util.List.of("infrastructure", "app", "domain"), layering.layers())
     assertEquals(2, layering.violationThreshold())
   }
@@ -69,14 +67,12 @@ class ConstraintsReaderTest {
         |checks:
         |  layering:
         |    layers: [a, b]
-        |  package_coupling:
-        |    cyclic_dependencies_threshold: 0
         |""".stripMargin)
 
     val plan = ConstraintsReader.readFromFile(Some(path))
     val constraints = plan.constraints()
 
-    assertEquals(0, constraints.layering().violationThreshold())
+    assertEquals(0, constraints.layering().get().violationThreshold())
   }
 
   @Test
@@ -92,7 +88,7 @@ class ConstraintsReaderTest {
     val plan = ConstraintsReader.readFromFile(Some(path))
     val constraints = plan.constraints()
 
-    assertNull(constraints.layering())
+    assertTrue(constraints.layering().isEmpty)
   }
 
   @Test
@@ -212,6 +208,30 @@ class ConstraintsReaderTest {
   }
 
   @Test
+  def modules_withThreeModuleDefinitions_blueprintIsParsed(): Unit = {
+    val path = writeTempYaml(
+      """
+        |root_package: com.example
+        |checks:
+        |  modules:
+        |    module-definitions:
+        |      AUTH: [domain.auth, app.auth]
+        |      BILLING: [domain.billing, app.billing]
+        |      NOTIFICATION: [domain.notification, app.notification]
+        |    module-dependencies:
+        |      AUTH: [BILLING]
+        |      BILLING: [NOTIFICATION]
+        |    violation_threshold: 2
+        |""".stripMargin)
+
+    val plan = ConstraintsReader.readFromFile(Some(path))
+    val blueprint = plan.constraints().submodulesBlueprint().get()
+
+    assertEquals(path, blueprint.location())
+    assertEquals(2, blueprint.violationThreshold())
+  }
+
+  @Test
   def modules_isParsed(): Unit = {
     val path = writeTempYaml(
       """
@@ -228,6 +248,42 @@ class ConstraintsReaderTest {
 
     assertTrue(constraints.submodulesBlueprint().isPresent)
     assertEquals(1, constraints.submodulesBlueprint().get().violationThreshold())
+  }
+
+  @Test
+  def modules_locationPointsToConfigFile(): Unit = {
+    val path = writeTempYaml(
+      """
+        |root_package: com.example
+        |checks:
+        |  package_coupling:
+        |    cyclic_dependencies_threshold: 0
+        |  modules:
+        |    violation_threshold: 3
+        |""".stripMargin)
+
+    val plan = ConstraintsReader.readFromFile(Some(path))
+    val blueprint = plan.constraints().submodulesBlueprint().get()
+
+    assertEquals(path, blueprint.location())
+    assertEquals(3, blueprint.violationThreshold())
+  }
+
+  @Test
+  def modules_defaultThresholdIsZero(): Unit = {
+    val path = writeTempYaml(
+      """
+        |root_package: com.example
+        |checks:
+        |  package_coupling:
+        |    cyclic_dependencies_threshold: 0
+        |  modules: {}
+        |""".stripMargin)
+
+    val plan = ConstraintsReader.readFromFile(Some(path))
+    val blueprint = plan.constraints().submodulesBlueprint().get()
+
+    assertEquals(0, blueprint.violationThreshold())
   }
 
   @Test
@@ -278,7 +334,7 @@ class ConstraintsReaderTest {
     val rootPackage = plan.basePackage()
 
     assertEquals("org.example.myapp", rootPackage)
-    assertNotNull(constraints.layering())
+    assertTrue(constraints.layering().isPresent)
     assertTrue(constraints.thirdParty().isPresent)
     assertTrue(constraints.packageCoupling().isPresent)
     assertTrue(constraints.packageCoupling().get().adp().isPresent)
