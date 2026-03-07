@@ -4,8 +4,9 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.tindalos.principle.domain.analyzers.sap.SAPResult
 import org.tindalos.principle.domain.constraints.SAP
-import org.tindalos.principle.domain.core.Package
-import org.tindalos.principle.domain.core.packages.{PackageMetrics, PackageReference}
+import org.tindalos.principle.domain.core.packages.{PackageMetrics, PackageReference, PackageWithMetrics}
+
+import scala.collection.JavaConverters._
 
 class PlainEnglishSAPAnalysisResultReporterTest {
 
@@ -13,19 +14,14 @@ class PlainEnglishSAPAnalysisResultReporterTest {
   private val sap = new SAP(0, 0.25)
   private val reporter = new PlainEnglishSAPAnalysisResultReporter()
 
-  private def testPackage(name: String, distance: Float): Package = {
-    val m = new PackageMetrics(0, 0, 0, 0, distance)
-    new Package(name) {
-      override def isUnreferred() = false
-      override def getMetrics() = m
-      override def getOwnPackageReferences() = Set.empty[PackageReference]
-      override def getOwnExternalPackageReferences() = Set.empty[PackageReference]
-    }
+  private def testPackage(name: String, distance: Float): PackageWithMetrics = new PackageWithMetrics {
+    override def reference() = new PackageReference(name)
+    override def getMetrics() = new PackageMetrics(0, 0, 0, 0, distance)
   }
 
   @Test
   def noViolations_reportsNoViolations(): Unit = {
-    val result = SAPResult(List.empty, sap)
+    val result = new SAPResult(List.empty[PackageWithMetrics].asJava, sap)
 
     val report = reporter.report(result)
 
@@ -43,7 +39,7 @@ class PlainEnglishSAPAnalysisResultReporterTest {
   @Test
   def withViolation_reportsPackageAndDistance(): Unit = {
     val pkg = testPackage("com.example.domain", 0.7f)
-    val result = SAPResult(List(pkg), sap)
+    val result = new SAPResult(List[PackageWithMetrics](pkg).asJava, sap)
 
     val report = reporter.report(result)
 
@@ -61,7 +57,7 @@ class PlainEnglishSAPAnalysisResultReporterTest {
   @Test
   def withThreshold_reportsThreshold(): Unit = {
     val pkg = testPackage("com.example.domain", 0.7f)
-    val result = SAPResult(List(pkg), new SAP(3, 0.25))
+    val result = new SAPResult(List(pkg).asJava, new SAP(3, 0.25))
 
     val report = reporter.report(result)
 
@@ -80,7 +76,7 @@ class PlainEnglishSAPAnalysisResultReporterTest {
   def multipleViolations_allReported(): Unit = {
     val pkg1 = testPackage("com.example.domain", 0.7f)
     val pkg2 = testPackage("com.example.app", 0.5f)
-    val result = SAPResult(List(pkg1, pkg2), sap)
+    val result = new SAPResult(List(pkg1, pkg2).asJava, sap)
 
     val report = reporter.report(result)
 

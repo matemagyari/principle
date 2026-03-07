@@ -4,6 +4,9 @@ import org.tindalos.principle.domain.AnalysisInput
 import org.tindalos.principle.domain.analyzers.Analyzer
 import org.tindalos.principle.domain.constraints.Constraints
 import org.tindalos.principle.domain.core.Package
+import org.tindalos.principle.domain.core.packages.PackageWithMetrics
+
+import scala.collection.JavaConverters._
 
 object SAPViolationAnalyzer extends Analyzer {
 
@@ -17,7 +20,7 @@ object SAPViolationAnalyzer extends Analyzer {
 
     val outlierPackages = removeRootPackageIfEmpty(checkInput.packages).filter(_.distance > maxDistance)
 
-    new SAPResult(outlierPackages, sapExpectation)
+    new SAPResult(outlierPackages.asInstanceOf[List[PackageWithMetrics]].asJava, sapExpectation)
   }
 
   private def removeRootPackageIfEmpty(packages: List[Package]) = {

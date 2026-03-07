@@ -5,13 +5,15 @@ import org.tindalos.principle.domain.analyzers.sap.SAPResult
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
+import scala.collection.JavaConverters._
+
 class PlainEnglishSAPAnalysisResultReporter extends SAPAnalysisResultReporter {
 
-  def report(result: SAPResult):AnalysisResultsReporter.Report = {
-    val outlierPackages = result.outlierPackages
+  def report(result: SAPResult): AnalysisResultsReporter.Report = {
+    val outlierPackages = result.outlierPackages().asScala
     val sectionLine = "=============================================================="
     val sb = new StringBuffer("\n" + sectionLine + "\n")
-    sb.append("\tStable Abstractions Principle violations (" + outlierPackages.length + " of allowed " + result.threshold + " )\t")
+    sb.append("\tStable Abstractions Principle violations (" + outlierPackages.size + " of allowed " + result.threshold() + " )\t")
     sb.append("\n" + sectionLine + "\n")
 
     if (outlierPackages.isEmpty) {
