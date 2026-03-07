@@ -46,9 +46,10 @@ public class YAMLComponentDependencyAnalysisResultReporterTest {
                   description: Average Component Dependency constraint
                   constraint_violated: false
                   metrics:
-                    acd: 2.0
-                    racd: 0.4
-                    nccd: 0.4
+                    component_dependency:
+                      average: 2.0
+                      relative_average: 0.4
+                      normalized_cumulative: 0.4
                     num_of_components: 5
                   racd_threshold: ~
                   nccd_threshold: ~
@@ -69,9 +70,10 @@ public class YAMLComponentDependencyAnalysisResultReporterTest {
                   description: Average Component Dependency constraint
                   constraint_violated: false
                   metrics:
-                    acd: 2.0
-                    racd: 0.4
-                    nccd: 0.4
+                    component_dependency:
+                      average: 2.0
+                      relative_average: 0.4
+                      normalized_cumulative: 0.4
                     num_of_components: 5
                   racd_threshold: 0.5
                   nccd_threshold: ~
@@ -92,9 +94,10 @@ public class YAMLComponentDependencyAnalysisResultReporterTest {
                   description: Average Component Dependency constraint
                   constraint_violated: true
                   metrics:
-                    acd: 2.0
-                    racd: 0.4
-                    nccd: 0.4
+                    component_dependency:
+                      average: 2.0
+                      relative_average: 0.4
+                      normalized_cumulative: 0.4
                     num_of_components: 5
                   racd_threshold: 0.3
                   nccd_threshold: ~
@@ -115,9 +118,10 @@ public class YAMLComponentDependencyAnalysisResultReporterTest {
                   description: Average Component Dependency constraint
                   constraint_violated: false
                   metrics:
-                    acd: 2.0
-                    racd: 0.4
-                    nccd: 0.4
+                    component_dependency:
+                      average: 2.0
+                      relative_average: 0.4
+                      normalized_cumulative: 0.4
                     num_of_components: 5
                   racd_threshold: 0.5
                   nccd_threshold: 0.6
@@ -138,9 +142,10 @@ public class YAMLComponentDependencyAnalysisResultReporterTest {
                   description: Average Component Dependency constraint
                   constraint_violated: false
                   metrics:
-                    acd: 1.0
-                    racd: 1.0
-                    nccd: 1.0
+                    component_dependency:
+                      average: 1.0
+                      relative_average: 1.0
+                      normalized_cumulative: 1.0
                     num_of_components: 1
                   racd_threshold: ~
                   nccd_threshold: ~

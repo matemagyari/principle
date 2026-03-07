@@ -17,9 +17,10 @@ public class YAMLComponentDependencyAnalysisResultReporter implements ComponentD
                   description: Average Component Dependency constraint
                   constraint_violated: %s
                   metrics:
-                    acd: %s
-                    racd: %s
-                    nccd: %s
+                    component_dependency:
+                      average: %s
+                      relative_average: %s
+                      normalized_cumulative: %s
                     num_of_components: %s
                   racd_threshold: %s
                   nccd_threshold: %s
