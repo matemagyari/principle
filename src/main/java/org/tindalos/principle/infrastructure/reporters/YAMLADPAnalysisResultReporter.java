@@ -18,23 +18,28 @@ public class YAMLADPAnalysisResultReporter implements ADPAnalysisResultReporter 
 
     @Override
     public String report(ADPResult result) {
-        var sb = new StringBuilder();
-        sb.append("adp_result:\n");
-        sb.append("  description: Acyclic Package Dependency Principle constraint\n");
-        sb.append("  violation_count: ").append(result.cyclesByBreakingPoints().size()).append("\n");
-        sb.append("  threshold: ").append(result.threshold()).append("\n");
-        sb.append("  constraint_violated: ").append(result.constraintViolated()).append("\n");
+        return """
+                adp_result:
+                  description: Acyclic Package Dependency Principle constraint
+                  violation_count: %s
+                  threshold: %s
+                  constraint_violated: %s
+                %s""".formatted(
+                result.cyclesByBreakingPoints().size(),
+                result.threshold(),
+                result.constraintViolated(),
+                breakingPointsYaml(result));
+    }
 
+    private String breakingPointsYaml(ADPResult result) {
         if (result.cyclesByBreakingPoints().isEmpty()) {
-            sb.append("  breaking_points: []\n");
-        } else {
-            sb.append("  breaking_points:\n");
-
-            result.cyclesByBreakingPoints().entrySet().stream()
-                    .sorted(Map.Entry.comparingByKey())
-                    .forEach(entry -> appendBreakingPoint(sb, entry.getKey(), entry.getValue()));
+            return "  breaking_points: []\n";
         }
 
+        var sb = new StringBuilder("  breaking_points:\n");
+        result.cyclesByBreakingPoints().entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .forEach(entry -> appendBreakingPoint(sb, entry.getKey(), entry.getValue()));
         return sb.toString();
     }
 
