@@ -5,11 +5,13 @@ import org.tindalos.principle.domain.analyzers.adp.ADPResult;
 import org.tindalos.principle.domain.constraints.ADP;
 import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.packages.PackageReference;
+import org.yaml.snakeyaml.Yaml;
 
 import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests for YAMLADPAnalysisResultReporter verifying correct YAML output
@@ -23,11 +25,19 @@ public class YAMLADPAnalysisResultReporterTest {
         return new PackageReference(name);
     }
 
+    private void assertValidYaml(String yaml) {
+        assertNotNull("YAML output must not be null", yaml);
+        Object parsed = new Yaml().load(yaml);
+        assertNotNull("YAML must parse to a non-null object", parsed);
+    }
+
     @Test
     public void noViolations_reportsEmptyBreakingPoints() {
         var result = new ADPResult(Map.of(), new ADP(0));
 
         var report = reporter.report(result);
+
+        assertValidYaml(report);
 
         var expected = """
                 adp_result:
@@ -45,6 +55,8 @@ public class YAMLADPAnalysisResultReporterTest {
         var result = new ADPResult(Map.of(), new ADP(5));
 
         var report = reporter.report(result);
+
+        assertValidYaml(report);
 
         var expected = """
                 adp_result:
@@ -65,6 +77,8 @@ public class YAMLADPAnalysisResultReporterTest {
                 new ADP(0));
 
         var report = reporter.report(result);
+
+        assertValidYaml(report);
 
         var expected = """
                 adp_result:
@@ -93,6 +107,8 @@ public class YAMLADPAnalysisResultReporterTest {
 
         var report = reporter.report(result);
 
+        assertValidYaml(report);
+
         var expected = """
                 adp_result:
                   description: Acyclic Package Dependency Principle constraint
@@ -120,6 +136,8 @@ public class YAMLADPAnalysisResultReporterTest {
                 new ADP(5));
 
         var report = reporter.report(result);
+
+        assertValidYaml(report);
 
         var expected = """
                 adp_result:

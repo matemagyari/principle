@@ -5,8 +5,10 @@ import org.tindalos.principle.domain.analyzers.acd.ComponentDependenciesResult;
 import org.tindalos.principle.domain.constraints.NCCD;
 import org.tindalos.principle.domain.constraints.PackageCouplingConstraints;
 import org.tindalos.principle.domain.constraints.RACD;
+import org.yaml.snakeyaml.Yaml;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests for YAMLComponentDependencyAnalysisResultReporter verifying correct YAML output
@@ -32,11 +34,19 @@ public class YAMLComponentDependencyAnalysisResultReporterTest {
         return PackageCouplingConstraints.builder().build();
     }
 
+    private void assertValidYaml(String yaml) {
+        assertNotNull("YAML output must not be null", yaml);
+        Object parsed = new Yaml().load(yaml);
+        assertNotNull("YAML must parse to a non-null object", parsed);
+    }
+
     @Test
     public void noThresholds_reportsNullThresholds() {
         var result = new ComponentDependenciesResult(10, 5, couplingWithNoThresholds());
 
         var report = reporter.report(result);
+
+        assertValidYaml(report);
 
         var expected = """
                 component_dependency_result:
@@ -59,6 +69,8 @@ public class YAMLComponentDependencyAnalysisResultReporterTest {
 
         var report = reporter.report(result);
 
+        assertValidYaml(report);
+
         var expected = """
                 component_dependency_result:
                   description: Average Component Dependency constraint
@@ -79,6 +91,8 @@ public class YAMLComponentDependencyAnalysisResultReporterTest {
         var result = new ComponentDependenciesResult(10, 5, couplingWithRacd(0.3));
 
         var report = reporter.report(result);
+
+        assertValidYaml(report);
 
         var expected = """
                 component_dependency_result:
@@ -101,6 +115,8 @@ public class YAMLComponentDependencyAnalysisResultReporterTest {
 
         var report = reporter.report(result);
 
+        assertValidYaml(report);
+
         var expected = """
                 component_dependency_result:
                   description: Average Component Dependency constraint
@@ -122,6 +138,8 @@ public class YAMLComponentDependencyAnalysisResultReporterTest {
 
         var report = reporter.report(result);
 
+        assertValidYaml(report);
+
         var expected = """
                 component_dependency_result:
                   description: Average Component Dependency constraint
@@ -137,4 +155,3 @@ public class YAMLComponentDependencyAnalysisResultReporterTest {
         assertEquals(expected, report);
     }
 }
-
