@@ -7,7 +7,7 @@ import org.tindalos.principle.domain.constraints.SDP
 import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.core.packages.{PackageMetrics, PackageReference}
 
-class SDPAnalysisResultReporterTest {
+class PlainEnglishSDPAnalysisResultReporterTest {
 
   private val SEP = "=============================================================="
   private val sdp = new SDP(0)

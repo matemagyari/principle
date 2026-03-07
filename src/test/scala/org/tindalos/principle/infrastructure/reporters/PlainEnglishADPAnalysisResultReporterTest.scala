@@ -10,7 +10,7 @@ import org.tindalos.principle.domain.core.packages.PackageReference
 import java.util
 import scala.collection.JavaConverters._
 
-class ADPAnalysisResultReporterTest {
+class PlainEnglishADPAnalysisResultReporterTest {
 
   private val SEP = "=============================================================="
   private val adp = new ADP(0)

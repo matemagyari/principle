@@ -6,7 +6,7 @@ import org.tindalos.principle.domain.analyzers.layering.{LayerReference, LayerVi
 
 import scala.collection.JavaConverters._
 
-class LayerAnalysisResultReporterTest {
+class PlainEnglishLayerAnalysisResultReporterTest {
 
   private val SEP = "=============================================================="
   private val reporter = new PlainEnglishLayerAnalysisResultReporter()

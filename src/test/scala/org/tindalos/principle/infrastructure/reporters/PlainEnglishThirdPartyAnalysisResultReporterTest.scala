@@ -9,7 +9,7 @@ import org.tindalos.principle.domain.core.packages.PackageReference
 import java.util.Collections
 import scala.collection.JavaConverters._
 
-class ThirdPartyAnalysisResultReporterTest {
+class PlainEnglishThirdPartyAnalysisResultReporterTest {
 
   private val thirdParty = new ThirdParty(Collections.emptyList(), 0)
   private val SEP = "=============================================================="

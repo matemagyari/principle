@@ -5,7 +5,7 @@ import org.junit.Test
 import org.tindalos.principle.domain.analyzers.acd.ComponentDependenciesResult
 import org.tindalos.principle.domain.constraints.{PackageCouplingConstraints, RACD}
 
-class ComponentDependencyAnalysisResultReporterTest {
+class PlainEnglishComponentDependencyAnalysisResultReporterTest {
 
   private val SEP = "=============================================================="
   private val reporter = new PlainEnglishComponentDependencyAnalysisResultReporter()

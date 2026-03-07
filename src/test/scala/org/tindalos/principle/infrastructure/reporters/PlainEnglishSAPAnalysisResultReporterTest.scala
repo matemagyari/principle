@@ -7,7 +7,7 @@ import org.tindalos.principle.domain.constraints.SAP
 import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.core.packages.{PackageMetrics, PackageReference}
 
-class SAPAnalysisResultReporterTest {
+class PlainEnglishSAPAnalysisResultReporterTest {
 
   private val SEP = "=============================================================="
   private val sap = new SAP(0, 0.25)

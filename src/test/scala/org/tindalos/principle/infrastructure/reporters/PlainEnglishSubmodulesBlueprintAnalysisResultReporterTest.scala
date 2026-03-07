@@ -5,7 +5,7 @@ import org.junit.Test
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.{Overlap, Submodule, SubmoduleId, SubmodulesBlueprintAnalysisResult}
 import org.tindalos.principle.domain.core.Package
 
-class SubmodulesBlueprintAnalysisResultReporterTest {
+class PlainEnglishSubmodulesBlueprintAnalysisResultReporterTest {
 
   private val SEP = "=============================================================="
   private val reporter = new PlainEnglishSubmodulesBlueprintAnalysisResultReporter()

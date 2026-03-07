@@ -7,7 +7,7 @@ import org.tindalos.principle.domain.analyzers.structure.Graph.SubgraphDecomposi
 import org.tindalos.principle.domain.analyzers.structure.PackageStructureHints1Finder.GroupingResult
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 
-class PackageCohesionReporterTest {
+class PlainEnglishPackageCohesionReporterTest {
 
   private val SEP = "================================================================================"
   private val reporter = new PlainEnglishPackageCohesionReporter()
