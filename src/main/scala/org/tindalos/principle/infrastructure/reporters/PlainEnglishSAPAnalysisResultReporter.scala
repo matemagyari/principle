@@ -1,8 +1,8 @@
 package org.tindalos.principle.infrastructure.reporters
 
 import org.tindalos.principle.app.reporters.SAPAnalysisResultReporter
-import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.analyzers.sap.SAPResult
+import org.tindalos.principle.domain.core.packages.PackageWithMetrics
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
 class PlainEnglishSAPAnalysisResultReporter extends SAPAnalysisResultReporter {
@@ -17,7 +17,7 @@ class PlainEnglishSAPAnalysisResultReporter extends SAPAnalysisResultReporter {
     if (outlierPackages.isEmpty) {
       sb.append("No violations.\n")
     } else {
-      outlierPackages foreach { outlierPackage =>
+      outlierPackages foreach { (outlierPackage: PackageWithMetrics) =>
         sb.append(print(outlierPackage) + "\n")
       }
     }
@@ -25,6 +25,6 @@ class PlainEnglishSAPAnalysisResultReporter extends SAPAnalysisResultReporter {
     sb.toString()
   }
 
-  private def print(outlierPackage: Package) = outlierPackage + " " + outlierPackage.distance
+  private def print(outlierPackage: PackageWithMetrics) = outlierPackage.reference() + " " + outlierPackage.getMetrics().distance()
 
 }
