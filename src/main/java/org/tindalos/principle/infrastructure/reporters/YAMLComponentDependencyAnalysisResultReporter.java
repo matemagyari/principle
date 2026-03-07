@@ -12,25 +12,25 @@ public class YAMLComponentDependencyAnalysisResultReporter implements ComponentD
 
     @Override
     public String report(ComponentDependenciesResult result) {
-        var sb = new StringBuilder();
-        sb.append("component_dependency_result:\n");
-        sb.append("  description: Average Component Dependency constraint\n");
-        sb.append("  constraint_violated: ").append(result.constraintViolated()).append("\n");
-        sb.append("  metrics:\n");
-        sb.append("    acd: ").append(result.acd()).append("\n");
-        sb.append("    racd: ").append(result.rAcd()).append("\n");
-        sb.append("    nccd: ").append(result.nCcd()).append("\n");
-        sb.append("    num_of_components: ").append(result.numOfComponents()).append("\n");
-
-        result.packageCoupling().racd().ifPresentOrElse(
-                racd -> sb.append("  racd_threshold: ").append(racd.threshold()).append("\n"),
-                () ->   sb.append("  racd_threshold: ~\n"));
-
-        result.packageCoupling().nccd().ifPresentOrElse(
-                nccd -> sb.append("  nccd_threshold: ").append(nccd.threshold()).append("\n"),
-                () ->   sb.append("  nccd_threshold: ~\n"));
-
-        return sb.toString();
+        return """
+                component_dependency_result:
+                  description: Average Component Dependency constraint
+                  constraint_violated: %s
+                  metrics:
+                    acd: %s
+                    racd: %s
+                    nccd: %s
+                    num_of_components: %s
+                  racd_threshold: %s
+                  nccd_threshold: %s
+                """.formatted(
+                result.constraintViolated(),
+                result.acd(),
+                result.rAcd(),
+                result.nCcd(),
+                result.numOfComponents(),
+                result.packageCoupling().racd().map(r -> String.valueOf(r.threshold())).orElse("~"),
+                result.packageCoupling().nccd().map(n -> String.valueOf(n.threshold())).orElse("~"));
     }
 }
 
