@@ -4,15 +4,13 @@ import org.tindalos.principle.domain.AnalysisInput
 import org.tindalos.principle.domain.analyzers.Analyzer
 import org.tindalos.principle.domain.constraints.Constraints
 import org.tindalos.principle.domain.core.{Package, PackageStructureBuilder}
-import org.tindalos.principle.infrastructure.analyzers.submodulesblueprint.SubmodulesBlueprintProvider
 
 import scala.collection.JavaConverters.asScalaSetConverter
 
-class SubmodulesBuilder(packageStructureBuilder: PackageStructureBuilder,
-                        submodulesBlueprintProvider: SubmodulesBlueprintProvider) {
-  def build(submodulesDefinitionLocation: String, packages: List[Package], basePackageName: String): Set[Submodule] = {
+class SubmodulesBuilder(packageStructureBuilder: PackageStructureBuilder) {
+  def build(submoduleDefinitions: SubmoduleDefinitions, packages: List[Package], basePackageName: String): Set[Submodule] = {
 
-    val submoduleDefinitions = submodulesBlueprintProvider.readSubmoduleDefinitions(basePackageName, submodulesDefinitionLocation)
+    submoduleDefinitions.checkNoOverlaps()
     val basePackage = packageStructureBuilder.build(packages, basePackageName)
 
     import scala.collection.JavaConverters._
@@ -32,27 +30,27 @@ class SubmodulesBuilder(packageStructureBuilder: PackageStructureBuilder,
 
 class SubmodulesBlueprintAnalyzer(submodulesBuilder: SubmodulesBuilder) extends Analyzer {
 
-  override def isEnabled(designQualityChecks: Constraints) = designQualityChecks.submodulesBlueprint().isPresent
+  override def isEnabled(designQualityChecks: Constraints) = designQualityChecks.submoduleDefinitions().isPresent
 
   override def analyze(checkInput: AnalysisInput): SubmodulesBlueprintAnalysisResult =
 
-    checkInput.submodulesBlueprint().map { submodulesBlueprint ⇒
+    checkInput.submoduleDefinitions().map { submoduleDefinitions ⇒
 
         try {
           val submodules = submodulesBuilder.build(
-            submodulesBlueprint.location,
+            submoduleDefinitions,
             checkInput.packages, checkInput.analysisPlan.basePackage)
 
           val (aID, aMD) = problematicDependencies(submodules)
 
-          new SubmodulesBlueprintAnalysisResult(submodulesBlueprint, aID, aMD)
+          new SubmodulesBlueprintAnalysisResult(submoduleDefinitions.violationThreshold, aID, aMD)
         }
         catch {
           case ex: OverlappingSubmoduleDefinitionsException =>
-            new SubmodulesBlueprintAnalysisResult(submodulesBlueprint, overlaps = ex.getOverlaps().asScala.toSet)
+            new SubmodulesBlueprintAnalysisResult(submoduleDefinitions.violationThreshold, overlaps = ex.getOverlaps().asScala.toSet)
         }
       }
-      .getOrElse(new SubmodulesBlueprintAnalysisResult(submodulesBlueprint = null))
+      .getOrElse(new SubmodulesBlueprintAnalysisResult(violationThreshold = 0))
 
   private def problematicDependencies(submodules: Set[Submodule]): (Map[Submodule, Set[Submodule]], Map[Submodule, Set[Submodule]]) = {
     val emptyMap = Map[Submodule, Set[Submodule]]()

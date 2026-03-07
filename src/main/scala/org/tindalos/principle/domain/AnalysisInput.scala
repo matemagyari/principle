@@ -1,7 +1,8 @@
 package org.tindalos.principle.domain
 
 import org.tindalos.principle.domain.analyzers.structure.Graph.Node
-import org.tindalos.principle.domain.constraints.{Layering, PackageCouplingConstraints, SubmodulesBlueprint, ThirdParty}
+import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmoduleDefinitions
+import org.tindalos.principle.domain.constraints.{Layering, PackageCouplingConstraints, ThirdParty}
 import org.tindalos.principle.domain.core.{AnalysisPlan, Package}
 
 case class AnalysisInput(
@@ -21,6 +22,6 @@ case class AnalysisInput(
 
   def thirdPartyExpectations(): Option[ThirdParty] = toScalaOption(expectations.thirdParty())
 
-  def submodulesBlueprint(): Option[SubmodulesBlueprint] = toScalaOption(expectations.submodulesBlueprint())
+  def submoduleDefinitions(): Option[SubmoduleDefinitions] = toScalaOption(expectations.submoduleDefinitions())
 
 }

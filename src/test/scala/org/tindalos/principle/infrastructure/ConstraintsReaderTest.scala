@@ -208,7 +208,7 @@ class ConstraintsReaderTest {
   }
 
   @Test
-  def modules_withThreeModuleDefinitions_blueprintIsParsed(): Unit = {
+  def modules_withThreeModuleDefinitions_isParsed(): Unit = {
     val path = writeTempYaml(
       """
         |root_package: com.example
@@ -225,14 +225,74 @@ class ConstraintsReaderTest {
         |""".stripMargin)
 
     val plan = ConstraintsReader.readFromFile(Some(path))
-    val blueprint = plan.constraints().submodulesBlueprint().get()
+    val definitions = plan.constraints().submoduleDefinitions().get()
 
-    assertEquals(path, blueprint.location())
-    assertEquals(2, blueprint.violationThreshold())
+    assertEquals(3, definitions.getDefinitions.size())
+    assertEquals(2, definitions.violationThreshold())
   }
 
   @Test
-  def modules_isParsed(): Unit = {
+  def modules_withDefinitions_isParsed(): Unit = {
+    val path = writeTempYaml(
+      """
+        |root_package: com.example
+        |checks:
+        |  package_coupling:
+        |    cyclic_dependencies_threshold: 0
+        |  modules:
+        |    module-definitions:
+        |      MOD1: [domain.mod1]
+        |    module-dependencies:
+        |      MOD1: []
+        |    violation_threshold: 1
+        |""".stripMargin)
+
+    val plan = ConstraintsReader.readFromFile(Some(path))
+    val constraints = plan.constraints()
+
+    assertTrue(constraints.submoduleDefinitions().isPresent)
+    assertEquals(1, constraints.submoduleDefinitions().get().violationThreshold())
+  }
+
+  @Test
+  def modules_defaultThresholdIsZero(): Unit = {
+    val path = writeTempYaml(
+      """
+        |root_package: com.example
+        |checks:
+        |  package_coupling:
+        |    cyclic_dependencies_threshold: 0
+        |  modules:
+        |    module-definitions:
+        |      MOD1: [domain.mod1]
+        |    module-dependencies:
+        |      MOD1: []
+        |""".stripMargin)
+
+    val plan = ConstraintsReader.readFromFile(Some(path))
+    val definitions = plan.constraints().submoduleDefinitions().get()
+
+    assertEquals(0, definitions.violationThreshold())
+  }
+
+  @Test
+  def noModules_submoduleDefinitionsIsAbsent(): Unit = {
+    val path = writeTempYaml(
+      """
+        |root_package: com.example
+        |checks:
+        |  package_coupling:
+        |    cyclic_dependencies_threshold: 0
+        |""".stripMargin)
+
+    val plan = ConstraintsReader.readFromFile(Some(path))
+    val constraints = plan.constraints()
+
+    assertFalse(constraints.submoduleDefinitions().isPresent)
+  }
+
+  @Test
+  def modules_withoutDefinitions_submoduleDefinitionsIsAbsent(): Unit = {
     val path = writeTempYaml(
       """
         |root_package: com.example
@@ -246,60 +306,7 @@ class ConstraintsReaderTest {
     val plan = ConstraintsReader.readFromFile(Some(path))
     val constraints = plan.constraints()
 
-    assertTrue(constraints.submodulesBlueprint().isPresent)
-    assertEquals(1, constraints.submodulesBlueprint().get().violationThreshold())
-  }
-
-  @Test
-  def modules_locationPointsToConfigFile(): Unit = {
-    val path = writeTempYaml(
-      """
-        |root_package: com.example
-        |checks:
-        |  package_coupling:
-        |    cyclic_dependencies_threshold: 0
-        |  modules:
-        |    violation_threshold: 3
-        |""".stripMargin)
-
-    val plan = ConstraintsReader.readFromFile(Some(path))
-    val blueprint = plan.constraints().submodulesBlueprint().get()
-
-    assertEquals(path, blueprint.location())
-    assertEquals(3, blueprint.violationThreshold())
-  }
-
-  @Test
-  def modules_defaultThresholdIsZero(): Unit = {
-    val path = writeTempYaml(
-      """
-        |root_package: com.example
-        |checks:
-        |  package_coupling:
-        |    cyclic_dependencies_threshold: 0
-        |  modules: {}
-        |""".stripMargin)
-
-    val plan = ConstraintsReader.readFromFile(Some(path))
-    val blueprint = plan.constraints().submodulesBlueprint().get()
-
-    assertEquals(0, blueprint.violationThreshold())
-  }
-
-  @Test
-  def noModules_submodulesBlueprintIsAbsent(): Unit = {
-    val path = writeTempYaml(
-      """
-        |root_package: com.example
-        |checks:
-        |  package_coupling:
-        |    cyclic_dependencies_threshold: 0
-        |""".stripMargin)
-
-    val plan = ConstraintsReader.readFromFile(Some(path))
-    val constraints = plan.constraints()
-
-    assertFalse(constraints.submodulesBlueprint().isPresent)
+    assertFalse(constraints.submoduleDefinitions().isPresent)
   }
 
   @Test(expected = classOf[InvalidConfigurationException])
@@ -325,6 +332,10 @@ class ConstraintsReaderTest {
         |    cyclic_dependencies_threshold: 0
         |    acd_threshold: 0.5
         |  modules:
+        |    module-definitions:
+        |      MOD1: [domain.mod1]
+        |    module-dependencies:
+        |      MOD1: []
         |    violation_threshold: 0
         |structure_analysis_enabled: true
         |""".stripMargin)
@@ -340,6 +351,6 @@ class ConstraintsReaderTest {
     assertTrue(constraints.packageCoupling().get().adp().isPresent)
     assertTrue(constraints.packageCoupling().get().racd().isPresent)
     assertTrue(constraints.packageCoupling().get().grouping().isPresent)
-    assertTrue(constraints.submodulesBlueprint().isPresent)
+    assertTrue(constraints.submoduleDefinitions().isPresent)
   }
 }

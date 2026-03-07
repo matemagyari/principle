@@ -7,6 +7,7 @@ import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.analyzers.submodulesblueprint._
 import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder
+import org.tindalos.principle.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 
 class BlueprintTest {
@@ -101,7 +102,6 @@ class BlueprintTest {
     val result = run("org.tindalos.principletest.submodulesblueprint", "src/test/resources/principle_blueprint_test.yaml")
 
     // Verify result has correct structure
-    assert(result.submodulesBlueprint != null, "Blueprint should not be null")
     assertEquals(0, result.threshold)
     assert(result.illegalDependencies.isInstanceOf[Map[_, _]], "Illegal dependencies should be a Map")
     assert(result.missingDependencies.isInstanceOf[Map[_, _]], "Missing dependencies should be a Map")
@@ -112,10 +112,6 @@ class BlueprintTest {
     val result = run("org.tindalos.principletest.submodulesblueprint", "src/test/resources/principle_blueprint_ok.yaml")
 
     // Verify blueprint was parsed successfully
-    assert(result.submodulesBlueprint != null, "Blueprint should be parsed")
-    assertEquals("src/test/resources/principle_blueprint_ok.yaml", result.submodulesBlueprint.location)
-
-    // Verify threshold
     assertEquals(0, result.threshold)
 
     // Verify no overlaps (valid blueprint)
@@ -131,16 +127,17 @@ class BlueprintTest {
   }
 
   private def run(basePackage: String, location: String) = {
-    val expectations = Constraints.builder().submodulesBlueprint(submodulesBlueprint(location)).build()
+    val provider = new YAMLBasedSubmodulesBlueprintProvider()
+    val submoduleDefinitions = provider.readSubmoduleDefinitions(basePackage, location, 0)
+    val constraints = Constraints.builder().submoduleDefinitions(submoduleDefinitions).build()
     val packageListProducer = new JDependBasedPackageListBuilder(basePackage)
     val packageList = packageListProducer.build()
     val analysisRunner= PoorMansDIContainer.buildAnalysisRunner()
-    val plan = new AnalysisPlan(expectations, basePackage)
+    val plan = new AnalysisPlan(constraints, basePackage)
     val result = analysisRunner.run(new AnalysisInput(packageList, Set(), plan))
     assertEquals(1, result.length)
     result.head.asInstanceOf[SubmodulesBlueprintAnalysisResult]
   }
 
-  def submodulesBlueprint(location: String) = new SubmodulesBlueprint(location, 0)
 
 }

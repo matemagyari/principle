@@ -3,13 +3,11 @@ package org.tindalos.principle.infrastructure.reporters
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.{Overlap, Submodule, SubmoduleId, SubmodulesBlueprintAnalysisResult}
-import org.tindalos.principle.domain.constraints.SubmodulesBlueprint
 import org.tindalos.principle.domain.core.Package
 
 class SubmodulesBlueprintAnalysisResultReporterTest {
 
   private val SEP = "=============================================================="
-  private val blueprint = new SubmodulesBlueprint("some/path", 0)
   private val reporter = new PlainEnglishSubmodulesBlueprintAnalysisResultReporter()
 
   private def submodule(id: String): Submodule =
@@ -17,7 +15,7 @@ class SubmodulesBlueprintAnalysisResultReporterTest {
 
   @Test
   def noViolations_reportsNoViolations(): Unit = {
-    val result = SubmodulesBlueprintAnalysisResult(blueprint)
+    val result = SubmodulesBlueprintAnalysisResult(0)
 
     val report = reporter.report(result)
 
@@ -35,7 +33,7 @@ class SubmodulesBlueprintAnalysisResultReporterTest {
   @Test
   def withOverlap_reportsOverlapMessage(): Unit = {
     val overlap = new Overlap(new SubmoduleId("MOD1"), new SubmoduleId("MOD2"))
-    val result = SubmodulesBlueprintAnalysisResult(blueprint, overlaps = Set(overlap))
+    val result = SubmodulesBlueprintAnalysisResult(0, overlaps = Set(overlap))
 
     val report = reporter.report(result)
 
@@ -54,7 +52,7 @@ class SubmodulesBlueprintAnalysisResultReporterTest {
   def withIllegalDependency_reportsIllegalDependency(): Unit = {
     val mod1 = submodule("MOD1")
     val mod2 = submodule("MOD2")
-    val result = SubmodulesBlueprintAnalysisResult(blueprint, illegalDependencies = Map(mod1 -> Set(mod2)))
+    val result = SubmodulesBlueprintAnalysisResult(0, illegalDependencies = Map(mod1 -> Set(mod2)))
 
     val report = reporter.report(result)
 
@@ -73,7 +71,7 @@ class SubmodulesBlueprintAnalysisResultReporterTest {
   def withMissingDependency_reportsMissingDependency(): Unit = {
     val mod1 = submodule("MOD1")
     val mod2 = submodule("MOD2")
-    val result = SubmodulesBlueprintAnalysisResult(blueprint, missingDependencies = Map(mod1 -> Set(mod2)))
+    val result = SubmodulesBlueprintAnalysisResult(0, missingDependencies = Map(mod1 -> Set(mod2)))
 
     val report = reporter.report(result)
 
@@ -94,7 +92,7 @@ class SubmodulesBlueprintAnalysisResultReporterTest {
     val mod2 = submodule("MOD2")
     val mod3 = submodule("MOD3")
     val result = SubmodulesBlueprintAnalysisResult(
-      blueprint,
+      0,
       illegalDependencies = Map(mod1 -> Set(mod2)),
       missingDependencies = Map(mod1 -> Set(mod3))
     )
@@ -113,4 +111,3 @@ class SubmodulesBlueprintAnalysisResultReporterTest {
     assertEquals(expected, report)
   }
 }
-

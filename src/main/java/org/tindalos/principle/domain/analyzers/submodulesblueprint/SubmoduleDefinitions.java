@@ -7,24 +7,38 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Contains all module definitions in a blueprint and validates that
- * no modules overlap (i.e., no two modules contain packages that are
- * subpackages of each other).
+ * Contains all module definitions in a blueprint, along with a violation
+ * threshold. Use {@link #checkNoOverlaps()} to validate that no modules
+ * overlap (i.e., no two modules contain packages that are subpackages of each other).
  */
 public class SubmoduleDefinitions {
 
     private final Map<SubmoduleId, SubmoduleDefinition> definitions;
+    private final int violationThreshold;
+
+    public SubmoduleDefinitions(Map<SubmoduleId, SubmoduleDefinition> definitions, int violationThreshold) {
+        this.definitions = Map.copyOf(definitions);
+        this.violationThreshold = violationThreshold;
+    }
 
     public SubmoduleDefinitions(Map<SubmoduleId, SubmoduleDefinition> definitions) {
-        this.definitions = Map.copyOf(definitions);
-        checkNoOverlaps(new ArrayList<>(definitions.values()));
+        this(definitions, 0);
     }
 
     public Map<SubmoduleId, SubmoduleDefinition> getDefinitions() {
         return definitions;
     }
 
-    private void checkNoOverlaps(List<SubmoduleDefinition> definitionList) {
+    public int violationThreshold() {
+        return violationThreshold;
+    }
+
+    /**
+     * Validates that no two module definitions overlap, throwing
+     * {@link OverlappingSubmoduleDefinitionsException} if any do.
+     */
+    public void checkNoOverlaps() {
+        List<SubmoduleDefinition> definitionList = new ArrayList<>(definitions.values());
         Set<Overlap> overlaps = new HashSet<>();
 
         for (SubmoduleDefinition submoduleDefinition : definitionList) {

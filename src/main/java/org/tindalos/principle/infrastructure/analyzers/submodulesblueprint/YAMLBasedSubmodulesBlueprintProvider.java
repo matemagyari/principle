@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  */
 public class YAMLBasedSubmodulesBlueprintProvider implements SubmodulesBlueprintProvider {
 
-    public SubmoduleDefinitions readSubmoduleDefinitions(String basePackageName, String submodulesDefinitionLocation) {
+    public SubmoduleDefinitions readSubmoduleDefinitions(String basePackageName, String submodulesDefinitionLocation, int violationThreshold) {
         String yaml = getYAML(submodulesDefinitionLocation);
         Map<String, Object> yamlObject = (Map<String, Object>) new Yaml().load(yaml);
         Map<String, Object> checks = (Map<String, Object>) yamlObject.get("checks");
@@ -31,7 +31,7 @@ public class YAMLBasedSubmodulesBlueprintProvider implements SubmodulesBlueprint
         Map<SubmoduleId, SubmoduleDefinition> submoduleDefinitionMap = buildSubmoduleDefinitions(basePackageName, modules);
         addDependencies(modules, submoduleDefinitionMap);
 
-        return new SubmoduleDefinitions(submoduleDefinitionMap);
+        return new SubmoduleDefinitions(submoduleDefinitionMap, violationThreshold);
     }
 
     private void checkSubmoduleExists(Set<SubmoduleId> validSubmodules, SubmoduleId submoduleId) {

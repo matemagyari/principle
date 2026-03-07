@@ -1,17 +1,19 @@
 package org.tindalos.principle.domain.constraints;
 
+import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmoduleDefinitions;
+
 import java.util.Optional;
 
 /**
  * Represents the complete set of architectural checks and constraints to be analyzed.
  * Contains configuration for layering, third-party dependencies, package coupling metrics,
- * and submodule blueprint validation.
+ * and submodule definitions validation.
  */
 public record Constraints(
         Optional<Layering> layering,
         Optional<ThirdParty> thirdParty,
         Optional<PackageCouplingConstraints> packageCoupling,
-        Optional<SubmodulesBlueprint> submodulesBlueprint) {
+        Optional<SubmoduleDefinitions> submoduleDefinitions) {
 
     /**
      * Builder for creating Constraints instances with a fluent API.
@@ -20,7 +22,7 @@ public record Constraints(
         private Optional<Layering> layering = Optional.empty();
         private Optional<ThirdParty> thirdParty = Optional.empty();
         private Optional<PackageCouplingConstraints> packageCoupling = Optional.empty();
-        private Optional<SubmodulesBlueprint> submodulesBlueprint = Optional.empty();
+        private Optional<SubmoduleDefinitions> submoduleDefinitions = Optional.empty();
 
         public Builder layering(Layering layering) {
             this.layering = Optional.ofNullable(layering);
@@ -37,13 +39,13 @@ public record Constraints(
             return this;
         }
 
-        public Builder submodulesBlueprint(SubmodulesBlueprint submodulesBlueprint) {
-            this.submodulesBlueprint = Optional.ofNullable(submodulesBlueprint);
+        public Builder submoduleDefinitions(SubmoduleDefinitions submoduleDefinitions) {
+            this.submoduleDefinitions = Optional.ofNullable(submoduleDefinitions);
             return this;
         }
 
         public Constraints build() {
-            return new Constraints(layering, thirdParty, packageCoupling, submodulesBlueprint);
+            return new Constraints(layering, thirdParty, packageCoupling, submoduleDefinitions);
         }
     }
 

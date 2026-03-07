@@ -3,9 +3,11 @@ package org.tindalos.principle.infrastructure.plugin
 import java.io.File
 
 import org.apache.commons.io.FileUtils
+import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmoduleDefinitions
 import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.domain.constraints.exception.InvalidConfigurationException
 import org.tindalos.principle.domain.core.AnalysisPlan
+import org.tindalos.principle.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider
 import org.yaml.snakeyaml.Yaml
 
 import scala.collection.JavaConverters._
@@ -31,10 +33,12 @@ object ConstraintsReader {
 
     val checks = {
 
-      val modules: Option[SubmodulesBlueprint] = getYamlStructure(checksYaml, "modules")
+      val modules: Option[SubmoduleDefinitions] = getYamlStructure(checksYaml, "modules")
+          .filter(m => m.contains("module-definitions"))
           .map { modules ⇒
             val threshold = modules.get("violation_threshold").map(_.asInstanceOf[Int]).getOrElse(0)
-            new SubmodulesBlueprint(fileLocation, threshold)
+            val provider = new YAMLBasedSubmodulesBlueprintProvider()
+            provider.readSubmoduleDefinitions(rootPackage, fileLocation, threshold)
           }
 
       val packageCoupling = {
@@ -65,7 +69,7 @@ object ConstraintsReader {
         getYamlStructure(checksYaml, "layering").map(toLayering).map(l => java.util.Optional.of(l)).getOrElse(java.util.Optional.empty()),
         getYamlStructure(checksYaml, "third_party_restrictions").map(toThirdParty).map(tp => java.util.Optional.of(tp)).getOrElse(java.util.Optional.empty()),
         java.util.Optional.of(packageCoupling),
-        modules.map(sm => java.util.Optional.of(sm)).getOrElse(java.util.Optional.empty()))
+        modules.map(sm => java.util.Optional.of(sm)).getOrElse(java.util.Optional.empty[SubmoduleDefinitions]()))
     }
 
     new AnalysisPlan(checks, rootPackage)

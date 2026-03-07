@@ -14,7 +14,6 @@ import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyAnalyzer
 import org.tindalos.principle.domain.core.PackageStructureBuilder
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 import org.tindalos.principle.domain.{AnalysisRunner, AnalysisRunnerImpl}
-import org.tindalos.principle.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider
 import org.tindalos.principle.infrastructure.reporters._
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PlainEnglishPackageCohesionReporter
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
@@ -54,8 +53,7 @@ object PoorMansDIContainer {
   }
 
   private def createAnalyzers(packageStructureBuilder: PackageStructureBuilder): List[Analyzer] = {
-    val submodulesBlueprintAnalyzer = new SubmodulesBlueprintAnalyzer(new SubmodulesBuilder(packageStructureBuilder,
-      new YAMLBasedSubmodulesBlueprintProvider()))
+    val submodulesBlueprintAnalyzer = new SubmodulesBlueprintAnalyzer(new SubmodulesBuilder(packageStructureBuilder))
     List(
       LayerViolationAnalyzer,
       ThirdPartyAnalyzer,

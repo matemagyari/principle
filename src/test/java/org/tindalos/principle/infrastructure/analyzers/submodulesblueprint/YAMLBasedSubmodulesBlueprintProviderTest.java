@@ -55,7 +55,7 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
 
     @Test
     public void readSubmoduleDefinitions_validYaml_parsesSuccessfully() {
-        SubmoduleDefinitions result = provider.readSubmoduleDefinitions("com", yamlFile);
+        SubmoduleDefinitions result = provider.readSubmoduleDefinitions("com", yamlFile, 0);
 
         assertNotNull("SubmoduleDefinitions should not be null", result);
 
@@ -96,7 +96,7 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
 
     @Test(expected = InvalidBlueprintDefinitionException.class)
     public void readSubmoduleDefinitions_missingFile_throwsException() {
-        provider.readSubmoduleDefinitions("com", "src/test/resources/non_existent_file.yaml");
+        provider.readSubmoduleDefinitions("com", "src/test/resources/non_existent_file.yaml", 0);
     }
 
     @Test(expected = InvalidBlueprintDefinitionException.class)
@@ -110,7 +110,7 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
             """;
 
         String yamlFile = createTempYamlFile(yaml);
-        provider.readSubmoduleDefinitions("com", yamlFile);
+        provider.readSubmoduleDefinitions("com", yamlFile, 0);
     }
 
     @Test(expected = InvalidBlueprintDefinitionException.class)
@@ -125,11 +125,11 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
             """;
 
         String yamlFile = createTempYamlFile(yaml);
-        provider.readSubmoduleDefinitions("com", yamlFile);
+        provider.readSubmoduleDefinitions("com", yamlFile, 0);
     }
 
     @Test(expected = OverlappingSubmoduleDefinitionsException.class)
-    public void readSubmoduleDefinitions_overlappingModules_throwsException() {
+    public void readSubmoduleDefinitions_overlappingModules_throwsOnOverlapCheck() {
         String yaml = """
             checks:
               modules:
@@ -143,7 +143,7 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
             """;
 
         String yamlFile = createTempYamlFile(yaml);
-        provider.readSubmoduleDefinitions("com", yamlFile);
+        SubmoduleDefinitions definitions = provider.readSubmoduleDefinitions("com", yamlFile, 0);
+        definitions.checkNoOverlaps();
     }
 }
-
