@@ -5,9 +5,9 @@ import org.tindalos.principle.domain.analyzers.adp.ADPResult;
 import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.packages.PackageReference;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Reports ADP analysis results in YAML format.
@@ -36,26 +36,26 @@ public class YAMLADPAnalysisResultReporter implements ADPAnalysisResultReporter 
             return "  breaking_points: []\n";
         }
 
-        var sb = new StringBuilder("  breaking_points:\n");
-        result.cyclesByBreakingPoints().entrySet().stream()
+        var entries = result.cyclesByBreakingPoints().entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
-                .forEach(entry -> appendBreakingPoint(sb, entry.getKey(), entry.getValue()));
-        return sb.toString();
+                .map(entry -> breakingPointYaml(entry.getKey(), entry.getValue()))
+                .collect(Collectors.joining());
+
+        return "  breaking_points:\n" + entries;
     }
 
-    private void appendBreakingPoint(StringBuilder sb, PackageReference breakingPoint, Set<Cycle> cycles) {
-        sb.append("    - package: ").append(breakingPoint.name()).append("\n");
-        sb.append("      cycle_count: ").append(cycles.size()).append("\n");
-        sb.append("      cycles:\n");
-
-        cycles.stream()
+    private String breakingPointYaml(PackageReference breakingPoint, Set<Cycle> cycles) {
+        var cycleLines = cycles.stream()
                 .sorted()
-                .forEach(cycle -> {
-                    List<String> refs = cycle.references().stream()
-                            .map(PackageReference::name)
-                            .toList();
-                    sb.append("        - ").append(refs).append("\n");
-                });
+                .map(cycle -> "        - %s\n".formatted(
+                        cycle.references().stream().map(PackageReference::name).toList()))
+                .collect(Collectors.joining());
+
+        return """
+                    - package: %s
+                      cycle_count: %s
+                      cycles:
+                %s""".formatted(breakingPoint.name(), cycles.size(), cycleLines);
     }
 }
 
