@@ -33,7 +33,10 @@ public class YAMLSubmodulesBlueprintAnalysisResultReporter implements Submodules
 
     private String violationsYaml(SubmodulesBlueprintAnalysisResult result) {
         if (result.violationsNumber() == 0)
-            return "  illegal_dependencies: []\n  missing_dependencies: []\n";
+            return """
+                      illegal_dependencies: []
+                      missing_dependencies: []
+                    """;
 
         return dependenciesYaml("illegal_dependencies", result.illegalDependencies())
                 + dependenciesYaml("missing_dependencies", result.missingDependencies());
@@ -50,8 +53,10 @@ public class YAMLSubmodulesBlueprintAnalysisResultReporter implements Submodules
                             .map(s -> s.id.value())
                             .sorted()
                             .collect(Collectors.joining(", "));
-                    return "    - submodule: " + e.getKey().id.value() + "\n"
-                            + "      depends_on: [" + depList + "]\n";
+                    return """
+                                - submodule: %s
+                                  depends_on: [%s]
+                            """.formatted(e.getKey().id.value(), depList);
                 })
                 .collect(Collectors.joining());
 
