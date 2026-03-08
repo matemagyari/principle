@@ -43,19 +43,18 @@ class SubmodulesBlueprintAnalyzer(submodulesBuilder: SubmodulesBuilder) extends 
             checkInput.packages, checkInput.analysisPlan.basePackage)
 
           val (aID, aMD) = problematicDependencies(submodules)
-
-          new SubmodulesBlueprintAnalysisResult(submoduleDefinitions.violationThreshold, aID, aMD)
+          SubmodulesBlueprintAnalysisResult.withViolations(submoduleDefinitions.violationThreshold, aID, aMD)
         }
         catch {
           case ex: OverlappingSubmoduleDefinitionsException =>
-            new SubmodulesBlueprintAnalysisResult(submoduleDefinitions.violationThreshold, overlaps = ex.getOverlaps().asScala.toSet)
+            SubmodulesBlueprintAnalysisResult.withOverlaps(submoduleDefinitions.violationThreshold, ex.getOverlaps().asScala.toSet.asJava)
         }
       }
-      .getOrElse(new SubmodulesBlueprintAnalysisResult(violationThreshold = 0))
+      .getOrElse(SubmodulesBlueprintAnalysisResult.empty(0))
 
-  private def problematicDependencies(submodules: Set[Submodule]): (Map[Submodule, Set[Submodule]], Map[Submodule, Set[Submodule]]) = {
+  private def problematicDependencies(submodules: Set[Submodule]): (java.util.Map[Submodule, java.util.Set[Submodule]], java.util.Map[Submodule, java.util.Set[Submodule]]) = {
     val emptyMap = Map[Submodule, Set[Submodule]]()
-    submodules.foldLeft((emptyMap, emptyMap))((acc, submodule) => {
+    val (aID, aMD) = submodules.foldLeft((emptyMap, emptyMap))((acc, submodule) => {
       val otherSubmodules = submodules.filterNot(_.equals(submodule))
       val illegalDependencies = submodule.findIllegalDependencies(otherSubmodules.asJava).asScala.toSet
       val missingDependencies = submodule.findMissingPredefinedDependencies(otherSubmodules.asJava).asScala.toSet
@@ -65,5 +64,6 @@ class SubmodulesBlueprintAnalyzer(submodulesBuilder: SubmodulesBuilder) extends 
 
       (aID2, aMD2)
     })
+    (aID.map { case (k, v) => k -> v.asJava }.asJava, aMD.map { case (k, v) => k -> v.asJava }.asJava)
   }
 }

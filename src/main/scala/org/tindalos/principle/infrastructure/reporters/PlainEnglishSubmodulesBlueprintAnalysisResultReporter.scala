@@ -5,24 +5,26 @@ import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmodulesBlu
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.Submodule
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 
+import scala.collection.JavaConverters._
+
 class PlainEnglishSubmodulesBlueprintAnalysisResultReporter extends SubmodulesBlueprintAnalysisResultReporter {
 
-  def report(result: SubmodulesBlueprintAnalysisResult):AnalysisResultsReporter.Report = {
+  def report(result: SubmodulesBlueprintAnalysisResult): AnalysisResultsReporter.Report = {
     val sectionLine = "=============================================================="
     val sb = new StringBuffer("\n" + sectionLine + "\n")
-    sb.append("Submodules Blueprint violations (" + result.violationsNumber + " of the allowed " + result.threshold + ")")
+    sb.append("Submodules Blueprint violations (" + result.violationsNumber() + " of the allowed " + result.threshold() + ")")
     sb.append("\n" + sectionLine + "\n")
 
-    if (!result.overlaps.isEmpty) {
+    if (!result.overlaps().isEmpty) {
       sb.append("Invalid blueprint definition, overlapping modules" + "\n")
-    } else if (result.violationsNumber == 0) {
+    } else if (result.violationsNumber() == 0) {
       sb.append("No violations.\n")
     } else {
-      result.illegalDependencies.foreach({ keyVal =>
-        sb.append(printIllegalDependencies(keyVal._1, keyVal._2) + "\n")
+      result.illegalDependencies().asScala.foreach({ keyVal =>
+        sb.append(printIllegalDependencies(keyVal._1, keyVal._2.asScala.toSet) + "\n")
       })
-      result.missingDependencies.foreach({ keyVal =>
-        sb.append(printMissingDependencies(keyVal._1, keyVal._2) + "\n")
+      result.missingDependencies().asScala.foreach({ keyVal =>
+        sb.append(printMissingDependencies(keyVal._1, keyVal._2.asScala.toSet) + "\n")
       })
     }
     sb.append(sectionLine + "\n")

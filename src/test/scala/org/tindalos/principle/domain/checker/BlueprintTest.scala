@@ -7,6 +7,8 @@ import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.analyzers.submodulesblueprint._
 import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics
+
+import scala.collection.JavaConverters._
 import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder
 import org.tindalos.principle.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
@@ -20,37 +22,32 @@ class BlueprintTest {
 
   @Test
   def missingAndIllegal() {
-
     val result = run("org.tindalos.principletest.submodulesblueprint", "src/test/resources/principle_blueprint_test.yaml")
 
     val mod1 = fakeSubmodule("MOD1")
     val mod2 = fakeSubmodule("MOD2")
     val mod3 = fakeSubmodule("MOD3")
 
-    assertEquals(Map(mod3 -> Set(mod2)), result.illegalDependencies)
-    assertEquals(Map(mod1 -> Set(mod2)), result.missingDependencies)
+    assertEquals(java.util.Map.of(mod3, java.util.Set.of[Submodule](mod2)), result.illegalDependencies())
+    assertEquals(java.util.Map.of(mod1, java.util.Set.of[Submodule](mod2)), result.missingDependencies())
   }
 
   @Test
   def overlapping() = {
     val result = run("org.tindalos.principletest.submodulesblueprint", "src/test/resources/principle_blueprint_test_overlapping.yaml")
 
-    // When overlaps exist, illegalDependencies and missingDependencies should be empty
-    assertEquals(Map(), result.illegalDependencies)
-    assertEquals(Map(), result.missingDependencies)
-
-    // Verify overlaps are detected
-    assert(result.overlaps.nonEmpty, "Expected overlaps to be detected")
+    assertEquals(java.util.Map.of(), result.illegalDependencies())
+    assertEquals(java.util.Map.of(), result.missingDependencies())
+    assert(!result.overlaps().isEmpty, "Expected overlaps to be detected")
   }
 
   @Test
   def violationsCount() = {
     val result = run("org.tindalos.principletest.submodulesblueprint", "src/test/resources/principle_blueprint_test.yaml")
 
-    // Verify total violations count
-    assertEquals(2, result.violationsNumber)
-    assertEquals(1, result.illegalDependencies.size)
-    assertEquals(1, result.missingDependencies.size)
+    assertEquals(2, result.violationsNumber())
+    assertEquals(1, result.illegalDependencies().size)
+    assertEquals(1, result.missingDependencies().size)
   }
 
   @Test
@@ -60,9 +57,8 @@ class BlueprintTest {
     val mod3 = fakeSubmodule("MOD3")
     val mod2 = fakeSubmodule("MOD2")
 
-    // Verify illegal dependencies are detected
-    assert(result.illegalDependencies.contains(mod3), "MOD3 should have illegal dependencies")
-    val illegalDeps = result.illegalDependencies.get(mod3).get
+    assert(result.illegalDependencies().containsKey(mod3), "MOD3 should have illegal dependencies")
+    val illegalDeps = result.illegalDependencies().get(mod3)
     assert(illegalDeps.contains(mod2), "MOD3 illegally depends on MOD2")
   }
 
@@ -73,17 +69,14 @@ class BlueprintTest {
     val mod1 = fakeSubmodule("MOD1")
     val mod2 = fakeSubmodule("MOD2")
 
-    // Verify missing dependencies are detected
-    assert(result.missingDependencies.contains(mod1), "MOD1 should have missing dependencies")
-    val missingDeps = result.missingDependencies.get(mod1).get
+    assert(result.missingDependencies().containsKey(mod1), "MOD1 should have missing dependencies")
+    val missingDeps = result.missingDependencies().get(mod1)
     assert(missingDeps.contains(mod2), "MOD1 is missing dependency on MOD2")
   }
 
   @Test
   def expectationsFailed_whenViolationsExceedThreshold() = {
     val result = run("org.tindalos.principletest.submodulesblueprint", "src/test/resources/principle_blueprint_test.yaml")
-
-    // With threshold 0 and 2 violations, expectations should fail
     assert(result.constraintViolated(), "Expectations should fail when violations exceed threshold")
   }
 
@@ -102,25 +95,18 @@ class BlueprintTest {
   def verifyResultStructure() = {
     val result = run("org.tindalos.principletest.submodulesblueprint", "src/test/resources/principle_blueprint_test.yaml")
 
-    // Verify result has correct structure
-    assertEquals(0, result.threshold)
-    assert(result.illegalDependencies.isInstanceOf[Map[_, _]], "Illegal dependencies should be a Map")
-    assert(result.missingDependencies.isInstanceOf[Map[_, _]], "Missing dependencies should be a Map")
+    assertEquals(0, result.threshold())
+    assert(result.illegalDependencies().isInstanceOf[java.util.Map[_, _]], "Illegal dependencies should be a Map")
+    assert(result.missingDependencies().isInstanceOf[java.util.Map[_, _]], "Missing dependencies should be a Map")
   }
 
   @Test
   def blueprintOk_parsingSucceeds() = {
     val result = run("org.tindalos.principletest.submodulesblueprint", "src/test/resources/principle_blueprint_ok.yaml")
 
-    // Verify blueprint was parsed successfully
-    assertEquals(0, result.threshold)
-
-    // Verify no overlaps (valid blueprint)
-    assert(result.overlaps.isEmpty, "Valid blueprint should have no overlaps")
-
-    // For a valid blueprint with matching code, there should be no violations
-    // (Note: actual violations depend on the test code structure)
-    assert(result.violationsNumber >= 0, "Violations should be non-negative")
+    assertEquals(0, result.threshold())
+    assert(result.overlaps().isEmpty, "Valid blueprint should have no overlaps")
+    assert(result.violationsNumber() >= 0, "Violations should be non-negative")
   }
 
   def fakeSubmodule(name: String) = {

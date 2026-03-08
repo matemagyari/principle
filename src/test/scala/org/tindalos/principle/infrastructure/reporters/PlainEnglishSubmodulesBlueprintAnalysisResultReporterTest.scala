@@ -15,7 +15,7 @@ class PlainEnglishSubmodulesBlueprintAnalysisResultReporterTest {
 
   @Test
   def noViolations_reportsNoViolations(): Unit = {
-    val result = SubmodulesBlueprintAnalysisResult(0)
+    val result = SubmodulesBlueprintAnalysisResult.empty(0)
 
     val report = reporter.report(result)
 
@@ -33,7 +33,7 @@ class PlainEnglishSubmodulesBlueprintAnalysisResultReporterTest {
   @Test
   def withOverlap_reportsOverlapMessage(): Unit = {
     val overlap = new Overlap(new SubmoduleId("MOD1"), new SubmoduleId("MOD2"))
-    val result = SubmodulesBlueprintAnalysisResult(0, overlaps = Set(overlap))
+    val result = SubmodulesBlueprintAnalysisResult.withOverlaps(0, java.util.Set.of[Overlap](overlap))
 
     val report = reporter.report(result)
 
@@ -52,7 +52,7 @@ class PlainEnglishSubmodulesBlueprintAnalysisResultReporterTest {
   def withIllegalDependency_reportsIllegalDependency(): Unit = {
     val mod1 = submodule("MOD1")
     val mod2 = submodule("MOD2")
-    val result = SubmodulesBlueprintAnalysisResult(0, illegalDependencies = Map(mod1 -> Set(mod2)))
+    val result = SubmodulesBlueprintAnalysisResult.withViolations(0, java.util.Map.of(mod1, java.util.Set.of[Submodule](mod2)), java.util.Map.of[Submodule, java.util.Set[Submodule]]())
 
     val report = reporter.report(result)
 
@@ -71,7 +71,7 @@ class PlainEnglishSubmodulesBlueprintAnalysisResultReporterTest {
   def withMissingDependency_reportsMissingDependency(): Unit = {
     val mod1 = submodule("MOD1")
     val mod2 = submodule("MOD2")
-    val result = SubmodulesBlueprintAnalysisResult(0, missingDependencies = Map(mod1 -> Set(mod2)))
+    val result = SubmodulesBlueprintAnalysisResult.withViolations(0, java.util.Map.of[Submodule, java.util.Set[Submodule]](), java.util.Map.of(mod1, java.util.Set.of[Submodule](mod2)))
 
     val report = reporter.report(result)
 
@@ -91,10 +91,10 @@ class PlainEnglishSubmodulesBlueprintAnalysisResultReporterTest {
     val mod1 = submodule("MOD1")
     val mod2 = submodule("MOD2")
     val mod3 = submodule("MOD3")
-    val result = SubmodulesBlueprintAnalysisResult(
+    val result = SubmodulesBlueprintAnalysisResult.withViolations(
       0,
-      illegalDependencies = Map(mod1 -> Set(mod2)),
-      missingDependencies = Map(mod1 -> Set(mod3))
+      java.util.Map.of(mod1, java.util.Set.of[Submodule](mod2)),
+      java.util.Map.of(mod1, java.util.Set.of[Submodule](mod3))
     )
 
     val report = reporter.report(result)
