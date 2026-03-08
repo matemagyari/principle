@@ -22,9 +22,9 @@ public class Submodule {
         if (plannedDependencies.contains(id))
             throw new InvalidBlueprintDefinitionException("Submodule should not depend on itself: " + id);
         this.id = id;
-        this.packagesUnderModule = packagesUnderModule;
-        this.plannedDependencies = plannedDependencies;
-        this.outgoingReferences = packagesUnderModule.stream()
+        this.packagesUnderModule = Set.copyOf(packagesUnderModule);
+        this.plannedDependencies = Set.copyOf(plannedDependencies);
+        this.outgoingReferences = this.packagesUnderModule.stream()
                 .flatMap(p -> p.accumulatedDirectPackageReferences().stream())
                 .collect(Collectors.toUnmodifiableSet());
     }
