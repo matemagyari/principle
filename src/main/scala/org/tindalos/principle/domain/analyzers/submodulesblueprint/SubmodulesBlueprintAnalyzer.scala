@@ -7,6 +7,7 @@ import org.tindalos.principle.domain.core.{Package, PackageStructureBuilder}
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics
 
 import scala.collection.JavaConverters.asScalaSetConverter
+import scala.collection.JavaConverters._
 
 class SubmodulesBuilder(packageStructureBuilder: PackageStructureBuilder) {
   def build(submoduleDefinitions: SubmoduleDefinitions, packages: List[Package], basePackageName: String): Set[Submodule] = {
@@ -14,14 +15,13 @@ class SubmodulesBuilder(packageStructureBuilder: PackageStructureBuilder) {
     submoduleDefinitions.checkNoOverlaps()
     val basePackage = packageStructureBuilder.build(packages, basePackageName)
 
-    import scala.collection.JavaConverters._
 
     def convert(submoduleDefinition: SubmoduleDefinition): Submodule = {
       val packages = submoduleDefinition.packages().asScala.map(reference => basePackage.toMap().get(reference) match {
         case None => throw new InvalidBlueprintDefinitionException("Package does not exist: " + reference)
         case Some(aPackage) => aPackage
       })
-      new Submodule(submoduleDefinition.id, packages.toSet.asInstanceOf[Set[PackageWithMetrics]], submoduleDefinition.getLegalDependencies.asScala.toSet)
+      new Submodule(submoduleDefinition.id, packages.toSet.asInstanceOf[Set[PackageWithMetrics]].asJava, submoduleDefinition.getLegalDependencies.asScala.toSet.asJava)
     }
 
     submoduleDefinitions.getDefinitions().asScala.values.map(convert).toSet
@@ -57,8 +57,8 @@ class SubmodulesBlueprintAnalyzer(submodulesBuilder: SubmodulesBuilder) extends 
     val emptyMap = Map[Submodule, Set[Submodule]]()
     submodules.foldLeft((emptyMap, emptyMap))((acc, submodule) => {
       val otherSubmodules = submodules.filterNot(_.equals(submodule))
-      val illegalDependencies = submodule.findIllegalDependencies(otherSubmodules)
-      val missingDependencies = submodule.findMissingPredefinedDependencies(otherSubmodules)
+      val illegalDependencies = submodule.findIllegalDependencies(otherSubmodules.asJava).asScala.toSet
+      val missingDependencies = submodule.findMissingPredefinedDependencies(otherSubmodules.asJava).asScala.toSet
 
       val aID2 = if (illegalDependencies.isEmpty) acc._1 else acc._1 + (submodule -> illegalDependencies)
       val aMD2 = if (missingDependencies.isEmpty) acc._2 else acc._2 + (submodule -> missingDependencies)

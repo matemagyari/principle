@@ -6,6 +6,7 @@ import org.tindalos.principle.domain.AnalysisInput
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.analyzers.submodulesblueprint._
 import org.tindalos.principle.domain.constraints._
+import org.tindalos.principle.domain.core.packages.PackageWithMetrics
 import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder
 import org.tindalos.principle.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
@@ -123,7 +124,7 @@ class BlueprintTest {
   }
 
   def fakeSubmodule(name: String) = {
-    new Submodule(new SubmoduleId(name), Set(), Set())
+    new Submodule(new SubmoduleId(name), java.util.Set.of[PackageWithMetrics](), java.util.Set.of[SubmoduleId]())
   }
 
   private def run(basePackage: String, location: String) = {

@@ -11,7 +11,7 @@ class YAMLSubmodulesBlueprintAnalysisResultReporterTest {
   private val reporter = new YAMLSubmodulesBlueprintAnalysisResultReporter()
 
   private def submodule(id: String): Submodule =
-    new Submodule(new SubmoduleId(id), Set.empty[PackageWithMetrics], Set.empty[SubmoduleId])
+    new Submodule(new SubmoduleId(id), java.util.Set.of[PackageWithMetrics](), java.util.Set.of[SubmoduleId]())
 
   private def assertValidYaml(yaml: String): Unit = {
     val parsed = new Yaml().load(yaml)

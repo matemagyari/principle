@@ -11,7 +11,7 @@ class PlainEnglishSubmodulesBlueprintAnalysisResultReporterTest {
   private val reporter = new PlainEnglishSubmodulesBlueprintAnalysisResultReporter()
 
   private def submodule(id: String): Submodule =
-    new Submodule(new SubmoduleId(id), Set.empty[PackageWithMetrics], Set.empty[SubmoduleId])
+    new Submodule(new SubmoduleId(id), java.util.Set.of[PackageWithMetrics](), java.util.Set.of[SubmoduleId]())
 
   @Test
   def noViolations_reportsNoViolations(): Unit = {
