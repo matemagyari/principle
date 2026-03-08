@@ -26,6 +26,7 @@ public class YAMLSDPAnalysisResultReporterTest {
         return new PackageWithMetrics() {
             public PackageReference reference() { return new PackageReference(name); }
             public PackageMetrics getMetrics() { return new PackageMetrics(0, 0, 0, instability, 0); }
+            public java.util.Set<PackageReference> accumulatedDirectPackageReferences() { return java.util.Set.of(); }
         };
     }
 

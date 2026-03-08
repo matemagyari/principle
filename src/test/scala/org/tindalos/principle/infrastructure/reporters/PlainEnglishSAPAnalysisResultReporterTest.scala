@@ -17,6 +17,7 @@ class PlainEnglishSAPAnalysisResultReporterTest {
   private def testPackage(name: String, distance: Float): PackageWithMetrics = new PackageWithMetrics {
     override def reference() = new PackageReference(name)
     override def getMetrics() = new PackageMetrics(0, 0, 0, 0, distance)
+    override def accumulatedDirectPackageReferences() = java.util.Set.of[PackageReference]()
   }
 
   @Test

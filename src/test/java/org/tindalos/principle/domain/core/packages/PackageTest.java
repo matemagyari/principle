@@ -105,7 +105,7 @@ public class PackageTest {
         pkg.addOwnReference(ref1);
         pkg.addOwnReference(ref2);
 
-        Set<PackageReference> refs = JavaConverters.setAsJavaSet(pkg.accumulatedDirectPackageReferences());
+        Set<PackageReference> refs = pkg.accumulatedDirectPackageReferences();
 
         assertEquals(2, refs.size());
         assertTrue(refs.contains(ref1));
@@ -121,7 +121,7 @@ public class PackageTest {
 
         parent.insert(child);
 
-        Set<PackageReference> refs = JavaConverters.setAsJavaSet(parent.accumulatedDirectPackageReferences());
+        Set<PackageReference> refs = parent.accumulatedDirectPackageReferences();
 
         assertTrue(refs.contains(refFromChild));
     }

@@ -17,6 +17,7 @@ class PlainEnglishSDPAnalysisResultReporterTest {
   private def testPackage(name: String, instability: Float): PackageWithMetrics = new PackageWithMetrics {
     override def reference() = new PackageReference(name)
     override def getMetrics() = new PackageMetrics(0, 0, 0, instability, 0)
+    override def accumulatedDirectPackageReferences() = java.util.Set.of[PackageReference]()
   }
 
   @Test

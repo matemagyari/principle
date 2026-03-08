@@ -4,13 +4,15 @@ import org.apache.commons.lang3.builder.HashCodeBuilder
 import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.core.packages.PackageReference
 
+import scala.collection.JavaConverters._
+
 
 class Submodule(val id: SubmoduleId, val packagesUnderModule: Set[Package], val plannedDependencies: Set[SubmoduleId]) {
 
   //TODO move this check to the definition
   if (plannedDependencies.contains(id)) throw new InvalidBlueprintDefinitionException("Submodule should not depend on itself: " + id)
 
-  val outgoingReferences = packagesUnderModule.flatMap(x => x.accumulatedDirectPackageReferences()).toSet
+  val outgoingReferences = packagesUnderModule.flatMap(x => x.accumulatedDirectPackageReferences().asScala).toSet
 
   def findMissingPredefinedDependencies(otherSubmodules: Set[Submodule]) = {
 

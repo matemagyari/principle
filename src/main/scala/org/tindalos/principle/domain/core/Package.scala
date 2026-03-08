@@ -35,15 +35,19 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
   }
 
   // all the references going out from this package
-  def accumulatedDirectPackageReferences(): Set[PackageReference] = {
+  override def accumulatedDirectPackageReferences(): java.util.Set[PackageReference] = {
+    scalaAccumulatedDirectPackageReferences().asJava
+  }
+
+  private def scalaAccumulatedDirectPackageReferences(): Set[PackageReference] = {
     val rs = subPackages
-        .flatMap(_.accumulatedDirectPackageReferences())
+        .flatMap(_.scalaAccumulatedDirectPackageReferences())
         .filterNot(_.equals(reference))
     rs.toSet ++: getOwnPackageReferences()
   }
 
   protected def accumulatedDirectlyReferredPackages(packageReferenceMap: Map[PackageReference, Package]): Set[Package] =
-    accumulatedDirectPackageReferences().map(packageReferenceMap.get(_).get)
+    scalaAccumulatedDirectPackageReferences().map(packageReferenceMap.get(_).get)
 
   def toMap(): Map[PackageReference, Package] = toMap(scala.collection.mutable.Map[PackageReference, Package]())
 
@@ -106,7 +110,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
 
   private def cumulatedDependenciesAcc(packageReferenceMap: Map[PackageReference, Package], dependencies: scala.collection.mutable.Set[PackageReference]): Set[PackageReference] = {
 
-    val accumulatedPackageReferences = this.accumulatedDirectPackageReferences().filterNot(dependencies.contains(_))
+    val accumulatedPackageReferences = this.accumulatedDirectPackageReferences().asScala.toSet.filterNot(dependencies.contains(_))
 
     if (accumulatedPackageReferences.isEmpty) {
       dependencies.filterNot(_.equals(reference)).toSet

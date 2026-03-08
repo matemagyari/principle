@@ -25,6 +25,7 @@ public class YAMLSAPAnalysisResultReporterTest {
         return new PackageWithMetrics() {
             public PackageReference reference() { return new PackageReference(name); }
             public PackageMetrics getMetrics() { return new PackageMetrics(0, 0, 0, 0, distance); }
+            public java.util.Set<PackageReference> accumulatedDirectPackageReferences() { return java.util.Set.of(); }
         };
     }
 
