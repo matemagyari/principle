@@ -3,7 +3,7 @@ package org.tindalos.principle.infrastructure.reporters
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.{Overlap, Submodule, SubmoduleId, SubmodulesBlueprintAnalysisResult}
-import org.tindalos.principle.domain.core.Package
+import org.tindalos.principle.domain.core.packages.PackageWithMetrics
 
 class PlainEnglishSubmodulesBlueprintAnalysisResultReporterTest {
 
@@ -11,7 +11,7 @@ class PlainEnglishSubmodulesBlueprintAnalysisResultReporterTest {
   private val reporter = new PlainEnglishSubmodulesBlueprintAnalysisResultReporter()
 
   private def submodule(id: String): Submodule =
-    new Submodule(new SubmoduleId(id), Set.empty[Package], Set.empty[SubmoduleId])
+    new Submodule(new SubmoduleId(id), Set.empty[PackageWithMetrics], Set.empty[SubmoduleId])
 
   @Test
   def noViolations_reportsNoViolations(): Unit = {

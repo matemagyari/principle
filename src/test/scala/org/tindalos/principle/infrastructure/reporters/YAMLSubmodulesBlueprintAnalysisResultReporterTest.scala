@@ -3,7 +3,7 @@ package org.tindalos.principle.infrastructure.reporters
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.{Overlap, Submodule, SubmoduleId, SubmodulesBlueprintAnalysisResult}
-import org.tindalos.principle.domain.core.Package
+import org.tindalos.principle.domain.core.packages.PackageWithMetrics
 import org.yaml.snakeyaml.Yaml
 
 class YAMLSubmodulesBlueprintAnalysisResultReporterTest {
@@ -11,7 +11,7 @@ class YAMLSubmodulesBlueprintAnalysisResultReporterTest {
   private val reporter = new YAMLSubmodulesBlueprintAnalysisResultReporter()
 
   private def submodule(id: String): Submodule =
-    new Submodule(new SubmoduleId(id), Set.empty[Package], Set.empty[SubmoduleId])
+    new Submodule(new SubmoduleId(id), Set.empty[PackageWithMetrics], Set.empty[SubmoduleId])
 
   private def assertValidYaml(yaml: String): Unit = {
     val parsed = new Yaml().load(yaml)

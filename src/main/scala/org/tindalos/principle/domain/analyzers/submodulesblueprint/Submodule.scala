@@ -1,13 +1,12 @@
 package org.tindalos.principle.domain.analyzers.submodulesblueprint
 
 import org.apache.commons.lang3.builder.HashCodeBuilder
-import org.tindalos.principle.domain.core.Package
-import org.tindalos.principle.domain.core.packages.PackageReference
+import org.tindalos.principle.domain.core.packages.{PackageReference, PackageWithMetrics}
 
 import scala.collection.JavaConverters._
 
 
-class Submodule(val id: SubmoduleId, val packagesUnderModule: Set[Package], val plannedDependencies: Set[SubmoduleId]) {
+class Submodule(val id: SubmoduleId, val packagesUnderModule: Set[PackageWithMetrics], val plannedDependencies: Set[SubmoduleId]) {
 
   //TODO move this check to the definition
   if (plannedDependencies.contains(id)) throw new InvalidBlueprintDefinitionException("Submodule should not depend on itself: " + id)
@@ -43,7 +42,7 @@ class Submodule(val id: SubmoduleId, val packagesUnderModule: Set[Package], val 
     val results = for (
       packageReference <- references;
       aPackage <- packagesUnderModule
-      if packageReference.pointsToThatOrInside(aPackage.reference)
+      if packageReference.pointsToThatOrInside(aPackage.reference())
     ) yield 1
 
     !results.isEmpty
@@ -61,7 +60,7 @@ class Submodule(val id: SubmoduleId, val packagesUnderModule: Set[Package], val 
   }
 
   private def removeOutsideReferences(references: Set[PackageReference]) =
-    references.filterNot(ref => packagesUnderModule.exists(pac => ref.pointsToThatOrInside(pac.reference)))
+    references.filterNot(ref => packagesUnderModule.exists(pac => ref.pointsToThatOrInside(pac.reference())))
 
   override def equals(other: Any) =
     if (!other.isInstanceOf[Submodule]) false

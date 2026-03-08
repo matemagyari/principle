@@ -4,6 +4,7 @@ import org.tindalos.principle.domain.AnalysisInput
 import org.tindalos.principle.domain.analyzers.Analyzer
 import org.tindalos.principle.domain.constraints.Constraints
 import org.tindalos.principle.domain.core.{Package, PackageStructureBuilder}
+import org.tindalos.principle.domain.core.packages.PackageWithMetrics
 
 import scala.collection.JavaConverters.asScalaSetConverter
 
@@ -20,7 +21,7 @@ class SubmodulesBuilder(packageStructureBuilder: PackageStructureBuilder) {
         case None => throw new InvalidBlueprintDefinitionException("Package does not exist: " + reference)
         case Some(aPackage) => aPackage
       })
-      new Submodule(submoduleDefinition.id, packages.toSet, submoduleDefinition.getLegalDependencies.asScala.toSet)
+      new Submodule(submoduleDefinition.id, packages.toSet.asInstanceOf[Set[PackageWithMetrics]], submoduleDefinition.getLegalDependencies.asScala.toSet)
     }
 
     submoduleDefinitions.getDefinitions().asScala.values.map(convert).toSet
