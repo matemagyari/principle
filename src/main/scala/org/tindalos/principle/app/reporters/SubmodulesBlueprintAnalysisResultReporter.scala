@@ -1,5 +1,0 @@
-package org.tindalos.principle.app.reporters
-
-import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmodulesBlueprintAnalysisResult
-
-trait SubmodulesBlueprintAnalysisResultReporter extends AnalysisResultReporter[SubmodulesBlueprintAnalysisResult]
