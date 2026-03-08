@@ -85,7 +85,7 @@ public class Submodule {
 
     @Override
     public String toString() {
-        return id.toString();
+        return id.value();
     }
 }
 
