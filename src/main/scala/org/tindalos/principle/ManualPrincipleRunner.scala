@@ -1,10 +1,11 @@
 package org.tindalos.principle
 
 import org.tindalos.principle.domain.core.AnalysisPlan
-import org.tindalos.principle.domain.constraints._
-import org.tindalos.principle.infrastructure.{ConsolePrinter, ConstraintsReader}
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
+import org.tindalos.principle.infrastructure.{ConsolePrinter, ConstraintsReader}
 import org.tindalos.principle.utils.logging.{SimpleLogger, TheLogger}
+
+import java.util.Optional
 
 object ManualPrincipleRunner extends App {
 
@@ -21,25 +22,8 @@ object ManualPrincipleRunner extends App {
     }
   })
 
-
-  val basePackage = "org.tindalos.principle"
-  val runAnalysis = PoorMansDIContainer.buildAnalyzer(basePackage, printer)
-  val checks = Constraints.builder().packageCoupling(PackageCouplingConstraints.builder().grouping(Grouping.of()).build()).build()
-
-  runAnalysis(new AnalysisPlan(checks, basePackage))
-
-//  {
-//    val checks = new Checks()
-//
-//    //checks.layering = layering()
-//    checks.packageCoupling = packageCoupling()
-//    //checks.setSubmodulesBlueprint(submodulesBlueprint())
-//    checks
-//  }
-
-  //private val submodulesDefinitionLocation = "src/main/resources/principle_blueprint.yaml"
-
-  private def layering() = new Layering(java.util.List.of("infrastructure", "app", "domain"), 0)
-
+  val plan: AnalysisPlan = ConstraintsReader.readFromFile(Optional.of("/Users/mate.magyari/private/PrivateProjects/principle/principle.yml"))
+  val runAnalysis = PoorMansDIContainer.buildAnalyzer(plan.basePackage(), printer)
+  runAnalysis(plan)
 
 }
