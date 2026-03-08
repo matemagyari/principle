@@ -39,8 +39,10 @@ public class YAMLThirdPartyAnalysisResultReporter implements ThirdPartyAnalysisR
                 .sorted(java.util.Map.Entry.comparingByKey())
                 .flatMap(entry -> entry.getValue().stream()
                         .sorted()
-                        .map(dep -> "    - referrer: %s\n      dependency: %s\n"
-                                .formatted(entry.getKey().name(), dep.name())))
+                        .map(dep -> """
+                                    - referrer: %s
+                                      dependency: %s
+                                """.formatted(entry.getKey().name(), dep.name())))
                 .collect(Collectors.joining());
 
         return "  violations:\n" + violationLines;

@@ -41,12 +41,16 @@ public class YAMLSDPAnalysisResultReporter implements SDPAnalysisResultReporter 
     }
 
     private String violationYaml(SDPViolation violation) {
-        return "    - depender: %s\n      depender_instability: %s\n      dependee: %s\n      dependee_instability: %s\n"
-                .formatted(
-                        violation.depender().reference().name(),
-                        violation.depender().getMetrics().instability(),
-                        violation.dependee().reference().name(),
-                        violation.dependee().getMetrics().instability());
+        return """
+                    - depender: %s
+                      depender_instability: %s
+                      dependee: %s
+                      dependee_instability: %s
+                """.formatted(
+                violation.depender().reference().name(),
+                violation.depender().getMetrics().instability(),
+                violation.dependee().reference().name(),
+                violation.dependee().getMetrics().instability());
     }
 }
 
