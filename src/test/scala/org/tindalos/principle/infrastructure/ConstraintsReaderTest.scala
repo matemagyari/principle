@@ -7,7 +7,7 @@ import org.tindalos.principle.infrastructure.plugin.ConstraintsReader
 
 import java.io.File
 import java.nio.file.Files
-import java.util.Collections
+import java.util.{Collections, Optional}
 
 class ConstraintsReaderTest {
 
@@ -34,7 +34,7 @@ class ConstraintsReaderTest {
         |    cyclic_dependencies_threshold: 0
         |""".stripMargin)
 
-    val plan = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Optional.of(path))
     val rootPackage = plan.basePackage()
 
     assertEquals("com.example", rootPackage)
@@ -51,7 +51,7 @@ class ConstraintsReaderTest {
         |    violation_threshold: 2
         |""".stripMargin)
 
-    val plan = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Optional.of(path))
     val constraints = plan.constraints()
 
     val layering = constraints.layering().get()
@@ -69,7 +69,7 @@ class ConstraintsReaderTest {
         |    layers: [a, b]
         |""".stripMargin)
 
-    val plan = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Optional.of(path))
     val constraints = plan.constraints()
 
     assertEquals(0, constraints.layering().get().violationThreshold())
@@ -85,7 +85,7 @@ class ConstraintsReaderTest {
         |    cyclic_dependencies_threshold: 0
         |""".stripMargin)
 
-    val plan = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Optional.of(path))
     val constraints = plan.constraints()
 
     assertTrue(constraints.layering().isEmpty)
@@ -101,7 +101,7 @@ class ConstraintsReaderTest {
         |    cyclic_dependencies_threshold: 5
         |""".stripMargin)
 
-    val plan = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Optional.of(path))
     val constraints = plan.constraints()
 
     val adp = constraints.packageCoupling().get().adp()
@@ -119,7 +119,7 @@ class ConstraintsReaderTest {
         |    acd_threshold: 0.35
         |""".stripMargin)
 
-    val plan = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Optional.of(path))
     val constraints = plan.constraints()
 
     val racd = constraints.packageCoupling().get().racd()
@@ -138,7 +138,7 @@ class ConstraintsReaderTest {
         |structure_analysis_enabled: true
         |""".stripMargin)
 
-    val plan = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Optional.of(path))
     val constraints = plan.constraints()
 
     assertTrue(constraints.packageCoupling().get().grouping().isPresent)
@@ -155,7 +155,7 @@ class ConstraintsReaderTest {
         |structure_analysis_enabled: false
         |""".stripMargin)
 
-    val plan = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Optional.of(path))
     val constraints = plan.constraints()
 
     assertFalse(constraints.packageCoupling().get().grouping().isPresent)
@@ -178,7 +178,7 @@ class ConstraintsReaderTest {
         |    violation_threshold: 3
         |""".stripMargin)
 
-    val plan = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Optional.of(path))
     val constraints = plan.constraints()
 
     val tp = constraints.thirdParty()
@@ -201,7 +201,7 @@ class ConstraintsReaderTest {
         |    cyclic_dependencies_threshold: 0
         |""".stripMargin)
 
-    val plan = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Optional.of(path))
     val constraints = plan.constraints()
 
     assertFalse(constraints.thirdParty().isPresent)
@@ -224,7 +224,7 @@ class ConstraintsReaderTest {
         |    violation_threshold: 2
         |""".stripMargin)
 
-    val plan = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Optional.of(path))
     val definitions = plan.constraints().submoduleDefinitions().get()
 
     assertEquals(3, definitions.getDefinitions.size())
@@ -247,7 +247,7 @@ class ConstraintsReaderTest {
         |    violation_threshold: 1
         |""".stripMargin)
 
-    val plan = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Optional.of(path))
     val constraints = plan.constraints()
 
     assertTrue(constraints.submoduleDefinitions().isPresent)
@@ -269,7 +269,7 @@ class ConstraintsReaderTest {
         |      MOD1: []
         |""".stripMargin)
 
-    val plan = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Optional.of(path))
     val definitions = plan.constraints().submoduleDefinitions().get()
 
     assertEquals(0, definitions.violationThreshold())
@@ -285,7 +285,7 @@ class ConstraintsReaderTest {
         |    cyclic_dependencies_threshold: 0
         |""".stripMargin)
 
-    val plan = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Optional.of(path))
     val constraints = plan.constraints()
 
     assertFalse(constraints.submoduleDefinitions().isPresent)
@@ -303,7 +303,7 @@ class ConstraintsReaderTest {
         |    violation_threshold: 1
         |""".stripMargin)
 
-    val plan = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Optional.of(path))
     val constraints = plan.constraints()
 
     assertFalse(constraints.submoduleDefinitions().isPresent)
@@ -311,7 +311,7 @@ class ConstraintsReaderTest {
 
   @Test(expected = classOf[InvalidConfigurationException])
   def missingFile_throwsInvalidConfigurationException(): Unit = {
-    ConstraintsReader.readFromFile(Some("/non/existent/path/principle.yml"))
+    ConstraintsReader.readFromFile(Optional.of("/non/existent/path/principle.yml"))
   }
 
   @Test
@@ -340,7 +340,7 @@ class ConstraintsReaderTest {
         |structure_analysis_enabled: true
         |""".stripMargin)
 
-    val plan = ConstraintsReader.readFromFile(Some(path))
+    val plan = ConstraintsReader.readFromFile(Optional.of(path))
     val constraints = plan.constraints()
     val rootPackage = plan.basePackage()
 

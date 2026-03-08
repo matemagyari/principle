@@ -30,7 +30,7 @@ class DesignQualityCheckerMojo extends AbstractMojo {
 
     ReportsDirectoryManager.ensureReportsDirectoryExists()
 
-    val plan = ConstraintsReader.readFromFile(if (location == null) None else Some(location))
+    val plan = ConstraintsReader.readFromFile(if (location == null) java.util.Optional.empty() else java.util.Optional.of(location))
 
     val analyse = PoorMansDIContainer.buildAnalyzer(plan.basePackage(), new LogPrinter(getLog()))
     try {
