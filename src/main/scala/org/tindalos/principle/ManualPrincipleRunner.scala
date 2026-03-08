@@ -2,9 +2,8 @@ package org.tindalos.principle
 
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.constraints._
-import org.tindalos.principle.infrastructure.ConsolePrinter
+import org.tindalos.principle.infrastructure.{ConsolePrinter, ConstraintsReader}
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
-import org.tindalos.principle.infrastructure.plugin.ConstraintsReader
 import org.tindalos.principle.utils.logging.{SimpleLogger, TheLogger}
 
 object ManualPrincipleRunner extends App {

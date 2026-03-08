@@ -1,4 +1,4 @@
-package org.tindalos.principle.infrastructure.plugin;
+package org.tindalos.principle.infrastructure;
 
 import org.apache.commons.io.FileUtils;
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmoduleDefinitions;

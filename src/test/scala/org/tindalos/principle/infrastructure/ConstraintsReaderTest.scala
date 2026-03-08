@@ -3,7 +3,6 @@ package org.tindalos.principle.infrastructure
 import org.junit.Assert._
 import org.junit.{After, Test}
 import org.tindalos.principle.domain.constraints.exception.InvalidConfigurationException
-import org.tindalos.principle.infrastructure.plugin.ConstraintsReader
 
 import java.io.File
 import java.nio.file.Files
