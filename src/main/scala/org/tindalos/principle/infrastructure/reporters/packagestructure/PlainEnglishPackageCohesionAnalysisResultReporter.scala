@@ -5,7 +5,7 @@ import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 
-object PackageCohesionReporter {
+object PackageCohesionAnalysisResultReporter {
 
   val sectionLine = "================================================================================"
   val subSectionLine = "-----------------------------------------------------------------------------"
@@ -29,13 +29,13 @@ object PackageCohesionReporter {
   def round(d: Double) = BigDecimal(d).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
 }
 
-trait PackageCohesionReporter extends AnalysisResultReporter[CohesionAnalysisResult]
+trait PackageCohesionAnalysisResultReporter extends AnalysisResultReporter[CohesionAnalysisResult]
 
-class PlainEnglishPackageCohesionReporter extends PackageCohesionReporter {
+class PlainEnglishPackageCohesionAnalysisResultReporter extends PackageCohesionAnalysisResultReporter {
 
   def report(result: CohesionAnalysisResult): AnalysisResultsReporter.Report = {
 
-    var fileNames = s"${PackageCohesionReporter.packageCohesionsFileName}, ${PackageCohesionReporter.packageStructureHints1FileName}, ${PackageCohesionReporter.packageStructureHints2FileName}"
+    var fileNames = s"${PackageCohesionAnalysisResultReporter.packageCohesionsFileName}, ${PackageCohesionAnalysisResultReporter.packageStructureHints1FileName}, ${PackageCohesionAnalysisResultReporter.packageStructureHints2FileName}"
 
     ExistingPackageCohesionsFileWriter.writeToFile(result)
     PackageStructureHints1FileWriter.writeToFile(result.groupingResult)
@@ -43,15 +43,15 @@ class PlainEnglishPackageCohesionReporter extends PackageCohesionReporter {
     PackageStructureHints2FileWriter.writeToFile(result.subgraphDecomposition)
     if (result.cohesiveNodeGroups.isDefined) {
       CohesiveGroupsFileWriter.writeToFile(result.cohesiveNodeGroups.get)
-      fileNames += s", ${PackageCohesionReporter.cohesiveGroupsFileName}"
+      fileNames += s", ${PackageCohesionAnalysisResultReporter.cohesiveGroupsFileName}"
     }
 
-    val sb = new StringBuffer("\n" + PackageCohesionReporter.sectionLine + "\n")
+    val sb = new StringBuffer("\n" + PackageCohesionAnalysisResultReporter.sectionLine + "\n")
     sb.append("\tPackage Cohesion Analysis\t")
-    sb.append("\n" + PackageCohesionReporter.sectionLine + "\n")
+    sb.append("\n" + PackageCohesionAnalysisResultReporter.sectionLine + "\n")
     sb.append(s"\nFor details check files: ${fileNames} in ${ReportsDirectoryManager.ensureReportsDirectoryExists()}\n\n")
 
-    sb.append(PackageCohesionReporter.sectionLine + "\n")
+    sb.append(PackageCohesionAnalysisResultReporter.sectionLine + "\n")
 
     sb.toString()
   }

@@ -5,7 +5,7 @@ import java.io.PrintWriter
 import org.tindalos.principle.domain.analyzers.structure.Graph.NodeId
 import org.tindalos.principle.domain.analyzers.structure.PackageStructureHints1Finder.GroupingResult
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
-import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter._
+import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionAnalysisResultReporter._
 
 
 object PackageStructureHints1FileWriter {

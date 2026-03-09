@@ -5,7 +5,7 @@ import java.io.PrintWriter
 import org.tindalos.principle.domain.analyzers.structure.Graph.{Peninsula, SubgraphDecomposition}
 import org.tindalos.principle.domain.analyzers.structure.Structure.NodeGroup
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
-import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter._
+import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionAnalysisResultReporter._
 
 
 object PackageStructureHints2FileWriter {

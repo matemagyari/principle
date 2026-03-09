@@ -15,7 +15,7 @@ import org.tindalos.principle.domain.core.PackageStructureBuilder
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 import org.tindalos.principle.domain.{AnalysisRunner, AnalysisRunnerImpl}
 import org.tindalos.principle.infrastructure.reporters._
-import org.tindalos.principle.infrastructure.reporters.packagestructure.PlainEnglishPackageCohesionReporter
+import org.tindalos.principle.infrastructure.reporters.packagestructure.PlainEnglishPackageCohesionAnalysisResultReporter
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
 import org.tindalos.principle.infrastructure.{JDependBasedPackageListBuilder, PackageStructureBuilderImpl}
 
@@ -34,7 +34,7 @@ object PoorMansDIContainer {
       new PlainEnglishComponentDependencyAnalysisResultReporter(),
       new PlainEnglishSubmodulesBlueprintAnalysisResultReporter(),
       new PlainEnglishSDPAnalysisResultReporter(),
-      new PlainEnglishPackageCohesionReporter()
+      new PlainEnglishPackageCohesionAnalysisResultReporter()
     )
 
     val analysisRunner = buildAnalysisRunner()

@@ -7,10 +7,10 @@ import org.tindalos.principle.domain.analyzers.structure.Graph.SubgraphDecomposi
 import org.tindalos.principle.domain.analyzers.structure.PackageStructureHints1Finder.GroupingResult
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 
-class PlainEnglishPackageCohesionReporterTest {
+class PlainEnglishPackageCohesionAnalysisResultReporterTest {
 
   private val SEP = "================================================================================"
-  private val reporter = new PlainEnglishPackageCohesionReporter()
+  private val reporter = new PlainEnglishPackageCohesionAnalysisResultReporter()
 
   private val emptyResult = CohesionAnalysisResult(
     packages = Set.empty,
@@ -33,7 +33,7 @@ class PlainEnglishPackageCohesionReporterTest {
          |\tPackage Cohesion Analysis\t
          |$SEP
          |
-         |For details check files: ${PackageCohesionReporter.packageCohesionsFileName}, ${PackageCohesionReporter.packageStructureHints1FileName}, ${PackageCohesionReporter.packageStructureHints2FileName} in $reportsDir
+         |For details check files: ${PackageCohesionAnalysisResultReporter.packageCohesionsFileName}, ${PackageCohesionAnalysisResultReporter.packageStructureHints1FileName}, ${PackageCohesionAnalysisResultReporter.packageStructureHints2FileName} in $reportsDir
          |
          |$SEP
          |""".stripMargin
@@ -47,7 +47,7 @@ class PlainEnglishPackageCohesionReporterTest {
     val resultWithGroups = emptyResult.copy(cohesiveNodeGroups = Some(Set.empty))
     val report = reporter.report(resultWithGroups)
 
-    assertTrue(report.contains(PackageCohesionReporter.cohesiveGroupsFileName))
+    assertTrue(report.contains(PackageCohesionAnalysisResultReporter.cohesiveGroupsFileName))
   }
 
   @Test
@@ -56,7 +56,7 @@ class PlainEnglishPackageCohesionReporterTest {
 
     val report = reporter.report(emptyResult)
 
-    assertTrue(!report.contains(PackageCohesionReporter.cohesiveGroupsFileName))
+    assertTrue(!report.contains(PackageCohesionAnalysisResultReporter.cohesiveGroupsFileName))
   }
 }
 

@@ -4,7 +4,7 @@ import java.io.PrintWriter
 
 import org.tindalos.principle.domain.analyzers.structure.Structure.NodeGroup
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
-import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter.{cohesiveGroupsFileName, generalDescription, round, sectionLine, subSectionLine}
+import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionAnalysisResultReporter.{cohesiveGroupsFileName, generalDescription, round, sectionLine, subSectionLine}
 
 object CohesiveGroupsFileWriter {
 

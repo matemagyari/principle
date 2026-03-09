@@ -5,7 +5,7 @@ import java.io.PrintWriter
 import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult
 import org.tindalos.principle.domain.analyzers.structure.Structure.NodeGroup
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
-import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter.{packageCohesionsFileName, generalDescription, round, sectionLine, subSectionLine}
+import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionAnalysisResultReporter.{packageCohesionsFileName, generalDescription, round, sectionLine, subSectionLine}
 
 
 object ExistingPackageCohesionsFileWriter {

@@ -12,7 +12,7 @@ import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmodulesBlu
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyViolationsResult
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter.Report
 import org.tindalos.principle.infrastructure.reporters._
-import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionReporter
+import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionAnalysisResultReporter
 
 object AnalysisResultsReporter {
   type Report = String
@@ -25,7 +25,7 @@ class AnalysisResultsReporter(
     componentDependencyReporter: ComponentDependencyAnalysisResultReporter,
     submodulesBlueprintReporter: SubmodulesBlueprintAnalysisResultReporter,
     sdpReporter: SDPAnalysisResultReporter,
-    cohesionReporter: PackageCohesionReporter) {
+    cohesionReporter: PackageCohesionAnalysisResultReporter) {
 
 
   def toReports(results: List[AnalysisResult]): List[(String, Boolean)] = results.map(toReport)
