@@ -4,10 +4,14 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.tindalos.principle.domain.analyzers.adp.ADPResult
 import org.tindalos.principle.domain.analyzers.layering.{LayerReference, LayerViolationsResult}
+import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult
+import org.tindalos.principle.domain.analyzers.structure.Graph.SubgraphDecomposition
+import org.tindalos.principle.domain.analyzers.structure.PackageStructureHints1Finder.GroupingResult
 import org.tindalos.principle.domain.constraints.ADP
 import org.tindalos.principle.domain.core.Cycle
 import org.tindalos.principle.domain.core.packages.PackageReference
 import org.tindalos.principle.infrastructure.reporters._
+import org.tindalos.principle.infrastructure.reporters.packagestructure.YAMLPackageCohesionAnalysisResultReporter
 import org.yaml.snakeyaml.Yaml
 
 import java.util.Collections
@@ -28,7 +32,7 @@ class AnalysisResultsReporterTest {
     new YAMLComponentDependencyAnalysisResultReporter(),
     new YAMLSubmodulesBlueprintAnalysisResultReporter(),
     new YAMLSDPAnalysisResultReporter(),
-    null // cohesion reporter not needed for these tests
+    new YAMLPackageCohesionAnalysisResultReporter()
   )
 
   private def ref(name: String) = new PackageReference(name)
@@ -168,6 +172,37 @@ class AnalysisResultsReporterTest {
         |      threshold: 0
         |      constraint_violated: false
         |      violations: []
+        |""".stripMargin
+    assertEquals(expected, result)
+  }
+
+  @Test
+  def cohesionResult_includesCohesionSectionInSummary(): Unit = {
+    new java.io.File("./principle_reports").mkdirs()
+    val cohesionResult = CohesionAnalysisResult(
+      packages = Set.empty,
+      cohesiveNodeGroups = None,
+      groupingResult = GroupingResult(Map.empty, List.empty),
+      subgraphDecomposition = SubgraphDecomposition(List.empty)
+    )
+
+    val result = reporter.summary(List(cohesionResult))
+
+    assertValidYaml(result)
+
+    val expected =
+      """analysis_summary:
+        |  success: true
+        |  description: "All constraints satisfied"
+        |  results:
+        |    package_cohesion_result:
+        |      description: Package Cohesion Analysis
+        |      package_count: 0
+        |      detail_files:
+        |        - existing_packages_cohesion.txt
+        |        - code_structure_observations1.txt
+        |        - code_structure_observations2.txt
+        |      packages: []
         |""".stripMargin
     assertEquals(expected, result)
   }
