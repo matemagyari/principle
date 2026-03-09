@@ -27,6 +27,28 @@ class AnalysisResultsReporter(
     sdpReporter: SDPAnalysisResultReporter,
     cohesionReporter: PackageCohesionAnalysisResultReporter) {
 
+  def summary(results: List[AnalysisResult]): String = {
+    val reports = toReports(results)
+    val success = !reports.exists(_._2)
+    val violatedNames = reports.filter(_._2).map { case (report, _) => report.takeWhile(_ != ':') }
+    val description =
+      if (success) "All constraints satisfied"
+      else s"Constraints violated in: ${violatedNames.mkString(", ")}"
+    val resultsYaml =
+      if (reports.isEmpty) "  results: {}\n"
+      else "  results:\n" + reports.map(_._1).map(indentYaml).mkString
+    s"""analysis_summary:
+       |  success: $success
+       |  description: "$description"
+       |$resultsYaml""".stripMargin
+  }
+
+  private def indentYaml(yaml: String): String = {
+    val lines = yaml.split("\n")
+    val significant = if (lines.lastOption.contains("")) lines.dropRight(1) else lines
+    significant.map("    " + _).mkString("\n") + "\n"
+  }
+
 
   def toReports(results: List[AnalysisResult]): List[(String, Boolean)] = results.map(toReport)
 
