@@ -2,6 +2,7 @@ package org.tindalos.principle.infrastructure
 
 import org.tindalos.principle.domain.core.{Package, PackageSorterModule, PackageStructureBuilder}
 import org.tindalos.principle.infrastructure.service.jdepend.{JDependPackageAnalyzer, JDependRunner, PackageFactory}
+import scala.collection.JavaConverters._
 
 trait PackageListBuilder {
   def build(): List[Package]
@@ -14,7 +15,9 @@ class JDependBasedPackageListBuilder(rootPackage: String) extends PackageListBui
       val packageFactory = new PackageFactory(rootPackage)
       packageFactory.buildPackageListFactory(PackageSorterModule.sortByName(_))
     }
-    JDependPackageAnalyzer.buildAnalyzerFn(JDependRunner.preparePackages, packageListTransformer)
+    JDependPackageAnalyzer.buildAnalyzerFn(
+      (rootPkg, filterEnabled) => JDependRunner.preparePackages(rootPkg, filterEnabled).asScala.toList,
+      packageListTransformer)
   }
   override def build(): List[Package] = fn.apply(rootPackage)
 }
