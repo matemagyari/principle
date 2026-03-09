@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain
 
-import org.tindalos.principle.domain.analyzers.structure.Graph.Node
+import org.tindalos.principle.domain.analyzers.structure.Node
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmoduleDefinitions
 import org.tindalos.principle.domain.constraints.{Layering, PackageCouplingConstraints, ThirdParty}
 import org.tindalos.principle.domain.core.{AnalysisPlan, Package}

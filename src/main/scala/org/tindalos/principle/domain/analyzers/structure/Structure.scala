@@ -1,20 +1,20 @@
 package org.tindalos.principle.domain.analyzers.structure
 
-import org.tindalos.principle.domain.analyzers.structure.Graph.{NodeId, Node}
+import scala.collection.JavaConverters._
 
 
 object Structure {
 
   case class NodeGroup(nodes: Set[Node]) {
 
-    val externalDependencies = nodes.flatMap(n => n.dependencies) -- nodes.map(_.id)
-    val externalDependants = nodes.flatMap(n => n.dependants) -- nodes.map(_.id)
+    val externalDependencies = nodes.flatMap(n => n.dependencies.asScala) -- nodes.map(_.id)
+    val externalDependants = nodes.flatMap(n => n.dependants.asScala) -- nodes.map(_.id)
     val externalGroupConnectionsNo = externalDependencies.size + externalDependants.size
 
     //based on nodes not the group
     val (internalArcsNo, externalArcsNo) = {
-      val internalNodeIds: Set[NodeId] = nodes.map(_.id)
-      val (internals, externals) = nodes.toList.flatMap(n => n.dependants.toList ++ n.dependencies.toList)
+      val internalNodeIds: Set[String] = nodes.map(_.id)
+      val (internals, externals) = nodes.toList.flatMap(n => n.dependants.asScala.toList ++ n.dependencies.asScala.toList)
         .partition(d => internalNodeIds.contains(d))
       //internal arcs counted twice
       (internals.size / 2, externals.size)

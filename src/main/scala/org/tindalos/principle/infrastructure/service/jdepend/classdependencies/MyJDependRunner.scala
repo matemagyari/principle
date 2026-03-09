@@ -2,8 +2,10 @@ package org.tindalos.principle.infrastructure.service.jdepend.classdependencies
 
 import java.io.File
 
-import org.tindalos.principle.domain.analyzers.structure.Graph.Node
+import org.tindalos.principle.domain.analyzers.structure.Node
 import org.tindalos.principle.infrastructure.BuildPathUtils
+
+import scala.collection.JavaConverters._
 
 object MyJDependRunner {
 
@@ -16,7 +18,6 @@ object MyJDependRunner {
 
   private def toClazz(f: File, rootPackage: String) = {
     val jc = new MyClassFileParser(rootPackage).parse(f)
-    import scala.collection.JavaConverters._
     Clazz1(jc.getName(), jc.getDependencies().asScala.to[Set] - jc.getName)
   }
 
@@ -25,7 +26,7 @@ object MyJDependRunner {
       val dependantNames = classes
           .filter(_.dependencies.contains(clazz.name))
           .map(_.name)
-      Node(clazz.name, clazz.dependencies, dependantNames)
+      new Node(clazz.name, clazz.dependencies.asJava, dependantNames.asJava)
     }
 
   //to ignore inner subclasses

@@ -7,7 +7,7 @@ import org.tindalos.principle.domain.analyzers.adp.CycleDetector
 import org.tindalos.principle.domain.analyzers.layering.LayerViolationAnalyzer
 import org.tindalos.principle.domain.analyzers.sap.SAPViolationAnalyzer
 import org.tindalos.principle.domain.analyzers.sdp.SDPViolationAnalyzer
-import org.tindalos.principle.domain.analyzers.structure.Graph.Node
+import org.tindalos.principle.domain.analyzers.structure.Node
 import org.tindalos.principle.domain.analyzers.structure._
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.{SubmodulesBlueprintAnalyzer, SubmodulesBuilder}
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyAnalyzer

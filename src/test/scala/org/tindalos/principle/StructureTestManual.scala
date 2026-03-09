@@ -4,6 +4,8 @@ import org.tindalos.principle.domain.analyzers.structure.Structure.NodeGroup
 import org.tindalos.principle.domain.analyzers.structure.{CohesiveGroupsDiscoveryModule, Graph, PackageCohesionModule, PackageStructureHints1Finder}
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
 
+import scala.collection.JavaConverters._
+
 /**
  * Created by mate.magyari on 17/12/2014.
  */
@@ -70,10 +72,10 @@ object StructureTestManual extends App {
   //val parts = Graph.findDetachableSubgraphs(classes)
   val parts = Graph.findDetachableSubgraphs(MyJDependRunner.createNodesOfClasses("org.tindalos.principle.infrastructure"))
 
-  parts.peninsulas.foreach {
+  parts.peninsulas.asScala.foreach {
     p => {
-      println("Top: " + p.frontNodes + " " + NodeGroup(p.subgraph).cohesion())
-      p.subgraph.map(_.id).toList.sorted.foreach {
+      println("Top: " + p.frontNodes + " " + NodeGroup(p.subgraph.asScala.toSet).cohesion())
+      p.subgraph.asScala.map(_.id).toList.sorted.foreach {
         n => println("\t"+n)
       }
     }

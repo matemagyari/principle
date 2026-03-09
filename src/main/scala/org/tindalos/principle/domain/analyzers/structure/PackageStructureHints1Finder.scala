@@ -1,21 +1,19 @@
 package org.tindalos.principle.domain.analyzers.structure
 
-import org.tindalos.principle.domain.analyzers.structure.Graph._
-
 object PackageStructureHints1Finder {
 
-  case class GroupingResult(val grouping: Map[Set[String], List[NodeId]], val labelledSources: List[(String, NodeId)])
+  case class GroupingResult(grouping: Map[Set[String], List[String]], labelledSources: List[(String, String)])
 
-  val makeGroups = (graph: Set[Node]) => {
+  def makeGroups(graph: Set[Node]): GroupingResult =  {
     val sources = Graph.findSources(graph).toList.sortBy(_.id)
     val labelledSources = for {i <- 0 to sources.size - 1} yield (sources(i), label(sources.size, i))
 
-    val labelledNodes: IndexedSeq[(String, NodeId)] =
+    val labelledNodes: IndexedSeq[(String, String)] =
       for {(source, label) <- labelledSources
            downstream <- Graph.findDownstreamNodes(source, graph)
       } yield (label, downstream.id)
 
-    val grouping:Map[Set[String], List[NodeId]] = labelledNodes
+    val grouping:Map[Set[String], List[String]] = labelledNodes
       .toList
       .groupBy(_._2)                             //Map[NodeId, List[(String, NodeId)]]
       .map(kv => (kv._1, kv._2.map(_._1).toSet)) //Map[NodeId, Set[String]]

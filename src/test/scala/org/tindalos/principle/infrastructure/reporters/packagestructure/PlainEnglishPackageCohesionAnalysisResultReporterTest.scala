@@ -3,7 +3,7 @@ package org.tindalos.principle.infrastructure.reporters.packagestructure
 import org.junit.Assert.{assertEquals, assertTrue}
 import org.junit.Test
 import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult
-import org.tindalos.principle.domain.analyzers.structure.Graph.SubgraphDecomposition
+import org.tindalos.principle.domain.analyzers.structure.SubgraphDecomposition
 import org.tindalos.principle.domain.analyzers.structure.PackageStructureHints1Finder.GroupingResult
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 
@@ -16,7 +16,7 @@ class PlainEnglishPackageCohesionAnalysisResultReporterTest {
     packages = Set.empty,
     cohesiveNodeGroups = None,
     groupingResult = GroupingResult(Map.empty, List.empty),
-    subgraphDecomposition = SubgraphDecomposition(List.empty)
+    subgraphDecomposition = new SubgraphDecomposition(java.util.Collections.emptyList())
   )
 
   @Test

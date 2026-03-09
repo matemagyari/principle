@@ -1,6 +1,5 @@
 package org.tindalos.principle.domain.analyzers.structure
 
-import org.tindalos.principle.domain.analyzers.structure.Graph.{NodeId, Node}
 import org.tindalos.principle.domain.analyzers.structure.Structure.NodeGroup
 
 import scala.annotation.tailrec
@@ -11,7 +10,7 @@ object PackageCohesionModule {
 
   case class CPackage(name: PackageName, component: NodeGroup)
 
-  def packageOf(nodeId:NodeId) = nodeId.substring(0, nodeId.lastIndexOf('.'))
+  def packageOf(nodeId: String) = nodeId.substring(0, nodeId.lastIndexOf('.'))
 
   def nodesInPackage(nodes:Set[Node], packageName: PackageName) =
     nodes.filter(n => PackageCohesionModule.packageOf(n.id).equals(packageName))

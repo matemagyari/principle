@@ -2,7 +2,7 @@ package org.tindalos.principle.domain.analyzers.structure
 
 import org.junit.Assert._
 import org.junit.Test
-import org.tindalos.principle.domain.analyzers.structure.Graph.Node
+import scala.collection.JavaConverters._
 
 class GraphTest {
 
@@ -10,10 +10,10 @@ class GraphTest {
   def findDownstreamNodesForSimpleAcyclicGraph() {
     //a -> b,c | b -> d
     val (a,b,c,d) = ("a","b","c","d")
-    val nodeA = Node(a, Set(b, c), Set())
-    val nodeB = Node(b, Set(d), Set(a))
-    val nodeC = Node(c, Set(), Set(a))
-    val nodeD = Node(d, Set(), Set(b))
+    val nodeA = new Node(a, Set(b, c).asJava, Set.empty[String].asJava)
+    val nodeB = new Node(b, Set(d).asJava, Set(a).asJava)
+    val nodeC = new Node(c, Set.empty[String].asJava, Set(a).asJava)
+    val nodeD = new Node(d, Set.empty[String].asJava, Set(b).asJava)
 
     val graph = Set(nodeA, nodeB, nodeC, nodeD)
 
@@ -31,10 +31,10 @@ class GraphTest {
   def findDownstreamNodesForDiamondAcyclicGraph() {
     //a -> b,c | b -> d | c->d
     val (a,b,c,d) = ("a","b","c","d")
-    val nodeA = Node(a, Set(b, c), Set())
-    val nodeB = Node(b, Set(d), Set(a))
-    val nodeC = Node(c, Set(d), Set(a))
-    val nodeD = Node(d, Set(), Set(b,c))
+    val nodeA = new Node(a, Set(b, c).asJava, Set.empty[String].asJava)
+    val nodeB = new Node(b, Set(d).asJava, Set(a).asJava)
+    val nodeC = new Node(c, Set(d).asJava, Set(a).asJava)
+    val nodeD = new Node(d, Set.empty[String].asJava, Set(b,c).asJava)
 
     val graph = Set(nodeA, nodeB, nodeC, nodeD)
 
@@ -50,9 +50,9 @@ class GraphTest {
   def findDownstreamNodesForCyclicTriangeGraph() {
     //a -> b,c | b -> d | c->d
     val (a,b,c) = ("a","b","c")
-    val nodeA = Node(a, Set(b), Set(c))
-    val nodeB = Node(b, Set(c), Set(a))
-    val nodeC = Node(c, Set(a), Set(b))
+    val nodeA = new Node(a, Set(b).asJava, Set(c).asJava)
+    val nodeB = new Node(b, Set(c).asJava, Set(a).asJava)
+    val nodeC = new Node(c, Set(a).asJava, Set(b).asJava)
 
     val graph = Set(nodeA, nodeB, nodeC)
 
@@ -68,12 +68,12 @@ class GraphTest {
   def findDetachableSubgraphsInGraphWithIslands() {
     //a -> b,c | b -> d | c->d
     val (a,b,c,d,e) = ("a","b","c","d","e")
-    val nodeA = Node(a, Set(b), Set(c))
-    val nodeB = Node(b, Set(c), Set(a))
-    val nodeC = Node(c, Set(a), Set(b))
+    val nodeA = new Node(a, Set(b).asJava, Set(c).asJava)
+    val nodeB = new Node(b, Set(c).asJava, Set(a).asJava)
+    val nodeC = new Node(c, Set(a).asJava, Set(b).asJava)
 
-    val nodeD = Node(d,Set(e),Set(e))
-    val nodeE = Node(e,Set(d),Set(d))
+    val nodeD = new Node(d, Set(e).asJava, Set(e).asJava)
+    val nodeE = new Node(e, Set(d).asJava, Set(d).asJava)
 
     val island1 = Set(nodeA, nodeB, nodeC)
     val island2 = Set(nodeD, nodeE)
@@ -91,11 +91,11 @@ class GraphTest {
   def isIslandPositive() {
 
     val (a,b,c,d,e) = ("a","b","c","d","e")
-    val nodeA = Node(a, Set(b), Set(c))
-    val nodeB = Node(b, Set(c), Set(a))
-    val nodeC = Node(c, Set(a), Set(b))
-    val nodeD = Node(c, Set(a), Set(e))
-    val nodeE = Node(c, Set(a), Set(b))
+    val nodeA = new Node(a, Set(b).asJava, Set(c).asJava)
+    val nodeB = new Node(b, Set(c).asJava, Set(a).asJava)
+    val nodeC = new Node(c, Set(a).asJava, Set(b).asJava)
+    val nodeD = new Node(c, Set(a).asJava, Set(e).asJava)
+    val nodeE = new Node(c, Set(a).asJava, Set(b).asJava)
 
     val island = Set(nodeA, nodeB, nodeC)
     val notIsland = Set(nodeA, nodeB, nodeC, nodeD)
@@ -109,10 +109,10 @@ class GraphTest {
   def findDownstreamNodesForCompleteGraph() {
 
     val (a,b,c,d) = ("a","b","c","d")
-    val nodeA = Node(a, Set(b,c,d), Set(b,c,d))
-    val nodeB = Node(b, Set(a,c,d), Set(a,c,d))
-    val nodeC = Node(c, Set(a,b,d), Set(a,b,d))
-    val nodeD = Node(d, Set(a,b,c), Set(a,b,c))
+    val nodeA = new Node(a, Set(b,c,d).asJava, Set(b,c,d).asJava)
+    val nodeB = new Node(b, Set(a,c,d).asJava, Set(a,c,d).asJava)
+    val nodeC = new Node(c, Set(a,b,d).asJava, Set(a,b,d).asJava)
+    val nodeD = new Node(d, Set(a,b,c).asJava, Set(a,b,c).asJava)
 
     val graph = Set(nodeA, nodeB, nodeC, nodeD)
 
@@ -127,16 +127,16 @@ class GraphTest {
   @Test
   def simpleGraphValid() {
     val (a,b) = ("a","b") // a->b
-    val nodeA = Node(a, Set(), Set(b))
-    val nodeB = Node(b, Set(a), Set())
+    val nodeA = new Node(a, Set.empty[String].asJava, Set(b).asJava)
+    val nodeB = new Node(b, Set(a).asJava, Set.empty[String].asJava)
 
     assertTrue(Graph.isValid(Set(nodeA, nodeB)))
   }
   @Test
   def simpleGraphInValid() {
     val (a,b) = ("a","b") // a->b
-    val nodeA = Node(a, Set(), Set(b))
-    val nodeB = Node(b, Set(), Set()) // missing reference to A
+    val nodeA = new Node(a, Set.empty[String].asJava, Set(b).asJava)
+    val nodeB = new Node(b, Set.empty[String].asJava, Set.empty[String].asJava) // missing reference to A
 
     assertFalse(Graph.isValid(Set(nodeA, nodeB)))
   }

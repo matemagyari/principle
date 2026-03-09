@@ -2,7 +2,6 @@ package org.tindalos.principle.infrastructure.reporters.packagestructure
 
 import java.io.PrintWriter
 
-import org.tindalos.principle.domain.analyzers.structure.Graph.NodeId
 import org.tindalos.principle.domain.analyzers.structure.PackageStructureHints1Finder.GroupingResult
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionAnalysisResultReporter._
@@ -48,7 +47,7 @@ object PackageStructureHints1FileWriter {
     printWriter.close()
   }
 
-  private def aSort(s1:(String,NodeId),s2:(String,NodeId)) = 1//s1.substring(1).toInt.compareTo(s2.substring(1).toInt)
+  private def aSort(s1:(String,String),s2:(String,String)) = 1//s1.substring(1).toInt.compareTo(s2.substring(1).toInt)
 
 
 }

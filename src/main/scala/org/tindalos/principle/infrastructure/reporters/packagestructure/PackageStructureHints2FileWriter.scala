@@ -2,10 +2,12 @@ package org.tindalos.principle.infrastructure.reporters.packagestructure
 
 import java.io.PrintWriter
 
-import org.tindalos.principle.domain.analyzers.structure.Graph.{Peninsula, SubgraphDecomposition}
+import org.tindalos.principle.domain.analyzers.structure.{Peninsula, SubgraphDecomposition}
 import org.tindalos.principle.domain.analyzers.structure.Structure.NodeGroup
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionAnalysisResultReporter._
+
+import scala.collection.JavaConverters._
 
 
 object PackageStructureHints2FileWriter {
@@ -24,17 +26,17 @@ object PackageStructureHints2FileWriter {
       .append(subSectionLine + "\n\n")
 
     def printPeninsula(p:Peninsula) {
-        val firstLine =  s"\nCohesion: ${NodeGroup(p.subgraph).cohesion()}"
+        val firstLine =  s"\nCohesion: ${NodeGroup(p.subgraph.asScala.toSet).cohesion()}"
         if (p.island)
           printWriter.append(s"${firstLine} - This is an island\n")
         else
           printWriter.append(s"${firstLine}\n")
 
-        p.frontNodes.map(_.id).toList.sorted.foreach {
+        p.frontNodes.asScala.map(_.id).toList.sorted.foreach {
           nodeId => printWriter.append(s"Top class: ${nodeId}\n")
         }
         printWriter.append(subSectionLine + "\n")
-        (p.subgraph -- p.frontNodes).map(_.id).toList.sorted.foreach {
+        (p.subgraph.asScala -- p.frontNodes.asScala).map(_.id).toList.sorted.foreach {
           nodeId => printWriter.append(s"           ${nodeId}\n")
         }
         printWriter.append("\n")
@@ -42,6 +44,7 @@ object PackageStructureHints2FileWriter {
 
     subgraphDecomposition
       .peninsulas
+      .asScala
       .toList
       .sortBy(_.subgraph.size)
       .reverse
