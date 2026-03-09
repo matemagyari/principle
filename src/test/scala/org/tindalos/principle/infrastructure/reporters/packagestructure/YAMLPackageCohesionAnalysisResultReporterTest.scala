@@ -31,6 +31,7 @@ class YAMLPackageCohesionAnalysisResultReporterTest {
 
   @Test
   def noPackages_reportsEmptyPackageList(): Unit = {
+    new java.io.File("./principle_reports").mkdirs()
     val report = reporter.report(emptyResult)
 
     assertValidYaml(report)
@@ -39,6 +40,10 @@ class YAMLPackageCohesionAnalysisResultReporterTest {
       """package_cohesion_result:
         |  description: Package Cohesion Analysis
         |  package_count: 0
+        |  detail_files:
+        |    - existing_packages_cohesion.txt
+        |    - code_structure_observations1.txt
+        |    - code_structure_observations2.txt
         |  packages: []
         |""".stripMargin
     assertEquals(expected, report)
@@ -46,6 +51,7 @@ class YAMLPackageCohesionAnalysisResultReporterTest {
 
   @Test
   def singlePackage_reportsNameCohesionAndSize(): Unit = {
+    new java.io.File("./principle_reports").mkdirs()
     val result = emptyResult.copy(packages = Set(pkg("org.example.domain", "org.example.domain.Foo", "org.example.domain.Bar")))
 
     val report = reporter.report(result)
@@ -56,6 +62,10 @@ class YAMLPackageCohesionAnalysisResultReporterTest {
       """package_cohesion_result:
         |  description: Package Cohesion Analysis
         |  package_count: 1
+        |  detail_files:
+        |    - existing_packages_cohesion.txt
+        |    - code_structure_observations1.txt
+        |    - code_structure_observations2.txt
         |  packages:
         |    - name: org.example.domain
         |      cohesion: 0.0
@@ -66,6 +76,7 @@ class YAMLPackageCohesionAnalysisResultReporterTest {
 
   @Test
   def multiplePackages_sortedAlphabeticallyByName(): Unit = {
+    new java.io.File("./principle_reports").mkdirs()
     val result = emptyResult.copy(packages = Set(
       pkg("org.example.infrastructure", "org.example.infrastructure.Repo"),
       pkg("org.example.app", "org.example.app.Service"),
@@ -80,6 +91,10 @@ class YAMLPackageCohesionAnalysisResultReporterTest {
       """package_cohesion_result:
         |  description: Package Cohesion Analysis
         |  package_count: 3
+        |  detail_files:
+        |    - existing_packages_cohesion.txt
+        |    - code_structure_observations1.txt
+        |    - code_structure_observations2.txt
         |  packages:
         |    - name: org.example.app
         |      cohesion: 0.0

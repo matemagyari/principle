@@ -18,7 +18,16 @@ class YAMLPackageCohesionAnalysisResultReporter extends PackageCohesionAnalysisR
     s"""package_cohesion_result:
        |  description: Package Cohesion Analysis
        |  package_count: ${result.packages.size}
-       |${packagesYaml(result)}""".stripMargin
+       |${filesYaml(result)}${packagesYaml(result)}""".stripMargin
+  }
+
+  private def filesYaml(result: CohesionAnalysisResult): String = {
+    val files = List(
+      PackageCohesionAnalysisResultReporter.packageCohesionsFileName,
+      PackageCohesionAnalysisResultReporter.packageStructureHints1FileName,
+      PackageCohesionAnalysisResultReporter.packageStructureHints2FileName
+    ) ++ (if (result.cohesiveNodeGroups.isDefined) List(PackageCohesionAnalysisResultReporter.cohesiveGroupsFileName) else Nil)
+    "  detail_files:\n" + files.map(f => s"    - $f\n").mkString
   }
 
   private def packagesYaml(result: CohesionAnalysisResult): String =
