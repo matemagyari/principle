@@ -8,11 +8,18 @@ import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult
  */
 class YAMLPackageCohesionAnalysisResultReporter extends PackageCohesionAnalysisResultReporter {
 
-  override def report(result: CohesionAnalysisResult): String =
+  override def report(result: CohesionAnalysisResult): String = {
+    ExistingPackageCohesionsFileWriter.writeToFile(result)
+    PackageStructureHints1FileWriter.writeToFile(result.groupingResult)
+    PackageStructureHints2FileWriter.writeToFile(result.subgraphDecomposition)
+    if (result.cohesiveNodeGroups.isDefined)
+      CohesiveGroupsFileWriter.writeToFile(result.cohesiveNodeGroups.get)
+
     s"""package_cohesion_result:
        |  description: Package Cohesion Analysis
        |  package_count: ${result.packages.size}
        |${packagesYaml(result)}""".stripMargin
+  }
 
   private def packagesYaml(result: CohesionAnalysisResult): String =
     if (result.packages.isEmpty)

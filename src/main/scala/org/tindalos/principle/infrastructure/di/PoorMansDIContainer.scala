@@ -15,7 +15,7 @@ import org.tindalos.principle.domain.core.PackageStructureBuilder
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 import org.tindalos.principle.domain.{AnalysisRunner, AnalysisRunnerImpl}
 import org.tindalos.principle.infrastructure.reporters._
-import org.tindalos.principle.infrastructure.reporters.packagestructure.PlainEnglishPackageCohesionAnalysisResultReporter
+import org.tindalos.principle.infrastructure.reporters.packagestructure.YAMLPackageCohesionAnalysisResultReporter
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
 import org.tindalos.principle.infrastructure.{JDependBasedPackageListBuilder, PackageStructureBuilderImpl}
 
@@ -27,14 +27,14 @@ object PoorMansDIContainer {
     val buildNodesFn:String => Set[Node] = MyJDependRunner.createNodesOfClasses(_)
 
     val reporter = new AnalysisResultsReporter(
-      new PlainEnglishADPAnalysisResultReporter(),
-      new PlainEnglishLayerAnalysisResultReporter(),
-      new PlainEnglishThirdPartyAnalysisResultReporter(),
-      new PlainEnglishSAPAnalysisResultReporter(),
-      new PlainEnglishComponentDependencyAnalysisResultReporter(),
-      new PlainEnglishSubmodulesBlueprintAnalysisResultReporter(),
-      new PlainEnglishSDPAnalysisResultReporter(),
-      new PlainEnglishPackageCohesionAnalysisResultReporter()
+      new YAMLADPAnalysisResultReporter(),
+      new YAMLLayerAnalysisResultReporter(),
+      new YAMLThirdPartyAnalysisResultReporter(),
+      new YAMLSAPAnalysisResultReporter(),
+      new YAMLComponentDependencyAnalysisResultReporter(),
+      new YAMLSubmodulesBlueprintAnalysisResultReporter(),
+      new YAMLSDPAnalysisResultReporter(),
+      new YAMLPackageCohesionAnalysisResultReporter()
     )
 
     val analysisRunner = buildAnalysisRunner()
