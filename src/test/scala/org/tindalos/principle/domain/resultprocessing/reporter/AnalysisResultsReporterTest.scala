@@ -179,11 +179,11 @@ class AnalysisResultsReporterTest {
   @Test
   def cohesionResult_includesCohesionSectionInSummary(): Unit = {
     new java.io.File("./principle_reports").mkdirs()
-    val cohesionResult = CohesionAnalysisResult(
-      packages = Set.empty,
-      cohesiveNodeGroups = None,
-      groupingResult = new GroupingResult(java.util.Collections.emptyMap(), java.util.Collections.emptyList()),
-      subgraphDecomposition = new SubgraphDecomposition(java.util.Collections.emptyList())
+    val cohesionResult = new CohesionAnalysisResult(
+      java.util.Collections.emptyMap(),
+      java.util.Optional.empty(),
+      new GroupingResult(java.util.Collections.emptyMap(), java.util.Collections.emptyList()),
+      new SubgraphDecomposition(java.util.Collections.emptyList())
     )
 
     val result = reporter.summary(List(cohesionResult))

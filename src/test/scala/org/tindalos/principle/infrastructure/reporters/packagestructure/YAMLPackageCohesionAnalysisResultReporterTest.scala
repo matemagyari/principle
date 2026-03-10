@@ -19,12 +19,15 @@ class YAMLPackageCohesionAnalysisResultReporterTest {
     assert(parsed != null, "YAML must parse to a non-null object")
   }
 
-  private val emptyResult = CohesionAnalysisResult(
-    packages = Set.empty,
-    cohesiveNodeGroups = None,
-    groupingResult = new GroupingResult(java.util.Collections.emptyMap(), java.util.Collections.emptyList()),
-    subgraphDecomposition = new SubgraphDecomposition(java.util.Collections.emptyList())
-  )
+  private def makeResult(pkgs: (String, NodeGroup)*): CohesionAnalysisResult =
+    new CohesionAnalysisResult(
+      pkgs.toMap.asJava,
+      java.util.Optional.empty(),
+      new GroupingResult(java.util.Collections.emptyMap(), java.util.Collections.emptyList()),
+      new SubgraphDecomposition(java.util.Collections.emptyList())
+    )
+
+  private val emptyResult = makeResult()
 
   private def pkg(packageName: String, nodeIds: String*): (String, NodeGroup) = {
     val nodes = nodeIds.map(id => new Node(id, Set.empty[String].asJava, Set.empty[String].asJava)).toSet
@@ -54,7 +57,7 @@ class YAMLPackageCohesionAnalysisResultReporterTest {
   @Test
   def singlePackage_reportsNameCohesionAndSize(): Unit = {
     new java.io.File("./principle_reports").mkdirs()
-    val result = emptyResult.copy(packages = Set(pkg("org.example.domain", "org.example.domain.Foo", "org.example.domain.Bar")))
+    val result = makeResult(pkg("org.example.domain", "org.example.domain.Foo", "org.example.domain.Bar"))
 
     val report = reporter.report(result)
 
@@ -79,11 +82,11 @@ class YAMLPackageCohesionAnalysisResultReporterTest {
   @Test
   def multiplePackages_sortedAlphabeticallyByName(): Unit = {
     new java.io.File("./principle_reports").mkdirs()
-    val result = emptyResult.copy(packages = Set(
+    val result = makeResult(
       pkg("org.example.infrastructure", "org.example.infrastructure.Repo"),
       pkg("org.example.app", "org.example.app.Service"),
       pkg("org.example.domain", "org.example.domain.Entity")
-    ))
+    )
 
     val report = reporter.report(result)
 

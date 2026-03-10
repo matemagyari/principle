@@ -1,6 +1,7 @@
 package org.tindalos.principle.infrastructure.reporters.packagestructure
 
 import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult
+import scala.collection.JavaConverters._
 
 /**
  * Reports package cohesion analysis results in YAML format.
@@ -12,12 +13,12 @@ class YAMLPackageCohesionAnalysisResultReporter extends PackageCohesionAnalysisR
     ExistingPackageCohesionsFileWriter.writeToFile(result)
     PackageStructureHints1FileWriter.writeToFile(result.groupingResult)
     PackageStructureHints2FileWriter.writeToFile(result.subgraphDecomposition)
-    if (result.cohesiveNodeGroups.isDefined)
-      CohesiveGroupsFileWriter.writeToFile(result.cohesiveNodeGroups.get)
+    if (result.cohesiveNodeGroups().isPresent)
+      CohesiveGroupsFileWriter.writeToFile(result.cohesiveNodeGroups().get().asScala.toSet)
 
     s"""package_cohesion_result:
        |  description: Package Cohesion Analysis
-       |  package_count: ${result.packages.size}
+       |  package_count: ${result.packages().size()}
        |${filesYaml(result)}${packagesYaml(result)}""".stripMargin
   }
 
@@ -26,18 +27,18 @@ class YAMLPackageCohesionAnalysisResultReporter extends PackageCohesionAnalysisR
       PackageCohesionAnalysisResultReporter.packageCohesionsFileName,
       PackageCohesionAnalysisResultReporter.packageStructureHints1FileName,
       PackageCohesionAnalysisResultReporter.packageStructureHints2FileName
-    ) ++ (if (result.cohesiveNodeGroups.isDefined) List(PackageCohesionAnalysisResultReporter.cohesiveGroupsFileName) else Nil)
+    ) ++ (if (result.cohesiveNodeGroups().isPresent) List(PackageCohesionAnalysisResultReporter.cohesiveGroupsFileName) else Nil)
     "  detail_files:\n" + files.map(f => s"    - $f\n").mkString
   }
 
   private def packagesYaml(result: CohesionAnalysisResult): String =
-    if (result.packages.isEmpty)
+    if (result.packages().isEmpty)
       "  packages: []\n"
     else {
-      val lines = result.packages.toList
-        .sortBy(_._1)
-        .map { case (name, group) =>
-          s"    - name: $name\n      cohesion: ${PackageCohesionAnalysisResultReporter.round(group.cohesion())}\n      size: ${group.nodes.size}\n"
+      val lines = result.packages().entrySet().asScala.toList
+        .sortBy(_.getKey)
+        .map { e =>
+          s"    - name: ${e.getKey}\n      cohesion: ${PackageCohesionAnalysisResultReporter.round(e.getValue.cohesion())}\n      size: ${e.getValue.nodes.size}\n"
         }
         .mkString
       "  packages:\n" + lines

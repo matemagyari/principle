@@ -25,18 +25,19 @@ object ExistingPackageCohesionsFileWriter {
       .append("\n" + sectionLine + "\n\n")
       .append(columns)
 
-    result.packages
-      .filter(_._2.nodes.size > 1)
+    result.packages()
+      .entrySet().asScala
+      .filter(_.getValue.nodes.size > 1)
       .toList
-      .sortBy(_._2.cohesion()).reverse
+      .sortBy(_.getValue.cohesion()).reverse
       .foreach {
-      p => printWriter.append(s"\n ${groupToLine(p._2)}\t${p._1}")
+      e => printWriter.append(s"\n ${groupToLine(e.getValue)}\t${e.getKey}")
     }
 
     printWriter.append("\n"+sectionLine+"\n")
-    val minPackages = result.packages.filter(_._2.nodes.size == 1)
+    val minPackages = result.packages().entrySet().asScala.filter(_.getValue.nodes.size == 1)
     printWriter.append(s"\n${oneElementPackageDesc} (${minPackages.size})\n\n")
-    minPackages.toList.map(_._2.nodes.asScala.head.id).sorted.foreach {
+    minPackages.toList.map(_.getValue.nodes.asScala.head.id).sorted.foreach {
       nodeId => printWriter.append( nodeId + "\n")
     }
 

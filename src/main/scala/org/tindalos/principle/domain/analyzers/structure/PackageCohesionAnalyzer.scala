@@ -5,6 +5,7 @@ import org.tindalos.principle.domain.analyzers.Analyzer
 import org.tindalos.principle.domain.analyzers.structure.PackageCohesionModule.PackageName
 import org.tindalos.principle.domain.analyzers.structure.GroupingResult
 import org.tindalos.principle.domain.constraints.Constraints
+import scala.collection.JavaConverters._
 
 class PackageCohesionAnalyzer(buildComponents:(PackageName, Set[Node]) => Set[(PackageName, NodeGroup)]
                               , makeStructureHints1: Set[Node] => GroupingResult
@@ -23,7 +24,13 @@ class PackageCohesionAnalyzer(buildComponents:(PackageName, Set[Node]) => Set[(P
           collapseToLimit(initialGroups)
         }
 
-      CohesionAnalysisResult(packagesWithCohesions, cohesiveGroups, structureHints1, structureHints2)
+      val javaPackages = packagesWithCohesions.toMap.asJava
+      val javaGroups: java.util.Optional[java.util.Set[NodeGroup]] = cohesiveGroups match {
+        case Some(groups) => java.util.Optional.of(groups.asJava)
+        case None         => java.util.Optional.empty()
+      }
+
+      new CohesionAnalysisResult(javaPackages, javaGroups, structureHints1, structureHints2)
     }
 
     override def isEnabled(expectations: Constraints) =

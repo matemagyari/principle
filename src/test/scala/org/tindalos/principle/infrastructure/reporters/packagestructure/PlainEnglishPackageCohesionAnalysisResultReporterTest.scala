@@ -12,11 +12,11 @@ class PlainEnglishPackageCohesionAnalysisResultReporterTest {
   private val SEP = "================================================================================"
   private val reporter = new PlainEnglishPackageCohesionAnalysisResultReporter()
 
-  private val emptyResult = CohesionAnalysisResult(
-    packages = Set.empty,
-    cohesiveNodeGroups = None,
-    groupingResult = new GroupingResult(java.util.Collections.emptyMap(), java.util.Collections.emptyList()),
-    subgraphDecomposition = new SubgraphDecomposition(java.util.Collections.emptyList())
+  private val emptyResult = new CohesionAnalysisResult(
+    java.util.Collections.emptyMap(),
+    java.util.Optional.empty(),
+    new GroupingResult(java.util.Collections.emptyMap(), java.util.Collections.emptyList()),
+    new SubgraphDecomposition(java.util.Collections.emptyList())
   )
 
   @Test
@@ -44,7 +44,12 @@ class PlainEnglishPackageCohesionAnalysisResultReporterTest {
   def report_withCohesiveGroups_includesCohesiveGroupsFile(): Unit = {
     new java.io.File("./principle_reports").mkdirs()
 
-    val resultWithGroups = emptyResult.copy(cohesiveNodeGroups = Some(Set.empty))
+    val resultWithGroups = new CohesionAnalysisResult(
+      java.util.Collections.emptyMap(),
+      java.util.Optional.of(java.util.Collections.emptySet()),
+      new GroupingResult(java.util.Collections.emptyMap(), java.util.Collections.emptyList()),
+      new SubgraphDecomposition(java.util.Collections.emptyList())
+    )
     val report = reporter.report(resultWithGroups)
 
     assertTrue(report.contains(PackageCohesionAnalysisResultReporter.cohesiveGroupsFileName))
