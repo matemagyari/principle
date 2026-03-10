@@ -3,7 +3,8 @@ package org.tindalos.principle.infrastructure.reporters.packagestructure
 import java.io.PrintWriter
 
 import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult
-import org.tindalos.principle.domain.analyzers.structure.Structure.NodeGroup
+import org.tindalos.principle.domain.analyzers.structure.NodeGroup
+import scala.collection.JavaConverters._
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionAnalysisResultReporter.{packageCohesionsFileName, generalDescription, round, sectionLine, subSectionLine}
 
@@ -35,7 +36,7 @@ object ExistingPackageCohesionsFileWriter {
     printWriter.append("\n"+sectionLine+"\n")
     val minPackages = result.packages.filter(_._2.nodes.size == 1)
     printWriter.append(s"\n${oneElementPackageDesc} (${minPackages.size})\n\n")
-    minPackages.toList.map(_._2.nodes.head.id).sorted.foreach {
+    minPackages.toList.map(_._2.nodes.asScala.head.id).sorted.foreach {
       nodeId => printWriter.append( nodeId + "\n")
     }
 

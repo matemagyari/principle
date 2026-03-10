@@ -2,7 +2,8 @@ package org.tindalos.principle.infrastructure.reporters.packagestructure
 
 import java.io.PrintWriter
 
-import org.tindalos.principle.domain.analyzers.structure.Structure.NodeGroup
+import org.tindalos.principle.domain.analyzers.structure.NodeGroup
+import scala.collection.JavaConverters._
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionAnalysisResultReporter.{cohesiveGroupsFileName, generalDescription, round, sectionLine, subSectionLine}
 
@@ -29,14 +30,14 @@ object CohesiveGroupsFileWriter {
     printWriter.append("\n"+sectionLine+"\n")
     val orphanNodes = cohesiveNodeGroups.filter(_.nodes.size == 1)
     printWriter.append(s"${orphanNodesDescription} (${orphanNodes.size})\n\n")
-    orphanNodes.toList.map(_.nodes.head.id).sorted.foreach {
+    orphanNodes.toList.map(_.nodes.asScala.head.id).sorted.foreach {
       nodeId => printWriter.append( nodeId + "\n")
     }
 
     printWriter.close()
   }
 
-  private def listNodes(n: NodeGroup) = n.nodes.toList.map(_.id).sorted.foldLeft("")(_ + "\n" + _)
+  private def listNodes(n: NodeGroup) = n.nodes.asScala.toList.map(_.id).sorted.foldLeft("")(_ + "\n" + _)
 
   private def groupToLine2(n: NodeGroup) =
     s"Cohesion: ${round(n.cohesion())} " +

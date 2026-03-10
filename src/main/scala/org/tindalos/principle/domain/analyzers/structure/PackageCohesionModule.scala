@@ -1,8 +1,7 @@
 package org.tindalos.principle.domain.analyzers.structure
 
-import org.tindalos.principle.domain.analyzers.structure.Structure.NodeGroup
-
 import scala.annotation.tailrec
+import scala.collection.JavaConverters._
 
 object PackageCohesionModule {
 
@@ -26,7 +25,7 @@ object PackageCohesionModule {
 
   val componentsFromPackages = (rootPackage: PackageName, ns: Set[Node]) =>
     groupByPackages(rootPackage, ns)
-      .map(x => (x._1, NodeGroup(x._2)))
+      .map(x => (x._1, new NodeGroup(x._2.asJava)))
 
   def packageCohesions(rootPackage: PackageName, ns: Set[Node]): List[(PackageName, NodeGroup, Double)] =
     componentsFromPackages(rootPackage, ns)

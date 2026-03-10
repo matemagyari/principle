@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.analyzers.structure
 
-import org.tindalos.principle.domain.analyzers.structure.Structure.{NodeGroup, cohesionDelta, merge}
+import org.tindalos.principle.domain.analyzers.structure.Structure
 
 import scala.annotation.tailrec
 
@@ -20,7 +20,7 @@ object CohesiveGroupsDiscoveryModule {
   private def collapse(ns: Set[NodeGroup], pairMap: Map[(NodeGroup, NodeGroup), Double]): Set[NodeGroup] = {
     val max = pairMap.maxBy(_._2)
     if (max._2 > 0.1) {
-      val merged = merge(max._1._1, max._1._2)
+      val merged = Structure.merge(max._1._1, max._1._2)
       val updatedNs = ns - max._1._1 - max._1._2 + merged
 
       val newPairs = for {
@@ -36,6 +36,6 @@ object CohesiveGroupsDiscoveryModule {
     else ns
   }
 
-  private def aPair(n1: NodeGroup, n2: NodeGroup) = ((n1, n2), cohesionDelta(n1, n2))
+  private def aPair(n1: NodeGroup, n2: NodeGroup) = ((n1, n2), Structure.cohesionDelta(n1, n2))
 
 }

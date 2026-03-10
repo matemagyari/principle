@@ -5,7 +5,7 @@ import org.junit.Test
 import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult
 import org.tindalos.principle.domain.analyzers.structure.{Node, SubgraphDecomposition}
 import org.tindalos.principle.domain.analyzers.structure.PackageStructureHints1Finder.GroupingResult
-import org.tindalos.principle.domain.analyzers.structure.Structure.NodeGroup
+import org.tindalos.principle.domain.analyzers.structure.NodeGroup
 import org.yaml.snakeyaml.Yaml
 
 import scala.collection.JavaConverters._
@@ -28,7 +28,7 @@ class YAMLPackageCohesionAnalysisResultReporterTest {
 
   private def pkg(packageName: String, nodeIds: String*): (String, NodeGroup) = {
     val nodes = nodeIds.map(id => new Node(id, Set.empty[String].asJava, Set.empty[String].asJava)).toSet
-    (packageName, NodeGroup(nodes))
+    (packageName, new NodeGroup(nodes.asJava))
   }
 
   @Test

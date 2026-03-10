@@ -1,6 +1,6 @@
 package org.tindalos.principle
 
-import org.tindalos.principle.domain.analyzers.structure.Structure.NodeGroup
+import org.tindalos.principle.domain.analyzers.structure.NodeGroup
 import org.tindalos.principle.domain.analyzers.structure.{CohesiveGroupsDiscoveryModule, Graph, PackageCohesionModule, PackageStructureHints1Finder}
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
 
@@ -62,7 +62,7 @@ object StructureTestManual extends App {
     g <- grouping.grouping
     nodeSet = g._2.map(x => classes.find(n => n.id == x).get).toSet
     if nodeSet.size > 1
-    nodeGroup = NodeGroup(nodeSet)
+    nodeGroup = new NodeGroup(nodeSet.asJava)
   } yield (g._1, nodeGroup.cohesion())
 
   cohesionsForGrouping.toList.sortBy(_._2).reverse.foreach {
@@ -74,14 +74,14 @@ object StructureTestManual extends App {
 
   parts.peninsulas.asScala.foreach {
     p => {
-      println("Top: " + p.frontNodes + " " + NodeGroup(p.subgraph.asScala.toSet).cohesion())
+      println("Top: " + p.frontNodes + " " + new NodeGroup(p.subgraph).cohesion())
       p.subgraph.asScala.map(_.id).toList.sorted.foreach {
         n => println("\t"+n)
       }
     }
   }
 
-  val initialComponents = classes.map(n => NodeGroup(Set(n)))
+  val initialComponents = classes.map(n => new NodeGroup(java.util.Collections.singleton(n)))
 
   start = System.currentTimeMillis()
   val components = CohesiveGroupsDiscoveryModule.collapseToLimit(initialComponents).toList.sortBy(_.nodes.size).reverse

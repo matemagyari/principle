@@ -2,8 +2,7 @@ package org.tindalos.principle.infrastructure.reporters.packagestructure
 
 import java.io.PrintWriter
 
-import org.tindalos.principle.domain.analyzers.structure.{Peninsula, SubgraphDecomposition}
-import org.tindalos.principle.domain.analyzers.structure.Structure.NodeGroup
+import org.tindalos.principle.domain.analyzers.structure.{NodeGroup, Peninsula, SubgraphDecomposition}
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionAnalysisResultReporter._
 
@@ -26,7 +25,7 @@ object PackageStructureHints2FileWriter {
       .append(subSectionLine + "\n\n")
 
     def printPeninsula(p:Peninsula) {
-        val firstLine =  s"\nCohesion: ${NodeGroup(p.subgraph.asScala.toSet).cohesion()}"
+        val firstLine =  s"\nCohesion: ${new NodeGroup(p.subgraph).cohesion()}"
         if (p.island)
           printWriter.append(s"${firstLine} - This is an island\n")
         else
