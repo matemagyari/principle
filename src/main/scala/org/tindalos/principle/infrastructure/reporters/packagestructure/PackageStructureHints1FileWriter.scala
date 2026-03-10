@@ -2,9 +2,10 @@ package org.tindalos.principle.infrastructure.reporters.packagestructure
 
 import java.io.PrintWriter
 
-import org.tindalos.principle.domain.analyzers.structure.PackageStructureHints1Finder.GroupingResult
+import org.tindalos.principle.domain.analyzers.structure.GroupingResult
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionAnalysisResultReporter._
+import scala.collection.JavaConverters._
 
 
 object PackageStructureHints1FileWriter {
@@ -24,21 +25,21 @@ object PackageStructureHints1FileWriter {
     printWriter
       .append(graphDescription+"\n\n")
       .append(description+"\n\n")
-      .append(s"\nSources (${grouping.labelledSources.size})\n")
+      .append(s"\nSources (${grouping.labelledSources().size()})\n")
       .append(subSectionLine+"\n\n")
 
-    grouping.labelledSources.sortBy(_._1).foreach {
-      x => printWriter.append(x._1 + " -> " + x._2+"\n")
+    grouping.labelledSources().asScala.sortBy(_.label()).foreach {
+      x => printWriter.append(x.label() + " -> " + x.nodeId()+"\n")
     }
     printWriter
-      .append(s"\nGroups (${grouping.grouping.size}) ordered by size\n")
+      .append(s"\nGroups (${grouping.grouping().size()}) ordered by size\n")
       .append(subSectionLine+"\n\n")
 
-    grouping.grouping.to[List].sortBy(_._2.size).foreach {
-      kv => {
-        val sources = kv._1.foldLeft("")(_ + "," + _).substring(1)
+    grouping.grouping().entrySet().asScala.toList.sortBy(_.getValue.size()).foreach {
+      entry => {
+        val sources = entry.getKey.asScala.foldLeft("")(_ + "," + _).substring(1)
         printWriter.append(s"Sources: ${sources}\n")
-        kv._2.sorted.foreach {
+        entry.getValue.asScala.sorted.foreach {
           x => printWriter.append("\t" + x+"\n")
         }
       }
@@ -46,8 +47,5 @@ object PackageStructureHints1FileWriter {
 
     printWriter.close()
   }
-
-  private def aSort(s1:(String,String),s2:(String,String)) = 1//s1.substring(1).toInt.compareTo(s2.substring(1).toInt)
-
 
 }

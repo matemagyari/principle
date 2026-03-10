@@ -43,14 +43,14 @@ object StructureTestManual extends App {
   def aSort(s1: String, s2: String) = s1.substring(1).toInt.compareTo(s2.substring(1).toInt)
 
   println("\nSources:")
-  grouping.labelledSources.sortBy(_._1).foreach {
-    x => println(x)
+  grouping.labelledSources().asScala.sortBy(_.label()).foreach {
+    x => println(x.label() + " -> " + x.nodeId())
   }
   println("\nGroups:")
-  grouping.grouping.foreach {
-    kv => {
-      println(kv._1.foldLeft("Sources: ")(_ + "," + _))
-      kv._2.sorted.foreach {
+  grouping.grouping().entrySet().asScala.foreach {
+    entry => {
+      println(entry.getKey.asScala.foldLeft("Sources: ")(_ + "," + _))
+      entry.getValue.asScala.sorted.foreach {
         x => println("\t" + x)
       }
     }
@@ -59,11 +59,11 @@ object StructureTestManual extends App {
   var start = System.currentTimeMillis()
 
   val cohesionsForGrouping = for {
-    g <- grouping.grouping
-    nodeSet = g._2.map(x => classes.find(n => n.id == x).get).toSet
+    entry <- grouping.grouping().entrySet().asScala
+    nodeSet = entry.getValue.asScala.map(x => classes.find(n => n.id == x).get).toSet
     if nodeSet.size > 1
     nodeGroup = new NodeGroup(nodeSet.asJava)
-  } yield (g._1, nodeGroup.cohesion())
+  } yield (entry.getKey, nodeGroup.cohesion())
 
   cohesionsForGrouping.toList.sortBy(_._2).reverse.foreach {
     c => println(c._2 + " " + c._1)

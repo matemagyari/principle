@@ -6,7 +6,7 @@ import org.tindalos.principle.domain.analyzers.adp.ADPResult
 import org.tindalos.principle.domain.analyzers.layering.{LayerReference, LayerViolationsResult}
 import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult
 import org.tindalos.principle.domain.analyzers.structure.SubgraphDecomposition
-import org.tindalos.principle.domain.analyzers.structure.PackageStructureHints1Finder.GroupingResult
+import org.tindalos.principle.domain.analyzers.structure.GroupingResult
 import org.tindalos.principle.domain.constraints.ADP
 import org.tindalos.principle.domain.core.Cycle
 import org.tindalos.principle.domain.core.packages.PackageReference
@@ -182,7 +182,7 @@ class AnalysisResultsReporterTest {
     val cohesionResult = CohesionAnalysisResult(
       packages = Set.empty,
       cohesiveNodeGroups = None,
-      groupingResult = GroupingResult(Map.empty, List.empty),
+      groupingResult = new GroupingResult(java.util.Collections.emptyMap(), java.util.Collections.emptyList()),
       subgraphDecomposition = new SubgraphDecomposition(java.util.Collections.emptyList())
     )
 

@@ -3,7 +3,7 @@ package org.tindalos.principle.domain.analyzers.structure
 import org.tindalos.principle.domain.AnalysisInput
 import org.tindalos.principle.domain.analyzers.Analyzer
 import org.tindalos.principle.domain.analyzers.structure.PackageCohesionModule.PackageName
-import org.tindalos.principle.domain.analyzers.structure.PackageStructureHints1Finder.GroupingResult
+import org.tindalos.principle.domain.analyzers.structure.GroupingResult
 import org.tindalos.principle.domain.constraints.Constraints
 
 class PackageCohesionAnalyzer(buildComponents:(PackageName, Set[Node]) => Set[(PackageName, NodeGroup)]

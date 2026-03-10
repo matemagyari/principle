@@ -4,7 +4,7 @@ import org.junit.Assert.{assertEquals, assertTrue}
 import org.junit.Test
 import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult
 import org.tindalos.principle.domain.analyzers.structure.SubgraphDecomposition
-import org.tindalos.principle.domain.analyzers.structure.PackageStructureHints1Finder.GroupingResult
+import org.tindalos.principle.domain.analyzers.structure.GroupingResult
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 
 class PlainEnglishPackageCohesionAnalysisResultReporterTest {
@@ -15,7 +15,7 @@ class PlainEnglishPackageCohesionAnalysisResultReporterTest {
   private val emptyResult = CohesionAnalysisResult(
     packages = Set.empty,
     cohesiveNodeGroups = None,
-    groupingResult = GroupingResult(Map.empty, List.empty),
+    groupingResult = new GroupingResult(java.util.Collections.emptyMap(), java.util.Collections.emptyList()),
     subgraphDecomposition = new SubgraphDecomposition(java.util.Collections.emptyList())
   )
 
