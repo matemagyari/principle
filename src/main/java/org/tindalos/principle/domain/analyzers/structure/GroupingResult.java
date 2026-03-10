@@ -1,5 +1,7 @@
 package org.tindalos.principle.domain.analyzers.structure;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,6 +15,13 @@ import java.util.Set;
 public record GroupingResult(
         Map<Set<String>, List<String>> grouping,
         List<LabelledSource> labelledSources) {
+
+    public GroupingResult {
+        Map<Set<String>, List<String>> copy = new LinkedHashMap<>();
+        grouping.forEach((k, v) -> copy.put(Set.copyOf(k), List.copyOf(v)));
+        grouping = Collections.unmodifiableMap(copy);
+        labelledSources = List.copyOf(labelledSources);
+    }
 
     /**
      * A source node annotated with a short label (e.g. "s01").
