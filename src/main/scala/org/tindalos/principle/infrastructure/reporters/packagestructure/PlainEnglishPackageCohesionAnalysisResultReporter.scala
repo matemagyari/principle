@@ -10,13 +10,8 @@ import PackageCohesionConstants._
 object PackageCohesionAnalysisResultReporter {
 
   val columns = "| Cohesion | Size | upstream/downstream dependencies | internal/external edges |\n"
-  val packageStructureHints2FileName = "code_structure_observations2.txt"
 
-  val graphDescription = "A directed graph is built representing the structure of the code, " +
-    "where each class appears as a vertex and each relationship between classes (composition, inheritance, ...) " +
-    "as a directed edge between the corresponding two vertices."
-
-  val generalDescription = graphDescription +
+  val generalDescription = GRAPH_DESCRIPTION +
     " Cohesion between a group of vertices (classes) is calculated by the " +
     "\n\n\tC = 1 - E1 / E2 " +
     "\n\nformula. E1 is the number of edges the vertices in the group participate in. This means 'internal' edges, where both ends of the edge is from the group and 'external' ones, where only one end is. " +
@@ -32,7 +27,7 @@ class PlainEnglishPackageCohesionAnalysisResultReporter extends PackageCohesionA
 
   def report(result: CohesionAnalysisResult): AnalysisResultsReporter.Report = {
 
-    var fileNames = s"${PackageCohesionConstants.PACKAGE_COHESIONS_FILE_NAME}, ${PackageCohesionConstants.PACKAGE_STRUCTURE_HINTS1_FILE_NAME}, ${PackageCohesionAnalysisResultReporter.packageStructureHints2FileName}"
+    var fileNames = s"${PackageCohesionConstants.PACKAGE_COHESIONS_FILE_NAME}, ${PackageCohesionConstants.PACKAGE_STRUCTURE_HINTS1_FILE_NAME}, ${PackageCohesionConstants.PACKAGE_STRUCTURE_HINTS2_FILE_NAME}"
 
     ExistingPackageCohesionsFileWriter.writeToFile(result)
     PackageStructureHints1FileWriter.writeToFile(result.groupingResult)

@@ -26,7 +26,7 @@ class YAMLPackageCohesionAnalysisResultReporter extends PackageCohesionAnalysisR
     val files = List(
       PackageCohesionConstants.PACKAGE_COHESIONS_FILE_NAME,
       PackageCohesionConstants.PACKAGE_STRUCTURE_HINTS1_FILE_NAME,
-      PackageCohesionAnalysisResultReporter.packageStructureHints2FileName
+      PackageCohesionConstants.PACKAGE_STRUCTURE_HINTS2_FILE_NAME
     ) ++ (if (result.cohesiveNodeGroups().isPresent) List(PackageCohesionConstants.COHESIVE_GROUPS_FILE_NAME) else Nil)
     "  detail_files:\n" + files.map(f => s"    - $f\n").mkString
   }

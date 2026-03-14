@@ -33,7 +33,7 @@ class PlainEnglishPackageCohesionAnalysisResultReporterTest {
          |\tPackage Cohesion Analysis\t
          |$SEP
          |
-         |For details check files: ${PackageCohesionConstants.PACKAGE_COHESIONS_FILE_NAME}, ${PackageCohesionConstants.PACKAGE_STRUCTURE_HINTS1_FILE_NAME}, ${PackageCohesionAnalysisResultReporter.packageStructureHints2FileName} in $reportsDir
+         |For details check files: ${PackageCohesionConstants.PACKAGE_COHESIONS_FILE_NAME}, ${PackageCohesionConstants.PACKAGE_STRUCTURE_HINTS1_FILE_NAME}, ${PackageCohesionConstants.PACKAGE_STRUCTURE_HINTS2_FILE_NAME} in $reportsDir
          |
          |$SEP
          |""".stripMargin
