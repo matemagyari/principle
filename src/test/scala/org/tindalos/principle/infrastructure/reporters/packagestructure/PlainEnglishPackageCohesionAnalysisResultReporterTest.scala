@@ -33,7 +33,7 @@ class PlainEnglishPackageCohesionAnalysisResultReporterTest {
          |\tPackage Cohesion Analysis\t
          |$SEP
          |
-         |For details check files: ${PackageCohesionAnalysisResultReporter.packageCohesionsFileName}, ${PackageCohesionAnalysisResultReporter.packageStructureHints1FileName}, ${PackageCohesionAnalysisResultReporter.packageStructureHints2FileName} in $reportsDir
+         |For details check files: ${PackageCohesionConstants.PACKAGE_COHESIONS_FILE_NAME}, ${PackageCohesionAnalysisResultReporter.packageStructureHints1FileName}, ${PackageCohesionAnalysisResultReporter.packageStructureHints2FileName} in $reportsDir
          |
          |$SEP
          |""".stripMargin
@@ -52,7 +52,7 @@ class PlainEnglishPackageCohesionAnalysisResultReporterTest {
     )
     val report = reporter.report(resultWithGroups)
 
-    assertTrue(report.contains(PackageCohesionAnalysisResultReporter.cohesiveGroupsFileName))
+    assertTrue(report.contains(PackageCohesionConstants.COHESIVE_GROUPS_FILE_NAME))
   }
 
   @Test
@@ -61,7 +61,7 @@ class PlainEnglishPackageCohesionAnalysisResultReporterTest {
 
     val report = reporter.report(emptyResult)
 
-    assertTrue(!report.contains(PackageCohesionAnalysisResultReporter.cohesiveGroupsFileName))
+    assertTrue(!report.contains(PackageCohesionConstants.COHESIVE_GROUPS_FILE_NAME))
   }
 }
 

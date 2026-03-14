@@ -1,13 +1,14 @@
 package org.tindalos.principle.domain.analyzers.submodulesblueprint;
 
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.tindalos.principle.domain.core.packages.PackageMetrics;
 import org.tindalos.principle.domain.core.packages.PackageReference;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
-
-import java.util.Set;
-
-import static org.junit.Assert.*;
 
 /**
  * Unit tests for Submodule verifying dependency detection logic.

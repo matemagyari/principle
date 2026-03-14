@@ -35,7 +35,7 @@ class PlainEnglishPackageCohesionAnalysisResultReporter extends PackageCohesionA
 
   def report(result: CohesionAnalysisResult): AnalysisResultsReporter.Report = {
 
-    var fileNames = s"${PackageCohesionAnalysisResultReporter.packageCohesionsFileName}, ${PackageCohesionAnalysisResultReporter.packageStructureHints1FileName}, ${PackageCohesionAnalysisResultReporter.packageStructureHints2FileName}"
+    var fileNames = s"${PackageCohesionConstants.PACKAGE_COHESIONS_FILE_NAME}, ${PackageCohesionAnalysisResultReporter.packageStructureHints1FileName}, ${PackageCohesionAnalysisResultReporter.packageStructureHints2FileName}"
 
     ExistingPackageCohesionsFileWriter.writeToFile(result)
     PackageStructureHints1FileWriter.writeToFile(result.groupingResult)
@@ -43,7 +43,7 @@ class PlainEnglishPackageCohesionAnalysisResultReporter extends PackageCohesionA
     PackageStructureHints2FileWriter.writeToFile(result.subgraphDecomposition)
     if (result.cohesiveNodeGroups().isPresent) {
       CohesiveGroupsFileWriter.writeToFile(result.cohesiveNodeGroups().get().asScala.toSet)
-      fileNames += s", ${PackageCohesionAnalysisResultReporter.cohesiveGroupsFileName}"
+      fileNames += s", ${PackageCohesionConstants.COHESIVE_GROUPS_FILE_NAME}"
     }
 
     val sb = new StringBuffer("\n" + PackageCohesionConstants.SECTION_LINE + "\n")
