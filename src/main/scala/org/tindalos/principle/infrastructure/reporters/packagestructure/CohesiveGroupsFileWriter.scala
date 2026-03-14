@@ -5,7 +5,8 @@ import java.io.PrintWriter
 import org.tindalos.principle.domain.analyzers.structure.NodeGroup
 import scala.collection.JavaConverters._
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
-import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionAnalysisResultReporter.{cohesiveGroupsFileName, generalDescription, round, sectionLine, subSectionLine}
+import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionAnalysisResultReporter.{cohesiveGroupsFileName, generalDescription, round}
+import PackageCohesionConstants._
 
 object CohesiveGroupsFileWriter {
 
@@ -19,15 +20,15 @@ object CohesiveGroupsFileWriter {
     printWriter
       .append(generalDescription+"\n\n")
       .append(cohesiveGroupsDescription)
-      .append("\n" + sectionLine + "\n\n")
+      .append("\n" + SECTION_LINE + "\n\n")
 
     cohesiveNodeGroups
       .toList.sortBy(_.cohesion()).reverse.filter(_.nodes.size > 1)
       .foreach {
-      p => printWriter.append(s"\n${groupToLine2(p)} \n${listNodes(p)} \n${subSectionLine}\n")
+      p => printWriter.append(s"\n${groupToLine2(p)} \n${listNodes(p)} \n${SUB_SECTION_LINE}\n")
     }
 
-    printWriter.append("\n"+sectionLine+"\n")
+    printWriter.append("\n"+SECTION_LINE+"\n")
     val orphanNodes = cohesiveNodeGroups.filter(_.nodes.size == 1)
     printWriter.append(s"${orphanNodesDescription} (${orphanNodes.size})\n\n")
     orphanNodes.toList.map(_.nodes.asScala.head.id).sorted.foreach {

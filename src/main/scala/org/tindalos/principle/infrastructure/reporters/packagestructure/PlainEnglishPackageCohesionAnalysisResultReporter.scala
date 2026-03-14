@@ -5,11 +5,10 @@ import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 import scala.collection.JavaConverters._
+import PackageCohesionConstants._
 
 object PackageCohesionAnalysisResultReporter {
 
-  val sectionLine = "================================================================================"
-  val subSectionLine = "-----------------------------------------------------------------------------"
   val columns = "| Cohesion | Size | upstream/downstream dependencies | internal/external edges |\n"
   val cohesiveGroupsFileName = "identified_cohesive_groups.txt"
   val packageCohesionsFileName = "existing_packages_cohesion.txt"
@@ -47,12 +46,12 @@ class PlainEnglishPackageCohesionAnalysisResultReporter extends PackageCohesionA
       fileNames += s", ${PackageCohesionAnalysisResultReporter.cohesiveGroupsFileName}"
     }
 
-    val sb = new StringBuffer("\n" + PackageCohesionAnalysisResultReporter.sectionLine + "\n")
+    val sb = new StringBuffer("\n" + PackageCohesionConstants.SECTION_LINE + "\n")
     sb.append("\tPackage Cohesion Analysis\t")
-    sb.append("\n" + PackageCohesionAnalysisResultReporter.sectionLine + "\n")
+    sb.append("\n" + PackageCohesionConstants.SECTION_LINE + "\n")
     sb.append(s"\nFor details check files: ${fileNames} in ${ReportsDirectoryManager.ensureReportsDirectoryExists()}\n\n")
 
-    sb.append(PackageCohesionAnalysisResultReporter.sectionLine + "\n")
+    sb.append(PackageCohesionConstants.SECTION_LINE + "\n")
 
     sb.toString()
   }

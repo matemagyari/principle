@@ -5,6 +5,7 @@ import java.io.PrintWriter
 import org.tindalos.principle.domain.analyzers.structure.{NodeGroup, Peninsula, SubgraphDecomposition}
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionAnalysisResultReporter._
+import PackageCohesionConstants._
 
 import scala.collection.JavaConverters._
 
@@ -22,7 +23,7 @@ object PackageStructureHints2FileWriter {
     val printWriter = new PrintWriter(ReportsDirectoryManager.reportDirectoryPath + "/" + packageStructureHints2FileName)
       .append(graphDescription + "\n\n")
       .append(description + "\n\n")
-      .append(subSectionLine + "\n\n")
+      .append(SUB_SECTION_LINE + "\n\n")
 
     def printPeninsula(p:Peninsula) {
         val firstLine =  s"\nCohesion: ${new NodeGroup(p.subgraph).cohesion()}"
@@ -34,7 +35,7 @@ object PackageStructureHints2FileWriter {
         p.frontNodes.asScala.map(_.id).toList.sorted.foreach {
           nodeId => printWriter.append(s"Top class: ${nodeId}\n")
         }
-        printWriter.append(subSectionLine + "\n")
+        printWriter.append(SUB_SECTION_LINE + "\n")
         (p.subgraph.asScala -- p.frontNodes.asScala).map(_.id).toList.sorted.foreach {
           nodeId => printWriter.append(s"           ${nodeId}\n")
         }

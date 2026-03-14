@@ -6,8 +6,8 @@ import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult
 import org.tindalos.principle.domain.analyzers.structure.NodeGroup
 import scala.collection.JavaConverters._
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
-import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionAnalysisResultReporter.{packageCohesionsFileName, generalDescription, round, sectionLine, subSectionLine}
-
+import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionAnalysisResultReporter.{packageCohesionsFileName, generalDescription, round}
+import PackageCohesionConstants._
 
 object ExistingPackageCohesionsFileWriter {
 
@@ -20,9 +20,9 @@ object ExistingPackageCohesionsFileWriter {
 
     printWriter
       .append(generalDescription)
-      .append("\n\n" + sectionLine + "\n")
+      .append("\n\n" + SECTION_LINE + "\n")
       .append("Package cohesions - existing packages are listed, ordered by cohesion")
-      .append("\n" + sectionLine + "\n\n")
+      .append("\n" + SECTION_LINE + "\n\n")
       .append(columns)
 
     result.packages()
@@ -34,7 +34,7 @@ object ExistingPackageCohesionsFileWriter {
       e => printWriter.append(s"\n ${groupToLine(e.getValue)}\t${e.getKey}")
     }
 
-    printWriter.append("\n"+sectionLine+"\n")
+    printWriter.append("\n"+SECTION_LINE+"\n")
     val minPackages = result.packages().entrySet().asScala.filter(_.getValue.nodes.size == 1)
     printWriter.append(s"\n${oneElementPackageDesc} (${minPackages.size})\n\n")
     minPackages.toList.map(_.getValue.nodes.asScala.head.id).sorted.foreach {

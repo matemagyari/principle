@@ -6,7 +6,7 @@ import org.tindalos.principle.domain.analyzers.structure.GroupingResult
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
 import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionAnalysisResultReporter._
 import scala.collection.JavaConverters._
-
+import PackageCohesionConstants._
 
 object PackageStructureHints1FileWriter {
 
@@ -26,14 +26,14 @@ object PackageStructureHints1FileWriter {
       .append(graphDescription+"\n\n")
       .append(description+"\n\n")
       .append(s"\nSources (${grouping.labelledSources().size()})\n")
-      .append(subSectionLine+"\n\n")
+      .append(SUB_SECTION_LINE+"\n\n")
 
     grouping.labelledSources().asScala.sortBy(_.label()).foreach {
       x => printWriter.append(x.label() + " -> " + x.nodeId()+"\n")
     }
     printWriter
       .append(s"\nGroups (${grouping.grouping().size()}) ordered by size\n")
-      .append(subSectionLine+"\n\n")
+      .append(SUB_SECTION_LINE+"\n\n")
 
     grouping.grouping().entrySet().asScala.toList.sortBy(_.getValue.size()).foreach {
       entry => {
