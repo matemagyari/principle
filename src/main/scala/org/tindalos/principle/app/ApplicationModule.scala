@@ -29,13 +29,7 @@ object ApplicationModule {
 
         val analysisResults = analysisRunner.run(new AnalysisInput(packages, nodes, analysisPlan))
 
-        def printReport(report: (String, Boolean)) =
-          if (report._2)
-            printer.printWarning(report._1)
-          else
-            printer.printInfo(report._1)
-
-        analysisResultsReporter.toReports(analysisResults) foreach printReport
+        printer.printInfo(analysisResultsReporter.summary(analysisResults))    
 
         val success = !analysisResults.exists(_.constraintViolated())
         new ValidationResult(success, if (success) "" else "Expectations failed")

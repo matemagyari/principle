@@ -33,7 +33,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
       insertIndirectSubPackage(aPackage)
     }
   }
-
+  
   // all the references going out from this package
   override def accumulatedDirectPackageReferences(): java.util.Set[PackageReference] = {
     scalaAccumulatedDirectPackageReferences().asJava

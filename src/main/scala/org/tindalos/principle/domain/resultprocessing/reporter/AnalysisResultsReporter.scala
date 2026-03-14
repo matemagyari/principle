@@ -28,7 +28,7 @@ class AnalysisResultsReporter(
     cohesionReporter: PackageCohesionAnalysisResultReporter) {
 
   def summary(results: List[AnalysisResult]): String = {
-    val reports = toReports(results)
+    val reports = results.map(toReport)
     val success = !reports.exists(_._2)
     val violatedNames = reports.filter(_._2).map { case (report, _) => report.takeWhile(_ != ':') }
     val description =
@@ -49,8 +49,6 @@ class AnalysisResultsReporter(
     significant.map("    " + _).mkString("\n") + "\n"
   }
 
-
-  def toReports(results: List[AnalysisResult]): List[(String, Boolean)] = results.map(toReport)
 
   private def toReport(result: AnalysisResult): (Report, Boolean) = {
     val report = result match {

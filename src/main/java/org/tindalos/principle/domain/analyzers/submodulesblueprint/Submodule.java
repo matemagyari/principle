@@ -1,11 +1,11 @@
 package org.tindalos.principle.domain.analyzers.submodulesblueprint;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.tindalos.principle.domain.core.packages.PackageReference;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Represents a submodule in the blueprint definition, grouping packages into a named module
