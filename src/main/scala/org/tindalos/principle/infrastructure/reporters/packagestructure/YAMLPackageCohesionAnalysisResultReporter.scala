@@ -14,7 +14,7 @@ class YAMLPackageCohesionAnalysisResultReporter extends PackageCohesionAnalysisR
     PackageStructureHints1FileWriter.writeToFile(result.groupingResult)
     PackageStructureHints2FileWriter.writeToFile(result.subgraphDecomposition)
     if (result.cohesiveNodeGroups().isPresent)
-      CohesiveGroupsFileWriter.writeToFile(result.cohesiveNodeGroups().get().asScala.toSet)
+      CohesiveGroupsFileWriter.writeToFile(result.cohesiveNodeGroups().get())
 
     s"""package_cohesion_result:
        |  description: Package Cohesion Analysis

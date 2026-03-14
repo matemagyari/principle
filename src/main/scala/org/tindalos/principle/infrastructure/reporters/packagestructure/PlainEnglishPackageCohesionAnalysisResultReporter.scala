@@ -4,7 +4,6 @@ import org.tindalos.principle.app.reporters.AnalysisResultReporter
 import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
-import scala.collection.JavaConverters._
 import PackageCohesionConstants._
 
 trait PackageCohesionAnalysisResultReporter extends AnalysisResultReporter[CohesionAnalysisResult]
@@ -20,7 +19,7 @@ class PlainEnglishPackageCohesionAnalysisResultReporter extends PackageCohesionA
 
     PackageStructureHints2FileWriter.writeToFile(result.subgraphDecomposition)
     if (result.cohesiveNodeGroups().isPresent) {
-      CohesiveGroupsFileWriter.writeToFile(result.cohesiveNodeGroups().get().asScala.toSet)
+      CohesiveGroupsFileWriter.writeToFile(result.cohesiveNodeGroups().get())
       fileNames += s", ${PackageCohesionConstants.COHESIVE_GROUPS_FILE_NAME}"
     }
 
