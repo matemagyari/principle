@@ -13,7 +13,7 @@ class JDependBasedPackageListBuilder(rootPackage: String) extends PackageListBui
   private val fn =  {
     val packageListTransformer = {
       val packageFactory = new PackageFactory(rootPackage)
-      packageFactory.buildPackageListFactory(PackageSorterModule.sortByName(_))
+      packageFactory.buildPackageListFactory(packages => PackageSorterModule.sortByName(packages.asJava).asScala.toList)
     }
     JDependPackageAnalyzer.buildAnalyzerFn(
       (rootPkg, filterEnabled) => JDependRunner.preparePackages(rootPkg, filterEnabled).asScala.toList,
