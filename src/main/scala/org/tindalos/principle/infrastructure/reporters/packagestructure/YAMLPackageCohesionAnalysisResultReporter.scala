@@ -38,7 +38,7 @@ class YAMLPackageCohesionAnalysisResultReporter extends PackageCohesionAnalysisR
       val lines = result.packages().entrySet().asScala.toList
         .sortBy(_.getKey)
         .map { e =>
-          s"    - name: ${e.getKey}\n      cohesion: ${PackageCohesionAnalysisResultReporter.round(e.getValue.cohesion())}\n      size: ${e.getValue.nodes.size}\n"
+          s"    - name: ${e.getKey}\n      cohesion: ${PackageCohesionConstants.round(e.getValue.cohesion())}\n      size: ${e.getValue.nodes.size}\n"
         }
         .mkString
       "  packages:\n" + lines
