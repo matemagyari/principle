@@ -6,7 +6,6 @@ import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult
 import org.tindalos.principle.domain.analyzers.structure.NodeGroup
 import scala.collection.JavaConverters._
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
-import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionAnalysisResultReporter.{packageCohesionsFileName, generalDescription, round}
 import PackageCohesionConstants._
 
 object ExistingPackageCohesionsFileWriter {
@@ -16,10 +15,10 @@ object ExistingPackageCohesionsFileWriter {
     val columns = "| Cohesion | Size | Upstream/Downstream dependencies of package | Internal/External edges of the classes |\n"
     val oneElementPackageDesc = "Each of the following packages contains only one class, therefore no cohesion is calculated"
 
-    val printWriter = new PrintWriter(ReportsDirectoryManager.reportDirectoryPath+"/"+packageCohesionsFileName)
+    val printWriter = new PrintWriter(ReportsDirectoryManager.reportDirectoryPath+"/"+PACKAGE_COHESIONS_FILE_NAME)
 
     printWriter
-      .append(generalDescription)
+      .append(GENERAL_DESCRIPTION)
       .append("\n\n" + SECTION_LINE + "\n")
       .append("Package cohesions - existing packages are listed, ordered by cohesion")
       .append("\n" + SECTION_LINE + "\n\n")

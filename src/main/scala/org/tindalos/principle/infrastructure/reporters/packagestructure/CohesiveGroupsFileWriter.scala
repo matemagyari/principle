@@ -5,7 +5,6 @@ import java.io.PrintWriter
 import org.tindalos.principle.domain.analyzers.structure.NodeGroup
 import scala.collection.JavaConverters._
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
-import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionAnalysisResultReporter.{cohesiveGroupsFileName, generalDescription, round}
 import PackageCohesionConstants._
 
 object CohesiveGroupsFileWriter {
@@ -15,10 +14,10 @@ object CohesiveGroupsFileWriter {
 
     val orphanNodesDescription = "\nThe following classes did not fit into any cohesive group"
 
-    val printWriter = new PrintWriter(ReportsDirectoryManager.reportDirectoryPath+"/"+cohesiveGroupsFileName)
+    val printWriter = new PrintWriter(ReportsDirectoryManager.reportDirectoryPath+"/"+COHESIVE_GROUPS_FILE_NAME)
 
     printWriter
-      .append(generalDescription+"\n\n")
+      .append(GENERAL_DESCRIPTION+"\n\n")
       .append(cohesiveGroupsDescription)
       .append("\n" + SECTION_LINE + "\n\n")
 

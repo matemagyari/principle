@@ -10,9 +10,6 @@ import PackageCohesionConstants._
 object PackageCohesionAnalysisResultReporter {
 
   val columns = "| Cohesion | Size | upstream/downstream dependencies | internal/external edges |\n"
-  val cohesiveGroupsFileName = "identified_cohesive_groups.txt"
-  val packageCohesionsFileName = "existing_packages_cohesion.txt"
-  val packageStructureHints1FileName = "code_structure_observations1.txt"
   val packageStructureHints2FileName = "code_structure_observations2.txt"
 
   val graphDescription = "A directed graph is built representing the structure of the code, " +
@@ -35,7 +32,7 @@ class PlainEnglishPackageCohesionAnalysisResultReporter extends PackageCohesionA
 
   def report(result: CohesionAnalysisResult): AnalysisResultsReporter.Report = {
 
-    var fileNames = s"${PackageCohesionConstants.PACKAGE_COHESIONS_FILE_NAME}, ${PackageCohesionAnalysisResultReporter.packageStructureHints1FileName}, ${PackageCohesionAnalysisResultReporter.packageStructureHints2FileName}"
+    var fileNames = s"${PackageCohesionConstants.PACKAGE_COHESIONS_FILE_NAME}, ${PackageCohesionConstants.PACKAGE_STRUCTURE_HINTS1_FILE_NAME}, ${PackageCohesionAnalysisResultReporter.packageStructureHints2FileName}"
 
     ExistingPackageCohesionsFileWriter.writeToFile(result)
     PackageStructureHints1FileWriter.writeToFile(result.groupingResult)
