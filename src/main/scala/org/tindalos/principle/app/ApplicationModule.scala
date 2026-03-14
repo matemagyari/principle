@@ -16,7 +16,7 @@ object ApplicationModule {
                          getNodes: String => Set[Node],
                          analysisRunner: AnalysisRunner,
                          analysisResultsReporter: AnalysisResultsReporter,
-                         printer: Printer) =
+                         printer: Printer): AnalysisPlan => ValidationResult =
 
     (analysisPlan: AnalysisPlan) => {
 
