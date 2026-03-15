@@ -19,7 +19,7 @@ case class AnalysisInput(
 
   def packageCouplingExpectations(): java.util.Optional[PackageCouplingConstraints] = expectations.packageCoupling()
 
-  def layeringExpectations(): Option[Layering] = toScalaOption(expectations.layering())
+  def layeringExpectations(): java.util.Optional[Layering] = expectations.layering()
 
   def thirdPartyExpectations(): Option[ThirdParty] = toScalaOption(expectations.thirdParty())
 
