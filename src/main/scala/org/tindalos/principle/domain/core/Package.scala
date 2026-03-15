@@ -5,7 +5,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder
 import org.tindalos.principle.domain.core.packages.{PackageMetrics, PackageReference, PackageWithMetrics}
 
 import scala.collection.JavaConverters._
-import java.{util => PackageReference}
 
 abstract class Package(val reference: PackageReference) extends PackageWithMetrics {
 
@@ -66,21 +65,18 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
     accumulatingMap.toMap
   }
 
-  private def createNew(name: String): Package = {
-    new Package(name) {
-      override def getOwnPackageReferences() = java.util.Collections.emptySet[PackageReference]()
-      override def getOwnExternalPackageReferences() = java.util.Collections.emptySet[PackageReference]()
-      override def getMetrics() = PackageMetrics.UNDEFINED
-      override def isUnreferred() = true
-    }
-  }
-
-  private def getSubPackageByRelativeName(relativeName: String) = {
+  private def getSubPackageByRelativeName(relativeName: String): Package = {
 
     subPackages.find(_.reference.equals(reference.child(relativeName))) match {
       case Some(subPackage) => subPackage
       case None =>
-        val directSubPackage = createNew(reference.createChild(relativeName))
+        val directSubPackage = new Package(reference.createChild(relativeName)) {
+          override def getOwnPackageReferences() = java.util.Collections.emptySet[PackageReference]()
+          override def getOwnExternalPackageReferences() = java.util.Collections.emptySet[PackageReference]()
+          override def getMetrics() = PackageMetrics.UNDEFINED
+          override def isUnreferred() = true
+        }
+
         _subPackages += directSubPackage
         directSubPackage
     }
@@ -168,7 +164,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
 
   private def firstPartOfRelativeNameTo(parentPackage: Package) = reference.firstPartOfRelativeNameTo(parentPackage.reference)
 
-  private def notEveryNodeUnderFirst(cycleCandidate: List[PackageReference]) = {
+  private def notEveryNodeUnderFirst(cycleCandidate: List[PackageReference]): Boolean = {
     val first = cycleCandidate.head
     cycleCandidate.tail.find(!_.isDescendantOf(first)) match {
       case None => first.equals(reference)
@@ -176,11 +172,11 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
     }
   }
 
-  private def isValid(cycleCandidate: List[PackageReference]) =
+  private def isValid(cycleCandidate: List[PackageReference]): Boolean =
     if (cycleCandidate.length < 2) false
     else notEveryNodeUnderFirst(cycleCandidate)
 
-  private def insertIndirectSubPackage(aPackage: Package) = {
+  private def insertIndirectSubPackage(aPackage: Package): Unit = {
     val relativeNameOfDirectSubPackage = aPackage.firstPartOfRelativeNameTo(this)
     getSubPackageByRelativeName(relativeNameOfDirectSubPackage).insert(aPackage)
   }
@@ -195,7 +191,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
 private class TraversedPackages(val packages: List[PackageReference] = List()) {
 
   def add(reference: PackageReference) = new TraversedPackages(packages :+ reference)
-  def from(index: Int) = packages.slice(index, packages.length)
+  def from(index: Int): List[PackageReference] = packages.slice(index, packages.length)
 }
 
 private object TraversedPackages {
