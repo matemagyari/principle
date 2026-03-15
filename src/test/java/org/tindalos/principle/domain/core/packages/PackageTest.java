@@ -131,7 +131,7 @@ public class PackageTest {
         TestPackage pkg = new TestPackage("org.example");
         pkg.setMetrics(new PackageMetrics(2, 3, 0.5f, 0.6f, 0.1f));
 
-        Assert.assertEquals(0.6f, pkg.instability(), 0.001);
+        Assert.assertEquals(0.6f, pkg.getMetrics().instability(), 0.001);
     }
 
     @Test

@@ -19,7 +19,7 @@ object SDPViolationAnalyzer extends Analyzer {
     yield
       aPackage.getOwnPackageReferences()
         .map(x => references.get(x).get)
-        .filter(_.instability > aPackage.instability)
+        .filter(_.getMetrics().instability > aPackage.getMetrics().instability)
         .map(new SDPViolation(aPackage, _))
 
 

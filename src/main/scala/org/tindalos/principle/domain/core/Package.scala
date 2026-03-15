@@ -18,7 +18,6 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
   def getMetrics(): PackageMetrics
   def getOwnPackageReferences(): Set[PackageReference]
   def getOwnExternalPackageReferences(): Set[PackageReference]
-  def instability = getMetrics().instability
   def distance = getMetrics().distance
   def isIsolated() = getMetrics().afferentCoupling == 0 && getMetrics().efferentCoupling == 0
 

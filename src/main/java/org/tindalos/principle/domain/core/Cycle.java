@@ -1,12 +1,12 @@
 package org.tindalos.principle.domain.core;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.tindalos.principle.domain.core.packages.PackageReference;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.tindalos.principle.domain.core.packages.PackageReference;
 
 /**
  * Represents a cyclic dependency between packages.
