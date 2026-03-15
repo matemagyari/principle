@@ -35,7 +35,8 @@ class SubmodulesBlueprintAnalyzer(submodulesBuilder: SubmodulesBuilder) extends 
 
   override def analyze(checkInput: AnalysisInput): SubmodulesBlueprintAnalysisResult =
 
-    checkInput.submoduleDefinitions().map { submoduleDefinitions ⇒
+    if (checkInput.submoduleDefinitions().isPresent) {
+      val submoduleDefinitions = checkInput.submoduleDefinitions().get()
 
         try {
           val submodules = submodulesBuilder.build(
@@ -49,8 +50,9 @@ class SubmodulesBlueprintAnalyzer(submodulesBuilder: SubmodulesBuilder) extends 
           case ex: OverlappingSubmoduleDefinitionsException =>
             SubmodulesBlueprintAnalysisResult.withOverlaps(submoduleDefinitions.violationThreshold, ex.getOverlaps().asScala.toSet.asJava)
         }
-      }
-      .getOrElse(SubmodulesBlueprintAnalysisResult.empty(0))
+    } else {
+      SubmodulesBlueprintAnalysisResult.empty(0)
+    }
 
   private def problematicDependencies(submodules: Set[Submodule]): (java.util.Map[Submodule, java.util.Set[Submodule]], java.util.Map[Submodule, java.util.Set[Submodule]]) = {
     val emptyMap = Map[Submodule, Set[Submodule]]()

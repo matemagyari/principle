@@ -13,16 +13,12 @@ case class AnalysisInput(
 
   private val expectations = analysisPlan.constraints
 
-  private def toScalaOption[T](javaOptional: java.util.Optional[T]): Option[T] = {
-    if (javaOptional.isPresent) Some(javaOptional.get()) else None
-  }
-
   def packageCouplingExpectations(): java.util.Optional[PackageCouplingConstraints] = expectations.packageCoupling()
 
   def layeringExpectations(): java.util.Optional[Layering] = expectations.layering()
 
-  def thirdPartyExpectations(): Option[ThirdParty] = toScalaOption(expectations.thirdParty())
+  def thirdPartyExpectations(): java.util.Optional[ThirdParty] = expectations.thirdParty()
 
-  def submoduleDefinitions(): Option[SubmoduleDefinitions] = toScalaOption(expectations.submoduleDefinitions())
+  def submoduleDefinitions(): java.util.Optional[SubmoduleDefinitions] = expectations.submoduleDefinitions()
 
 }

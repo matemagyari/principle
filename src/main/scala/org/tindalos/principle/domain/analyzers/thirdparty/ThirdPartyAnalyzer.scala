@@ -12,8 +12,8 @@ object ThirdPartyAnalyzer extends Analyzer {
 
   override def analyze(checkInput: AnalysisInput): ThirdPartyViolationsResult =
 
-    checkInput.thirdPartyExpectations()
-        .map { thirdParty ⇒
+    if (checkInput.thirdPartyExpectations().isPresent) {
+      val thirdParty = checkInput.thirdPartyExpectations().get()
 
           val barriers = thirdParty.barriers.asScala.toList
           val violationsList =
@@ -35,8 +35,9 @@ object ThirdPartyAnalyzer extends Analyzer {
           val javaViolations = violations.map { case (k, v) => k -> v.asJava }.asJava
 
           new ThirdPartyViolationsResult(javaViolations, thirdParty)
-        }
-        .getOrElse(new ThirdPartyViolationsResult(java.util.Collections.emptyMap(), null))
+    } else {
+      new ThirdPartyViolationsResult(java.util.Collections.emptyMap(), null)
+    }
 
   private def allowedComponentsForLayer(
       layers: List[String],
