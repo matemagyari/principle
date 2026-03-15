@@ -31,10 +31,10 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
 
   // it dies if there are cycles
   // through references, not through subPackages. transaitive too
-  def cumulatedDependencies(packageReferenceMap: Map[PackageReference, Package]) = cumulatedDependenciesAcc(packageReferenceMap, scala.collection.mutable.Set[PackageReference]())
+  def cumulatedDependencies(packageReferenceMap: Map[PackageReference, Package]): Set[PackageReference] = cumulatedDependenciesAcc(packageReferenceMap, scala.collection.mutable.Set[PackageReference]())
 
 
-  def insert(aPackage: Package) {
+  def insert(aPackage: Package): Unit = {
     if (this.equals(aPackage)) {
       throw new PackageStructureBuildingException("Attempted to insert into itself " + this)
     } else if (doesNotContain(aPackage)) {
@@ -45,8 +45,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
       insertIndirectSubPackage(aPackage)
     }
   }
-
-
+  
   private def scalaAccumulatedDirectPackageReferences(): Set[PackageReference] = {
     val rs = subPackages
         .flatMap(_.scalaAccumulatedDirectPackageReferences())
