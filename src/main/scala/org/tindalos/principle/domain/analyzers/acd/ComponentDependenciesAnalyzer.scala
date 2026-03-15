@@ -14,7 +14,7 @@ class ComponentDependenciesAnalyzer(packageStructureBuilder: PackageStructureBui
       val referenceMap = basePackage.toMap()
 
       val relevantPackages =
-        if (basePackage.isIsolated()) checkInput.packages.filterNot(_ equals basePackage)
+        if (basePackage.getMetrics().isIsolated()) checkInput.packages.filterNot(_ equals basePackage)
         else checkInput.packages
 
       val cumulatedComponentDependency = relevantPackages

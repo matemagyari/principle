@@ -1,17 +1,19 @@
 package org.tindalos.principle.domain.core.packages;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.*;
-
+import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageStructureBuildingException;
+
 import scala.collection.JavaConverters;
 
 public class PackageTest {
@@ -147,7 +149,7 @@ public class PackageTest {
         TestPackage pkg = new TestPackage("org.example");
         pkg.setMetrics(new PackageMetrics(0, 0, 0, 0, 0));
 
-        assertTrue(pkg.isIsolated());
+        assertTrue(pkg.getMetrics().isIsolated());
     }
 
     @Test
@@ -155,7 +157,7 @@ public class PackageTest {
         TestPackage pkg = new TestPackage("org.example");
         pkg.setMetrics(new PackageMetrics(1, 0, 0, 0, 0));
 
-        assertFalse(pkg.isIsolated());
+        assertFalse(pkg.getMetrics().isIsolated());
     }
 
     @Test
@@ -163,7 +165,7 @@ public class PackageTest {
         TestPackage pkg = new TestPackage("org.example");
         pkg.setMetrics(new PackageMetrics(0, 1, 0, 0, 0));
 
-        assertFalse(pkg.isIsolated());
+        assertFalse(pkg.getMetrics().isIsolated());
     }
 
     @Test

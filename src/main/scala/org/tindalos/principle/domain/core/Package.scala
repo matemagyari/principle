@@ -18,7 +18,6 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
   def getMetrics(): PackageMetrics
   def getOwnPackageReferences(): Set[PackageReference]
   def getOwnExternalPackageReferences(): Set[PackageReference]
-  def isIsolated() = getMetrics().afferentCoupling == 0 && getMetrics().efferentCoupling == 0
 
   def insert(aPackage: Package) {
     if (this.equals(aPackage)) {
@@ -62,7 +61,6 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
       override def getOwnExternalPackageReferences() = Set()
       override def getMetrics() = PackageMetrics.UNDEFINED
       override def isUnreferred() = true
-      override def isIsolated() = true
     }
   }
 

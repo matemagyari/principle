@@ -32,5 +32,9 @@ public record PackageMetrics(
         return this != UNDEFINED;
     }
 
+    public boolean isIsolated() {
+        return afferentCoupling == 0 && efferentCoupling == 0;
+    }
+
 }
 
