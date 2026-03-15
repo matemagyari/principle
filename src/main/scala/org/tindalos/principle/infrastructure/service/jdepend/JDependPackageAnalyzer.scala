@@ -6,11 +6,11 @@ import org.tindalos.principle.domain.core.{AnalysisPlan, Package}
 object JDependPackageAnalyzer {
 
   def buildAnalyzerFn(produceJavaPackageList: (String, Boolean) => List[JavaPackage]
-                    , transform: (String, List[JavaPackage]) => List[Package]) =
+                    , transform: List[JavaPackage] => List[Package]) =
 
     (rootPackage: String) => {
       val analyzedPackages = produceJavaPackageList(rootPackage,true)
-      transform(rootPackage, analyzedPackages)
+      transform(analyzedPackages)
     }
 
 }

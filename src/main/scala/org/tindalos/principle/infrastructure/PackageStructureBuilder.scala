@@ -10,7 +10,7 @@ trait PackageListBuilder {
 
 class JDependBasedPackageListBuilder(rootPackage: String) extends PackageListBuilder {
 
-  private val fn =  {
+  private val fn: String => List[Package] =  {
     val packageListTransformer = {
       val packageFactory = new PackageFactory(rootPackage)
       packageFactory.buildPackageListFactory(packages => PackageSorterModule.sortByName(packages.asJava).asScala.toList)
