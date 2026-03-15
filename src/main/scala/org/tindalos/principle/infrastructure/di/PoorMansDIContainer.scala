@@ -54,8 +54,15 @@ object PoorMansDIContainer {
 
   private def createAnalyzers(packageStructureBuilder: PackageStructureBuilder): List[Analyzer] = {
     val submodulesBlueprintAnalyzer = new SubmodulesBlueprintAnalyzer(new SubmodulesBuilder(packageStructureBuilder))
+    val layeringAnalyzer = new Analyzer {
+      override def analyze(checkInput: org.tindalos.principle.domain.AnalysisInput) =
+        LayerViolationAnalyzer.INSTANCE.analyze(checkInput)
+
+      override def isEnabled(constraints: org.tindalos.principle.domain.constraints.Constraints): Boolean =
+        LayerViolationAnalyzer.INSTANCE.isEnabled(constraints)
+    }
     List(
-      LayerViolationAnalyzer,
+      layeringAnalyzer,
       ThirdPartyAnalyzer,
       new CycleDetector(packageStructureBuilder),
       SDPViolationAnalyzer,
