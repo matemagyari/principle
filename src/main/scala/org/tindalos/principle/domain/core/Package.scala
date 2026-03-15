@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder
 import org.tindalos.principle.domain.core.packages.{PackageMetrics, PackageReference, PackageWithMetrics}
 
 import scala.collection.JavaConverters._
+import java.{util => PackageReference}
 
 abstract class Package(val reference: PackageReference) extends PackageWithMetrics {
 
@@ -14,10 +15,25 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
   
   def this(referenceName: String) = this(new PackageReference(referenceName))
 
+  override def getMetrics(): PackageMetrics
+  override def getOwnPackageReferences(): java.util.Set[PackageReference]
+  override def getOwnExternalPackageReferences(): java.util.Set[PackageReference]
+  // all the references going out from this package
+  override def accumulatedDirectPackageReferences(): java.util.Set[PackageReference] = {
+    scalaAccumulatedDirectPackageReferences().asJava
+  }
+
   def isUnreferred(): Boolean
-  def getMetrics(): PackageMetrics
-  def getOwnPackageReferences(): java.util.Set[PackageReference]
-  def getOwnExternalPackageReferences(): java.util.Set[PackageReference]
+
+  def toMap(): Map[PackageReference, Package] = toMap(scala.collection.mutable.Map[PackageReference, Package]())
+
+  def detectCycles(packageReferences: Map[PackageReference, Package]): CyclesInSubgraph =
+    detectCyclesOnThePathFromHere(TraversedPackages.empty(), CyclesInSubgraph.empty(), packageReferences)
+
+  // it dies if there are cycles
+  // through references, not through subPackages. transaitive too
+  def cumulatedDependencies(packageReferenceMap: Map[PackageReference, Package]) = cumulatedDependenciesAcc(packageReferenceMap, scala.collection.mutable.Set[PackageReference]())
+
 
   def insert(aPackage: Package) {
     if (this.equals(aPackage)) {
@@ -30,11 +46,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
       insertIndirectSubPackage(aPackage)
     }
   }
-  
-  // all the references going out from this package
-  override def accumulatedDirectPackageReferences(): java.util.Set[PackageReference] = {
-    scalaAccumulatedDirectPackageReferences().asJava
-  }
+
 
   private def scalaAccumulatedDirectPackageReferences(): Set[PackageReference] = {
     val rs = subPackages
@@ -43,12 +55,11 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
     rs.toSet ++: getOwnPackageReferences().asScala.toSet
   }
 
-  protected def accumulatedDirectlyReferredPackages(packageReferenceMap: Map[PackageReference, Package]): Set[Package] =
+  private def accumulatedDirectlyReferredPackages(packageReferenceMap: Map[PackageReference, Package]): Set[Package] =
     scalaAccumulatedDirectPackageReferences().map(packageReferenceMap.get(_).get)
 
-  def toMap(): Map[PackageReference, Package] = toMap(scala.collection.mutable.Map[PackageReference, Package]())
-
-  protected def toMap(accumulatingMap: scala.collection.mutable.Map[PackageReference, Package]): Map[PackageReference, Package] = {
+ 
+  private def toMap(accumulatingMap: scala.collection.mutable.Map[PackageReference, Package]): Map[PackageReference, Package] = {
 
     accumulatingMap.put(reference, this)
     subPackages.foreach(child => child.toMap(accumulatingMap))
@@ -97,13 +108,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
     }
   }
 
-  def detectCycles(packageReferences: Map[PackageReference, Package]): CyclesInSubgraph =
-    detectCyclesOnThePathFromHere(TraversedPackages.empty(), CyclesInSubgraph.empty(), packageReferences)
-
-  // it dies if there are cycles
-  // through references, not through subPackages. transaitive too
-  def cumulatedDependencies(packageReferenceMap: Map[PackageReference, Package]) = cumulatedDependenciesAcc(packageReferenceMap, scala.collection.mutable.Set[PackageReference]())
-
+ 
   private def cumulatedDependenciesAcc(packageReferenceMap: Map[PackageReference, Package], dependencies: scala.collection.mutable.Set[PackageReference]): Set[PackageReference] = {
 
     val accumulatedPackageReferences = this.accumulatedDirectPackageReferences().asScala.toSet.filterNot(dependencies.contains(_))
