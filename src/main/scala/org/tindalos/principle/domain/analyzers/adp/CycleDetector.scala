@@ -4,7 +4,7 @@ import org.tindalos.principle.domain.AnalysisInput
 import org.tindalos.principle.domain.analyzers.Analyzer
 import org.tindalos.principle.domain.constraints.Constraints
 import org.tindalos.principle.domain.core.packages.PackageReference
-import org.tindalos.principle.domain.core.{Cycle, PackageStructureBuilder}
+import org.tindalos.principle.domain.core.{Cycle, Package, PackageStructureBuilder}
 
 import scala.collection.JavaConverters._
 
@@ -16,7 +16,7 @@ class CycleDetector(packageStructureBuilder: PackageStructureBuilder) extends An
 
     override def analyze(input: AnalysisInput) = {
 
-      val basePackage = packageStructureBuilder.build(input.packages, input.analysisPlan.basePackage)
+      val basePackage = packageStructureBuilder.build(input.packages.asInstanceOf[List[Package]], input.analysisPlan.basePackage)
 
       val references = basePackage.toMap()
 

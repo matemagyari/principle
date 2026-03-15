@@ -20,10 +20,10 @@ object SAPViolationAnalyzer extends Analyzer {
 
     val outlierPackages = removeRootPackageIfEmpty(checkInput.packages).filter(_.getMetrics().distance > maxDistance)
 
-    new SAPResult(outlierPackages.asInstanceOf[List[PackageWithMetrics]].asJava, sapExpectation)
+    new SAPResult(outlierPackages.asJava, sapExpectation)
   }
 
-  private def removeRootPackageIfEmpty(packages: List[Package]) = {
+  private def removeRootPackageIfEmpty(packages: List[PackageWithMetrics]) = {
     val metrics = packages.head.getMetrics()
     if (metrics.abstractness == 0 && metrics.instability == 0) packages.tail
     else packages

@@ -5,6 +5,7 @@ import org.tindalos.principle.domain.analyzers.Analyzer
 import org.tindalos.principle.domain.constraints.Constraints
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.core.Package
+import org.tindalos.principle.domain.core.packages.PackageWithMetrics
 
 import scala.collection.JavaConverters._
 
@@ -18,7 +19,7 @@ object LayerViolationAnalyzer extends Analyzer {
 
   override def isEnabled(expectations: Constraints) = expectations.layering.isPresent
 
-  private def findViolations(packages: List[Package], configuration: AnalysisPlan): List[LayerReference] = {
+  private def findViolations(packages: List[PackageWithMetrics], configuration: AnalysisPlan): List[LayerReference] = {
 
     val layers = configuration.constraints.layering.get.layers.asScala.map(configuration.basePackage + "." + _).toList
 

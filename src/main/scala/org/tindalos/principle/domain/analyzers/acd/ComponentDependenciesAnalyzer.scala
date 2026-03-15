@@ -3,13 +3,13 @@ package org.tindalos.principle.domain.analyzers.acd
 import org.tindalos.principle.domain.AnalysisInput
 import org.tindalos.principle.domain.analyzers.Analyzer
 import org.tindalos.principle.domain.constraints.Constraints
-import org.tindalos.principle.domain.core.PackageStructureBuilder
+import org.tindalos.principle.domain.core.{Package, PackageStructureBuilder}
 
 class ComponentDependenciesAnalyzer(packageStructureBuilder: PackageStructureBuilder) extends Analyzer {
 
     override def analyze(checkInput: AnalysisInput): ComponentDependenciesResult = {
 
-      val basePackage = packageStructureBuilder.build(checkInput.packages, checkInput.analysisPlan.basePackage)
+      val basePackage = packageStructureBuilder.build(checkInput.packages.asInstanceOf[List[Package]], checkInput.analysisPlan.basePackage)
 
       val referenceMap = basePackage.toMap()
 
@@ -19,7 +19,7 @@ class ComponentDependenciesAnalyzer(packageStructureBuilder: PackageStructureBui
 
       val cumulatedComponentDependency = relevantPackages
         .foldLeft(0) { (acc, aPackage) ⇒
-          acc + aPackage.cumulatedDependencies(referenceMap).size + 1
+          acc + aPackage.asInstanceOf[Package].cumulatedDependencies(referenceMap).size + 1
         }
 
       //todo - remove .get

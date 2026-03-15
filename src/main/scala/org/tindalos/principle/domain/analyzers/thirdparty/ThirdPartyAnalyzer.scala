@@ -4,7 +4,7 @@ import org.tindalos.principle.domain.AnalysisInput
 import org.tindalos.principle.domain.analyzers.Analyzer
 import org.tindalos.principle.domain.core.Package
 import org.tindalos.principle.domain.constraints.{Barrier, Constraints}
-import org.tindalos.principle.domain.core.packages.PackageReference
+import org.tindalos.principle.domain.core.packages.{PackageReference, PackageWithMetrics}
 
 import scala.collection.JavaConverters._
 
@@ -50,7 +50,7 @@ object ThirdPartyAnalyzer extends Analyzer {
     !allowedComponentsForLayer(layers, layer, barriers).exists(referencedPackage.startsWith(_))
 
 
-  private def layerOf(layers: List[String], basePackage: String, aPackage: Package) =
+  private def layerOf(layers: List[String], basePackage: String, aPackage: PackageWithMetrics) =
     layers.find(l => aPackage.reference.startsWith(s"${basePackage}.${l}"))
 
 

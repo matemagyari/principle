@@ -3,12 +3,13 @@ package org.tindalos.principle.domain
 import org.tindalos.principle.domain.analyzers.structure.Node
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmoduleDefinitions
 import org.tindalos.principle.domain.constraints.{Layering, PackageCouplingConstraints, ThirdParty}
+import org.tindalos.principle.domain.core.packages.PackageWithMetrics
 import org.tindalos.principle.domain.core.{AnalysisPlan, Package}
 
 case class AnalysisInput(
-    packages: List[Package],
-    nodes: Set[Node] = Set(),
-    analysisPlan: AnalysisPlan) {
+                          packages: List[PackageWithMetrics],
+                          nodes: Set[Node] = Set(),
+                          analysisPlan: AnalysisPlan) {
 
   private val expectations = analysisPlan.constraints
 

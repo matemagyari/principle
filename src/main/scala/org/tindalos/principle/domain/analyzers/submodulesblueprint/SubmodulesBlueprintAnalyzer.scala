@@ -10,10 +10,10 @@ import scala.collection.JavaConverters.asScalaSetConverter
 import scala.collection.JavaConverters._
 
 class SubmodulesBuilder(packageStructureBuilder: PackageStructureBuilder) {
-  def build(submoduleDefinitions: SubmoduleDefinitions, packages: List[Package], basePackageName: String): Set[Submodule] = {
+  def build(submoduleDefinitions: SubmoduleDefinitions, packages: List[PackageWithMetrics], basePackageName: String): Set[Submodule] = {
 
     submoduleDefinitions.checkNoOverlaps()
-    val basePackage = packageStructureBuilder.build(packages, basePackageName)
+    val basePackage = packageStructureBuilder.build(packages.asInstanceOf[List[Package]], basePackageName)
 
 
     def convert(submoduleDefinition: SubmoduleDefinition): Submodule = {
