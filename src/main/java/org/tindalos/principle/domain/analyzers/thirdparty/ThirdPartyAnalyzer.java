@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.tindalos.principle.domain.AnalysisInput;
+import org.tindalos.principle.domain.analyzers.Analyzer;
 import org.tindalos.principle.domain.constraints.Barrier;
 import org.tindalos.principle.domain.constraints.Constraints;
 import org.tindalos.principle.domain.core.packages.PackageReference;
@@ -16,8 +17,9 @@ import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
 /**
  * Validates third-party dependency usage against configured layer barriers.
  */
-public final class ThirdPartyAnalyzer {
+public final class ThirdPartyAnalyzer implements Analyzer {
 
+    @Override
     public ThirdPartyViolationsResult analyze(AnalysisInput checkInput) {
         if (!checkInput.thirdPartyExpectations().isPresent()) {
             return new ThirdPartyViolationsResult(Collections.emptyMap(), null);
@@ -60,6 +62,7 @@ public final class ThirdPartyAnalyzer {
         return new ThirdPartyViolationsResult(Map.copyOf(immutableViolations), thirdParty);
     }
 
+    @Override
     public boolean isEnabled(Constraints designQualityChecks) {
         return designQualityChecks.thirdParty().isPresent();
     }

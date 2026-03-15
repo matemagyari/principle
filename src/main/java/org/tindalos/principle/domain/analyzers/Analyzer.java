@@ -1,0 +1,15 @@
+package org.tindalos.principle.domain.analyzers;
+
+import org.tindalos.principle.domain.AnalysisInput;
+import org.tindalos.principle.domain.AnalysisResult;
+import org.tindalos.principle.domain.constraints.Constraints;
+
+/**
+ * Contract for all architectural analyzers.
+ */
+public interface Analyzer {
+
+    AnalysisResult analyze(AnalysisInput checkInput);
+
+    boolean isEnabled(Constraints constraints);
+}
