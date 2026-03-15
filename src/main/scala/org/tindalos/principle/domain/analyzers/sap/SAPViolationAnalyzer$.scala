@@ -18,7 +18,7 @@ object SAPViolationAnalyzer extends Analyzer {
     val sapExpectation = checkInput.packageCouplingExpectations().flatMap(pc => toScalaOption(pc.sap())).get
     val maxDistance = sapExpectation.maxDistance
 
-    val outlierPackages = removeRootPackageIfEmpty(checkInput.packages).filter(_.distance > maxDistance)
+    val outlierPackages = removeRootPackageIfEmpty(checkInput.packages).filter(_.getMetrics().distance > maxDistance)
 
     new SAPResult(outlierPackages.asInstanceOf[List[PackageWithMetrics]].asJava, sapExpectation)
   }
