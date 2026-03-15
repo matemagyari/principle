@@ -6,7 +6,7 @@ import org.tindalos.principle.domain.constraints.Constraints
 
 import scala.collection.JavaConverters._
 
-object SDPViolationAnalyzer extends Analyzer {
+class SDPViolationAnalyzer() extends Analyzer {
 
   override def analyze(checkInput: AnalysisInput) = {
 

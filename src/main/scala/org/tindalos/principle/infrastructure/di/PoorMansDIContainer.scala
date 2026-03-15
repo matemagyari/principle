@@ -74,8 +74,8 @@ object PoorMansDIContainer {
       layeringAnalyzer,
       thirdPartyAnalyzer,
       new CycleDetector(packageStructureBuilder),
-      SDPViolationAnalyzer,
-      SAPViolationAnalyzer,
+      new SDPViolationAnalyzer(),
+      new SAPViolationAnalyzer(),
       new ComponentDependenciesAnalyzer(packageStructureBuilder),
       submodulesBlueprintAnalyzer,
       new PackageCohesionAnalyzer(

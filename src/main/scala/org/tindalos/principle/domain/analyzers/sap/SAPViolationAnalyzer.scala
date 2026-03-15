@@ -8,7 +8,7 @@ import org.tindalos.principle.domain.core.packages.PackageWithMetrics
 
 import scala.collection.JavaConverters._
 
-object SAPViolationAnalyzer extends Analyzer {
+class SAPViolationAnalyzer() extends Analyzer {
 
   override def analyze(checkInput: AnalysisInput) = {
     val sapExpectation = checkInput.packageCouplingExpectations().flatMap(_.sap()).get
