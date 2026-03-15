@@ -55,7 +55,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
     accumulatingMap.toMap
   }
 
-  protected def createNew(name: String) = {
+  private def createNew(name: String): Package = {
     new Package(name) {
       override def getOwnPackageReferences() = java.util.Collections.emptySet[PackageReference]()
       override def getOwnExternalPackageReferences() = java.util.Collections.emptySet[PackageReference]()
@@ -64,7 +64,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
     }
   }
 
-  protected def getSubPackageByRelativeName(relativeName: String) = {
+  private def getSubPackageByRelativeName(relativeName: String) = {
 
     subPackages.find(_.reference.equals(reference.child(relativeName))) match {
       case Some(subPackage) => subPackage
@@ -75,7 +75,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
     }
   }
 
-  protected def indexInTraversedPath(traversedPackages: List[PackageReference]) = {
+  private def indexInTraversedPath(traversedPackages: List[PackageReference]) = {
     val index = traversedPackages.indexOf(reference)
     if (index != -1) index
     else {
@@ -121,7 +121,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
     }
   }
 
-  protected def detectCyclesOnThePathFromHere(
+  private def detectCyclesOnThePathFromHere(
     traversedPackages: TraversedPackages, 
     foundCycles: CyclesInSubgraph, 
     packageReferences: Map[PackageReference, Package]): CyclesInSubgraph = {
@@ -155,15 +155,15 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
     else None
   }
 
-  protected def notAllAreDescendantsOf(packages: List[PackageReference], possibleAncestor: PackageReference) = packages.exists(!_.isDescendantOf(possibleAncestor))
+  private def notAllAreDescendantsOf(packages: List[PackageReference], possibleAncestor: PackageReference) = packages.exists(!_.isDescendantOf(possibleAncestor))
 
-  protected def isDirectSuperPackageOf(aPackage: Package) = reference.isDirectParentOf(aPackage.reference)
+  private def isDirectSuperPackageOf(aPackage: Package) = reference.isDirectParentOf(aPackage.reference)
 
-  protected def doesNotContain(aPackage: Package) = !aPackage.reference.pointsInside(reference)
+  private def doesNotContain(aPackage: Package) = !aPackage.reference.pointsInside(reference)
 
-  protected def firstPartOfRelativeNameTo(parentPackage: Package) = reference.firstPartOfRelativeNameTo(parentPackage.reference)
+  private def firstPartOfRelativeNameTo(parentPackage: Package) = reference.firstPartOfRelativeNameTo(parentPackage.reference)
 
-  protected def notEveryNodeUnderFirst(cycleCandidate: List[PackageReference]) = {
+  private def notEveryNodeUnderFirst(cycleCandidate: List[PackageReference]) = {
     val first = cycleCandidate.head
     cycleCandidate.tail.find(!_.isDescendantOf(first)) match {
       case None => first.equals(reference)
@@ -171,11 +171,11 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
     }
   }
 
-  protected def isValid(cycleCandidate: List[PackageReference]) =
+  private def isValid(cycleCandidate: List[PackageReference]) =
     if (cycleCandidate.length < 2) false
     else notEveryNodeUnderFirst(cycleCandidate)
 
-  protected def insertIndirectSubPackage(aPackage: Package) = {
+  private def insertIndirectSubPackage(aPackage: Package) = {
     val relativeNameOfDirectSubPackage = aPackage.firstPartOfRelativeNameTo(this)
     getSubPackageByRelativeName(relativeNameOfDirectSubPackage).insert(aPackage)
   }
@@ -187,12 +187,12 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
   override def toString() = reference.toString()
 }
 
-class TraversedPackages(val packages: List[PackageReference] = List()) {
+private class TraversedPackages(val packages: List[PackageReference] = List()) {
 
   def add(reference: PackageReference) = new TraversedPackages(packages :+ reference)
   def from(index: Int) = packages.slice(index, packages.length)
 }
 
-object TraversedPackages {
+private object TraversedPackages {
   def empty() = new TraversedPackages()
 }
