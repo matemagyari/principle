@@ -13,7 +13,7 @@ object LayerViolationAnalyzer extends Analyzer {
 
   override def analyze(checkInput: AnalysisInput): LayerViolationsResult = {
     val layering = checkInput.layeringExpectations().get
-    val layerReferences = findViolations(checkInput.packages, checkInput.analysisPlan)
+    val layerReferences = findViolations(checkInput.packages().asScala.toList, checkInput.analysisPlan())
     new LayerViolationsResult(layerReferences.asJava, layering.violationThreshold)
   }
 

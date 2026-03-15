@@ -14,13 +14,15 @@ class PackageCohesionAnalyzer(buildComponents:(PackageName, Set[Node]) => Set[(P
     
     override def analyze(input: AnalysisInput) = {
 
-      val packagesWithCohesions = buildComponents(input.analysisPlan.basePackage, input.nodes) 
-      val structureHints1 = makeStructureHints1(input.nodes)
-      val structureHints2 = findDetachableSubgraphs(input.nodes)
+      val nodes = input.nodes().asScala.toSet
+
+      val packagesWithCohesions = buildComponents(input.analysisPlan().basePackage, nodes)
+      val structureHints1 = makeStructureHints1(nodes)
+      val structureHints2 = findDetachableSubgraphs(nodes)
 
       val cohesiveGroups: Option[Set[NodeGroup]] =
         if (input.packageCouplingExpectations().isPresent) {
-          val initialGroups = input.nodes.map(n => new NodeGroup(java.util.Collections.singleton(n)))
+          val initialGroups = nodes.map(n => new NodeGroup(java.util.Collections.singleton(n)))
           Some(collapseToLimit(initialGroups))
         }
         else None

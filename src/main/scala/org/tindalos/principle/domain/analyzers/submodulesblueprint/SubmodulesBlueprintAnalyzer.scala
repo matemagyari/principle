@@ -41,7 +41,7 @@ class SubmodulesBlueprintAnalyzer(submodulesBuilder: SubmodulesBuilder) extends 
         try {
           val submodules = submodulesBuilder.build(
             submoduleDefinitions,
-            checkInput.packages, checkInput.analysisPlan.basePackage)
+            checkInput.packages().asScala.toList, checkInput.analysisPlan().basePackage)
 
           val (aID, aMD) = problematicDependencies(submodules)
           SubmodulesBlueprintAnalysisResult.withViolations(submoduleDefinitions.violationThreshold, aID, aMD)

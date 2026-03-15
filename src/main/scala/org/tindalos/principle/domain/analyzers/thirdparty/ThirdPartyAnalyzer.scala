@@ -21,8 +21,8 @@ object ThirdPartyAnalyzer extends Analyzer {
               List[(PackageReference, PackageReference)]()
             else {
               val layers = checkInput.layeringExpectations().get.layers.asScala.toList
-              val basePackage = checkInput.analysisPlan.basePackage
-              for (aPackage <- checkInput.packages
+              val basePackage = checkInput.analysisPlan().basePackage
+              for (aPackage <- checkInput.packages().asScala
                    if (underBasePackage(aPackage.reference, basePackage));
                    layer = layerOf(layers, basePackage, aPackage);
                    if layer.isDefined;

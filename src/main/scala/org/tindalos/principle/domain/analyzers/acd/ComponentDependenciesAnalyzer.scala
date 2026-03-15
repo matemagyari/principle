@@ -4,18 +4,20 @@ import org.tindalos.principle.domain.AnalysisInput
 import org.tindalos.principle.domain.analyzers.Analyzer
 import org.tindalos.principle.domain.constraints.Constraints
 import org.tindalos.principle.domain.core.{Package, PackageStructureBuilder}
+import scala.collection.JavaConverters._
 
 class ComponentDependenciesAnalyzer(packageStructureBuilder: PackageStructureBuilder) extends Analyzer {
 
     override def analyze(checkInput: AnalysisInput): ComponentDependenciesResult = {
 
-      val basePackage = packageStructureBuilder.build(checkInput.packages.asInstanceOf[List[Package]], checkInput.analysisPlan.basePackage)
+      val packages = checkInput.packages().asScala.toList
+      val basePackage = packageStructureBuilder.build(packages.asInstanceOf[List[Package]], checkInput.analysisPlan().basePackage)
 
       val referenceMap = basePackage.toMap()
 
       val relevantPackages =
-        if (basePackage.getMetrics().isIsolated()) checkInput.packages.filterNot(_ equals basePackage)
-        else checkInput.packages
+        if (basePackage.getMetrics().isIsolated()) packages.filterNot(_ equals basePackage)
+        else packages
 
       val cumulatedComponentDependency = relevantPackages
         .foldLeft(0) { (acc, aPackage) ⇒

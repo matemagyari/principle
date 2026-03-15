@@ -10,8 +10,9 @@ object SDPViolationAnalyzer extends Analyzer {
 
   override def analyze(checkInput: AnalysisInput) = {
 
-    val references = checkInput.packages.map(aPackage => (aPackage.reference -> aPackage)).toMap
-    val sdpViolations = for (aPackage <- checkInput.packages)
+    val packages = checkInput.packages().asScala.toList
+    val references = packages.map(aPackage => (aPackage.reference -> aPackage)).toMap
+    val sdpViolations = for (aPackage <- packages)
     yield
       aPackage.getOwnPackageReferences()
         .asScala

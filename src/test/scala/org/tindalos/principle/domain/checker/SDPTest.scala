@@ -6,6 +6,7 @@ import org.tindalos.principle.domain.AnalysisInput
 import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.analyzers.sdp.SDPResult
 import org.tindalos.principle.domain.constraints._
+import org.tindalos.principle.domain.core.packages.PackageWithMetrics
 import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 
@@ -40,7 +41,7 @@ class SDPTest {
     init(basePackage)
     val packageListProducer = new JDependBasedPackageListBuilder(basePackage)
     val packageList = packageListProducer.build()
-    val result = analysisRunner.run(new AnalysisInput(packageList, Set(), plan))
+    val result = analysisRunner.run(new AnalysisInput(packageList.map(p => p: PackageWithMetrics).asJava, Set.empty.asJava, plan))
     println(s"result: $result")
     assertEquals(1, result.length)
     result.head.asInstanceOf[SDPResult]

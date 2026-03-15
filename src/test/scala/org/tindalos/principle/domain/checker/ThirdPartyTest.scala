@@ -7,7 +7,7 @@ import org.tindalos.principle.domain.core.AnalysisPlan
 import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyViolationsResult
-import org.tindalos.principle.domain.core.packages.PackageReference
+import org.tindalos.principle.domain.core.packages.{PackageReference, PackageWithMetrics}
 import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder
 
 import java.util.Collections
@@ -65,7 +65,7 @@ class ThirdPartyTest {
     val packageListProducer = new JDependBasedPackageListBuilder(basePackage)
     val packageList = packageListProducer.build()
     val plan = new AnalysisPlan(expectations, basePackage)
-    val result = analysisRunner.run(new AnalysisInput(packageList, Set(), plan))
+    val result = analysisRunner.run(new AnalysisInput(packageList.map(p => p: PackageWithMetrics).asJava, Set.empty.asJava, plan))
     result(1)
   }
 

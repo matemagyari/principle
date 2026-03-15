@@ -3,8 +3,10 @@ package org.tindalos.principle.app
 import org.tindalos.principle.domain.{AnalysisInput, AnalysisResult, AnalysisRunner}
 import org.tindalos.principle.domain.core.{AnalysisPlan, Package}
 import org.tindalos.principle.domain.analyzers.structure.Node
+import org.tindalos.principle.domain.core.packages.PackageWithMetrics
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 import org.tindalos.principle.infrastructure.{JDependBasedPackageListBuilder, PackageListBuilder}
+import scala.collection.JavaConverters._
 
 /*
 This is the app entry point. Side effects can happen only here in this layer, underneath the code must be pure.
@@ -26,8 +28,9 @@ object ApplicationModule {
 
         val packages = packageListBuilder.build()
         val nodes = getNodes(analysisPlan.basePackage)
+        val packageInputs = packages.map(p => p: PackageWithMetrics)
 
-        val analysisResults = analysisRunner.run(new AnalysisInput(packages, nodes, analysisPlan))
+        val analysisResults = analysisRunner.run(new AnalysisInput(packageInputs.asJava, nodes.asJava, analysisPlan))
 
         printer.printInfo(analysisResultsReporter.summary(analysisResults))    
 
