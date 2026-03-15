@@ -10,12 +10,8 @@ import scala.collection.JavaConverters._
 
 object SAPViolationAnalyzer extends Analyzer {
 
-  private def toScalaOption[T](javaOptional: java.util.Optional[T]): Option[T] = {
-    if (javaOptional.isPresent) Some(javaOptional.get()) else None
-  }
-
   override def analyze(checkInput: AnalysisInput) = {
-    val sapExpectation = checkInput.packageCouplingExpectations().flatMap(pc => toScalaOption(pc.sap())).get
+    val sapExpectation = checkInput.packageCouplingExpectations().flatMap(_.sap()).get
     val maxDistance = sapExpectation.maxDistance
 
     val outlierPackages = removeRootPackageIfEmpty(checkInput.packages).filter(_.getMetrics().distance > maxDistance)

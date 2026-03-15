@@ -10,10 +10,6 @@ import scala.collection.JavaConverters._
 
 class CycleDetector(packageStructureBuilder: PackageStructureBuilder) extends Analyzer {
 
-  private def toScalaOption[T](javaOptional: java.util.Optional[T]): Option[T] = {
-    if (javaOptional.isPresent) Some(javaOptional.get()) else None
-  }
-
     override def analyze(input: AnalysisInput) = {
 
       val basePackage = packageStructureBuilder.build(input.packages.asInstanceOf[List[Package]], input.analysisPlan.basePackage)
@@ -35,7 +31,7 @@ class CycleDetector(packageStructureBuilder: PackageStructureBuilder) extends An
       }
 
       val javaCycles = cycles.map { case (k, v) => k -> v.asJava }.asJava
-      new ADPResult(javaCycles, input.packageCouplingExpectations().flatMap(pc => toScalaOption(pc.adp())).get)
+      new ADPResult(javaCycles, input.packageCouplingExpectations().flatMap(_.adp()).get)
     }
 
     override def isEnabled(expectations: Constraints) = expectations.packageCoupling.flatMap(pc => pc.adp()).isPresent

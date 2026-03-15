@@ -4,7 +4,7 @@ import org.tindalos.principle.domain.analyzers.structure.Node
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmoduleDefinitions
 import org.tindalos.principle.domain.constraints.{Layering, PackageCouplingConstraints, ThirdParty}
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics
-import org.tindalos.principle.domain.core.{AnalysisPlan, Package}
+import org.tindalos.principle.domain.core.AnalysisPlan
 
 case class AnalysisInput(
                           packages: List[PackageWithMetrics],
@@ -17,7 +17,7 @@ case class AnalysisInput(
     if (javaOptional.isPresent) Some(javaOptional.get()) else None
   }
 
-  def packageCouplingExpectations(): Option[PackageCouplingConstraints] = toScalaOption(expectations.packageCoupling())
+  def packageCouplingExpectations(): java.util.Optional[PackageCouplingConstraints] = expectations.packageCoupling()
 
   def layeringExpectations(): Option[Layering] = toScalaOption(expectations.layering())
 

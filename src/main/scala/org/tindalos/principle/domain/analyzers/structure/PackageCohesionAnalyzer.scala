@@ -19,10 +19,11 @@ class PackageCohesionAnalyzer(buildComponents:(PackageName, Set[Node]) => Set[(P
       val structureHints2 = findDetachableSubgraphs(input.nodes)
 
       val cohesiveGroups: Option[Set[NodeGroup]] =
-        input.packageCouplingExpectations().map { _ ⇒
+        if (input.packageCouplingExpectations().isPresent) {
           val initialGroups = input.nodes.map(n => new NodeGroup(java.util.Collections.singleton(n)))
-          collapseToLimit(initialGroups)
+          Some(collapseToLimit(initialGroups))
         }
+        else None
 
       val javaPackages = packagesWithCohesions.toMap.asJava
       val javaGroups: java.util.Optional[java.util.Set[NodeGroup]] = cohesiveGroups match {

@@ -8,10 +8,6 @@ import scala.collection.JavaConverters._
 
 object SDPViolationAnalyzer extends Analyzer {
 
-  private def toScalaOption[T](javaOptional: java.util.Optional[T]): Option[T] = {
-    if (javaOptional.isPresent) Some(javaOptional.get()) else None
-  }
-
   override def analyze(checkInput: AnalysisInput) = {
 
     val references = checkInput.packages.map(aPackage => (aPackage.reference -> aPackage)).toMap
@@ -24,7 +20,7 @@ object SDPViolationAnalyzer extends Analyzer {
         .map(new SDPViolation(aPackage, _))
 
 
-    new SDPResult(sdpViolations.flatten.asJava, checkInput.packageCouplingExpectations().flatMap(pc => toScalaOption(pc.sdp())).get)
+    new SDPResult(sdpViolations.flatten.asJava, checkInput.packageCouplingExpectations().flatMap(_.sdp()).get)
   }
 
   override def isEnabled(expectations: Constraints) =
