@@ -27,6 +27,7 @@ object LayerViolationAnalyzer extends Analyzer {
             layer = layers.find(aPackage.reference.startsWith(_))
             if layer.isDefined;
          referencedPackage <- aPackage.getOwnPackageReferences()
+          .asScala
             if referencedPackage.startsWith(configuration.basePackage);
          referencedLayer <- layers.slice(0, layers.indexOf(layer.get))
             if referencedPackage.startsWith(referencedLayer)

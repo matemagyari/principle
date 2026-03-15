@@ -264,13 +264,13 @@ public class PackageTest {
         }
 
         @Override
-        public scala.collection.immutable.Set<PackageReference> getOwnPackageReferences() {
-            return JavaConverters.asScalaSet(ownReferences).toSet();
+        public java.util.Set<PackageReference> getOwnPackageReferences() {
+            return Set.copyOf(ownReferences);
         }
 
         @Override
-        public scala.collection.immutable.Set<PackageReference> getOwnExternalPackageReferences() {
-            return JavaConverters.asScalaSet(externalReferences).toSet();
+        public java.util.Set<PackageReference> getOwnExternalPackageReferences() {
+            return Set.copyOf(externalReferences);
         }
     }
 }

@@ -18,6 +18,7 @@ object SDPViolationAnalyzer extends Analyzer {
     val sdpViolations = for (aPackage <- checkInput.packages)
     yield
       aPackage.getOwnPackageReferences()
+        .asScala
         .map(x => references.get(x).get)
         .filter(_.getMetrics().instability > aPackage.getMetrics().instability)
         .map(new SDPViolation(aPackage, _))

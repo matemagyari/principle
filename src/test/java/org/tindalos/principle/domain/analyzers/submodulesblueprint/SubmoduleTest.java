@@ -31,6 +31,8 @@ public class SubmoduleTest {
         return new PackageWithMetrics() {
             public PackageReference reference() { return new PackageReference(name); }
             public PackageMetrics getMetrics() { return new PackageMetrics(0, 0, 0, 0, 0); }
+            public java.util.Set<PackageReference> getOwnPackageReferences() { return Set.of(); }
+            public java.util.Set<PackageReference> getOwnExternalPackageReferences() { return Set.of(); }
             public java.util.Set<PackageReference> accumulatedDirectPackageReferences() { return Set.copyOf(refs); }
         };
     }

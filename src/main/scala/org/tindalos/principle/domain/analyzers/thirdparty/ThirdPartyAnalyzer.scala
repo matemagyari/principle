@@ -26,7 +26,7 @@ object ThirdPartyAnalyzer extends Analyzer {
                    if (underBasePackage(aPackage.reference, basePackage));
                    layer = layerOf(layers, basePackage, aPackage);
                    if layer.isDefined;
-                   referencedPackage <- aPackage.getOwnExternalPackageReferences();
+                   referencedPackage <- aPackage.getOwnExternalPackageReferences().asScala;
                    if (outOfAllowedComponents(layer.get, layers, barriers, referencedPackage))
               ) yield (aPackage.reference, referencedPackage)
             }

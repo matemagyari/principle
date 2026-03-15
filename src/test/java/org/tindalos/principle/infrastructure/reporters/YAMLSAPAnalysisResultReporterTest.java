@@ -1,15 +1,14 @@
 package org.tindalos.principle.infrastructure.reporters;
 
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.tindalos.principle.domain.analyzers.sap.SAPResult;
 import org.tindalos.principle.domain.constraints.SAP;
 import org.tindalos.principle.domain.core.packages.PackageMetrics;
 import org.tindalos.principle.domain.core.packages.PackageReference;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
-
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 import static org.tindalos.principle.infrastructure.reporters.YamlAssertions.assertValidYaml;
 
 /**
@@ -25,6 +24,8 @@ public class YAMLSAPAnalysisResultReporterTest {
         return new PackageWithMetrics() {
             public PackageReference reference() { return new PackageReference(name); }
             public PackageMetrics getMetrics() { return new PackageMetrics(0, 0, 0, 0, distance); }
+          public java.util.Set<PackageReference> getOwnPackageReferences() { return java.util.Set.of(); }
+          public java.util.Set<PackageReference> getOwnExternalPackageReferences() { return java.util.Set.of(); }
             public java.util.Set<PackageReference> accumulatedDirectPackageReferences() { return java.util.Set.of(); }
         };
     }

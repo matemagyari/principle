@@ -16,8 +16,8 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
 
   def isUnreferred(): Boolean
   def getMetrics(): PackageMetrics
-  def getOwnPackageReferences(): Set[PackageReference]
-  def getOwnExternalPackageReferences(): Set[PackageReference]
+  def getOwnPackageReferences(): java.util.Set[PackageReference]
+  def getOwnExternalPackageReferences(): java.util.Set[PackageReference]
 
   def insert(aPackage: Package) {
     if (this.equals(aPackage)) {
@@ -40,7 +40,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
     val rs = subPackages
         .flatMap(_.scalaAccumulatedDirectPackageReferences())
         .filterNot(_.equals(reference))
-    rs.toSet ++: getOwnPackageReferences()
+    rs.toSet ++: getOwnPackageReferences().asScala.toSet
   }
 
   protected def accumulatedDirectlyReferredPackages(packageReferenceMap: Map[PackageReference, Package]): Set[Package] =
@@ -57,8 +57,8 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
 
   protected def createNew(name: String) = {
     new Package(name) {
-      override def getOwnPackageReferences() = Set()
-      override def getOwnExternalPackageReferences() = Set()
+      override def getOwnPackageReferences() = java.util.Collections.emptySet[PackageReference]()
+      override def getOwnExternalPackageReferences() = java.util.Collections.emptySet[PackageReference]()
       override def getMetrics() = PackageMetrics.UNDEFINED
       override def isUnreferred() = true
     }

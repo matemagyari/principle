@@ -179,8 +179,8 @@ class CyclesInSubgraphTest {
     new Package(name) {
       override def isUnreferred(): Boolean = false
       override def getMetrics(): PackageMetrics = PackageMetrics.UNDEFINED
-      override def getOwnPackageReferences(): Set[PackageReference] = Set()
-      override def getOwnExternalPackageReferences(): Set[PackageReference] = Set()
+      override def getOwnPackageReferences(): java.util.Set[PackageReference] = java.util.Collections.emptySet[PackageReference]()
+      override def getOwnExternalPackageReferences(): java.util.Set[PackageReference] = java.util.Collections.emptySet[PackageReference]()
     }
   }
 }
