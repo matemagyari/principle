@@ -31,7 +31,8 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
 
   // it dies if there are cycles
   // through references, not through subPackages. transaitive too
-  def cumulatedDependencies(packageReferenceMap: Map[PackageReference, Package]): Set[PackageReference] = cumulatedDependenciesAcc(packageReferenceMap, scala.collection.mutable.Set[PackageReference]())
+  def cumulatedDependencies(packageReferenceMap: java.util.Map[PackageReference, Package]): java.util.Set[PackageReference] =
+    cumulatedDependenciesAcc(packageReferenceMap, scala.collection.mutable.Set[PackageReference]()).asJava
 
 
   def insert(aPackage: Package): Unit = {
@@ -104,7 +105,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
   }
 
  
-  private def cumulatedDependenciesAcc(packageReferenceMap: Map[PackageReference, Package], dependencies: scala.collection.mutable.Set[PackageReference]): Set[PackageReference] = {
+  private def cumulatedDependenciesAcc(packageReferenceMap: java.util.Map[PackageReference, Package], dependencies: scala.collection.mutable.Set[PackageReference]): Set[PackageReference] = {
 
     val accumulatedPackageReferences = this.accumulatedDirectPackageReferences().asScala.toSet.filterNot(dependencies.contains(_))
 
@@ -114,7 +115,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
       var result = accumulatedPackageReferences
       accumulatedPackageReferences.foreach({ packageReference =>
         dependencies.add(packageReference)
-        result = result ++: (packageReferenceMap.get(packageReference).get.cumulatedDependenciesAcc(packageReferenceMap, dependencies))
+        result = result ++: packageReferenceMap.get(packageReference).cumulatedDependenciesAcc(packageReferenceMap, dependencies)
         result = result.filterNot(_.equals(reference))
       })
       result
