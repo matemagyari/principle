@@ -14,7 +14,6 @@ import org.tindalos.principle.domain.core.packages.PackageReference
 import org.tindalos.principle.infrastructure.reporters._
 import org.tindalos.principle.infrastructure.reporters.packagestructure.YAMLPackageCohesionAnalysisResultReporter
 import org.yaml.snakeyaml.Yaml
-import scala.collection.JavaConverters._
 
 import java.util.Collections
 import java.util.{List => JList, Map => JMap, Set => JSet}
@@ -46,7 +45,7 @@ class AnalysisResultsReporterTest {
 
   @Test
   def noResults_returnsSuccessWithAllSatisfied(): Unit = {
-    val result = reporter.summary(List.empty.asJava)
+    val result = reporter.summary(Collections.emptyList[AnalysisResult]())
 
     assertValidYaml(result)
 
@@ -63,7 +62,7 @@ class AnalysisResultsReporterTest {
   def singleSatisfiedResult_returnsSuccessAndIncludesResultSection(): Unit = {
     val adpResult = new ADPResult(JMap.of(), new ADP(0))
 
-    val result = reporter.summary((List(adpResult): List[AnalysisResult]).asJava)
+    val result = reporter.summary(Collections.singletonList(adpResult))
 
     assertValidYaml(result)
 
@@ -87,7 +86,7 @@ class AnalysisResultsReporterTest {
     val cycle = new Cycle(ref("com.example.a"), ref("com.example.b"))
     val adpResult = new ADPResult(JMap.of(ref("com.example.a"), Collections.singleton(cycle)), new ADP(0))
 
-    val result = reporter.summary((List(adpResult): List[AnalysisResult]).asJava)
+    val result = reporter.summary(Collections.singletonList(adpResult))
 
     assertValidYaml(result)
 
@@ -117,7 +116,7 @@ class AnalysisResultsReporterTest {
     val layerResult = new LayerViolationsResult(
       Collections.singletonList(new LayerReference("com.a.Foo", "com.b.Bar")), 0)
 
-    val result = reporter.summary((List(adpResult, layerResult): List[AnalysisResult]).asJava)
+    val result = reporter.summary(JList.of(adpResult, layerResult))
 
     assertValidYaml(result)
 
@@ -153,7 +152,7 @@ class AnalysisResultsReporterTest {
     val adpResult = new ADPResult(JMap.of(), new ADP(0))
     val layerResult = new LayerViolationsResult(JList.of(), 0)
 
-    val result = reporter.summary((List(adpResult, layerResult): List[AnalysisResult]).asJava)
+    val result = reporter.summary(JList.of(adpResult, layerResult))
 
     assertValidYaml(result)
 
@@ -188,7 +187,7 @@ class AnalysisResultsReporterTest {
       new SubgraphDecomposition(java.util.Collections.emptyList())
     )
 
-    val result = reporter.summary((List(cohesionResult): List[AnalysisResult]).asJava)
+    val result = reporter.summary(Collections.singletonList(cohesionResult))
 
     assertValidYaml(result)
 

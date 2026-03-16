@@ -50,7 +50,7 @@ public class AnalysisResultsReporterTest {
     }
 
     private List<AnalysisResult> javaList(AnalysisResult... results) {
-      return java.util.Arrays.asList(results);
+        return List.of(results);
     }
 
     private void assertValidYaml(String yaml) {
