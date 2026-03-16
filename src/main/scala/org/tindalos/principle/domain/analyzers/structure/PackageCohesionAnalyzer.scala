@@ -2,12 +2,11 @@ package org.tindalos.principle.domain.analyzers.structure
 
 import org.tindalos.principle.domain.AnalysisInput
 import org.tindalos.principle.domain.analyzers.Analyzer
-import org.tindalos.principle.domain.analyzers.structure.PackageCohesionModule.PackageName
 import org.tindalos.principle.domain.analyzers.structure.GroupingResult
 import org.tindalos.principle.domain.constraints.Constraints
 import scala.collection.JavaConverters._
 
-class PackageCohesionAnalyzer(buildComponents:(PackageName, Set[Node]) => Set[(PackageName, NodeGroup)]
+class PackageCohesionAnalyzer(buildComponents:(String, Set[Node]) => Set[(String, NodeGroup)]
                               , makeStructureHints1: Set[Node] => GroupingResult
                               , findDetachableSubgraphs: Set[Node] => SubgraphDecomposition
                               , collapseToLimit: Set[NodeGroup] => Set[NodeGroup]) extends Analyzer {

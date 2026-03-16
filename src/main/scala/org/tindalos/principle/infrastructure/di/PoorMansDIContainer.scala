@@ -64,7 +64,11 @@ object PoorMansDIContainer {
       new ComponentDependenciesAnalyzer(packageStructureBuilder),
       submodulesBlueprintAnalyzer,
       new PackageCohesionAnalyzer(
-        PackageCohesionModule.componentsFromPackages
+        (rootPackage, nodes) =>
+          PackageCohesionModule.componentsFromPackages(rootPackage, nodes.asJava)
+            .asScala
+            .map(entry => (entry.getKey, entry.getValue))
+            .toSet
         , PackageStructureHints1Finder.makeGroups
         , nodes => Graph.findDetachableSubgraphs(nodes.asJava)
         , CohesiveGroupsDiscoveryModule.collapseToLimit))

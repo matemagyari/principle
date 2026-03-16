@@ -30,7 +30,11 @@ object StructureTestManual extends App {
 
 
   val classes = MyJDependRunner.createNodesOfClasses(rootPackage, targetDir)
-  val packages = PackageCohesionModule.componentsFromPackages(rootPackage, classes)
+  val packages = PackageCohesionModule
+    .componentsFromPackages(rootPackage, classes.asJava)
+    .asScala
+    .map(entry => (entry.getKey, entry.getValue))
+    .toSet
 
   val sortedPackages = packages
     .filter(_._2.nodes.size > 1)
