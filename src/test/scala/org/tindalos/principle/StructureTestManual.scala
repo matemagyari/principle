@@ -70,7 +70,7 @@ object StructureTestManual extends App {
   }
 
   //val parts = Graph.findDetachableSubgraphs(classes)
-  val parts = Graph.findDetachableSubgraphs(MyJDependRunner.createNodesOfClasses("org.tindalos.principle.infrastructure"))
+  val parts = Graph.findDetachableSubgraphs(MyJDependRunner.createNodesOfClasses("org.tindalos.principle.infrastructure").asJava)
 
   parts.peninsulas.asScala.foreach {
     p => {

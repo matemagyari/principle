@@ -6,12 +6,12 @@ import scala.collection.JavaConverters._
 object PackageStructureHints1Finder {
 
   def makeGroups(graph: Set[Node]): GroupingResult = {
-    val sources = Graph.findSources(graph).toList.sortBy(_.id)
+    val sources = Graph.findSources(graph.asJava).asScala.toList.sortBy(_.id)
     val labelledSources = for {i <- 0 to sources.size - 1} yield (sources(i), label(sources.size, i))
 
     val labelledNodes: IndexedSeq[(String, String)] =
       for {(source, lbl) <- labelledSources
-           downstream <- Graph.findDownstreamNodes(source, graph)
+           downstream <- Graph.findDownstreamNodes(source, graph.asJava).asScala
       } yield (lbl, downstream.id)
 
     val grouping: Map[Set[String], List[String]] = labelledNodes

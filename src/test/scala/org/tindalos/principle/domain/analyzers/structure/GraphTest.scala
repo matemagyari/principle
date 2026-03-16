@@ -6,6 +6,13 @@ import scala.collection.JavaConverters._
 
 class GraphTest {
 
+  private def isValid(graph: Set[Node]) = Graph.isValid(graph.asJava)
+
+  private def isIsland(subgraph: Set[Node]) = Graph.isIsland(subgraph.asJava)
+
+  private def findDownstreamNodes(node: Node, graph: Set[Node]) =
+    Graph.findDownstreamNodes(node, graph.asJava).asScala.toSet
+
   @Test
   def findDownstreamNodesForSimpleAcyclicGraph() {
     //a -> b,c | b -> d
@@ -17,12 +24,12 @@ class GraphTest {
 
     val graph = Set(nodeA, nodeB, nodeC, nodeD)
 
-    assertTrue(Graph.isValid(graph))
+  assertTrue(isValid(graph))
 
-    assertEquals(Set(nodeD), Graph.findDownstreamNodes(nodeD, graph))
-    assertEquals(Set(nodeC), Graph.findDownstreamNodes(nodeC, graph))
-    assertEquals(Set(nodeB,nodeD), Graph.findDownstreamNodes(nodeB, graph))
-    assertEquals(Set(nodeA, nodeB, nodeC, nodeD), Graph.findDownstreamNodes(nodeA, graph))
+  assertEquals(Set(nodeD), findDownstreamNodes(nodeD, graph))
+  assertEquals(Set(nodeC), findDownstreamNodes(nodeC, graph))
+  assertEquals(Set(nodeB,nodeD), findDownstreamNodes(nodeB, graph))
+  assertEquals(Set(nodeA, nodeB, nodeC, nodeD), findDownstreamNodes(nodeA, graph))
 
   }
 
@@ -38,12 +45,12 @@ class GraphTest {
 
     val graph = Set(nodeA, nodeB, nodeC, nodeD)
 
-    assertTrue(Graph.isValid(graph))
+  assertTrue(isValid(graph))
 
-    assertEquals(Set(nodeD), Graph.findDownstreamNodes(nodeD, graph))
-    assertEquals(Set(nodeC,nodeD), Graph.findDownstreamNodes(nodeC, graph))
-    assertEquals(Set(nodeB,nodeD), Graph.findDownstreamNodes(nodeB, graph))
-    assertEquals(Set(nodeA, nodeB, nodeC, nodeD), Graph.findDownstreamNodes(nodeA, graph))
+  assertEquals(Set(nodeD), findDownstreamNodes(nodeD, graph))
+  assertEquals(Set(nodeC,nodeD), findDownstreamNodes(nodeC, graph))
+  assertEquals(Set(nodeB,nodeD), findDownstreamNodes(nodeB, graph))
+  assertEquals(Set(nodeA, nodeB, nodeC, nodeD), findDownstreamNodes(nodeA, graph))
   }
 
   @Test
@@ -56,11 +63,11 @@ class GraphTest {
 
     val graph = Set(nodeA, nodeB, nodeC)
 
-    assertTrue(Graph.isValid(graph))
+  assertTrue(isValid(graph))
 
-    assertEquals(graph, Graph.findDownstreamNodes(nodeA, graph))
-    assertEquals(graph, Graph.findDownstreamNodes(nodeB, graph))
-    assertEquals(graph, Graph.findDownstreamNodes(nodeC, graph))
+  assertEquals(graph, findDownstreamNodes(nodeA, graph))
+  assertEquals(graph, findDownstreamNodes(nodeB, graph))
+  assertEquals(graph, findDownstreamNodes(nodeC, graph))
   }
 
 
@@ -79,9 +86,9 @@ class GraphTest {
     val island2 = Set(nodeD, nodeE)
     val graph = island1 ++ island2
 
-    assertTrue(Graph.isValid(graph))
+    assertTrue(isValid(graph))
 
-    val x = Graph.findDetachableSubgraphs(graph)
+    val x = Graph.findDetachableSubgraphs(graph.asJava)
     //assertEquals(island1, Graph.findDetachableSubgraphs(graph))
     //assertEquals(island1, Graph.findDownstreamNodes(nodeB, graph))
     //assertEquals(island1, Graph.findDownstreamNodes(nodeC, graph))
@@ -100,8 +107,8 @@ class GraphTest {
     val island = Set(nodeA, nodeB, nodeC)
     val notIsland = Set(nodeA, nodeB, nodeC, nodeD)
 
-    assertTrue(Graph.isIsland(island))
-    assertFalse(Graph.isIsland(notIsland))
+    assertTrue(isIsland(island))
+    assertFalse(isIsland(notIsland))
   }
 
 
@@ -116,12 +123,12 @@ class GraphTest {
 
     val graph = Set(nodeA, nodeB, nodeC, nodeD)
 
-    assertTrue(Graph.isValid(graph))
+  assertTrue(isValid(graph))
 
-    assertEquals(graph, Graph.findDownstreamNodes(nodeA, graph))
-    assertEquals(graph, Graph.findDownstreamNodes(nodeB, graph))
-    assertEquals(graph, Graph.findDownstreamNodes(nodeC, graph))
-    assertEquals(graph, Graph.findDownstreamNodes(nodeD, graph))
+  assertEquals(graph, findDownstreamNodes(nodeA, graph))
+  assertEquals(graph, findDownstreamNodes(nodeB, graph))
+  assertEquals(graph, findDownstreamNodes(nodeC, graph))
+  assertEquals(graph, findDownstreamNodes(nodeD, graph))
   }
 
   @Test
@@ -130,7 +137,7 @@ class GraphTest {
     val nodeA = new Node(a, Set.empty[String].asJava, Set(b).asJava)
     val nodeB = new Node(b, Set(a).asJava, Set.empty[String].asJava)
 
-    assertTrue(Graph.isValid(Set(nodeA, nodeB)))
+    assertTrue(isValid(Set(nodeA, nodeB)))
   }
   @Test
   def simpleGraphInValid() {
@@ -138,7 +145,7 @@ class GraphTest {
     val nodeA = new Node(a, Set.empty[String].asJava, Set(b).asJava)
     val nodeB = new Node(b, Set.empty[String].asJava, Set.empty[String].asJava) // missing reference to A
 
-    assertFalse(Graph.isValid(Set(nodeA, nodeB)))
+    assertFalse(isValid(Set(nodeA, nodeB)))
   }
 
 }

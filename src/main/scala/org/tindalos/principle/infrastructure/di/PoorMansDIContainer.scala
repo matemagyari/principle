@@ -66,7 +66,7 @@ object PoorMansDIContainer {
       new PackageCohesionAnalyzer(
         PackageCohesionModule.componentsFromPackages
         , PackageStructureHints1Finder.makeGroups
-        , Graph.findDetachableSubgraphs
+        , nodes => Graph.findDetachableSubgraphs(nodes.asJava)
         , CohesiveGroupsDiscoveryModule.collapseToLimit))
   }
 
