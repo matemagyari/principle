@@ -42,7 +42,7 @@ object StructureTestManual extends App {
     .sortBy(_._2.cohesion())
 
 
-  val grouping = PackageStructureHints1Finder.makeGroups(classes)
+  val grouping = PackageStructureHints1Finder.makeGroups(classes.asJava)
 
   def aSort(s1: String, s2: String) = s1.substring(1).toInt.compareTo(s2.substring(1).toInt)
 

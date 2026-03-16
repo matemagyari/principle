@@ -69,7 +69,7 @@ object PoorMansDIContainer {
             .asScala
             .map(entry => (entry.getKey, entry.getValue))
             .toSet
-        , PackageStructureHints1Finder.makeGroups
+        , nodes => PackageStructureHints1Finder.makeGroups(nodes.asJava)
         , nodes => Graph.findDetachableSubgraphs(nodes.asJava)
         , CohesiveGroupsDiscoveryModule.collapseToLimit))
   }
