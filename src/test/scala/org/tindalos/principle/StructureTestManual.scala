@@ -88,7 +88,7 @@ object StructureTestManual extends App {
   val initialComponents = classes.map(n => new NodeGroup(java.util.Collections.singleton(n)))
 
   start = System.currentTimeMillis()
-  val components = CohesiveGroupsDiscoveryModule.collapseToLimit(initialComponents).toList.sortBy(_.nodes.size).reverse
+  val components = CohesiveGroupsDiscoveryModule.collapseToLimit(initialComponents.asJava).asScala.toList.sortBy(_.nodes.size).reverse
   println("Time1: " + (System.currentTimeMillis() - start))
 
   val componentsSortedBySize = components.toList.sortBy(_.nodes.size).reverse

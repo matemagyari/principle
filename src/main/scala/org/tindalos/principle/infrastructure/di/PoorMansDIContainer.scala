@@ -71,7 +71,7 @@ object PoorMansDIContainer {
             .toSet
         , nodes => PackageStructureHints1Finder.makeGroups(nodes.asJava)
         , nodes => Graph.findDetachableSubgraphs(nodes.asJava)
-        , CohesiveGroupsDiscoveryModule.collapseToLimit))
+        , nodes => CohesiveGroupsDiscoveryModule.collapseToLimit(nodes.asJava).asScala.toSet))
   }
 
 
