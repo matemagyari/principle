@@ -14,8 +14,6 @@ import org.junit.Test;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageStructureBuildingException;
 
-import scala.collection.JavaConverters;
-
 public class PackageTest {
 
     private TestPackage packageA;
@@ -91,7 +89,7 @@ public class PackageTest {
         parent.insert(child1);
         parent.insert(child2);
 
-        Map<PackageReference, org.tindalos.principle.domain.core.Package> map = JavaConverters.mapAsJavaMap(parent.toMap());
+        Map<PackageReference, org.tindalos.principle.domain.core.Package> map = parent.toMap();
 
         assertEquals(3, map.size());
         assertTrue(map.containsKey(parent.reference()));

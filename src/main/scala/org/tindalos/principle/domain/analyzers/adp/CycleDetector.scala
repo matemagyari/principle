@@ -12,20 +12,20 @@ class CycleDetector(packageStructureBuilder: PackageStructureBuilder) extends An
 
     override def analyze(input: AnalysisInput) = {
 
-  val basePackage = packageStructureBuilder.build(input.packages().asScala.toList.asInstanceOf[List[Package]], input.analysisPlan().basePackage)
+      val basePackage = packageStructureBuilder.build(input.packages().asScala.toList.asInstanceOf[List[Package]], input.analysisPlan().basePackage)
 
       val references = basePackage.toMap()
 
       var cycles = Map[PackageReference, Set[Cycle]]()
 
-      var sortedByAfferents = references.values.toList.sortBy(_.getMetrics().afferentCoupling)
+      var sortedByAfferents = references.asScala.values.toList.sortBy(_.getMetrics().afferentCoupling)
 
       if (basePackage.getMetrics().afferentCoupling == 0) {
         sortedByAfferents = sortedByAfferents.filterNot(_ equals basePackage)
       }
 
       while (sortedByAfferents.nonEmpty) {
-        val cyclesInSubgraph = sortedByAfferents.head.detectCycles(references)
+        val cyclesInSubgraph = sortedByAfferents.head.detectCycles(references.asScala.toMap)
         cycles = cyclesInSubgraph.mergeBreakingPoints2(cycles)
         sortedByAfferents = sortedByAfferents.filterNot(cyclesInSubgraph.investigatedPackages.contains(_))
       }

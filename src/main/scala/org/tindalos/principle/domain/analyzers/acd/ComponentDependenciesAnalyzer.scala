@@ -21,7 +21,7 @@ class ComponentDependenciesAnalyzer(packageStructureBuilder: PackageStructureBui
 
       val cumulatedComponentDependency = relevantPackages
         .foldLeft(0) { (acc, aPackage) ⇒
-          acc + aPackage.asInstanceOf[Package].cumulatedDependencies(referenceMap.asJava).size + 1
+          acc + aPackage.asInstanceOf[Package].cumulatedDependencies(referenceMap).size + 1
         }
 
       //todo - remove .get

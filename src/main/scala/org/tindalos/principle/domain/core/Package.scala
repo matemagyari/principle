@@ -24,7 +24,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
 
   def isUnreferred(): Boolean
 
-  def toMap(): Map[PackageReference, Package] = toMap(scala.collection.mutable.Map[PackageReference, Package]())
+  def toMap(): java.util.Map[PackageReference, Package] = toMap(scala.collection.mutable.Map[PackageReference, Package]()).asJava
 
   def detectCycles(packageReferences: Map[PackageReference, Package]): CyclesInSubgraph =
     detectCyclesOnThePathFromHere(TraversedPackages.empty(), CyclesInSubgraph.empty(), packageReferences)

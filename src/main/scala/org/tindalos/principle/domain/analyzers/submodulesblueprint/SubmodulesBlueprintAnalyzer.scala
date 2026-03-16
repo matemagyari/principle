@@ -17,7 +17,7 @@ class SubmodulesBuilder(packageStructureBuilder: PackageStructureBuilder) {
 
 
     def convert(submoduleDefinition: SubmoduleDefinition): Submodule = {
-      val packages = submoduleDefinition.packages().asScala.map(reference => basePackage.toMap().get(reference) match {
+      val packages = submoduleDefinition.packages().asScala.map(reference => Option(basePackage.toMap().get(reference)) match {
         case None => throw new InvalidBlueprintDefinitionException("Package does not exist: " + reference)
         case Some(aPackage) => aPackage
       })
