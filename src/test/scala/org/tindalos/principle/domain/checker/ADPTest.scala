@@ -95,8 +95,8 @@ class ADPTest {
     val packageList = packageListProducer.build()
     val classes = MyJDependRunner.createNodesOfClasses(basePackage)
     val result = analysisRunner.run(new AnalysisInput(packageList.map(p => p: PackageWithMetrics).asJava, classes.asJava, plan))
-    assertEquals(1, result.length)
-    result.head.asInstanceOf[ADPResult].cyclesByBreakingPoints
+    assertEquals(1, result.size())
+    result.get(0).asInstanceOf[ADPResult].cyclesByBreakingPoints
   }
 
   private def ref(reference:String) = new PackageReference(reference)

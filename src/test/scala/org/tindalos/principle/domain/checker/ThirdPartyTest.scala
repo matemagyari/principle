@@ -66,7 +66,7 @@ class ThirdPartyTest {
     val packageList = packageListProducer.build()
     val plan = new AnalysisPlan(expectations, basePackage)
     val result = analysisRunner.run(new AnalysisInput(packageList.map(p => p: PackageWithMetrics).asJava, Set.empty.asJava, plan))
-    result(1)
+    result.get(1)
   }
 
   private def layering() = {

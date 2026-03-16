@@ -50,8 +50,8 @@ class LayeringTest {
     val packageListProducer = new JDependBasedPackageListBuilder(basePackage)
     val packageList = packageListProducer.build()
     val result = analysisRunner.run(new AnalysisInput(packageList.map(p => p: PackageWithMetrics).asJava, Set.empty.asJava, plan))
-    assertEquals(1, result.length)
-    result.head.asInstanceOf[LayerViolationsResult].violations
+    assertEquals(1, result.size())
+    result.get(0).asInstanceOf[LayerViolationsResult].violations
   }
 
   private def prepareChecks() = Constraints.builder().layering(layering()).build()

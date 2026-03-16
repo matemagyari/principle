@@ -43,8 +43,8 @@ class SDPTest {
     val packageList = packageListProducer.build()
     val result = analysisRunner.run(new AnalysisInput(packageList.map(p => p: PackageWithMetrics).asJava, Set.empty.asJava, plan))
     println(s"result: $result")
-    assertEquals(1, result.length)
-    result.head.asInstanceOf[SDPResult]
+    assertEquals(1, result.size())
+    result.get(0).asInstanceOf[SDPResult]
   }
 
 }

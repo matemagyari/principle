@@ -18,6 +18,7 @@ import org.tindalos.principle.infrastructure.reporters._
 import org.tindalos.principle.infrastructure.reporters.packagestructure.YAMLPackageCohesionAnalysisResultReporter
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
 import org.tindalos.principle.infrastructure.{JDependBasedPackageListBuilder, PackageStructureBuilderImpl}
+import scala.collection.JavaConverters._
 
 object PoorMansDIContainer {
 
@@ -49,7 +50,7 @@ object PoorMansDIContainer {
   }
 
   def buildAnalysisRunner(): AnalysisRunner = {
-    new AnalysisRunnerImpl(createAnalyzers(new PackageStructureBuilderImpl()))
+    new AnalysisRunnerImpl(createAnalyzers(new PackageStructureBuilderImpl()).asJava)
   }
 
   private def createAnalyzers(packageStructureBuilder: PackageStructureBuilder): List[Analyzer] = {
