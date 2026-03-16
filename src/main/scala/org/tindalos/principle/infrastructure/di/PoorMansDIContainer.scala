@@ -63,15 +63,7 @@ object PoorMansDIContainer {
       new SAPViolationAnalyzer(),
       new ComponentDependenciesAnalyzer(packageStructureBuilder),
       submodulesBlueprintAnalyzer,
-      new PackageCohesionAnalyzer(
-        (rootPackage, nodes) =>
-          PackageCohesionModule.componentsFromPackages(rootPackage, nodes.asJava)
-            .asScala
-            .map(entry => (entry.getKey, entry.getValue))
-            .toSet
-        , nodes => PackageStructureHints1Finder.makeGroups(nodes.asJava)
-        , nodes => Graph.findDetachableSubgraphs(nodes.asJava)
-        , nodes => CohesiveGroupsDiscoveryModule.collapseToLimit(nodes.asJava).asScala.toSet))
+      new PackageCohesionAnalyzer())
   }
 
 
