@@ -1,7 +1,6 @@
 package org.tindalos.principle.domain.resultprocessing.reporter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.tindalos.principle.app.reporters.ADPAnalysisResultReporter;
 import org.tindalos.principle.app.reporters.ComponentDependencyAnalysisResultReporter;
@@ -108,26 +107,17 @@ public final class AnalysisResultsReporter {
     }
 
     private ReportWithViolation toReport(AnalysisResult result) {
-        String report;
-        if (result instanceof ADPResult typed) {
-            report = adpReporter.report(typed);
-        } else if (result instanceof LayerViolationsResult typed) {
-            report = layerReporter.report(typed);
-        } else if (result instanceof ThirdPartyViolationsResult typed) {
-            report = thirdPartyReporter.report(typed);
-        } else if (result instanceof SDPResult typed) {
-            report = sdpReporter.report(typed);
-        } else if (result instanceof SAPResult typed) {
-            report = sapReporter.report(typed);
-        } else if (result instanceof ComponentDependenciesResult typed) {
-            report = componentDependencyReporter.report(typed);
-        } else if (result instanceof SubmodulesBlueprintAnalysisResult typed) {
-            report = submodulesBlueprintReporter.report(typed);
-        } else if (result instanceof CohesionAnalysisResult typed) {
-            report = cohesionReporter.report(typed);
-        } else {
-            throw new RuntimeException("terrible thing - no result type");
-        }
+        String report = switch (result) {
+            case ADPResult typed -> adpReporter.report(typed);
+            case LayerViolationsResult typed -> layerReporter.report(typed);
+            case ThirdPartyViolationsResult typed -> thirdPartyReporter.report(typed);
+            case SDPResult typed -> sdpReporter.report(typed);
+            case SAPResult typed -> sapReporter.report(typed);
+            case ComponentDependenciesResult typed -> componentDependencyReporter.report(typed);
+            case SubmodulesBlueprintAnalysisResult typed -> submodulesBlueprintReporter.report(typed);
+            case CohesionAnalysisResult typed -> cohesionReporter.report(typed);
+            default -> throw new RuntimeException("terrible thing - no result type");
+        };
         return new ReportWithViolation(report, result.constraintViolated());
     }
 
