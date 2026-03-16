@@ -32,7 +32,7 @@ object ApplicationModule {
 
         val analysisResults = analysisRunner.run(new AnalysisInput(packageInputs.asJava, nodes.asJava, analysisPlan))
 
-        printer.printInfo(analysisResultsReporter.summary(analysisResults))    
+        printer.printInfo(analysisResultsReporter.summary(analysisResults.asJava))    
 
         val success = !analysisResults.exists(_.constraintViolated())
         new ValidationResult(success, if (success) "" else "Expectations failed")

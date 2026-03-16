@@ -1,6 +1,7 @@
 package org.tindalos.principle.domain.resultprocessing.reporter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.tindalos.principle.app.reporters.ADPAnalysisResultReporter;
 import org.tindalos.principle.app.reporters.ComponentDependencyAnalysisResultReporter;
@@ -53,11 +54,10 @@ public final class AnalysisResultsReporter {
         this.cohesionReporter = cohesionReporter;
     }
 
-    public String summary(scala.collection.immutable.List<AnalysisResult> results) {
-        var reports = new ArrayList<ReportWithViolation>();
-        var iterator = results.iterator();
-        while (iterator.hasNext()) {
-            reports.add(toReport(iterator.next()));
+    public String summary(List<AnalysisResult> results) {
+        var reports = new ArrayList<ReportWithViolation>(results.size());
+        for (var result : results) {
+            reports.add(toReport(result));
         }
 
         var success = reports.stream().noneMatch(ReportWithViolation::violated);

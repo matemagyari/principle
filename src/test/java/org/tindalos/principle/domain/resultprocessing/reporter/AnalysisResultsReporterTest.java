@@ -1,6 +1,7 @@
 package org.tindalos.principle.domain.resultprocessing.reporter;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -26,9 +27,6 @@ import org.tindalos.principle.infrastructure.reporters.YAMLThirdPartyAnalysisRes
 import org.tindalos.principle.infrastructure.reporters.packagestructure.YAMLPackageCohesionAnalysisResultReporter;
 import org.yaml.snakeyaml.Yaml;
 
-import scala.collection.JavaConverters;
-import scala.collection.immutable.List;
-
 /**
  * Tests for AnalysisResultsReporter.summary() verifying that
  * a single YAML output is produced combining all partial results,
@@ -51,8 +49,8 @@ public class AnalysisResultsReporterTest {
         return new PackageReference(name);
     }
 
-    private List<AnalysisResult> scalaList(AnalysisResult... results) {
-        return JavaConverters.asScalaBuffer(java.util.Arrays.asList(results)).toList();
+    private List<AnalysisResult> javaList(AnalysisResult... results) {
+      return java.util.Arrays.asList(results);
     }
 
     private void assertValidYaml(String yaml) {
@@ -62,7 +60,7 @@ public class AnalysisResultsReporterTest {
 
     @Test
     public void noResults_returnsSuccessWithAllSatisfied() {
-        var result = reporter.summary(scalaList());
+        var result = reporter.summary(javaList());
 
         assertValidYaml(result);
 
@@ -79,7 +77,7 @@ public class AnalysisResultsReporterTest {
     public void singleSatisfiedResult_returnsSuccessAndIncludesResultSection() {
         var adpResult = new ADPResult(Map.of(), new ADP(0));
 
-        var result = reporter.summary(scalaList(adpResult));
+        var result = reporter.summary(javaList(adpResult));
 
         assertValidYaml(result);
 
@@ -103,7 +101,7 @@ public class AnalysisResultsReporterTest {
         var cycle = new Cycle(ref("com.example.a"), ref("com.example.b"));
         var adpResult = new ADPResult(Map.of(ref("com.example.a"), Collections.singleton(cycle)), new ADP(0));
 
-        var result = reporter.summary(scalaList(adpResult));
+        var result = reporter.summary(javaList(adpResult));
 
         assertValidYaml(result);
 
@@ -133,7 +131,7 @@ public class AnalysisResultsReporterTest {
         var layerResult = new LayerViolationsResult(
                 Collections.singletonList(new LayerReference("com.a.Foo", "com.b.Bar")), 0);
 
-        var result = reporter.summary(scalaList(adpResult, layerResult));
+        var result = reporter.summary(javaList(adpResult, layerResult));
 
         assertValidYaml(result);
 
@@ -169,7 +167,7 @@ public class AnalysisResultsReporterTest {
         var adpResult = new ADPResult(Map.of(), new ADP(0));
         var layerResult = new LayerViolationsResult(java.util.List.of(), 0);
 
-        var result = reporter.summary(scalaList(adpResult, layerResult));
+        var result = reporter.summary(javaList(adpResult, layerResult));
 
         assertValidYaml(result);
 
@@ -204,7 +202,7 @@ public class AnalysisResultsReporterTest {
                 new SubgraphDecomposition(java.util.Collections.emptyList())
         );
 
-        var result = reporter.summary(scalaList(cohesionResult));
+        var result = reporter.summary(javaList(cohesionResult));
 
         assertValidYaml(result);
 
