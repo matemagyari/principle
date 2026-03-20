@@ -20,7 +20,15 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
   override def getOwnExternalPackageReferences(): java.util.Set[PackageReference]
   // all the references going out from this package
   override def accumulatedDirectPackageReferences(): java.util.Set[PackageReference] =
-    scalaAccumulatedDirectPackageReferences()
+    java.util.stream.Stream
+        .concat(
+          _subPackages
+            .stream()
+            .flatMap(_.accumulatedDirectPackageReferences().stream())
+            .filter(x => !x.equals(reference)),
+          getOwnPackageReferences().stream()
+        )
+        .collect(Collectors.toUnmodifiableSet())
 
   def isUnreferred(): Boolean
 
@@ -46,22 +54,9 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
       insertIndirectSubPackage(aPackage)
     }
   }
-  
-  private def scalaAccumulatedDirectPackageReferences(): java.util.Set[PackageReference] =
-    Collections.unmodifiableSet(
-      java.util.stream.Stream
-        .concat(
-          _subPackages
-            .stream()
-            .flatMap(_.scalaAccumulatedDirectPackageReferences().stream())
-            .filter(x => !x.equals(reference)),
-          getOwnPackageReferences().stream()
-        )
-        .collect(Collectors.toSet())
-    )
 
   private def accumulatedDirectlyReferredPackages(packageReferenceMap: java.util.Map[PackageReference, Package]): Set[Package] =
-    scalaAccumulatedDirectPackageReferences().asScala.flatMap(x => Option(packageReferenceMap.get(x))).toSet
+    accumulatedDirectPackageReferences().asScala.flatMap(x => Option(packageReferenceMap.get(x))).toSet
 
  
   private def toMap(accumulatingMap: scala.collection.mutable.Map[PackageReference, Package]): Map[PackageReference, Package] = {
