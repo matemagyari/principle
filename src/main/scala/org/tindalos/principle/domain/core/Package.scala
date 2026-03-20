@@ -5,6 +5,7 @@ import org.tindalos.principle.domain.core.packages.{PackageMetrics, PackageRefer
 
 import scala.collection.JavaConverters._
 import java.util.Collections
+import java.util.stream.Collectors
 
 abstract class Package(val reference: PackageReference) extends PackageWithMetrics {
 
@@ -18,9 +19,8 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
   override def getOwnPackageReferences(): java.util.Set[PackageReference]
   override def getOwnExternalPackageReferences(): java.util.Set[PackageReference]
   // all the references going out from this package
-  override def accumulatedDirectPackageReferences(): java.util.Set[PackageReference] = {
-    scalaAccumulatedDirectPackageReferences().asJava
-  }
+  override def accumulatedDirectPackageReferences(): java.util.Set[PackageReference] =
+    scalaAccumulatedDirectPackageReferences()
 
   def isUnreferred(): Boolean
 
@@ -47,21 +47,27 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
     }
   }
   
-  private def scalaAccumulatedDirectPackageReferences(): Set[PackageReference] = {
-    val rs = _subPackages.asScala
-        .flatMap(_.scalaAccumulatedDirectPackageReferences())
-        .filterNot(_.equals(reference))
-    rs.toSet ++: getOwnPackageReferences().asScala.toSet
-  }
+  private def scalaAccumulatedDirectPackageReferences(): java.util.Set[PackageReference] =
+    Collections.unmodifiableSet(
+      java.util.stream.Stream
+        .concat(
+          _subPackages
+            .stream()
+            .flatMap(_.scalaAccumulatedDirectPackageReferences().stream())
+            .filter(x => !x.equals(reference)),
+          getOwnPackageReferences().stream()
+        )
+        .collect(Collectors.toSet())
+    )
 
   private def accumulatedDirectlyReferredPackages(packageReferenceMap: java.util.Map[PackageReference, Package]): Set[Package] =
-    scalaAccumulatedDirectPackageReferences().flatMap(x => Option(packageReferenceMap.get(x)))
+    scalaAccumulatedDirectPackageReferences().asScala.flatMap(x => Option(packageReferenceMap.get(x))).toSet
 
  
   private def toMap(accumulatingMap: scala.collection.mutable.Map[PackageReference, Package]): Map[PackageReference, Package] = {
 
     accumulatingMap.put(reference, this)
-    _subPackages.asScala.foreach(child => child.toMap(accumulatingMap))
+    _subPackages.forEach(child => child.toMap(accumulatingMap))
     accumulatingMap.toMap
   }
 
