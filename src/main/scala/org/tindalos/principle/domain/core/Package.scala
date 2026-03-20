@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder
 import org.tindalos.principle.domain.core.packages.{PackageMetrics, PackageReference, PackageWithMetrics}
 
 import scala.collection.JavaConverters._
+import java.util.Collections
 
 abstract class Package(val reference: PackageReference) extends PackageWithMetrics {
 
@@ -26,7 +27,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
   def toMap(): java.util.Map[PackageReference, Package] = toMap(scala.collection.mutable.Map[PackageReference, Package]()).asJava
 
   def detectCycles(packageReferences: java.util.Map[PackageReference, Package]): CyclesInSubgraph =
-    detectCyclesOnThePathFromHere(TraversedPackages.empty(), CyclesInSubgraph.empty(), packageReferences.asScala.toMap)
+    detectCyclesOnThePathFromHere(TraversedPackages.empty(), CyclesInSubgraph.empty(), Collections.unmodifiableMap(packageReferences))
 
   // it dies if there are cycles
   // through references, not through subPackages. transaitive too
@@ -53,8 +54,8 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
     rs.toSet ++: getOwnPackageReferences().asScala.toSet
   }
 
-  private def accumulatedDirectlyReferredPackages(packageReferenceMap: Map[PackageReference, Package]): Set[Package] =
-    scalaAccumulatedDirectPackageReferences().map(packageReferenceMap.get(_).get)
+  private def accumulatedDirectlyReferredPackages(packageReferenceMap: java.util.Map[PackageReference, Package]): Set[Package] =
+    scalaAccumulatedDirectPackageReferences().flatMap(x => Option(packageReferenceMap.get(x)))
 
  
   private def toMap(accumulatingMap: scala.collection.mutable.Map[PackageReference, Package]): Map[PackageReference, Package] = {
@@ -65,10 +66,11 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
   }
 
   private def getSubPackageByRelativeName(relativeName: String): Package = {
-
-    _subPackages.asScala.find(_.reference.equals(reference.child(relativeName))) match {
-      case Some(subPackage) => subPackage
-      case None =>
+    val targetReference = reference.child(relativeName)
+    _subPackages.stream()
+      .filter(subPackage => subPackage.reference.equals(targetReference))
+      .findFirst()
+      .orElseGet(() => {
         val directSubPackage = new Package(reference.createChild(relativeName)) {
           override def getOwnPackageReferences() = java.util.Collections.emptySet[PackageReference]()
           override def getOwnExternalPackageReferences() = java.util.Collections.emptySet[PackageReference]()
@@ -78,7 +80,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
 
         _subPackages.add(directSubPackage)
         directSubPackage
-    }
+      })
   }
 
   private def indexInTraversedPath(traversedPackages: List[PackageReference]) = {
@@ -124,7 +126,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
   private def detectCyclesOnThePathFromHere(
     traversedPackages: TraversedPackages, 
     foundCycles: CyclesInSubgraph, 
-    packageReferences: Map[PackageReference, Package]): CyclesInSubgraph = {
+    packageReferences: java.util.Map[PackageReference, Package]): CyclesInSubgraph = {
 
     //enough cycles have been found already with this package
     if (foundCycles.isBreakingPoint(this)) foundCycles
