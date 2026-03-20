@@ -1,6 +1,5 @@
 package org.tindalos.principle.domain.core
 
-import scala.collection.mutable.ListBuffer
 import org.apache.commons.lang3.builder.HashCodeBuilder
 import org.tindalos.principle.domain.core.packages.{PackageMetrics, PackageReference, PackageWithMetrics}
 
@@ -8,9 +7,9 @@ import scala.collection.JavaConverters._
 
 abstract class Package(val reference: PackageReference) extends PackageWithMetrics {
 
-  val _subPackages: ListBuffer[Package] = ListBuffer()
+  val _subPackages: java.util.List[Package] = new java.util.ArrayList[Package]()
 
-  def subPackages = _subPackages.toList
+  def subPackages = _subPackages.asScala.toList
   
   def this(referenceName: String) = this(new PackageReference(referenceName))
 
@@ -41,7 +40,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
     } else if (doesNotContain(aPackage)) {
       throw new PackageStructureBuildingException("Attempted to insert " + aPackage + " into " + this)
     } else if (isDirectSuperPackageOf(aPackage)) {
-      _subPackages += aPackage
+      _subPackages.add(aPackage)
     } else {
       insertIndirectSubPackage(aPackage)
     }
@@ -77,7 +76,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
           override def isUnreferred() = true
         }
 
-        _subPackages += directSubPackage
+        _subPackages.add(directSubPackage)
         directSubPackage
     }
   }
