@@ -9,7 +9,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
 
   val _subPackages: java.util.List[Package] = new java.util.ArrayList[Package]()
 
-  def subPackages = _subPackages.asScala.toList
+  def subPackages: java.util.List[Package] = java.util.Collections.unmodifiableList(_subPackages)
   
   def this(referenceName: String) = this(new PackageReference(referenceName))
 
@@ -47,7 +47,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
   }
   
   private def scalaAccumulatedDirectPackageReferences(): Set[PackageReference] = {
-    val rs = subPackages
+    val rs = _subPackages.asScala
         .flatMap(_.scalaAccumulatedDirectPackageReferences())
         .filterNot(_.equals(reference))
     rs.toSet ++: getOwnPackageReferences().asScala.toSet
@@ -60,13 +60,13 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
   private def toMap(accumulatingMap: scala.collection.mutable.Map[PackageReference, Package]): Map[PackageReference, Package] = {
 
     accumulatingMap.put(reference, this)
-    subPackages.foreach(child => child.toMap(accumulatingMap))
+    _subPackages.asScala.foreach(child => child.toMap(accumulatingMap))
     accumulatingMap.toMap
   }
 
   private def getSubPackageByRelativeName(relativeName: String): Package = {
 
-    subPackages.find(_.reference.equals(reference.child(relativeName))) match {
+    _subPackages.asScala.find(_.reference.equals(reference.child(relativeName))) match {
       case Some(subPackage) => subPackage
       case None =>
         val directSubPackage = new Package(reference.createChild(relativeName)) {

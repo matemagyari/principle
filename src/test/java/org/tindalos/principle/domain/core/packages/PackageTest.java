@@ -60,10 +60,10 @@ public class PackageTest {
         parent.insert(grandchild);
 
         Assert.assertEquals(1, parent.subPackages().size());
-        org.tindalos.principle.domain.core.Package child = parent.subPackages().head();
+        org.tindalos.principle.domain.core.Package child = parent.subPackages().get(0);
         assertEquals("org.example.child", child.reference().name());
         assertEquals(1, child.subPackages().size());
-        assertEquals("org.example.child.grandchild", child.subPackages().head().reference().name());
+        assertEquals("org.example.child.grandchild", child.subPackages().get(0).reference().name());
     }
 
     @Test(expected = PackageStructureBuildingException.class)
@@ -207,15 +207,15 @@ public class PackageTest {
         root.insert(level3);
 
         Assert.assertEquals(1, root.subPackages().size());
-        org.tindalos.principle.domain.core.Package org_example = root.subPackages().head();
+        org.tindalos.principle.domain.core.Package org_example = root.subPackages().get(0);
         assertEquals("org.example", org_example.reference().name());
 
         assertEquals(1, org_example.subPackages().size());
-        org.tindalos.principle.domain.core.Package org_example_app = org_example.subPackages().head();
+        org.tindalos.principle.domain.core.Package org_example_app = org_example.subPackages().get(0);
         assertEquals("org.example.app", org_example_app.reference().name());
 
         assertEquals(1, org_example_app.subPackages().size());
-        assertEquals("org.example.app.service", org_example_app.subPackages().head().reference().name());
+        assertEquals("org.example.app.service", org_example_app.subPackages().get(0).reference().name());
     }
 
     /**
