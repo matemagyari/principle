@@ -55,8 +55,13 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
     }
   }
 
-  private def accumulatedDirectlyReferredPackages(packageReferenceMap: java.util.Map[PackageReference, Package]): Set[Package] =
-    accumulatedDirectPackageReferences().asScala.flatMap(x => Option(packageReferenceMap.get(x))).toSet
+  private def accumulatedDirectlyReferredPackages(packageReferenceMap: java.util.Map[PackageReference, Package]): java.util.Set[Package] =
+    Collections.unmodifiableSet(
+      accumulatedDirectPackageReferences().asScala
+        .flatMap(packageReference => Option(packageReferenceMap.get(packageReference)))
+        .toSet
+        .asJava
+    )
 
  
   private def toMap(accumulatingMap: scala.collection.mutable.Map[PackageReference, Package]): Map[PackageReference, Package] = {
@@ -142,9 +147,9 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
           foundCycles.add(new Cycle(list))
         }
       } else {
-        accumulatedDirectlyReferredPackages(packageReferences).foreach({ referencedPackage =>
-        val cyclesInSubgraph = referencedPackage.detectCyclesOnThePathFromHere(traversedPackages.add(reference), foundCycles, packageReferences)
-        foundCycles.mergeIn(cyclesInSubgraph)
+        accumulatedDirectlyReferredPackages(packageReferences).forEach({ referencedPackage =>
+          val cyclesInSubgraph = referencedPackage.detectCyclesOnThePathFromHere(traversedPackages.add(reference), foundCycles, packageReferences)
+          foundCycles.mergeIn(cyclesInSubgraph)
         })
       }
       //System.err.println("Cycles found so far: " + foundCycles.getCycles().size())
