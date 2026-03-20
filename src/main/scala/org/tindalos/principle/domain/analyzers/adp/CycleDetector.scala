@@ -25,7 +25,7 @@ class CycleDetector(packageStructureBuilder: PackageStructureBuilder) extends An
       }
 
       while (sortedByAfferents.nonEmpty) {
-        val cyclesInSubgraph = sortedByAfferents.head.detectCycles(references.asScala.toMap)
+        val cyclesInSubgraph = sortedByAfferents.head.detectCycles(references)
         cycles = cyclesInSubgraph.mergeBreakingPoints2(cycles)
         sortedByAfferents = sortedByAfferents.filterNot(cyclesInSubgraph.investigatedPackages.contains(_))
       }

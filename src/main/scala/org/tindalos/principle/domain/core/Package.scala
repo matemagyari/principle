@@ -26,8 +26,8 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
 
   def toMap(): java.util.Map[PackageReference, Package] = toMap(scala.collection.mutable.Map[PackageReference, Package]()).asJava
 
-  def detectCycles(packageReferences: Map[PackageReference, Package]): CyclesInSubgraph =
-    detectCyclesOnThePathFromHere(TraversedPackages.empty(), CyclesInSubgraph.empty(), packageReferences)
+  def detectCycles(packageReferences: java.util.Map[PackageReference, Package]): CyclesInSubgraph =
+    detectCyclesOnThePathFromHere(TraversedPackages.empty(), CyclesInSubgraph.empty(), packageReferences.asScala.toMap)
 
   // it dies if there are cycles
   // through references, not through subPackages. transaitive too
