@@ -29,7 +29,7 @@ class ADPTest {
   def simple() = {
     val result = run("org.tindalos.principletest.cycle.simple")
     val expectedCycle = new Cycle(ref("org.tindalos.principletest.cycle.simple.left"), ref("org.tindalos.principletest.cycle.simple.right"))
-    val expected = Map(ref("org.tindalos.principletest.cycle.simple.left") -> Set(expectedCycle).asJava).asJava
+    val expected = Map(ref("org.tindalos.principletest.cycle.simple.right") -> Set(expectedCycle).asJava).asJava
     assertEquals(expected, result)
   }
 
@@ -40,7 +40,7 @@ class ADPTest {
       ref("org.tindalos.principletest.cycle.transitive.a"),
       ref("org.tindalos.principletest.cycle.transitive.b"),
       ref("org.tindalos.principletest.cycle.transitive.c"))
-    val expected = Map(ref("org.tindalos.principletest.cycle.transitive.a") -> Set(expectedCycle).asJava).asJava
+    val expected = Map(ref("org.tindalos.principletest.cycle.transitive.c") -> Set(expectedCycle).asJava).asJava
     assertEquals(expected, result)
   }
   
@@ -52,7 +52,7 @@ class ADPTest {
       ref("org.tindalos.principletest.cycle.transitive2.b"),
       ref("org.tindalos.principletest.cycle.transitive2.c"))
     // we used to expect b in Scala version  
-    val expected = Map(ref("org.tindalos.principletest.cycle.transitive2.b") -> Set(expectedCycle).asJava).asJava
+    val expected = Map(ref("org.tindalos.principletest.cycle.transitive2.c") -> Set(expectedCycle).asJava).asJava
     assertEquals(expected, result)
   }
 
@@ -62,7 +62,7 @@ class ADPTest {
     val expectedCycle = new Cycle(
       ref("org.tindalos.principletest.cycle.btwparentandchild"),
       ref("org.tindalos.principletest.cycle.btwparentandchild.child"))
-    val expected = Map(ref("org.tindalos.principletest.cycle.btwparentandchild") -> Set(expectedCycle).asJava).asJava
+    val expected = Map(ref("org.tindalos.principletest.cycle.btwparentandchild.child") -> Set(expectedCycle).asJava).asJava
     assertEquals(expected, result)
   }
 

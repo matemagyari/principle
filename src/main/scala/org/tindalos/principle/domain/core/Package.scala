@@ -32,7 +32,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
 
   def isUnreferred(): Boolean
 
-  def toMap(): java.util.Map[PackageReference, Package] = toMap(scala.collection.mutable.Map[PackageReference, Package]())
+  def toMap(): java.util.Map[PackageReference, Package] = toMap(new java.util.HashMap[PackageReference, Package]())
 
   def detectCycles(packageReferences: java.util.Map[PackageReference, Package]): CyclesInSubgraph =
     detectCyclesOnThePathFromHere(TraversedPackages.empty(), CyclesInSubgraph.empty(), Collections.unmodifiableMap(packageReferences))
@@ -62,11 +62,10 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
   }
 
  
-  private def toMap(accumulatingMap: scala.collection.mutable.Map[PackageReference, Package]): java.util.Map[PackageReference, Package] = {
-
+  private def toMap(accumulatingMap: java.util.Map[PackageReference, Package]): java.util.Map[PackageReference, Package] = {
     accumulatingMap.put(reference, this)
     _subPackages.forEach(child => child.toMap(accumulatingMap))
-    Collections.unmodifiableMap(accumulatingMap.asJava)
+    Collections.unmodifiableMap(accumulatingMap)
   }
 
   private def getSubPackageByRelativeName(relativeName: String): Package = {
