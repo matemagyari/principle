@@ -37,8 +37,8 @@ class CyclesInSubgraphTest {
 
     val cycles = cyclesInSubgraph.cycles
     assertEquals(1, cycles.size)
-    assertTrue(cycles.contains(refB))
-    assertEquals(1, cycles(refB).size)
+    assertTrue(cycles.containsKey(refB))
+    assertEquals(1, cycles.get(refB).size)
   }
 
   @Test
@@ -55,8 +55,8 @@ class CyclesInSubgraphTest {
 
     val cycles = cyclesInSubgraph.cycles
     assertEquals(1, cycles.size)
-    assertTrue(cycles.contains(refB))
-    assertEquals(2, cycles(refB).size)
+    assertTrue(cycles.containsKey(refB))
+    assertEquals(2, cycles.get(refB).size)
   }
 
   @Test
@@ -73,8 +73,8 @@ class CyclesInSubgraphTest {
 
     val cycles = cyclesInSubgraph.cycles
     assertEquals(2, cycles.size)
-    assertTrue(cycles.contains(refB))
-    assertTrue(cycles.contains(refC))
+    assertTrue(cycles.containsKey(refB))
+    assertTrue(cycles.containsKey(refC))
   }
 
   @Test
@@ -88,7 +88,7 @@ class CyclesInSubgraphTest {
 
     val cycles = cyclesInSubgraph.cycles
     assertEquals(1, cycles.size)
-    assertEquals(1, cycles(refB).size)
+    assertEquals(1, cycles.get(refB).size)
   }
 
   @Test

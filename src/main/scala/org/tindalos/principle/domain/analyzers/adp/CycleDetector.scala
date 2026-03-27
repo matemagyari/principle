@@ -6,6 +6,7 @@ import org.tindalos.principle.domain.constraints.Constraints
 import org.tindalos.principle.domain.core.packages.PackageReference
 import org.tindalos.principle.domain.core.{Cycle, Package, PackageStructureBuilder}
 
+import java.util
 import scala.collection.JavaConverters._
 
 class CycleDetector(packageStructureBuilder: PackageStructureBuilder) extends Analyzer {
@@ -16,7 +17,7 @@ class CycleDetector(packageStructureBuilder: PackageStructureBuilder) extends An
 
       val references = basePackage.toMap()
 
-      var cycles = Map[PackageReference, Set[Cycle]]()
+      var cycles = new util.HashMap[PackageReference, util.Set[Cycle]]()
 
       var sortedByAfferents = references.asScala.values.toList.sortBy(_.getMetrics().afferentCoupling)
 
@@ -26,12 +27,11 @@ class CycleDetector(packageStructureBuilder: PackageStructureBuilder) extends An
 
       while (sortedByAfferents.nonEmpty) {
         val cyclesInSubgraph = sortedByAfferents.head.detectCycles(references)
-        cycles = cyclesInSubgraph.mergeBreakingPoints2(cycles)
+        cycles = new util.HashMap[PackageReference, util.Set[Cycle]](cyclesInSubgraph.mergeBreakingPoints2(cycles))
         sortedByAfferents = sortedByAfferents.filterNot(cyclesInSubgraph.investigatedPackages.contains(_))
       }
 
-      val javaCycles = cycles.map { case (k, v) => k -> v.asJava }.asJava
-      new ADPResult(javaCycles, input.packageCouplingExpectations().flatMap(_.adp()).get)
+      new ADPResult(cycles, input.packageCouplingExpectations().flatMap(_.adp()).get)
     }
 
     override def isEnabled(expectations: Constraints) = expectations.packageCoupling.flatMap(pc => pc.adp()).isPresent
