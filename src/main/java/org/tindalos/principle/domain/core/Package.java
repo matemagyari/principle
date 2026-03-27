@@ -1,10 +1,5 @@
 package org.tindalos.principle.domain.core;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.tindalos.principle.domain.core.packages.PackageMetrics;
-import org.tindalos.principle.domain.core.packages.PackageReference;
-import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,6 +10,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.tindalos.principle.domain.core.packages.PackageMetrics;
+import org.tindalos.principle.domain.core.packages.PackageReference;
+import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
 
 public abstract class Package implements PackageWithMetrics {
 

@@ -1,12 +1,12 @@
 package org.tindalos.principle.domain.core;
 
-import org.tindalos.principle.domain.core.packages.PackageReference;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.tindalos.principle.domain.core.packages.PackageReference;
 
 /**
  * Tracks cycle detection progress in a package subgraph.
