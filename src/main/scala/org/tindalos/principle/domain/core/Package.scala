@@ -40,7 +40,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
   // it dies if there are cycles
   // through references, not through subPackages. transaitive too
   def cumulatedDependencies(packageReferenceMap: java.util.Map[PackageReference, Package]): java.util.Set[PackageReference] =
-    cumulatedDependenciesAcc(packageReferenceMap, scala.collection.mutable.Set[PackageReference]()).asJava
+    cumulatedDependenciesAcc(packageReferenceMap, new java.util.HashSet[PackageReference]())
 
 
   def insert(aPackage: Package): Unit = {
@@ -110,20 +110,26 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
   }
 
  
-  private def cumulatedDependenciesAcc(packageReferenceMap: java.util.Map[PackageReference, Package], dependencies: scala.collection.mutable.Set[PackageReference]): Set[PackageReference] = {
+  private def cumulatedDependenciesAcc(
+    packageReferenceMap: java.util.Map[PackageReference, Package],
+    dependencies: java.util.Set[PackageReference]): java.util.Set[PackageReference] = {
 
-    val accumulatedPackageReferences = this.accumulatedDirectPackageReferences().asScala.toSet.filterNot(dependencies.contains(_))
+    val accumulatedPackageReferences = this.accumulatedDirectPackageReferences().stream()
+      .filter(packageReference => !dependencies.contains(packageReference))
+      .collect(Collectors.toUnmodifiableSet[PackageReference])
 
     if (accumulatedPackageReferences.isEmpty) {
-      dependencies.filterNot(_.equals(reference)).toSet
+      dependencies.stream()
+        .filter(packageReference => !packageReference.equals(reference))
+        .collect(Collectors.toUnmodifiableSet[PackageReference])
     } else {
-      var result = accumulatedPackageReferences
-      accumulatedPackageReferences.foreach({ packageReference =>
+      val result = new java.util.HashSet[PackageReference](accumulatedPackageReferences)
+      accumulatedPackageReferences.forEach { packageReference =>
         dependencies.add(packageReference)
-        result = result ++: packageReferenceMap.get(packageReference).cumulatedDependenciesAcc(packageReferenceMap, dependencies)
-        result = result.filterNot(_.equals(reference))
-      })
-      result
+        result.addAll(packageReferenceMap.get(packageReference).cumulatedDependenciesAcc(packageReferenceMap, dependencies))
+        result.remove(reference)
+      }
+      java.util.Set.copyOf(result)
     }
   }
 
