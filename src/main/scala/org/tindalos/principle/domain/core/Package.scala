@@ -66,7 +66,7 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
 
     accumulatingMap.put(reference, this)
     _subPackages.forEach(child => child.toMap(accumulatingMap))
-    accumulatingMap.asJava
+    Collections.unmodifiableMap(accumulatingMap.asJava)
   }
 
   private def getSubPackageByRelativeName(relativeName: String): Package = {
