@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder
 import org.tindalos.principle.domain.core.packages.{PackageMetrics, PackageReference, PackageWithMetrics}
 
 import scala.collection.JavaConverters._
-import java.util.Collections
+import java.util.{Collections, Optional}
 import java.util.stream.Collectors
 
 abstract class Package(val reference: PackageReference) extends PackageWithMetrics {
@@ -55,13 +55,11 @@ abstract class Package(val reference: PackageReference) extends PackageWithMetri
     }
   }
 
-  private def accumulatedDirectlyReferredPackages(packageReferenceMap: java.util.Map[PackageReference, Package]): java.util.Set[Package] =
-    Collections.unmodifiableSet(
-      accumulatedDirectPackageReferences().asScala
-        .flatMap(packageReference => Option(packageReferenceMap.get(packageReference)))
-        .toSet
-        .asJava
-    )
+  private def accumulatedDirectlyReferredPackages(packageReferenceMap: java.util.Map[PackageReference, Package]): java.util.Set[Package] = {
+    accumulatedDirectPackageReferences().stream()
+      .flatMap(r => Optional.ofNullable(packageReferenceMap.get(r)).stream())
+      .collect(Collectors.toUnmodifiableSet[Package])
+  }
 
  
   private def toMap(accumulatingMap: scala.collection.mutable.Map[PackageReference, Package]): Map[PackageReference, Package] = {
