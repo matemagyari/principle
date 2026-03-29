@@ -1,6 +1,6 @@
 package org.tindalos.principle.infrastructure
 
-import org.tindalos.principle.domain.core.{Package, PackageSorterModule, PackageStructureBuilder}
+import org.tindalos.principle.domain.core.{Package, PackageSorterModule}
 import org.tindalos.principle.infrastructure.service.jdepend.{JDependPackageAnalyzer, JDependRunner, PackageFactory}
 import scala.collection.JavaConverters._
 
@@ -20,25 +20,4 @@ class JDependBasedPackageListBuilder(rootPackage: String) extends PackageListBui
       packageListTransformer)
   }
   override def build(): java.util.List[Package] = fn.apply(rootPackage).asJava
-}
-
-class PackageStructureBuilderImpl() extends PackageStructureBuilder {
-  private var cachedBasePackage: Package = _
-
-  override def build(packages: java.util.List[Package], rootPackage: String): Package = {
-    val scalaPackages = packages.asScala.toList
-
-    if (cachedBasePackage == null) {
-      val sortedPackages = sortByName(scalaPackages, rootPackage)
-      val basePackage = sortedPackages.head
-      sortedPackages.tail.foreach(aPackage => basePackage.insert(aPackage))
-      cachedBasePackage = basePackage
-    }
-    cachedBasePackage
-  }
-
-  private def sortByName(packages:List[Package], basePackageName:String):List[Package] =
-    sortByName(packages).filter(_.reference.startsWith(basePackageName))
-
-  private def sortByName(packages:List[Package]): List[Package] = packages.sortBy(_.reference.name)
 }
