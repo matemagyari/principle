@@ -29,7 +29,7 @@ public class SubmodulesBuilder {
 
         submoduleDefinitions.checkNoOverlaps();
 
-        Package basePackage = packageStructureBuilder.build(asScalaPackageList(packages), basePackageName);
+        Package basePackage = packageStructureBuilder.build(toPackageList(packages), basePackageName);
         Map<PackageReference, Package> packageMap = basePackage.toMap();
 
         return submoduleDefinitions.getDefinitions().values().stream()
@@ -56,16 +56,9 @@ public class SubmodulesBuilder {
         return foundPackage;
     }
 
-    @SuppressWarnings("unchecked")
-    private scala.collection.immutable.List<Package> asScalaPackageList(List<PackageWithMetrics> packages) {
-        scala.collection.immutable.List<Package> scalaPackages = scala.collection.immutable.List$.MODULE$.empty();
-
-        for (int i = packages.size() - 1; i >= 0; i--) {
-            scalaPackages = new scala.collection.immutable.$colon$colon<>(
-                (Package) packages.get(i),
-                scalaPackages);
-        }
-
-        return scalaPackages;
+    private List<Package> toPackageList(List<PackageWithMetrics> packages) {
+        return packages.stream()
+            .map(pkg -> (Package) pkg)
+            .collect(Collectors.toUnmodifiableList());
     }
 }

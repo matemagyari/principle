@@ -25,10 +25,11 @@ class JDependBasedPackageListBuilder(rootPackage: String) extends PackageListBui
 class PackageStructureBuilderImpl() extends PackageStructureBuilder {
   private var cachedBasePackage: Package = _
 
-  override def build(packages: List[Package], rootPackage: String): Package = {
+  override def build(packages: java.util.List[Package], rootPackage: String): Package = {
+    val scalaPackages = packages.asScala.toList
 
     if (cachedBasePackage == null) {
-      val sortedPackages = sortByName(packages, rootPackage)
+      val sortedPackages = sortByName(scalaPackages, rootPackage)
       val basePackage = sortedPackages.head
       sortedPackages.tail.foreach(aPackage => basePackage.insert(aPackage))
       cachedBasePackage = basePackage

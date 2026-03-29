@@ -11,7 +11,7 @@ class ComponentDependenciesAnalyzer(packageStructureBuilder: PackageStructureBui
     override def analyze(checkInput: AnalysisInput): ComponentDependenciesResult = {
 
       val packages = checkInput.packages().asScala.toList
-      val basePackage = packageStructureBuilder.build(packages.asInstanceOf[List[Package]], checkInput.analysisPlan().basePackage)
+      val basePackage = packageStructureBuilder.build(checkInput.packages().asInstanceOf[java.util.List[Package]], checkInput.analysisPlan().basePackage)
 
       val referenceMap = basePackage.toMap()
 

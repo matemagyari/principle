@@ -13,7 +13,7 @@ class CycleDetector(packageStructureBuilder: PackageStructureBuilder) extends An
 
     override def analyze(input: AnalysisInput) = {
 
-      val basePackage = packageStructureBuilder.build(input.packages().asScala.toList.asInstanceOf[List[Package]], input.analysisPlan().basePackage)
+      val basePackage = packageStructureBuilder.build(input.packages().asInstanceOf[java.util.List[Package]], input.analysisPlan().basePackage)
 
       val references = basePackage.toMap()
 
