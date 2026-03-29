@@ -5,7 +5,7 @@ import org.tindalos.principle.infrastructure.service.jdepend.{JDependPackageAnal
 import scala.collection.JavaConverters._
 
 trait PackageListBuilder {
-  def build(): List[Package]
+  def build(): java.util.List[Package]
 }
 
 class JDependBasedPackageListBuilder(rootPackage: String) extends PackageListBuilder {
@@ -19,7 +19,7 @@ class JDependBasedPackageListBuilder(rootPackage: String) extends PackageListBui
       (rootPkg, filterEnabled) => JDependRunner.preparePackages(rootPkg, filterEnabled).asScala.toList,
       packageListTransformer)
   }
-  override def build(): List[Package] = fn.apply(rootPackage)
+  override def build(): java.util.List[Package] = fn.apply(rootPackage).asJava
 }
 
 class PackageStructureBuilderImpl() extends PackageStructureBuilder {

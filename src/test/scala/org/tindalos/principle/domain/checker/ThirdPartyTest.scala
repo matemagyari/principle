@@ -65,7 +65,8 @@ class ThirdPartyTest {
     val packageListProducer = new JDependBasedPackageListBuilder(basePackage)
     val packageList = packageListProducer.build()
     val plan = new AnalysisPlan(expectations, basePackage)
-    val result = analysisRunner.run(new AnalysisInput(packageList.map(p => p: PackageWithMetrics).asJava, Set.empty.asJava, plan))
+    val packageInputs = packageList.asScala.map(p => p: PackageWithMetrics).toList
+    val result = analysisRunner.run(new AnalysisInput(packageInputs.asJava, Set.empty.asJava, plan))
     result.get(1)
   }
 

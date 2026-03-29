@@ -121,7 +121,8 @@ class BlueprintTest {
     val packageList = packageListProducer.build()
     val analysisRunner= PoorMansDIContainer.buildAnalysisRunner()
     val plan = new AnalysisPlan(constraints, basePackage)
-    val result = analysisRunner.run(new AnalysisInput(packageList.map(p => p: PackageWithMetrics).asJava, Set.empty.asJava, plan))
+    val packageInputs = packageList.asScala.map(p => p: PackageWithMetrics).toList
+    val result = analysisRunner.run(new AnalysisInput(packageInputs.asJava, Set.empty.asJava, plan))
     assertEquals(1, result.size())
     result.get(0).asInstanceOf[SubmodulesBlueprintAnalysisResult]
   }

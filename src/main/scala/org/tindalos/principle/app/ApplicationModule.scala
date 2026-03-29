@@ -28,7 +28,7 @@ object ApplicationModule {
 
         val packages = packageListBuilder.build()
         val nodes = getNodes(analysisPlan.basePackage)
-        val packageInputs = packages.map(p => p: PackageWithMetrics)
+        val packageInputs = packages.asScala.map(p => p: PackageWithMetrics).toList
 
         val analysisResults = analysisRunner.run(new AnalysisInput(packageInputs.asJava, nodes.asJava, analysisPlan))
 

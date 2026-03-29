@@ -95,7 +95,8 @@ class ADPTest {
     val packageListProducer = new JDependBasedPackageListBuilder(basePackage)
     val packageList = packageListProducer.build()
     val classes = MyJDependRunner.createNodesOfClasses(basePackage)
-    val result = analysisRunner.run(new AnalysisInput(packageList.map(p => p: PackageWithMetrics).asJava, classes.asJava, plan))
+    val packageInputs = packageList.asScala.map(p => p: PackageWithMetrics).toList
+    val result = analysisRunner.run(new AnalysisInput(packageInputs.asJava, classes.asJava, plan))
     assertEquals(1, result.size())
     result.get(0).asInstanceOf[ADPResult].cyclesByBreakingPoints
   }
