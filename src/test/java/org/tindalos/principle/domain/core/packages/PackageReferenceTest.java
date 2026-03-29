@@ -19,6 +19,13 @@ public class PackageReferenceTest {
     }
 
     @Test
+    public void parent() {
+        assertEquals(ref("aa.bb"), testObj.parent().orElseThrow());
+        assertEquals(ref("aa"), ref("aa.bb").parent().orElseThrow());
+        assertFalse(ref("aa").parent().isPresent());
+    }
+
+    @Test
     public void firstPartOfRelativeNameTo() {
         assertEquals("bb", testObj.firstPartOfRelativeNameTo(ref("aa")));
     }

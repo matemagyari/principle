@@ -1,6 +1,8 @@
 package org.tindalos.principle.domain.core.packages;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.Optional;
+
 /**
  * Represents a reference to a Java package by its fully qualified name.
  * Provides hierarchical package navigation and comparison operations.
@@ -30,6 +32,14 @@ public record PackageReference(String name) implements Comparable<PackageReferen
 
     public PackageReference child(String relativeName) {
         return new PackageReference(name + "." + relativeName);
+    }
+
+    public Optional<PackageReference> parent() {
+        int lastDot = name.lastIndexOf('.');
+        if (lastDot < 0) {
+            return Optional.empty();
+        }
+        return Optional.of(new PackageReference(name.substring(0, lastDot)));
     }
 
     public boolean pointsInside(PackageReference reference) {

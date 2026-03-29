@@ -3,31 +3,9 @@ package org.tindalos.principle.domain.analyzers.submodulesblueprint
 import org.tindalos.principle.domain.AnalysisInput
 import org.tindalos.principle.domain.analyzers.Analyzer
 import org.tindalos.principle.domain.constraints.Constraints
-import org.tindalos.principle.domain.core.{Package, PackageStructureBuilder}
-import org.tindalos.principle.domain.core.packages.PackageWithMetrics
 
 import scala.collection.JavaConverters.asScalaSetConverter
 import scala.collection.JavaConverters._
-
-class SubmodulesBuilder(packageStructureBuilder: PackageStructureBuilder) {
-  def build(submoduleDefinitions: SubmoduleDefinitions, packages: List[PackageWithMetrics], basePackageName: String): Set[Submodule] = {
-
-    submoduleDefinitions.checkNoOverlaps()
-    val basePackage = packageStructureBuilder.build(packages.asInstanceOf[List[Package]], basePackageName)
-
-
-    def convert(submoduleDefinition: SubmoduleDefinition): Submodule = {
-      val packages = submoduleDefinition.packages().asScala.map(reference => Option(basePackage.toMap().get(reference)) match {
-        case None => throw new InvalidBlueprintDefinitionException("Package does not exist: " + reference)
-        case Some(aPackage) => aPackage
-      })
-      new Submodule(submoduleDefinition.id, packages.toSet.asInstanceOf[Set[PackageWithMetrics]].asJava, submoduleDefinition.getLegalDependencies.asScala.toSet.asJava)
-    }
-
-    submoduleDefinitions.getDefinitions().asScala.values.map(convert).toSet
-
-  }
-}
 
 class SubmodulesBlueprintAnalyzer(submodulesBuilder: SubmodulesBuilder) extends Analyzer {
 
@@ -41,7 +19,7 @@ class SubmodulesBlueprintAnalyzer(submodulesBuilder: SubmodulesBuilder) extends 
         try {
           val submodules = submodulesBuilder.build(
             submoduleDefinitions,
-            checkInput.packages().asScala.toList, checkInput.analysisPlan().basePackage)
+            checkInput.packages(), checkInput.analysisPlan().basePackage).asScala.toSet
 
           val (aID, aMD) = problematicDependencies(submodules)
           SubmodulesBlueprintAnalysisResult.withViolations(submoduleDefinitions.violationThreshold, aID, aMD)
