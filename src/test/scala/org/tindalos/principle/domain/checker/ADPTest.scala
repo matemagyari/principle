@@ -12,6 +12,7 @@ import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
 
 import java.util
+import java.util.Optional
 import scala.collection.JavaConverters._
 
 class ADPTest {
@@ -51,9 +52,10 @@ class ADPTest {
       ref("org.tindalos.principletest.cycle.transitive2.a"),
       ref("org.tindalos.principletest.cycle.transitive2.b"),
       ref("org.tindalos.principletest.cycle.transitive2.c"))
-    // we used to expect b in Scala version  
-    val expected = Map(ref("org.tindalos.principletest.cycle.transitive2.b") -> Set(expectedCycle).asJava).asJava
-    assertEquals(expected, result)
+    assertEquals(1, result.size())
+    assertEquals(Optional.of(ref("org.tindalos.principletest.cycle.transitive2")), result.keySet().iterator().next().parent()) 
+    val expectedValue: util.Set[Cycle] = result.values().iterator().next()
+    assertEquals(util.Collections.singleton(expectedCycle), expectedValue)
   }
 
   @Test

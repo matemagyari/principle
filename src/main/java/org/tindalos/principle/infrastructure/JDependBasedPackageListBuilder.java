@@ -1,16 +1,17 @@
 package org.tindalos.principle.infrastructure;
 
-import jdepend.framework.JavaPackage;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageSorterModule;
 import org.tindalos.principle.domain.core.packages.PackageMetrics;
 import org.tindalos.principle.domain.core.packages.PackageReference;
 import org.tindalos.principle.infrastructure.service.jdepend.JDependRunner;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import jdepend.framework.JavaPackage;
 
 public final class JDependBasedPackageListBuilder implements PackageListBuilder {
 
