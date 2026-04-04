@@ -1,13 +1,12 @@
 package org.tindalos.principle.infrastructure.di
 
-import org.tindalos.principle.app.{AnalysisPlanValidatorImpl, ApplicationModule, NodeBuilder, Printer}
+import org.tindalos.principle.app.{AnalysisPlanValidatorImpl, NodeBuilder, Printer, PrincipleApplication}
 import org.tindalos.principle.domain.analyzers.Analyzer
 import org.tindalos.principle.domain.analyzers.acd.ComponentDependenciesAnalyzer
 import org.tindalos.principle.domain.analyzers.adp.CycleDetector
 import org.tindalos.principle.domain.analyzers.layering.LayerViolationAnalyzer
 import org.tindalos.principle.domain.analyzers.sap.SAPViolationAnalyzer
 import org.tindalos.principle.domain.analyzers.sdp.SDPViolationAnalyzer
-import org.tindalos.principle.domain.analyzers.structure.Node
 import org.tindalos.principle.domain.analyzers.structure._
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.{SubmodulesBlueprintAnalyzer, SubmodulesBuilder}
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyAnalyzer
@@ -40,13 +39,15 @@ object PoorMansDIContainer {
 
     val analysisRunner = buildAnalysisRunner()
 
-    ApplicationModule.buildApplicationFn(
+    val application = new PrincipleApplication(
       new AnalysisPlanValidatorImpl,
       new JDependBasedPackageListBuilder(rootPackage),
       nodeBuilder,
       analysisRunner,
       reporter,
       printer)
+
+    (analysisPlan) => application.analyze(analysisPlan)
   }
 
   def buildAnalysisRunner(): AnalysisRunner = {
