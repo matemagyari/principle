@@ -18,6 +18,8 @@ import org.tindalos.principle.infrastructure.reporters.packagestructure.YAMLPack
 import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.DefaultNodeBuilder
 import org.tindalos.principle.infrastructure.{JDependBasedPackageListBuilder, PackageStructureBuilderImpl}
 import scala.collection.JavaConverters._
+import java.util
+import java.{util => utilList}
 
 object PoorMansDIContainer {
 
@@ -49,22 +51,15 @@ object PoorMansDIContainer {
   }
 
   def buildAnalysisRunner(): AnalysisRunner = {
-    new AnalysisRunnerImpl(createAnalyzers(new PackageStructureBuilderImpl()).asJava)
-  }
-
-  private def createAnalyzers(packageStructureBuilder: PackageStructureBuilder): List[Analyzer] = {
-    val submodulesBlueprintAnalyzer = new SubmodulesBlueprintAnalyzer(new SubmodulesBuilder(packageStructureBuilder))
-    List(
+    val packageStructureBuilder = new PackageStructureBuilderImpl()
+    new AnalysisRunnerImpl(util.List.of(
       new LayerViolationAnalyzer(),
       new ThirdPartyAnalyzer(),
       new CycleDetector(packageStructureBuilder),
       new SDPViolationAnalyzer(),
       new SAPViolationAnalyzer(),
       new ComponentDependenciesAnalyzer(packageStructureBuilder),
-      submodulesBlueprintAnalyzer,
-      new PackageCohesionAnalyzer())
+      new SubmodulesBlueprintAnalyzer(new SubmodulesBuilder(packageStructureBuilder)),
+      new PackageCohesionAnalyzer()))
   }
-
-
-
 }
