@@ -1,5 +1,4 @@
 plugins {
-    id 'scala'
     id 'java'
     id 'maven-publish'
     id 'signing'
@@ -21,15 +20,7 @@ repositories {
     }
 }
 
-ext {
-    scalaVersion = '2.12.18'
-    scalaCompatVersion = '2.12'
-}
-
 dependencies {
-    // Scala
-    implementation "org.scala-lang:scala-library:${scalaVersion}"
-
     // Maven Plugin API (if still needed for plugin development)
     implementation 'org.apache.maven:maven-plugin-api:3.1.0'
     compileOnly 'org.apache.maven.plugin-tools:maven-plugin-annotations:3.2'
@@ -39,7 +30,6 @@ dependencies {
 
     // Testing
     testImplementation 'junit:junit:4.11'
-    testImplementation 'org.scalatest:scalatest_2.11:2.2.4'
 
     // Utilities
     implementation 'com.google.guava:guava:14.0.1'
@@ -51,34 +41,19 @@ dependencies {
     implementation 'org.specs2:classycle:1.4.1'
 }
 
-tasks.withType(ScalaCompile) {
-    scalaCompileOptions.with {
-        deprecation = true
-        unchecked = true
-        additionalParameters = ['-target:11']  // Scala 2.12 max support
-    }
-}
-
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
     options.compilerArgs << '-Xlint:unchecked'
     options.compilerArgs << '-Xlint:deprecation'
 }
 
-// Configure source sets to separate Java and Scala
 sourceSets {
     main {
-        scala {
-            srcDirs = ['src/main/scala']
-        }
         java {
             srcDirs = ['src/main/java']
         }
     }
     test {
-        scala {
-            srcDirs = ['src/test/scala']
-        }
         java {
             srcDirs = ['src/test/java']
         }
@@ -96,7 +71,7 @@ task principleCheck {
 }
 
 // Make principleCheck run after compile
-compileScala.finalizedBy principleCheck
+compileJava.finalizedBy principleCheck
 
 // Publishing configuration
 publishing {

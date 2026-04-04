@@ -5,7 +5,6 @@
         "directory": "/Users/mate.magyari/private/PrivateProjects/principle",
         "workspaceDir": "/Users/mate.magyari/private/PrivateProjects/principle",
         "sources": [
-            "/Users/mate.magyari/private/PrivateProjects/principle/src/test/scala",
             "/Users/mate.magyari/private/PrivateProjects/principle/src/test/java"
         ],
         "dependencies": [
@@ -14,11 +13,6 @@
         "classpath": [
             "/Users/mate.magyari/private/PrivateProjects/principle/.bloop/principle/build/classes",
             "/Users/mate.magyari/private/PrivateProjects/principle/src/main/resources",
-            "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.specs2/classycle/1.4.1/acdec5590a7736e556e2f8c20d9c10b1ef15626/classycle-1.4.1.jar",
-            "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scalatest/scalatest_2.11/2.2.4/39d673d2eae9db03a05e573863a0af2f927d9c41/scalatest_2.11-2.2.4.jar",
-            "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-reflect/2.11.2/1a6265829fcde7d3a522fe2c0366f2fc40727b17/scala-reflect-2.11.2.jar",
-            "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-lang.modules/scala-xml_2.11/1.0.2/820fbca7e524b530fdadc594c39d49a21ea0337e/scala-xml_2.11-1.0.2.jar",
-            "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-library/2.12.18/fa825f984172f6801e3d8c476071b1823c0a925b/scala-library-2.12.18.jar",
             "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.apache.maven/maven-plugin-api/3.1.0/8821fd1b81c6b960f7ce39f5dde612c665146fd8/maven-plugin-api-3.1.0.jar",
             "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/guru.nidi/jdepend/2.9.5/b5360974576de083aad81c046215674a10ed90a8/jdepend-2.9.5.jar",
             "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.eclipse.sisu/org.eclipse.sisu.plexus/0.0.0.M2a/7510dc8dfe27a0b57c17601bc760b7b0c8f95fa/org.eclipse.sisu.plexus-0.0.0.M2a.jar",
@@ -27,10 +21,12 @@
             "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.json/json/20090211/c183aa3a2a6250293808bba12262c8920ce5a51c/json-20090211.jar",
             "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/com.googlecode.json-simple/json-simple/1.1.1/c9ad4a0850ab676c5c64461a05ca524cdfff59f1/json-simple-1.1.1.jar",
             "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.yaml/snakeyaml/1.5/7d393624a4914082e750f6e3888c1cc3f22b28c9/snakeyaml-1.5.jar",
+            "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.specs2/classycle/1.4.1/acdec5590a7736e556e2f8c20d9c10b1ef15626/classycle-1.4.1.jar",
             "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/junit/junit/4.11/4e031bb61df09069aeb2bffb4019e7a5034a4ee0/junit-4.11.jar",
             "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.apache.maven/maven-model/3.1.0/82b2f097c1cc9a8d0e6b99af5e56327d5002c30f/maven-model-3.1.0.jar",
             "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.apache.maven/maven-artifact/3.1.0/446e6a69fee5b7f2b0f498c0e4dfbd38f740a8f9/maven-artifact-3.1.0.jar",
             "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/1.3.2/b6dde38349ba9bb5e6ea6320531eae969985dae5/commons-io-1.3.2.jar",
+            "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-library/2.9.1/681ebd06c98c6f3ce583e5cf2e831a353b451c6c/scala-library-2.9.1.jar",
             "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar",
             "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.codehaus.plexus/plexus-utils/3.0.10/65e6460a49460d2ca038f8644ff9ae6d878733b8/plexus-utils-3.0.10.jar",
             "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/javax.enterprise/cdi-api/1.0/44c453f60909dfc223552ace63e05c694215156b/cdi-api-1.0.jar",
@@ -48,33 +44,6 @@
         "resources": [
             "/Users/mate.magyari/private/PrivateProjects/principle/src/test/resources"
         ],
-        "scala": {
-            "organization": "org.scala-lang",
-            "name": "scala-compiler",
-            "version": "2.12.18",
-            "options": [
-                "-deprecation",
-                "-target:11",
-                "-unchecked"
-            ],
-            "jars": [
-                "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-compiler/2.12.18/87fa026116e55786ea1a878ea37fb13b6d1365f6/scala-compiler-2.12.18.jar",
-                "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-sbt/compiler-bridge_2.12/1.9.3/4ac91c1a0392c6ebe1525ee266c3a31366276e97/compiler-bridge_2.12-1.9.3-sources.jar",
-                "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-sbt/compiler-interface/1.9.3/b882061aec6f9de3093e777c28022eec82a1e802/compiler-interface-1.9.3.jar",
-                "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-reflect/2.12.18/7e1a6985bfbe78bdc94f33613301ef385d4629b4/scala-reflect-2.12.18.jar",
-                "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-library/2.12.18/fa825f984172f6801e3d8c476071b1823c0a925b/scala-library-2.12.18.jar",
-                "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-lang.modules/scala-xml_2.12/2.1.0/16b228fa6f9d5afece0f2d2d6d5b03d5372dbea4/scala-xml_2.12-2.1.0.jar",
-                "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-sbt/util-interface/1.9.2/b696783ce958ebdf061c53fa173a67f9f1b88754/util-interface-1.9.2.jar"
-            ],
-            "setup": {
-                "order": "mixed",
-                "addLibraryToBootClasspath": true,
-                "addCompilerToClasspath": false,
-                "addExtraJarsToClasspath": false,
-                "manageBootClasspath": true,
-                "filterLibraryFromClasspath": true
-            }
-        },
         "java": {
             "options": [
                 "-target",
@@ -163,11 +132,6 @@
             "classpath": [
                 "/Users/mate.magyari/private/PrivateProjects/principle/.bloop/principle/build/classes",
                 "/Users/mate.magyari/private/PrivateProjects/principle/src/main/resources",
-                "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.specs2/classycle/1.4.1/acdec5590a7736e556e2f8c20d9c10b1ef15626/classycle-1.4.1.jar",
-                "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scalatest/scalatest_2.11/2.2.4/39d673d2eae9db03a05e573863a0af2f927d9c41/scalatest_2.11-2.2.4.jar",
-                "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-reflect/2.11.2/1a6265829fcde7d3a522fe2c0366f2fc40727b17/scala-reflect-2.11.2.jar",
-                "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-lang.modules/scala-xml_2.11/1.0.2/820fbca7e524b530fdadc594c39d49a21ea0337e/scala-xml_2.11-1.0.2.jar",
-                "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-library/2.12.18/fa825f984172f6801e3d8c476071b1823c0a925b/scala-library-2.12.18.jar",
                 "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.apache.maven/maven-plugin-api/3.1.0/8821fd1b81c6b960f7ce39f5dde612c665146fd8/maven-plugin-api-3.1.0.jar",
                 "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/guru.nidi/jdepend/2.9.5/b5360974576de083aad81c046215674a10ed90a8/jdepend-2.9.5.jar",
                 "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.eclipse.sisu/org.eclipse.sisu.plexus/0.0.0.M2a/7510dc8dfe27a0b57c17601bc760b7b0c8f95fa/org.eclipse.sisu.plexus-0.0.0.M2a.jar",
@@ -176,10 +140,12 @@
                 "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.json/json/20090211/c183aa3a2a6250293808bba12262c8920ce5a51c/json-20090211.jar",
                 "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/com.googlecode.json-simple/json-simple/1.1.1/c9ad4a0850ab676c5c64461a05ca524cdfff59f1/json-simple-1.1.1.jar",
                 "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.yaml/snakeyaml/1.5/7d393624a4914082e750f6e3888c1cc3f22b28c9/snakeyaml-1.5.jar",
+                "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.specs2/classycle/1.4.1/acdec5590a7736e556e2f8c20d9c10b1ef15626/classycle-1.4.1.jar",
                 "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/junit/junit/4.11/4e031bb61df09069aeb2bffb4019e7a5034a4ee0/junit-4.11.jar",
                 "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.apache.maven/maven-model/3.1.0/82b2f097c1cc9a8d0e6b99af5e56327d5002c30f/maven-model-3.1.0.jar",
                 "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.apache.maven/maven-artifact/3.1.0/446e6a69fee5b7f2b0f498c0e4dfbd38f740a8f9/maven-artifact-3.1.0.jar",
                 "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/1.3.2/b6dde38349ba9bb5e6ea6320531eae969985dae5/commons-io-1.3.2.jar",
+                "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-library/2.9.1/681ebd06c98c6f3ce583e5cf2e831a353b451c6c/scala-library-2.9.1.jar",
                 "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar",
                 "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.codehaus.plexus/plexus-utils/3.0.10/65e6460a49460d2ca038f8644ff9ae6d878733b8/plexus-utils-3.0.10.jar",
                 "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/javax.enterprise/cdi-api/1.0/44c453f60909dfc223552ace63e05c694215156b/cdi-api-1.0.jar",
@@ -239,6 +205,22 @@
                     ]
                 },
                 {
+                    "organization": "org.scala-lang",
+                    "name": "scala-library",
+                    "version": "2.9.1",
+                    "artifacts": [
+                        {
+                            "name": "scala-library",
+                            "classifier": "sources",
+                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-library/2.9.1/7bff8baa16a29957087409c27d8bedea4eae132d/scala-library-2.9.1-sources.jar"
+                        },
+                        {
+                            "name": "scala-library",
+                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-library/2.9.1/681ebd06c98c6f3ce583e5cf2e831a353b451c6c/scala-library-2.9.1.jar"
+                        }
+                    ]
+                },
+                {
                     "organization": "junit",
                     "name": "junit",
                     "version": "4.11",
@@ -267,22 +249,6 @@
                             "name": "hamcrest-core",
                             "classifier": "sources",
                             "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.1/2ccf1154d1a8936042a8a742dc3e611d02ac7213/hamcrest-core-1.1-sources.jar"
-                        }
-                    ]
-                },
-                {
-                    "organization": "org.scala-lang",
-                    "name": "scala-library",
-                    "version": "2.12.18",
-                    "artifacts": [
-                        {
-                            "name": "scala-library",
-                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-library/2.12.18/fa825f984172f6801e3d8c476071b1823c0a925b/scala-library-2.12.18.jar"
-                        },
-                        {
-                            "name": "scala-library",
-                            "classifier": "sources",
-                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-library/2.12.18/da6a485d45eeebe061858d1e8ad424a300a077ac/scala-library-2.12.18-sources.jar"
                         }
                     ]
                 },
@@ -330,22 +296,6 @@
                     ]
                 },
                 {
-                    "organization": "guru.nidi",
-                    "name": "jdepend",
-                    "version": "2.9.5",
-                    "artifacts": [
-                        {
-                            "name": "jdepend",
-                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/guru.nidi/jdepend/2.9.5/b5360974576de083aad81c046215674a10ed90a8/jdepend-2.9.5.jar"
-                        },
-                        {
-                            "name": "jdepend",
-                            "classifier": "sources",
-                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/guru.nidi/jdepend/2.9.5/746b09e46d0827a73af81f50bb0ff78aa4dbe36d/jdepend-2.9.5-sources.jar"
-                        }
-                    ]
-                },
-                {
                     "organization": "org.codehaus.plexus",
                     "name": "plexus-component-annotations",
                     "version": "1.5.5",
@@ -358,6 +308,22 @@
                         {
                             "name": "plexus-component-annotations",
                             "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.codehaus.plexus/plexus-component-annotations/1.5.5/c72f2660d0cbed24246ddb55d7fdc4f7374d2078/plexus-component-annotations-1.5.5.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "guru.nidi",
+                    "name": "jdepend",
+                    "version": "2.9.5",
+                    "artifacts": [
+                        {
+                            "name": "jdepend",
+                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/guru.nidi/jdepend/2.9.5/b5360974576de083aad81c046215674a10ed90a8/jdepend-2.9.5.jar"
+                        },
+                        {
+                            "name": "jdepend",
+                            "classifier": "sources",
+                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/guru.nidi/jdepend/2.9.5/746b09e46d0827a73af81f50bb0ff78aa4dbe36d/jdepend-2.9.5-sources.jar"
                         }
                     ]
                 },
@@ -490,22 +456,6 @@
                     ]
                 },
                 {
-                    "organization": "org.scalatest",
-                    "name": "scalatest_2.11",
-                    "version": "2.2.4",
-                    "artifacts": [
-                        {
-                            "name": "scalatest_2.11",
-                            "classifier": "sources",
-                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scalatest/scalatest_2.11/2.2.4/f93d68a40996f84efc126e9f9e8abde49a92191f/scalatest_2.11-2.2.4-sources.jar"
-                        },
-                        {
-                            "name": "scalatest_2.11",
-                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scalatest/scalatest_2.11/2.2.4/39d673d2eae9db03a05e573863a0af2f927d9c41/scalatest_2.11-2.2.4.jar"
-                        }
-                    ]
-                },
-                {
                     "organization": "com.google.guava",
                     "name": "guava",
                     "version": "14.0.1",
@@ -534,22 +484,6 @@
                         {
                             "name": "plexus-classworlds",
                             "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.codehaus.plexus/plexus-classworlds/2.4/ef38ff5c25f83a4a02fcd9843d85f3e47012873e/plexus-classworlds-2.4.jar"
-                        }
-                    ]
-                },
-                {
-                    "organization": "org.scala-lang",
-                    "name": "scala-reflect",
-                    "version": "2.11.2",
-                    "artifacts": [
-                        {
-                            "name": "scala-reflect",
-                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-reflect/2.11.2/1a6265829fcde7d3a522fe2c0366f2fc40727b17/scala-reflect-2.11.2.jar"
-                        },
-                        {
-                            "name": "scala-reflect",
-                            "classifier": "sources",
-                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-reflect/2.11.2/84c4ff1b1d352bc3494c3cb357051dff7ac84826/scala-reflect-2.11.2-sources.jar"
                         }
                     ]
                 },
@@ -618,34 +552,18 @@
                     ]
                 },
                 {
-                    "organization": "org.scala-lang.modules",
-                    "name": "scala-xml_2.11",
-                    "version": "1.0.2",
+                    "organization": "javax.annotation",
+                    "name": "jsr250-api",
+                    "version": "1.0",
                     "artifacts": [
                         {
-                            "name": "scala-xml_2.11",
+                            "name": "jsr250-api",
                             "classifier": "sources",
-                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-lang.modules/scala-xml_2.11/1.0.2/312c3557d1ca0b34820f3b3fc5404a47936ceb26/scala-xml_2.11-1.0.2-sources.jar"
+                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/javax.annotation/jsr250-api/1.0/9b1fba77edd118e13c42bda43d3c993dadd52c25/jsr250-api-1.0-sources.jar"
                         },
                         {
-                            "name": "scala-xml_2.11",
-                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.scala-lang.modules/scala-xml_2.11/1.0.2/820fbca7e524b530fdadc594c39d49a21ea0337e/scala-xml_2.11-1.0.2.jar"
-                        }
-                    ]
-                },
-                {
-                    "organization": "org.apache.commons",
-                    "name": "commons-lang3",
-                    "version": "3.1",
-                    "artifacts": [
-                        {
-                            "name": "commons-lang3",
-                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.1/905075e6c80f206bbe6cf1e809d2caa69f420c76/commons-lang3-3.1.jar"
-                        },
-                        {
-                            "name": "commons-lang3",
-                            "classifier": "sources",
-                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.1/8d30b90ae8bda4fbac8363161c8a9b5a99e23baf/commons-lang3-3.1-sources.jar"
+                            "name": "jsr250-api",
+                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/javax.annotation/jsr250-api/1.0/5025422767732a1ab45d93abfea846513d742dcf/jsr250-api-1.0.jar"
                         }
                     ]
                 },
@@ -666,18 +584,18 @@
                     ]
                 },
                 {
-                    "organization": "javax.annotation",
-                    "name": "jsr250-api",
-                    "version": "1.0",
+                    "organization": "org.apache.commons",
+                    "name": "commons-lang3",
+                    "version": "3.1",
                     "artifacts": [
                         {
-                            "name": "jsr250-api",
-                            "classifier": "sources",
-                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/javax.annotation/jsr250-api/1.0/9b1fba77edd118e13c42bda43d3c993dadd52c25/jsr250-api-1.0-sources.jar"
+                            "name": "commons-lang3",
+                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.1/905075e6c80f206bbe6cf1e809d2caa69f420c76/commons-lang3-3.1.jar"
                         },
                         {
-                            "name": "jsr250-api",
-                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/javax.annotation/jsr250-api/1.0/5025422767732a1ab45d93abfea846513d742dcf/jsr250-api-1.0.jar"
+                            "name": "commons-lang3",
+                            "classifier": "sources",
+                            "path": "/Users/mate.magyari/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.1/8d30b90ae8bda4fbac8363161c8a9b5a99e23baf/commons-lang3-3.1-sources.jar"
                         }
                     ]
                 }
