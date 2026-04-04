@@ -3,6 +3,7 @@ package org.tindalos.principle.infrastructure;
 import org.junit.After;
 import org.junit.Test;
 import org.tindalos.principle.domain.constraints.exception.InvalidConfigurationException;
+import org.tindalos.principle.infrastructure.core.ConstraintsReader;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -36,7 +37,7 @@ public class ConstraintsReaderTest {
                     cyclic_dependencies_threshold: 0
                 """);
 
-        var plan = org.tindalos.principle.infrastructure.ConstraintsReader.readFromFile(Optional.of(path));
+        var plan = ConstraintsReader.readFromFile(Optional.of(path));
 
         assertEquals("com.example", plan.basePackage());
     }

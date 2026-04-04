@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.tindalos.principle.domain.AggregatedAnalysisResults;
 import org.tindalos.principle.app.reporters.AnalysisResultsReporter;
 import org.tindalos.principle.infrastructure.ConsolePrinter;
-import org.tindalos.principle.infrastructure.ConstraintsReader;
+import org.tindalos.principle.infrastructure.core.ConstraintsReader;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 import org.tindalos.principle.utils.logging.SimpleLogger;
 import org.tindalos.principle.utils.logging.TheLogger;

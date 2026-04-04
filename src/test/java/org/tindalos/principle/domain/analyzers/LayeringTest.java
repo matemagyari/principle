@@ -13,7 +13,7 @@ import org.tindalos.principle.domain.constraints.Constraints;
 import org.tindalos.principle.domain.constraints.Layering;
 import org.tindalos.principle.domain.plan.AnalysisPlan;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
-import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder;
+import org.tindalos.principle.infrastructure.service.jdepend.JDependBasedPackageListBuilder;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 
 import static org.junit.Assert.assertEquals;

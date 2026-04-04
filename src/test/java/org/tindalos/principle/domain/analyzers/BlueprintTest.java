@@ -12,7 +12,7 @@ import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmodulesBlu
 import org.tindalos.principle.domain.constraints.Constraints;
 import org.tindalos.principle.domain.plan.AnalysisPlan;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
-import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder;
+import org.tindalos.principle.infrastructure.service.jdepend.JDependBasedPackageListBuilder;
 import org.tindalos.principle.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 

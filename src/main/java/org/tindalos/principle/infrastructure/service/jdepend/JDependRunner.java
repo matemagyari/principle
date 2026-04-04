@@ -3,7 +3,7 @@ package org.tindalos.principle.infrastructure.service.jdepend;
 import jdepend.framework.JDepend;
 import jdepend.framework.JavaPackage;
 import jdepend.framework.PackageFilter;
-import org.tindalos.principle.infrastructure.BuildPathUtils;
+import org.tindalos.principle.infrastructure.core.BuildPathUtils;
 
 import java.io.IOException;
 import java.util.Collection;

@@ -12,7 +12,7 @@ import org.tindalos.principle.domain.constraints.PackageCouplingConstraints;
 import org.tindalos.principle.domain.constraints.SDP;
 import org.tindalos.principle.domain.plan.AnalysisPlan;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
-import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder;
+import org.tindalos.principle.infrastructure.service.jdepend.JDependBasedPackageListBuilder;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 
 import static org.junit.Assert.assertEquals;

@@ -1,4 +1,4 @@
-package org.tindalos.principle.infrastructure;
+package org.tindalos.principle.infrastructure.di;
 
 import java.util.List;
 

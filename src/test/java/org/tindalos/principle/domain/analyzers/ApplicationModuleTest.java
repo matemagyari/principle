@@ -5,6 +5,8 @@ import java.util.List;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 import org.junit.Test;
+import org.tindalos.principle.domain.analyzers.adp.ADPResult;
+import org.tindalos.principle.domain.analyzers.layering.LayerViolationsResult;
 import org.tindalos.principle.domain.constraints.ACD;
 import org.tindalos.principle.domain.constraints.ADP;
 import org.tindalos.principle.domain.constraints.Constraints;
@@ -46,7 +48,10 @@ public class ApplicationModuleTest {
             var results = application.analyze(new AnalysisPlan(constraints, basePackage));
             var summary = reporter.summary(results);
             TheLogger.info(summary);
-            assertFalse(results.results().isEmpty());
+            var adpViolated = results.adpResult().map(ADPResult::constraintViolated).orElse(false);
+            var layeringViolated = results.layerViolationsResult().map(LayerViolationsResult::constraintViolated).orElse(false);
+            assertFalse(adpViolated);
+            assertFalse(layeringViolated);
             // assertTrue(summary.contains("analysis_summary:"));
         } catch (Exception ex) {
             TheLogger.error(ex.getMessage());

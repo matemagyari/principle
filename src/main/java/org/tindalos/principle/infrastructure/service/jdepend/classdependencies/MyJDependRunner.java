@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.tindalos.principle.domain.core.Node;
-import org.tindalos.principle.infrastructure.BuildPathUtils;
+import org.tindalos.principle.infrastructure.core.BuildPathUtils;
 
 /**
  * Creates dependency graph nodes by parsing compiled class files with JDepend support.

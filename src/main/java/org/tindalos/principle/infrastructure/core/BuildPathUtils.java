@@ -1,8 +1,7 @@
-package org.tindalos.principle.infrastructure;
+package org.tindalos.principle.infrastructure.core;
 
 import java.io.File;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Utility for resolving compiled classes directories across Maven and Gradle build systems.

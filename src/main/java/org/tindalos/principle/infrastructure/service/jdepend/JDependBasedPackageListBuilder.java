@@ -1,12 +1,10 @@
-package org.tindalos.principle.infrastructure;
+package org.tindalos.principle.infrastructure.service.jdepend;
 
 import java.util.List;
 
 import org.tindalos.principle.app.PackageListBuilder;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageSorterModule;
-import org.tindalos.principle.infrastructure.service.jdepend.JDependRunner;
-import org.tindalos.principle.infrastructure.service.jdepend.PackageFactory;
 
 import jdepend.framework.JavaPackage;
 

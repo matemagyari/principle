@@ -19,8 +19,7 @@ import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmodulesBui
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyAnalyzer;
 import org.tindalos.principle.domain.core.PackageStructureBuilder;
 import org.tindalos.principle.app.reporters.AnalysisResultsReporter;
-import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder;
-import org.tindalos.principle.infrastructure.PackageStructureBuilderImpl;
+import org.tindalos.principle.infrastructure.service.jdepend.JDependBasedPackageListBuilder;
 import org.tindalos.principle.infrastructure.reporters.YAMLADPAnalysisResultReporter;
 import org.tindalos.principle.infrastructure.reporters.YAMLComponentDependencyAnalysisResultReporter;
 import org.tindalos.principle.infrastructure.reporters.YAMLLayerAnalysisResultReporter;
