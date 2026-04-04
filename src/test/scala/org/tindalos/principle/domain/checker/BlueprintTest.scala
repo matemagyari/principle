@@ -8,10 +8,11 @@ import org.tindalos.principle.domain.analyzers.submodulesblueprint._
 import org.tindalos.principle.domain.constraints._
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics
 
-import scala.collection.JavaConverters._
 import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder
 import org.tindalos.principle.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
+
+import java.util
 
 class BlueprintTest {
 
@@ -119,10 +120,15 @@ class BlueprintTest {
     val constraints = Constraints.builder().submoduleDefinitions(submoduleDefinitions).build()
     val packageListProducer = new JDependBasedPackageListBuilder(basePackage)
     val packageList = packageListProducer.build()
-    val analysisRunner= PoorMansDIContainer.buildAnalysisRunner()
+    val analysisRunner = PoorMansDIContainer.buildAnalysisRunner()
     val plan = new AnalysisPlan(constraints, basePackage)
-    val packageInputs = packageList.asScala.map(p => p: PackageWithMetrics).toList
-    val result = analysisRunner.run(new AnalysisInput(packageInputs.asJava, Set.empty.asJava, plan))
+
+    val packageInputs = packageList
+      .stream()
+      .map[PackageWithMetrics](p => p.asInstanceOf[PackageWithMetrics])
+      .toList()
+
+    val result = analysisRunner.run(new AnalysisInput(packageInputs, util.Set.of(), plan))
     assertEquals(1, result.size())
     result.get(0).asInstanceOf[SubmodulesBlueprintAnalysisResult]
   }
