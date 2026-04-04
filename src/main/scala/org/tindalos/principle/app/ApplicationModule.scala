@@ -2,7 +2,6 @@ package org.tindalos.principle.app
 
 import org.tindalos.principle.domain.{AnalysisInput, AnalysisResult, AnalysisRunner}
 import org.tindalos.principle.domain.core.{AnalysisPlan, Package}
-import org.tindalos.principle.domain.analyzers.structure.Node
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics
 import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter
 import org.tindalos.principle.infrastructure.{JDependBasedPackageListBuilder, PackageListBuilder}
@@ -15,7 +14,7 @@ object ApplicationModule {
 
   def buildApplicationFn(inputValidator: AnalysisPlanValidator,
                          packageListBuilder: PackageListBuilder,
-                         getNodes: String => Set[Node],
+                         nodeBuilder: NodeBuilder,
                          analysisRunner: AnalysisRunner,
                          analysisResultsReporter: AnalysisResultsReporter,
                          printer: Printer): AnalysisPlan => ValidationResult =
@@ -27,10 +26,10 @@ object ApplicationModule {
       if (validationResult.success) {
 
         val packages = packageListBuilder.build()
-        val nodes = getNodes(analysisPlan.basePackage)
+        val nodes = nodeBuilder.build(analysisPlan.basePackage)
         val packageInputs = packages.asScala.map(p => p: PackageWithMetrics).toList
 
-        val analysisResults = analysisRunner.run(new AnalysisInput(packageInputs.asJava, nodes.asJava, analysisPlan))
+        val analysisResults = analysisRunner.run(new AnalysisInput(packageInputs.asJava, nodes, analysisPlan))
 
         printer.printInfo(analysisResultsReporter.summary(analysisResults))
 

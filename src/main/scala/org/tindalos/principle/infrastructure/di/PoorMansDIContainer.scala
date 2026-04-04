@@ -1,6 +1,6 @@
 package org.tindalos.principle.infrastructure.di
 
-import org.tindalos.principle.app.{AnalysisPlanValidatorImpl, ApplicationModule, Printer}
+import org.tindalos.principle.app.{AnalysisPlanValidatorImpl, ApplicationModule, NodeBuilder, Printer}
 import org.tindalos.principle.domain.analyzers.Analyzer
 import org.tindalos.principle.domain.analyzers.acd.ComponentDependenciesAnalyzer
 import org.tindalos.principle.domain.analyzers.adp.CycleDetector
@@ -16,7 +16,7 @@ import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsRe
 import org.tindalos.principle.domain.{AnalysisRunner, AnalysisRunnerImpl}
 import org.tindalos.principle.infrastructure.reporters._
 import org.tindalos.principle.infrastructure.reporters.packagestructure.YAMLPackageCohesionAnalysisResultReporter
-import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner
+import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.DefaultNodeBuilder
 import org.tindalos.principle.infrastructure.{JDependBasedPackageListBuilder, PackageStructureBuilderImpl}
 import scala.collection.JavaConverters._
 
@@ -25,7 +25,7 @@ object PoorMansDIContainer {
 
   def buildAnalyzer(rootPackage: String, printer:Printer) = {
 
-    val buildNodesFn:String => Set[Node] = rootPackage => MyJDependRunner.createNodesOfClasses(rootPackage).asScala.toSet
+    val nodeBuilder: NodeBuilder = new DefaultNodeBuilder()
 
     val reporter = new AnalysisResultsReporter(
       new YAMLADPAnalysisResultReporter(),
@@ -43,7 +43,7 @@ object PoorMansDIContainer {
     ApplicationModule.buildApplicationFn(
       new AnalysisPlanValidatorImpl,
       new JDependBasedPackageListBuilder(rootPackage),
-      buildNodesFn,
+      nodeBuilder,
       analysisRunner,
       reporter,
       printer)
