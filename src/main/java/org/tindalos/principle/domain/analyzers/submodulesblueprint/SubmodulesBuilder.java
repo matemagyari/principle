@@ -6,8 +6,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.tindalos.principle.domain.constraints.submodules.InvalidBlueprintDefinitionException;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageStructureBuilder;
+import org.tindalos.principle.domain.constraints.submodules.SubmoduleDefinition;
+import org.tindalos.principle.domain.constraints.submodules.SubmoduleDefinitions;
 import org.tindalos.principle.domain.core.packages.PackageReference;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
 

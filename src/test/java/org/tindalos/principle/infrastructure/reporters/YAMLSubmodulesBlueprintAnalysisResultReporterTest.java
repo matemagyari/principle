@@ -1,9 +1,9 @@
 package org.tindalos.principle.infrastructure.reporters;
 
 import org.junit.Test;
-import org.tindalos.principle.domain.analyzers.submodulesblueprint.Overlap;
+import org.tindalos.principle.domain.constraints.submodules.Overlap;
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.Submodule;
-import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmoduleId;
+import org.tindalos.principle.domain.constraints.submodules.SubmoduleId;
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmodulesBlueprintAnalysisResult;
 import org.yaml.snakeyaml.Yaml;
 

@@ -1,5 +1,6 @@
 package org.tindalos.principle.domain.analyzers.submodulesblueprint;
 
+import org.tindalos.principle.domain.constraints.submodules.Overlap;
 import org.tindalos.principle.domain.core.AnalysisResult;
 
 import java.util.Map;

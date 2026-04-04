@@ -3,7 +3,7 @@ package org.tindalos.principle.domain.analyzers.sap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.tindalos.principle.domain.AnalysisInput;
+import org.tindalos.principle.domain.plan.AnalysisInput;
 import org.tindalos.principle.domain.analyzers.Analyzer;
 import org.tindalos.principle.domain.constraints.Constraints;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;

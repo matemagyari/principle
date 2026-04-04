@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain;
+package org.tindalos.principle.domain.plan;
 
 import org.tindalos.principle.domain.constraints.Constraints;
 

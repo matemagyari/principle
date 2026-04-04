@@ -13,7 +13,7 @@ import org.tindalos.principle.domain.constraints.Layering;
 import org.tindalos.principle.domain.constraints.PackageCouplingConstraints;
 import org.tindalos.principle.domain.constraints.SAP;
 import org.tindalos.principle.domain.constraints.SDP;
-import org.tindalos.principle.domain.AnalysisPlan;
+import org.tindalos.principle.domain.plan.AnalysisPlan;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager;
 import org.tindalos.principle.utils.logging.TheLogger;

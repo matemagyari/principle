@@ -6,6 +6,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
+import org.tindalos.principle.domain.constraints.submodules.InvalidBlueprintDefinitionException;
+import org.tindalos.principle.domain.constraints.submodules.SubmoduleId;
 import org.tindalos.principle.domain.core.packages.PackageMetrics;
 import org.tindalos.principle.domain.core.packages.PackageReference;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;

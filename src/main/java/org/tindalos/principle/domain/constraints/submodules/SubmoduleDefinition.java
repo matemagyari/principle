@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.analyzers.submodulesblueprint;
+package org.tindalos.principle.domain.constraints.submodules;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.tindalos.principle.domain.core.packages.PackageReference;

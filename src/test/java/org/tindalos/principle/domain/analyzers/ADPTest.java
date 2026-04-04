@@ -6,13 +6,13 @@ import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.tindalos.principle.domain.AnalysisInput;
+import org.tindalos.principle.domain.plan.AnalysisInput;
 import org.tindalos.principle.domain.AnalysisRunner;
 import org.tindalos.principle.domain.analyzers.adp.ADPResult;
 import org.tindalos.principle.domain.constraints.ADP;
 import org.tindalos.principle.domain.constraints.Constraints;
 import org.tindalos.principle.domain.constraints.PackageCouplingConstraints;
-import org.tindalos.principle.domain.AnalysisPlan;
+import org.tindalos.principle.domain.plan.AnalysisPlan;
 import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.packages.PackageReference;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;

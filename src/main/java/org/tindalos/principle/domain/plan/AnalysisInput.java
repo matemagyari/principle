@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain;
+package org.tindalos.principle.domain.plan;
 
 import java.util.List;
 import java.util.Objects;
@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.tindalos.principle.domain.core.Node;
-import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmoduleDefinitions;
+import org.tindalos.principle.domain.constraints.submodules.SubmoduleDefinitions;
 import org.tindalos.principle.domain.constraints.Layering;
 import org.tindalos.principle.domain.constraints.PackageCouplingConstraints;
 import org.tindalos.principle.domain.constraints.ThirdParty;

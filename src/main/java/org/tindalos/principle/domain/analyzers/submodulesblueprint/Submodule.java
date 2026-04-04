@@ -4,6 +4,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.tindalos.principle.domain.constraints.submodules.InvalidBlueprintDefinitionException;
+import org.tindalos.principle.domain.constraints.submodules.SubmoduleId;
 import org.tindalos.principle.domain.core.packages.PackageReference;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
 

@@ -5,12 +5,12 @@ import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.tindalos.principle.domain.AnalysisInput;
+import org.tindalos.principle.domain.plan.AnalysisInput;
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.Submodule;
-import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmoduleId;
+import org.tindalos.principle.domain.constraints.submodules.SubmoduleId;
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmodulesBlueprintAnalysisResult;
 import org.tindalos.principle.domain.constraints.Constraints;
-import org.tindalos.principle.domain.AnalysisPlan;
+import org.tindalos.principle.domain.plan.AnalysisPlan;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
 import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder;
 import org.tindalos.principle.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider;

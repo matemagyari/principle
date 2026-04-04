@@ -1,6 +1,6 @@
 package org.tindalos.principle.app;
 
-import org.tindalos.principle.domain.AnalysisPlan;
+import org.tindalos.principle.domain.plan.AnalysisPlan;
 
 /**
  * Validates analysis plan to ensure consistency and correctness

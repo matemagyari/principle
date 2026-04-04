@@ -3,7 +3,7 @@ package org.tindalos.principle.infrastructure.analyzers.submodulesblueprint;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.tindalos.principle.domain.analyzers.submodulesblueprint.*;
+import org.tindalos.principle.domain.constraints.submodules.*;
 import org.tindalos.principle.domain.core.packages.PackageReference;
 
 import java.io.File;

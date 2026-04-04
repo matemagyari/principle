@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.analyzers.submodulesblueprint;
+package org.tindalos.principle.domain.constraints.submodules;
 
 /**
  * Identifier for a submodule in the blueprint definition.

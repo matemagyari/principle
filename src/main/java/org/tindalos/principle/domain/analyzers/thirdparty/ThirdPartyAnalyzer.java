@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.tindalos.principle.domain.AnalysisInput;
+import org.tindalos.principle.domain.plan.AnalysisInput;
 import org.tindalos.principle.domain.analyzers.Analyzer;
 import org.tindalos.principle.domain.constraints.Barrier;
 import org.tindalos.principle.domain.constraints.Constraints;

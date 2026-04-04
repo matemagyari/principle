@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.analyzers.submodulesblueprint;
+package org.tindalos.principle.domain.constraints.submodules;
 
 import java.util.Set;
 

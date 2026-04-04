@@ -2,7 +2,7 @@ package org.tindalos.principle.app;
 
 import org.tindalos.principle.domain.constraints.Barrier;
 import org.tindalos.principle.domain.constraints.ThirdParty;
-import org.tindalos.principle.domain.AnalysisPlan;
+import org.tindalos.principle.domain.plan.AnalysisPlan;
 
 import java.util.Comparator;
 import java.util.List;

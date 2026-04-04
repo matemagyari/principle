@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.constraints;
 
-import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmoduleDefinitions;
+import org.tindalos.principle.domain.constraints.submodules.SubmoduleDefinitions;
 
 import java.util.Optional;
 

@@ -1,10 +1,10 @@
 package org.tindalos.principle.infrastructure.analyzers.submodulesblueprint;
 
 import org.apache.commons.io.FileUtils;
-import org.tindalos.principle.domain.analyzers.submodulesblueprint.InvalidBlueprintDefinitionException;
-import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmoduleDefinition;
-import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmoduleDefinitions;
-import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmoduleId;
+import org.tindalos.principle.domain.constraints.submodules.InvalidBlueprintDefinitionException;
+import org.tindalos.principle.domain.constraints.submodules.SubmoduleDefinition;
+import org.tindalos.principle.domain.constraints.submodules.SubmoduleDefinitions;
+import org.tindalos.principle.domain.constraints.submodules.SubmoduleId;
 import org.tindalos.principle.domain.core.packages.PackageReference;
 import org.yaml.snakeyaml.Yaml;
 

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.tindalos.principle.domain.analyzers.Analyzer;
 import org.tindalos.principle.domain.core.AnalysisResult;
+import org.tindalos.principle.domain.plan.AnalysisInput;
 import org.tindalos.principle.utils.logging.TheLogger;
 
 /**
