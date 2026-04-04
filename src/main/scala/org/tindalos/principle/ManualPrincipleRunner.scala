@@ -23,7 +23,5 @@ object ManualPrincipleRunner extends App {
   })
 
   val plan: AnalysisPlan = ConstraintsReader.readFromFile(Optional.of("/Users/mate.magyari/private/PrivateProjects/principle/principle.yml"))
-  val runAnalysis = PoorMansDIContainer.buildAnalyzer(plan.basePackage(), printer)
-  runAnalysis(plan)
-
+  PoorMansDIContainer.buildAnalyzer(plan.basePackage(), printer).analyze(plan)
 }

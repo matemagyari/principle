@@ -32,9 +32,9 @@ class DesignQualityCheckerMojo extends AbstractMojo {
 
     val plan = ConstraintsReader.readFromFile(java.util.Optional.ofNullable(location))
 
-    val analyse = PoorMansDIContainer.buildAnalyzer(plan.basePackage(), new LogPrinter(getLog()))
+    val analyser = PoorMansDIContainer.buildAnalyzer(plan.basePackage(), new LogPrinter(getLog()))
     try {
-      val result = analyse(plan)
+      val result = analyser.analyze(plan)
       if (!result.success) throw new MojoFailureException("\nNumber of violations exceeds allowed limits!")
     } catch {
       case ex: IOException => getLog().error("/target/classes not found! " + ex.getMessage())

@@ -18,7 +18,7 @@ class ApplicationModuleTest {
 
     TestFixture.setLogger()
 
-    val runAnalysis = PoorMansDIContainer.buildAnalyzer(basePackage, new ConsolePrinter())
+    val application = PoorMansDIContainer.buildAnalyzer(basePackage, new ConsolePrinter())
 
     val constraints = Constraints.builder()
       .layering(layering())
@@ -32,7 +32,7 @@ class ApplicationModuleTest {
       .build()
 
     try {
-      runAnalysis(new AnalysisPlan(constraints, basePackage))
+      application.analyze(new AnalysisPlan(constraints, basePackage))
     } catch {
       case ex: Exception =>
         ex.printStackTrace()

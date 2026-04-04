@@ -22,7 +22,7 @@ import scala.collection.JavaConverters._
 object PoorMansDIContainer {
 
 
-  def buildAnalyzer(rootPackage: String, printer:Printer) = {
+  def buildAnalyzer(rootPackage: String, printer:Printer): PrincipleApplication = {
 
     val nodeBuilder: NodeBuilder = new DefaultNodeBuilder()
 
@@ -39,15 +39,13 @@ object PoorMansDIContainer {
 
     val analysisRunner = buildAnalysisRunner()
 
-    val application = new PrincipleApplication(
+    new PrincipleApplication(
       new AnalysisPlanValidatorImpl,
       new JDependBasedPackageListBuilder(rootPackage),
       nodeBuilder,
       analysisRunner,
       reporter,
       printer)
-
-    (analysisPlan) => application.analyze(analysisPlan)
   }
 
   def buildAnalysisRunner(): AnalysisRunner = {
