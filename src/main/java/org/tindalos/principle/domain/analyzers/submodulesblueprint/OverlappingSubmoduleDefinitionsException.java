@@ -1,7 +1,5 @@
 package org.tindalos.principle.domain.analyzers.submodulesblueprint;
 
-import scala.collection.JavaConverters;
-
 import java.util.Set;
 
 /**
@@ -26,8 +24,8 @@ public class OverlappingSubmoduleDefinitionsException extends InvalidBlueprintDe
 
         for (Overlap overlap : overlaps) {
             msg.append("\n");
-            Set<SubmoduleId> scalaSet = overlap.submoduleIds();
-            for (SubmoduleId submoduleId : scalaSet) {
+            Set<SubmoduleId> ids = overlap.submoduleIds();
+            for (SubmoduleId submoduleId : ids) {
                 msg.append(submoduleId).append(" and ");
             }
             // Remove the trailing " and " by going back 4 characters from the last append
