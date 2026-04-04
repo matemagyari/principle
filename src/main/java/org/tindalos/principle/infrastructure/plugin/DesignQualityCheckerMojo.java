@@ -40,12 +40,12 @@ public class DesignQualityCheckerMojo extends AbstractMojo {
         var analyzer = PoorMansDIContainer.buildAnalyzer(plan.basePackage(), new LogPrinter(getLog()));
         try {
             var result = analyzer.analyze(plan);
-            if (!result.success()) {
+            if (result.hasViolations()) {
                 throw new MojoFailureException("\nNumber of violations exceeds allowed limits!");
             }
         } catch (InvalidConfigurationException ex) {
             throw new MojoFailureException(ex.getMessage());
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
             throw new MojoFailureException("Unexpected error", ex);
         }
     }

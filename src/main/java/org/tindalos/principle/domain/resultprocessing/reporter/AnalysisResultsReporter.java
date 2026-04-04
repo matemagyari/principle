@@ -1,7 +1,6 @@
 package org.tindalos.principle.domain.resultprocessing.reporter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.tindalos.principle.app.reporters.ADPAnalysisResultReporter;
 import org.tindalos.principle.app.reporters.ComponentDependencyAnalysisResultReporter;
@@ -10,6 +9,7 @@ import org.tindalos.principle.app.reporters.SAPAnalysisResultReporter;
 import org.tindalos.principle.app.reporters.SDPAnalysisResultReporter;
 import org.tindalos.principle.app.reporters.SubmodulesBlueprintAnalysisResultReporter;
 import org.tindalos.principle.app.reporters.ThirdPartyAnalysisResultReporter;
+import org.tindalos.principle.domain.AggregatedAnalysisResults;
 import org.tindalos.principle.domain.AnalysisResult;
 import org.tindalos.principle.domain.analyzers.acd.ComponentDependenciesResult;
 import org.tindalos.principle.domain.analyzers.adp.ADPResult;
@@ -54,13 +54,13 @@ public final class AnalysisResultsReporter {
         this.cohesionReporter = cohesionReporter;
     }
 
-    public String summary(List<AnalysisResult> results) {
-        var reports = new ArrayList<ReportWithViolation>(results.size());
-        for (var result : results) {
+    public String summary(AggregatedAnalysisResults results) {
+        var reports = new ArrayList<ReportWithViolation>(results.results().size());
+        for (var result : results.results()) {
             reports.add(toReport(result));
         }
 
-        var success = reports.stream().noneMatch(ReportWithViolation::violated);
+        var success = !results.hasViolations();
         var violatedNames = reports.stream()
                 .filter(ReportWithViolation::violated)
                 .map(ReportWithViolation::report)
@@ -107,18 +107,17 @@ public final class AnalysisResultsReporter {
     }
 
     private ReportWithViolation toReport(AnalysisResult result) {
-        String report = switch (result) {
-            case ADPResult typed -> adpReporter.report(typed);
-            case LayerViolationsResult typed -> layerReporter.report(typed);
-            case ThirdPartyViolationsResult typed -> thirdPartyReporter.report(typed);
-            case SDPResult typed -> sdpReporter.report(typed);
-            case SAPResult typed -> sapReporter.report(typed);
-            case ComponentDependenciesResult typed -> componentDependencyReporter.report(typed);
-            case SubmodulesBlueprintAnalysisResult typed -> submodulesBlueprintReporter.report(typed);
-            case CohesionAnalysisResult typed -> cohesionReporter.report(typed);
+        return switch (result) {
+            case ADPResult typed -> new ReportWithViolation(adpReporter.report(typed), result.constraintViolated());
+            case LayerViolationsResult typed -> new ReportWithViolation(layerReporter.report(typed), result.constraintViolated());
+            case ThirdPartyViolationsResult typed -> new ReportWithViolation(thirdPartyReporter.report(typed), result.constraintViolated());
+            case SDPResult typed -> new ReportWithViolation(sdpReporter.report(typed), result.constraintViolated());
+            case SAPResult typed -> new ReportWithViolation(sapReporter.report(typed), result.constraintViolated());
+            case ComponentDependenciesResult typed -> new ReportWithViolation(componentDependencyReporter.report(typed), result.constraintViolated());
+            case SubmodulesBlueprintAnalysisResult typed -> new ReportWithViolation(submodulesBlueprintReporter.report(typed), result.constraintViolated());
+            case CohesionAnalysisResult typed -> new ReportWithViolation(cohesionReporter.report(typed), result.constraintViolated());
             default -> throw new RuntimeException("terrible thing - no result type");
         };
-        return new ReportWithViolation(report, result.constraintViolated());
     }
 
     private record ReportWithViolation(String report, boolean violated) {
