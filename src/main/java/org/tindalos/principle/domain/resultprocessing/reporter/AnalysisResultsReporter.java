@@ -19,7 +19,7 @@ import org.tindalos.principle.domain.analyzers.sdp.SDPResult;
 import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult;
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmodulesBlueprintAnalysisResult;
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyViolationsResult;
-import org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionAnalysisResultReporter;
+import org.tindalos.principle.domain.analyzers.structure.PackageCohesionAnalysisResultReporter;
 
 /**
  * Aggregates individual analysis reports into a single YAML summary.

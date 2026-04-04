@@ -1,5 +1,9 @@
 package org.tindalos.principle.domain.analyzers;
 
+import java.util.List;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.tindalos.principle.domain.constraints.ACD;
 import org.tindalos.principle.domain.constraints.ADP;
@@ -10,13 +14,9 @@ import org.tindalos.principle.domain.constraints.PackageCouplingConstraints;
 import org.tindalos.principle.domain.constraints.SAP;
 import org.tindalos.principle.domain.constraints.SDP;
 import org.tindalos.principle.domain.core.AnalysisPlan;
-import org.tindalos.principle.infrastructure.ConsolePrinter;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager;
-
-import java.util.List;
-
-import static org.junit.Assert.fail;
+import org.tindalos.principle.utils.logging.TheLogger;
 
 public class ApplicationModuleTest {
 
@@ -28,6 +28,8 @@ public class ApplicationModuleTest {
         TestFixture.setLogger();
 
         var application = PoorMansDIContainer.buildAnalyzer(basePackage);
+
+        var reporter = PoorMansDIContainer.createReporter();
 
         var constraints = Constraints.builder()
                 .layering(layering())
@@ -41,9 +43,13 @@ public class ApplicationModuleTest {
                 .build();
 
         try {
-            application.analyze(new AnalysisPlan(constraints, basePackage));
+            var results = application.analyze(new AnalysisPlan(constraints, basePackage));
+            var summary = reporter.summary(results);
+            TheLogger.info(summary);
+            assertFalse(results.results().isEmpty());
+            // assertTrue(summary.contains("analysis_summary:"));
         } catch (Exception ex) {
-            ex.printStackTrace();
+            TheLogger.error(ex.getMessage());
             fail(ex.getMessage());
         }
     }

@@ -2,6 +2,7 @@ package org.tindalos.principle.infrastructure.reporters.packagestructure;
 
 import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult;
 import org.tindalos.principle.domain.analyzers.structure.NodeGroup;
+import org.tindalos.principle.domain.analyzers.structure.PackageCohesionAnalysisResultReporter;
 
 import java.util.ArrayList;
 import java.util.Comparator;

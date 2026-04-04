@@ -1,6 +1,7 @@
 package org.tindalos.principle.infrastructure.reporters.packagestructure;
 
 import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult;
+import org.tindalos.principle.domain.analyzers.structure.PackageCohesionAnalysisResultReporter;
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager;
 import static org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionConstants.COHESIVE_GROUPS_FILE_NAME;
 import static org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionConstants.PACKAGE_COHESIONS_FILE_NAME;

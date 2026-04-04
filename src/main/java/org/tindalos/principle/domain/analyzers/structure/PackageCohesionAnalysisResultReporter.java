@@ -1,7 +1,6 @@
-package org.tindalos.principle.infrastructure.reporters.packagestructure;
+package org.tindalos.principle.domain.analyzers.structure;
 
 import org.tindalos.principle.app.reporters.AnalysisResultReporter;
-import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult;
 
 /**
  * Reporter contract for package cohesion analysis results.

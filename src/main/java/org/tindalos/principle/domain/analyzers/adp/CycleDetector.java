@@ -20,8 +20,7 @@ import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
 
 /**
  * Analyzer for the Acyclic Dependency Principle (ADP).
- * Builds the package tree for the configured base package and detects cycles
- * without relying on Scala collection conversions.
+ * Builds the package tree for the configured base package and detects cycles.
  */
 public final class CycleDetector implements Analyzer {
 
