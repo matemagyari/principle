@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.checker;
+package org.tindalos.principle.domain.analyzers;
 
 import org.junit.Test;
 import org.tindalos.principle.domain.constraints.ACD;

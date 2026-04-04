@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.checker;
+package org.tindalos.principle.domain.analyzers;
 
 import org.tindalos.principle.utils.logging.SimpleLogger;
 import org.tindalos.principle.utils.logging.TheLogger;

@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.checker;
+package org.tindalos.principle.domain.analyzers;
 
 import java.util.Map;
 import java.util.Set;
