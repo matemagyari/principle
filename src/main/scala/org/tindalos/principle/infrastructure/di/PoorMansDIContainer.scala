@@ -25,7 +25,7 @@ object PoorMansDIContainer {
 
   def buildAnalyzer(rootPackage: String, printer:Printer) = {
 
-    val buildNodesFn:String => Set[Node] = MyJDependRunner.createNodesOfClasses(_)
+    val buildNodesFn:String => Set[Node] = rootPackage => MyJDependRunner.createNodesOfClasses(rootPackage).asScala.toSet
 
     val reporter = new AnalysisResultsReporter(
       new YAMLADPAnalysisResultReporter(),

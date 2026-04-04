@@ -29,7 +29,7 @@ object StructureTestManual extends App {
   */
 
 
-  val classes = MyJDependRunner.createNodesOfClasses(rootPackage, targetDir)
+  val classes = MyJDependRunner.createNodesOfClasses(rootPackage, targetDir).asScala.toSet
   val packages = PackageCohesionModule
     .componentsFromPackages(rootPackage, classes.asJava)
     .asScala
@@ -74,7 +74,7 @@ object StructureTestManual extends App {
   }
 
   //val parts = Graph.findDetachableSubgraphs(classes)
-  val parts = Graph.findDetachableSubgraphs(MyJDependRunner.createNodesOfClasses("org.tindalos.principle.infrastructure").asJava)
+  val parts = Graph.findDetachableSubgraphs(MyJDependRunner.createNodesOfClasses("org.tindalos.principle.infrastructure"))
 
   parts.peninsulas.asScala.foreach {
     p => {

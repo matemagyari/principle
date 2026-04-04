@@ -96,7 +96,7 @@ class ADPTest {
     init(basePackage)
     val packageListProducer = new JDependBasedPackageListBuilder(basePackage)
     val packageList = packageListProducer.build()
-    val classes = MyJDependRunner.createNodesOfClasses(basePackage)
+    val classes = MyJDependRunner.createNodesOfClasses(basePackage).asScala.toSet
     val packageInputs = packageList.asScala.map(p => p: PackageWithMetrics).toList
     val result = analysisRunner.run(new AnalysisInput(packageInputs.asJava, classes.asJava, plan))
     assertEquals(1, result.size())
