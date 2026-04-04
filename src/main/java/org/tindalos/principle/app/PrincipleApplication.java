@@ -8,7 +8,6 @@ import org.tindalos.principle.domain.AnalysisRunner;
 import org.tindalos.principle.domain.constraints.exception.InvalidConfigurationException;
 import org.tindalos.principle.domain.core.AnalysisPlan;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
-import org.tindalos.principle.infrastructure.PackageListBuilder;
 
 /**
  * Main application entry point for running architectural analysis.

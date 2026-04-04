@@ -1,4 +1,4 @@
-package org.tindalos.principle.infrastructure;
+package org.tindalos.principle.app;
 
 import org.tindalos.principle.domain.core.Package;
 

@@ -7,7 +7,6 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.tindalos.principle.domain.constraints.exception.InvalidConfigurationException;
-import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter;
 import org.tindalos.principle.infrastructure.ConstraintsReader;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager;
