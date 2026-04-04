@@ -27,7 +27,7 @@ public class ApplicationModuleTest {
 
         TestFixture.setLogger();
 
-        var application = PoorMansDIContainer.buildAnalyzer(basePackage, new ConsolePrinter());
+        var application = PoorMansDIContainer.buildAnalyzer(basePackage);
 
         var constraints = Constraints.builder()
                 .layering(layering())

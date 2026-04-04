@@ -5,7 +5,6 @@ import java.util.List;
 import org.tindalos.principle.app.AnalysisPlanValidatorImpl;
 import org.tindalos.principle.app.NodeBuilder;
 import org.tindalos.principle.app.PrincipleApplication;
-import org.tindalos.principle.app.Printer;
 import org.tindalos.principle.domain.AnalysisRunner;
 import org.tindalos.principle.domain.AnalysisRunnerImpl;
 import org.tindalos.principle.domain.analyzers.Analyzer;
@@ -40,10 +39,20 @@ public final class PoorMansDIContainer {
     private PoorMansDIContainer() {
     }
 
-    public static PrincipleApplication buildAnalyzer(String rootPackage, Printer printer) {
+    public static PrincipleApplication buildAnalyzer(String rootPackage) {
         NodeBuilder nodeBuilder = new DefaultNodeBuilder();
 
-        AnalysisResultsReporter reporter = new AnalysisResultsReporter(
+        AnalysisRunner analysisRunner = buildAnalysisRunner();
+
+        return new PrincipleApplication(
+                new AnalysisPlanValidatorImpl(),
+                new JDependBasedPackageListBuilder(rootPackage),
+                nodeBuilder,
+                analysisRunner);
+    }
+
+    public static AnalysisResultsReporter createReporter() {
+        return new AnalysisResultsReporter(
                 new YAMLADPAnalysisResultReporter(),
                 new YAMLLayerAnalysisResultReporter(),
                 new YAMLThirdPartyAnalysisResultReporter(),
@@ -52,16 +61,6 @@ public final class PoorMansDIContainer {
                 new YAMLSubmodulesBlueprintAnalysisResultReporter(),
                 new YAMLSDPAnalysisResultReporter(),
                 new YAMLPackageCohesionAnalysisResultReporter());
-
-        AnalysisRunner analysisRunner = buildAnalysisRunner();
-
-        return new PrincipleApplication(
-                new AnalysisPlanValidatorImpl(),
-                new JDependBasedPackageListBuilder(rootPackage),
-                nodeBuilder,
-                analysisRunner,
-                reporter,
-                printer);
     }
 
     public static AnalysisRunner buildAnalysisRunner() {

@@ -2,6 +2,8 @@ package org.tindalos.principle;
 
 import java.util.Optional;
 
+import org.tindalos.principle.domain.AggregatedAnalysisResults;
+import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter;
 import org.tindalos.principle.infrastructure.ConsolePrinter;
 import org.tindalos.principle.infrastructure.ConstraintsReader;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
@@ -30,6 +32,8 @@ public final class ManualPrincipleRunner {
 
         var plan = ConstraintsReader.readFromFile(
                 Optional.of("/Users/mate.magyari/private/PrivateProjects/principle/principle.yml"));
-        PoorMansDIContainer.buildAnalyzer(plan.basePackage(), printer).analyze(plan);
+        AnalysisResultsReporter reporter = PoorMansDIContainer.createReporter();
+        AggregatedAnalysisResults results = PoorMansDIContainer.buildAnalyzer(plan.basePackage()).analyze(plan);
+        printer.printInfo(reporter.summary(results));
     }
 }

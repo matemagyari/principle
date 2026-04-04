@@ -8,7 +8,6 @@ import org.tindalos.principle.domain.AnalysisRunner;
 import org.tindalos.principle.domain.constraints.exception.InvalidConfigurationException;
 import org.tindalos.principle.domain.core.AnalysisPlan;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
-import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter;
 import org.tindalos.principle.infrastructure.PackageListBuilder;
 
 /**
@@ -22,22 +21,16 @@ public class PrincipleApplication {
     private final PackageListBuilder packageListBuilder;
     private final NodeBuilder nodeBuilder;
     private final AnalysisRunner analysisRunner;
-    private final AnalysisResultsReporter analysisResultsReporter;
-    private final Printer printer;
 
     public PrincipleApplication(
             AnalysisPlanValidator inputValidator,
             PackageListBuilder packageListBuilder,
             NodeBuilder nodeBuilder,
-            AnalysisRunner analysisRunner,
-            AnalysisResultsReporter analysisResultsReporter,
-            Printer printer) {
+            AnalysisRunner analysisRunner) {
         this.inputValidator = inputValidator;
         this.packageListBuilder = packageListBuilder;
         this.nodeBuilder = nodeBuilder;
         this.analysisRunner = analysisRunner;
-        this.analysisResultsReporter = analysisResultsReporter;
-        this.printer = printer;
     }
 
     public AggregatedAnalysisResults analyze(AnalysisPlan analysisPlan) {
@@ -52,10 +45,7 @@ public class PrincipleApplication {
                 .toList();
         var nodes = nodeBuilder.build(analysisPlan.basePackage());
 
-        var analysisResults = new AggregatedAnalysisResults(
+        return new AggregatedAnalysisResults(
                 analysisRunner.run(new AnalysisInput(packages, nodes, analysisPlan)));
-
-        printer.printInfo(analysisResultsReporter.summary(analysisResults));
-        return analysisResults;
     }
 }

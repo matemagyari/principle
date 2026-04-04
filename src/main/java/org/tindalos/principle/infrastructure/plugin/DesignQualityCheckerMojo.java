@@ -7,6 +7,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.tindalos.principle.domain.constraints.exception.InvalidConfigurationException;
+import org.tindalos.principle.domain.resultprocessing.reporter.AnalysisResultsReporter;
 import org.tindalos.principle.infrastructure.ConstraintsReader;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager;
@@ -37,9 +38,12 @@ public class DesignQualityCheckerMojo extends AbstractMojo {
 
         var plan = ConstraintsReader.readFromFile(Optional.ofNullable(location));
 
-        var analyzer = PoorMansDIContainer.buildAnalyzer(plan.basePackage(), new LogPrinter(getLog()));
+        var printer = new LogPrinter(getLog());
+        var analyzer = PoorMansDIContainer.buildAnalyzer(plan.basePackage());
+        var reporter = PoorMansDIContainer.createReporter();
         try {
             var result = analyzer.analyze(plan);
+            printer.printInfo(reporter.summary(result));
             if (result.hasViolations()) {
                 throw new MojoFailureException("\nNumber of violations exceeds allowed limits!");
             }
