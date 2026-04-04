@@ -3,7 +3,7 @@ package org.tindalos.principle.infrastructure.service.jdepend.classdependencies;
 import java.util.Set;
 
 import org.tindalos.principle.app.NodeBuilder;
-import org.tindalos.principle.domain.analyzers.structure.Node;
+import org.tindalos.principle.domain.core.Node;
 
 /**
  * Default NodeBuilder implementation backed by JDepend class-file parsing.

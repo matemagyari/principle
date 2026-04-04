@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.analyzers.thirdparty;
 
-import org.tindalos.principle.domain.AnalysisResult;
+import org.tindalos.principle.domain.core.AnalysisResult;
 import org.tindalos.principle.domain.constraints.ThirdParty;
 import org.tindalos.principle.domain.core.packages.PackageReference;
 

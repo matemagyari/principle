@@ -6,6 +6,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
+import org.tindalos.principle.domain.core.Node;
 
 /**
  * Unit tests for PackageCohesionModule package grouping helpers.

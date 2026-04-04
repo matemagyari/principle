@@ -1,5 +1,7 @@
 package org.tindalos.principle.domain.analyzers.structure;
 
+import org.tindalos.principle.domain.core.Node;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 

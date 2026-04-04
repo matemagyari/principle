@@ -12,7 +12,7 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult;
 import org.tindalos.principle.domain.analyzers.structure.GroupingResult;
-import org.tindalos.principle.domain.analyzers.structure.Node;
+import org.tindalos.principle.domain.core.Node;
 import org.tindalos.principle.domain.analyzers.structure.NodeGroup;
 import org.tindalos.principle.domain.analyzers.structure.SubgraphDecomposition;
 import org.yaml.snakeyaml.Yaml;

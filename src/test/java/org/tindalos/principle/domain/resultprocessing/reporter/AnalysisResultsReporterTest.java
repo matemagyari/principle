@@ -9,7 +9,7 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import org.tindalos.principle.app.reporters.AnalysisResultsReporter;
 import org.tindalos.principle.domain.AggregatedAnalysisResults;
-import org.tindalos.principle.domain.AnalysisResult;
+import org.tindalos.principle.domain.core.AnalysisResult;
 import org.tindalos.principle.domain.analyzers.adp.ADPResult;
 import org.tindalos.principle.domain.analyzers.layering.LayerReference;
 import org.tindalos.principle.domain.analyzers.layering.LayerViolationsResult;

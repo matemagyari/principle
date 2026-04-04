@@ -3,7 +3,7 @@ package org.tindalos.principle.app.reporters;
 import java.util.ArrayList;
 
 import org.tindalos.principle.domain.AggregatedAnalysisResults;
-import org.tindalos.principle.domain.AnalysisResult;
+import org.tindalos.principle.domain.core.AnalysisResult;
 import org.tindalos.principle.domain.analyzers.acd.ComponentDependenciesResult;
 import org.tindalos.principle.domain.analyzers.adp.ADPResult;
 import org.tindalos.principle.domain.analyzers.layering.LayerViolationsResult;

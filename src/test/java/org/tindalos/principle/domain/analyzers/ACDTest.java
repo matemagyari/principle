@@ -10,7 +10,7 @@ import org.tindalos.principle.domain.analyzers.acd.ComponentDependenciesResult;
 import org.tindalos.principle.domain.constraints.ACD;
 import org.tindalos.principle.domain.constraints.Constraints;
 import org.tindalos.principle.domain.constraints.PackageCouplingConstraints;
-import org.tindalos.principle.domain.core.AnalysisPlan;
+import org.tindalos.principle.domain.AnalysisPlan;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
 import org.tindalos.principle.infrastructure.JDependBasedPackageListBuilder;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;

@@ -11,6 +11,7 @@ import org.tindalos.principle.domain.analyzers.sdp.SDPResult;
 import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult;
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmodulesBlueprintAnalysisResult;
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyViolationsResult;
+import org.tindalos.principle.domain.core.AnalysisResult;
 
 /**
  * Immutable aggregate wrapper around analysis results.

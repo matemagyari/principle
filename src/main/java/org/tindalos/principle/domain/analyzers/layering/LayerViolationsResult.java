@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.analyzers.layering;
 
-import org.tindalos.principle.domain.AnalysisResult;
+import org.tindalos.principle.domain.core.AnalysisResult;
 
 import java.util.List;
 

@@ -13,7 +13,7 @@ import org.tindalos.principle.domain.constraints.ACD;
 import org.tindalos.principle.domain.constraints.Constraints;
 import org.tindalos.principle.domain.constraints.PackageCouplingConstraints;
 import org.tindalos.principle.domain.constraints.RACD;
-import org.tindalos.principle.domain.core.AnalysisPlan;
+import org.tindalos.principle.domain.AnalysisPlan;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageStructureBuilder;
 import org.tindalos.principle.domain.core.packages.PackageMetrics;

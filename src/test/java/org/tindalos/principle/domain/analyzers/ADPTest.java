@@ -12,7 +12,7 @@ import org.tindalos.principle.domain.analyzers.adp.ADPResult;
 import org.tindalos.principle.domain.constraints.ADP;
 import org.tindalos.principle.domain.constraints.Constraints;
 import org.tindalos.principle.domain.constraints.PackageCouplingConstraints;
-import org.tindalos.principle.domain.core.AnalysisPlan;
+import org.tindalos.principle.domain.AnalysisPlan;
 import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.packages.PackageReference;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;

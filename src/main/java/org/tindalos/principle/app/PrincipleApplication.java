@@ -6,7 +6,7 @@ import org.tindalos.principle.domain.AggregatedAnalysisResults;
 import org.tindalos.principle.domain.AnalysisInput;
 import org.tindalos.principle.domain.AnalysisRunner;
 import org.tindalos.principle.domain.constraints.exception.InvalidConfigurationException;
-import org.tindalos.principle.domain.core.AnalysisPlan;
+import org.tindalos.principle.domain.AnalysisPlan;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
 
 /**

@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.analyzers.adp;
 
-import org.tindalos.principle.domain.AnalysisResult;
+import org.tindalos.principle.domain.core.AnalysisResult;
 import org.tindalos.principle.domain.constraints.ADP;
 import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.packages.PackageReference;

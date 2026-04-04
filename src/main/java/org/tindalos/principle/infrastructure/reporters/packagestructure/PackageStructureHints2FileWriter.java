@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Comparator;
 
-import org.tindalos.principle.domain.analyzers.structure.Node;
+import org.tindalos.principle.domain.core.Node;
 import org.tindalos.principle.domain.analyzers.structure.NodeGroup;
 import org.tindalos.principle.domain.analyzers.structure.Peninsula;
 import org.tindalos.principle.domain.analyzers.structure.SubgraphDecomposition;

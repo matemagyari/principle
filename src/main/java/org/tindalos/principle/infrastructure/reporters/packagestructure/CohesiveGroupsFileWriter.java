@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.tindalos.principle.domain.analyzers.structure.Node;
+import org.tindalos.principle.domain.core.Node;
 import org.tindalos.principle.domain.analyzers.structure.NodeGroup;
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager;
 import static org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionConstants.COHESIVE_GROUPS_FILE_NAME;

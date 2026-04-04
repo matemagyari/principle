@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.tindalos.principle.domain.AnalysisInput;
-import org.tindalos.principle.domain.AnalysisResult;
 import org.tindalos.principle.domain.analyzers.Analyzer;
 import org.tindalos.principle.domain.constraints.Constraints;
-import org.tindalos.principle.domain.core.AnalysisPlan;
+import org.tindalos.principle.domain.AnalysisPlan;
 import org.tindalos.principle.domain.core.packages.PackageReference;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
 

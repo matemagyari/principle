@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.tindalos.principle.domain.analyzers.structure.Node;
+import org.tindalos.principle.domain.core.Node;
 import org.tindalos.principle.infrastructure.BuildPathUtils;
 
 /**

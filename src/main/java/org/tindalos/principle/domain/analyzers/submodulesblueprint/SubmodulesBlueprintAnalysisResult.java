@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.analyzers.submodulesblueprint;
 
-import org.tindalos.principle.domain.AnalysisResult;
+import org.tindalos.principle.domain.core.AnalysisResult;
 
 import java.util.Map;
 import java.util.Set;

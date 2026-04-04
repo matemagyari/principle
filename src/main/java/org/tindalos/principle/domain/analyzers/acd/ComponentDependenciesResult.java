@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.analyzers.acd;
 
-import org.tindalos.principle.domain.AnalysisResult;
+import org.tindalos.principle.domain.core.AnalysisResult;
 import org.tindalos.principle.domain.constraints.DoubleExpectation;
 import org.tindalos.principle.domain.constraints.PackageCouplingConstraints;
 

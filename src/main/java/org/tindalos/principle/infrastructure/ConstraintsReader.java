@@ -4,7 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmoduleDefinitions;
 import org.tindalos.principle.domain.constraints.*;
 import org.tindalos.principle.domain.constraints.exception.InvalidConfigurationException;
-import org.tindalos.principle.domain.core.AnalysisPlan;
+import org.tindalos.principle.domain.AnalysisPlan;
 import org.tindalos.principle.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider;
 import org.yaml.snakeyaml.Yaml;
 

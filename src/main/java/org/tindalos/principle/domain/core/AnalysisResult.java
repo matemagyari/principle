@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain;
+package org.tindalos.principle.domain.core;
 
 /**
  * Represents the result of an architectural analysis.

@@ -1,6 +1,6 @@
 package org.tindalos.principle.domain.analyzers.sap;
 
-import org.tindalos.principle.domain.AnalysisResult;
+import org.tindalos.principle.domain.core.AnalysisResult;
 import org.tindalos.principle.domain.constraints.SAP;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
 

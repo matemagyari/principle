@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import org.tindalos.principle.domain.analyzers.structure.CohesiveGroupsDiscoveryModule;
 import org.tindalos.principle.domain.analyzers.structure.Graph;
-import org.tindalos.principle.domain.analyzers.structure.Node;
+import org.tindalos.principle.domain.core.Node;
 import org.tindalos.principle.domain.analyzers.structure.NodeGroup;
 import org.tindalos.principle.domain.analyzers.structure.PackageCohesionModule;
 import org.tindalos.principle.domain.analyzers.structure.PackageStructureHints1Finder;

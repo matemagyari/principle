@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.analyzers.structure;
+package org.tindalos.principle.domain.core;
 
 import java.util.Set;
 

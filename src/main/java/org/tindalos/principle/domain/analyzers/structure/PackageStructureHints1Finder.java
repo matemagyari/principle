@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.tindalos.principle.domain.analyzers.structure.GroupingResult.LabelledSource;
+import org.tindalos.principle.domain.core.Node;
 
 /**
  * Creates source-based grouping hints from a class dependency graph.

@@ -1,7 +1,7 @@
 package org.tindalos.principle.domain.analyzers;
 
 import org.tindalos.principle.domain.AnalysisInput;
-import org.tindalos.principle.domain.AnalysisResult;
+import org.tindalos.principle.domain.core.AnalysisResult;
 import org.tindalos.principle.domain.constraints.Constraints;
 
 /**

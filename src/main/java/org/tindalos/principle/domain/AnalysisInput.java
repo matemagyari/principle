@@ -5,12 +5,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import org.tindalos.principle.domain.analyzers.structure.Node;
+import org.tindalos.principle.domain.core.Node;
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmoduleDefinitions;
 import org.tindalos.principle.domain.constraints.Layering;
 import org.tindalos.principle.domain.constraints.PackageCouplingConstraints;
 import org.tindalos.principle.domain.constraints.ThirdParty;
-import org.tindalos.principle.domain.core.AnalysisPlan;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
 
 /**
