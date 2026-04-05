@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.resultprocessing.reporter;
+package org.tindalos.principle.app.reporters;
 
 import java.util.Collections;
 import java.util.List;
@@ -7,9 +7,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
-import org.tindalos.principle.app.reporters.AnalysisResultsReporter;
 import org.tindalos.principle.domain.AggregatedAnalysisResults;
-import org.tindalos.principle.domain.core.AnalysisResult;
 import org.tindalos.principle.domain.analyzers.adp.ADPResult;
 import org.tindalos.principle.domain.analyzers.layering.LayerReference;
 import org.tindalos.principle.domain.analyzers.layering.LayerViolationsResult;
@@ -17,6 +15,7 @@ import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult;
 import org.tindalos.principle.domain.analyzers.structure.GroupingResult;
 import org.tindalos.principle.domain.analyzers.structure.SubgraphDecomposition;
 import org.tindalos.principle.domain.constraints.ADP;
+import org.tindalos.principle.domain.core.AnalysisResult;
 import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.packages.PackageReference;
 import org.tindalos.principle.infrastructure.reporters.YAMLADPAnalysisResultReporter;
