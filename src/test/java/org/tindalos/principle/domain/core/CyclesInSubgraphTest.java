@@ -44,7 +44,7 @@ public class CyclesInSubgraphTest {
         PackageReference refB = new PackageReference("org.example.b");
         Cycle cycle = new Cycle(List.of(refA, refB));
 
-        cyclesInSubgraph.add(cycle);
+        cyclesInSubgraph = cyclesInSubgraph.withAddedCycle(cycle);
 
         var cycles = cyclesInSubgraph.cycles();
         assertEquals(1, cycles.size());
@@ -61,8 +61,8 @@ public class CyclesInSubgraphTest {
         Cycle cycle1 = new Cycle(List.of(refA, refB));
         Cycle cycle2 = new Cycle(List.of(refC, refB));
 
-        cyclesInSubgraph.add(cycle1);
-        cyclesInSubgraph.add(cycle2);
+        cyclesInSubgraph = cyclesInSubgraph.withAddedCycle(cycle1)
+            .withAddedCycle(cycle2);
 
         var cycles = cyclesInSubgraph.cycles();
         assertEquals(1, cycles.size());
@@ -79,8 +79,8 @@ public class CyclesInSubgraphTest {
         Cycle cycle1 = new Cycle(List.of(refA, refB));
         Cycle cycle2 = new Cycle(List.of(refB, refC));
 
-        cyclesInSubgraph.add(cycle1);
-        cyclesInSubgraph.add(cycle2);
+        cyclesInSubgraph = cyclesInSubgraph.withAddedCycle(cycle1)
+            .withAddedCycle(cycle2);
 
         var cycles = cyclesInSubgraph.cycles();
         assertEquals(2, cycles.size());
@@ -94,8 +94,8 @@ public class CyclesInSubgraphTest {
         PackageReference refB = new PackageReference("org.example.b");
         Cycle cycle = new Cycle(List.of(refA, refB));
 
-        cyclesInSubgraph.add(cycle);
-        cyclesInSubgraph.add(cycle);
+        cyclesInSubgraph = cyclesInSubgraph.withAddedCycle(cycle)
+            .withAddedCycle(cycle);
 
         var cycles = cyclesInSubgraph.cycles();
         assertEquals(1, cycles.size());
@@ -104,7 +104,7 @@ public class CyclesInSubgraphTest {
 
     @Test
     public void rememberPackageAsInvestigated_addsPackage() {
-        cyclesInSubgraph.rememberPackageAsInvestigated(packageA);
+        cyclesInSubgraph = cyclesInSubgraph.withInvestigatedPackage(packageA);
 
         var packages = cyclesInSubgraph.investigatedPackages();
         assertEquals(1, packages.size());
@@ -113,9 +113,9 @@ public class CyclesInSubgraphTest {
 
     @Test
     public void rememberMultiplePackages_tracksAllDistinctPackages() {
-        cyclesInSubgraph.rememberPackageAsInvestigated(packageA);
-        cyclesInSubgraph.rememberPackageAsInvestigated(packageB);
-        cyclesInSubgraph.rememberPackageAsInvestigated(packageC);
+        cyclesInSubgraph = cyclesInSubgraph.withInvestigatedPackage(packageA)
+            .withInvestigatedPackage(packageB)
+            .withInvestigatedPackage(packageC);
 
         var packages = cyclesInSubgraph.investigatedPackages();
         assertEquals(3, packages.size());
@@ -129,7 +129,7 @@ public class CyclesInSubgraphTest {
         PackageReference refB = new PackageReference("org.example.b");
         Cycle cycle = new Cycle(List.of(new PackageReference("org.example.a"), refB));
 
-        cyclesInSubgraph.add(cycle);
+        cyclesInSubgraph = cyclesInSubgraph.withAddedCycle(cycle);
 
         assertFalse(cyclesInSubgraph.isBreakingPoint(packageB));
     }
@@ -140,7 +140,7 @@ public class CyclesInSubgraphTest {
 
         for (int index = 1; index <= 6; index++) {
             PackageReference refOther = new PackageReference("org.example.other" + index);
-            cyclesInSubgraph.add(new Cycle(List.of(refOther, refB)));
+            cyclesInSubgraph = cyclesInSubgraph.withAddedCycle(new Cycle(List.of(refOther, refB)));
         }
 
         assertTrue(cyclesInSubgraph.isBreakingPoint(packageB));
@@ -152,14 +152,14 @@ public class CyclesInSubgraphTest {
         PackageReference refB = new PackageReference("org.example.b");
         PackageReference refC = new PackageReference("org.example.c");
 
-        cyclesInSubgraph.add(new Cycle(List.of(refA, refB)));
-        cyclesInSubgraph.rememberPackageAsInvestigated(packageA);
+        cyclesInSubgraph = cyclesInSubgraph.withAddedCycle(new Cycle(List.of(refA, refB)))
+            .withInvestigatedPackage(packageA);
 
-        CyclesInSubgraph other = CyclesInSubgraph.empty();
-        other.add(new Cycle(List.of(refB, refC)));
-        other.rememberPackageAsInvestigated(packageB);
+        CyclesInSubgraph other = CyclesInSubgraph.empty()
+            .withAddedCycle(new Cycle(List.of(refB, refC)))
+            .withInvestigatedPackage(packageB);
 
-        cyclesInSubgraph.mergeIn(other);
+        cyclesInSubgraph = cyclesInSubgraph.mergedWith(other);
 
         assertEquals(2, cyclesInSubgraph.cycles().size());
         assertEquals(2, cyclesInSubgraph.investigatedPackages().size());
@@ -171,8 +171,8 @@ public class CyclesInSubgraphTest {
     public void toString_containsKeySections() {
         PackageReference refA = new PackageReference("org.example.a");
         PackageReference refB = new PackageReference("org.example.b");
-        cyclesInSubgraph.add(new Cycle(List.of(refA, refB)));
-        cyclesInSubgraph.rememberPackageAsInvestigated(packageA);
+        cyclesInSubgraph = cyclesInSubgraph.withAddedCycle(new Cycle(List.of(refA, refB)))
+            .withInvestigatedPackage(packageA);
 
         String value = cyclesInSubgraph.toString();
 

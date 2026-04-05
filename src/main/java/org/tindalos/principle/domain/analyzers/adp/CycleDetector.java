@@ -1,18 +1,15 @@
 package org.tindalos.principle.domain.analyzers.adp;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.tindalos.principle.domain.plan.AnalysisInput;
 import org.tindalos.principle.domain.analyzers.Analyzer;
 import org.tindalos.principle.domain.constraints.Constraints;
-import org.tindalos.principle.domain.core.Cycle;
+import org.tindalos.principle.domain.core.CyclesInSubgraph;
 import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageStructureBuilder;
 import org.tindalos.principle.domain.core.packages.PackageReference;
@@ -34,26 +31,48 @@ public final class CycleDetector implements Analyzer {
     public ADPResult analyze(AnalysisInput input) {
         var basePackage = packageStructureBuilder.build(toPackages(input.packages()), input.analysisPlan().basePackage());
         var references = basePackage.toMap();
-        Map<PackageReference, Set<Cycle>> cycles = new HashMap<>();
-
+        
         var sortedByAfferents = references.values().stream()
-                .sorted(Comparator.comparingInt(pkg -> pkg.getMetrics().afferentCoupling()))
-            .collect(Collectors.toCollection(ArrayList::new));
+            .sorted(Comparator.comparingInt(pkg -> pkg.getMetrics().afferentCoupling()))
+            .collect(java.util.stream.Collectors.toCollection(java.util.ArrayList::new));
 
         if (basePackage.getMetrics().afferentCoupling() == 0) {
             sortedByAfferents.removeIf(basePackage::equals);
         }
-
-        while (!sortedByAfferents.isEmpty()) {
-            var cyclesInSubgraph = sortedByAfferents.get(0).detectCycles(references);
-            cycles = new HashMap<>(cyclesInSubgraph.mergeBreakingPoints2(cycles));
-
-            var investigatedPackages = cyclesInSubgraph.investigatedPackages();
-            sortedByAfferents.removeIf(investigatedPackages::contains);
-        }
+        
+        var cycles = analyzeCyclesRecursively(
+            sortedByAfferents, 
+            references, 
+            new CyclesInSubgraph(Set.of(), Map.of()));
 
         var expectation = input.packageCouplingExpectations().flatMap(packageCoupling -> packageCoupling.adp()).get();
-        return new ADPResult(cycles, expectation);
+        return new ADPResult(cycles.cycles(), expectation);
+    }
+
+    /**
+     * Recursively analyzes cycles by processing packages in sorted order,
+     * removing already-investigated packages to avoid redundant analysis.
+     */
+    private CyclesInSubgraph analyzeCyclesRecursively(
+        java.util.List<Package> remaining,
+        Map<PackageReference, Package> references,
+        CyclesInSubgraph accumulator) {
+        
+        if (remaining.isEmpty()) {
+            return accumulator;
+        }
+        
+        var current = remaining.get(0);
+        var cyclesInSubgraph = current.detectCycles(references);
+        var updatedAccumulator = accumulator.mergedWith(cyclesInSubgraph);
+        
+        var investigatedPackages = cyclesInSubgraph.investigatedPackages();
+        var next = remaining.stream()
+            .skip(1)
+            .filter(pkg -> !investigatedPackages.contains(pkg))
+            .toList();
+        
+        return analyzeCyclesRecursively(new java.util.ArrayList<>(next), references, updatedAccumulator);
     }
 
     @Override

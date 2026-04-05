@@ -69,7 +69,7 @@ public abstract class Package implements PackageWithMetrics {
     public CyclesInSubgraph detectCycles(Map<PackageReference, Package> packageReferences) {
         return detectCyclesOnThePathFromHere(
             TraversedPackages.empty(),
-            new CyclesInSubgraph(),
+            new CyclesInSubgraph(Set.of(), Map.of()),
             Collections.unmodifiableMap(packageReferences));
     }
 
@@ -192,24 +192,26 @@ public abstract class Package implements PackageWithMetrics {
             return foundCycles;
         }
 
-        foundCycles.rememberPackageAsInvestigated(this);
+        var cyclesAfterInvestigating = foundCycles.withInvestigatedPackage(this);
 
         Optional<List<PackageReference>> cycleCandidateEndingHere = findCycleCandidateEndingHere(traversedPackages);
         if (cycleCandidateEndingHere.isPresent()) {
             if (isValid(cycleCandidateEndingHere.get())) {
-                foundCycles.add(new Cycle(cycleCandidateEndingHere.get()));
+                return cyclesAfterInvestigating.withAddedCycle(new Cycle(cycleCandidateEndingHere.get()));
             }
+            return cyclesAfterInvestigating;
         } else {
-            accumulatedDirectlyReferredPackages(packageReferences).forEach(referencedPackage -> {
+            // Process all referred packages sequentially, threading the accumulator through
+            var accumulatedCycles = cyclesAfterInvestigating;
+            for (var referencedPackage : accumulatedDirectlyReferredPackages(packageReferences)) {
                 CyclesInSubgraph cyclesInSubgraph = referencedPackage.detectCyclesOnThePathFromHere(
                     traversedPackages.add(reference),
-                    foundCycles,
+                    accumulatedCycles,
                     packageReferences);
-                foundCycles.mergeIn(cyclesInSubgraph);
-            });
+                accumulatedCycles = accumulatedCycles.mergedWith(cyclesInSubgraph);
+            }
+            return accumulatedCycles;
         }
-
-        return foundCycles;
     }
 
     private Optional<List<PackageReference>> findCycleCandidateEndingHere(TraversedPackages traversedPackages) {

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.tindalos.principle.domain.plan.AnalysisInput;
@@ -41,17 +42,15 @@ public final class ThirdPartyAnalyzer implements Analyzer {
                 continue;
             }
 
-            var layer = layerOf(layers, basePackage, aPackage);
-            if (layer == null) {
-                continue;
-            }
-
-            for (var referencedPackage : aPackage.getOwnExternalPackageReferences()) {
-                if (outOfAllowedComponents(layer, layers, barriers, referencedPackage)) {
-                    violations.computeIfAbsent(aPackage.reference(), ignored -> new HashSet<>())
-                            .add(referencedPackage);
-                }
-            }
+            layerOf(layers, basePackage, aPackage)
+                .ifPresent(layer -> {
+                    for (var referencedPackage : aPackage.getOwnExternalPackageReferences()) {
+                        if (outOfAllowedComponents(layer, layers, barriers, referencedPackage)) {
+                            violations.computeIfAbsent(aPackage.reference(), ignored -> new HashSet<>())
+                                    .add(referencedPackage);
+                        }
+                    }
+                });
         }
 
         var immutableViolations = new HashMap<PackageReference, Set<PackageReference>>();
@@ -85,13 +84,10 @@ public final class ThirdPartyAnalyzer implements Analyzer {
                 .noneMatch(referencedPackage::startsWith);
     }
 
-    private String layerOf(List<String> layers, String basePackage, PackageWithMetrics aPackage) {
-        for (var layer : layers) {
-            if (aPackage.reference().startsWith(basePackage + "." + layer)) {
-                return layer;
-            }
-        }
-        return null;
+    private Optional<String> layerOf(List<String> layers, String basePackage, PackageWithMetrics aPackage) {
+        return layers.stream()
+            .filter(layer -> aPackage.reference().startsWith(basePackage + "." + layer))
+            .findFirst();
     }
 
     private boolean underBasePackage(PackageReference aPackage, String basePackage) {
