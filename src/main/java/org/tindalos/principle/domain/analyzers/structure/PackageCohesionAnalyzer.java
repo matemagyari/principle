@@ -40,8 +40,8 @@ public final class PackageCohesionAnalyzer implements Analyzer {
     }
 
     @Override
-    public boolean isEnabled(Constraints expectations) {
-        return expectations.packageCoupling().isPresent()
-                && expectations.packageCoupling().get().grouping().isPresent();
+    public boolean isEnabled(Constraints constraints) {
+        return constraints.packageCoupling().isPresent()
+                && constraints.packageCoupling().get().grouping().isPresent();
     }
 }

@@ -32,14 +32,14 @@ public class ConstraintsReader {
 
         var rootPackage = (String) yamlObject.get("root_package");
 
-        var checksYaml = getYamlStructure(yamlObject, "checks").orElseThrow();
+        var constraintsYaml = getYamlStructure(yamlObject, "constraints").orElseThrow();
 
-        var modules = parseModules(checksYaml, rootPackage, fileLocation);
-        var packageCoupling = parsePackageCoupling(checksYaml, yamlObject);
+        var modules = parseModules(constraintsYaml, rootPackage, fileLocation);
+        var packageCoupling = parsePackageCoupling(constraintsYaml, yamlObject);
 
         var constraints = new Constraints(
-                getYamlStructure(checksYaml, "layering").map(ConstraintsReader::toLayering),
-                getYamlStructure(checksYaml, "third_party_restrictions").map(ConstraintsReader::toThirdParty),
+                getYamlStructure(constraintsYaml, "layering").map(ConstraintsReader::toLayering),
+                getYamlStructure(constraintsYaml, "third_party_restrictions").map(ConstraintsReader::toThirdParty),
                 Optional.of(packageCoupling),
                 modules);
 
@@ -47,10 +47,10 @@ public class ConstraintsReader {
     }
 
     @SuppressWarnings("unchecked")
-    private static Optional<SubmoduleDefinitions> parseModules(Map<String, Object> checksYaml,
+    private static Optional<SubmoduleDefinitions> parseModules(Map<String, Object> constraintsYaml,
                                                                 String rootPackage,
                                                                 String fileLocation) {
-        return getYamlStructure(checksYaml, "modules")
+        return getYamlStructure(constraintsYaml, "modules")
                 .filter(m -> m.containsKey("module-definitions"))
                 .map(modules -> {
                     var threshold = Optional.ofNullable((Integer) modules.get("violation_threshold")).orElse(0);
@@ -60,11 +60,11 @@ public class ConstraintsReader {
     }
 
     @SuppressWarnings("unchecked")
-    private static PackageCouplingConstraints parsePackageCoupling(Map<String, Object> checksYaml,
+    private static PackageCouplingConstraints parsePackageCoupling(Map<String, Object> constraintsYaml,
                                                                     Map<String, Object> yamlObject) {
         var builder = PackageCouplingConstraints.builder();
 
-        getYamlStructure(checksYaml, "package_coupling").ifPresent(pc -> {
+        getYamlStructure(constraintsYaml, "package_coupling").ifPresent(pc -> {
             Optional.ofNullable(pc.get("acd_threshold"))
                     .map(t -> new RACD((Double) t))
                     .ifPresent(builder::racd);

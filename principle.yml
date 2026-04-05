@@ -1,6 +1,6 @@
 root_package: org.tindalos.principle
 
-checks:
+constraints:
 
   layering:
     layers: [infrastructure, app, domain]

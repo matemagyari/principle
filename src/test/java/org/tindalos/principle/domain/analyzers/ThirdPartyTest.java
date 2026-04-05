@@ -66,9 +66,9 @@ public class ThirdPartyTest {
     }
 
     private AnalysisResult run(String basePackage, ThirdParty thirdParty) {
-        var expectations = Constraints.builder().layering(layering()).thirdParty(thirdParty).build();
+        var constraints = Constraints.builder().layering(layering()).thirdParty(thirdParty).build();
         var packageList = new JDependBasedPackageListBuilder(basePackage).build();
-        var plan = new AnalysisPlan(expectations, basePackage);
+        var plan = new AnalysisPlan(constraints, basePackage);
         var packageInputs = packageList.stream().map(p -> (PackageWithMetrics) p).toList();
         var result = analysisRunner.run(new AnalysisInput(packageInputs, Set.of(), plan));
         return result.get(1);

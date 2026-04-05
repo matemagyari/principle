@@ -4,7 +4,7 @@ import java.util.Optional;
 
 /**
  * Represents package coupling metrics and constraints for architecture analysis.
- * Encapsulates various coupling-related checks including ADP, SDP, SAP, ACD, RACD, NCCD,
+ * Encapsulates various coupling-related constraints including ADP, SDP, SAP, ACD, RACD, NCCD,
  * and package structure grouping analysis.
  */
 public record PackageCouplingConstraints(

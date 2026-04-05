@@ -22,7 +22,7 @@ public class LayeringTest {
 
     private AnalysisPlan plan;
     private final AnalysisRunner analysisRunner = PoorMansDIContainer.buildAnalysisRunner();
-    private final Constraints expectations = prepareChecks();
+    private final Constraints constraints = prepareChecks();
 
     @Before
     public void setup() {
@@ -49,7 +49,7 @@ public class LayeringTest {
     }
 
     private void init(String basePackage) {
-        plan = new AnalysisPlan(expectations, basePackage);
+        plan = new AnalysisPlan(constraints, basePackage);
     }
 
     private List<LayerReference> run(String basePackage) {

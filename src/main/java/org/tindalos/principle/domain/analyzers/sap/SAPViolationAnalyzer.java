@@ -34,8 +34,8 @@ public final class SAPViolationAnalyzer implements Analyzer {
     }
 
     @Override
-    public boolean isEnabled(Constraints expectations) {
-        return expectations.packageCoupling().isPresent()
-                && expectations.packageCoupling().get().sap().isPresent();
+    public boolean isEnabled(Constraints constraints) {
+        return constraints.packageCoupling().isPresent()
+                && constraints.packageCoupling().get().sap().isPresent();
     }
 }

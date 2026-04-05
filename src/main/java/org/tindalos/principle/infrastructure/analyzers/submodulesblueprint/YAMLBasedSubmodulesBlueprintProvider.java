@@ -23,10 +23,10 @@ public class YAMLBasedSubmodulesBlueprintProvider implements SubmodulesBlueprint
     public SubmoduleDefinitions readSubmoduleDefinitions(String basePackageName, String submodulesDefinitionLocation, int violationThreshold) {
         String yaml = getYAML(submodulesDefinitionLocation);
         Map<String, Object> yamlObject = (Map<String, Object>) new Yaml().load(yaml);
-        Map<String, Object> checks = (Map<String, Object>) yamlObject.get("checks");
+        Map<String, Object> constraints = (Map<String, Object>) yamlObject.get("constraints");
 
         @SuppressWarnings("unchecked")
-        Map<String, Object> modules = (Map<String, Object>) checks.get("modules");
+        Map<String, Object> modules = (Map<String, Object>) constraints.get("modules");
 
         Map<SubmoduleId, SubmoduleDefinition> submoduleDefinitionMap = buildSubmoduleDefinitions(basePackageName, modules);
         addDependencies(modules, submoduleDefinitionMap);

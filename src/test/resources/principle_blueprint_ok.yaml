@@ -1,4 +1,4 @@
-checks:
+constraints:
 
   modules:
   # Map submodules to packages

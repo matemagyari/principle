@@ -5,7 +5,7 @@ import org.tindalos.principle.domain.constraints.submodules.SubmoduleDefinitions
 import java.util.Optional;
 
 /**
- * Represents the complete set of architectural checks and constraints to be analyzed.
+ * Represents the complete set of architectural constraints and constraints to be analyzed.
  * Contains configuration for layering, third-party dependencies, package coupling metrics,
  * and submodule definitions validation.
  */

@@ -1,7 +1,7 @@
 package org.tindalos.principle.domain.constraints.exception;
 
 /**
- * Exception thrown when the configuration for architectural checks is invalid.
+ * Exception thrown when the configuration for architectural constraints is invalid.
  * This includes issues like invalid layer definitions, missing required fields,
  * or contradictory constraint specifications.
  */

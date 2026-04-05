@@ -23,8 +23,8 @@ public class LayerViolationAnalyzer implements Analyzer {
     }
 
     @Override
-    public boolean isEnabled(Constraints expectations) {
-        return expectations.layering().isPresent();
+    public boolean isEnabled(Constraints constraints) {
+        return constraints.layering().isPresent();
     }
 
     private List<LayerReference> findViolations(List<PackageWithMetrics> packages, AnalysisPlan configuration) {

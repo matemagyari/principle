@@ -25,7 +25,7 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
     @Before
     public void setUp() {
         String yaml = """
-            checks:
+            constraints:
               modules:
                 module-definitions:
                   MOD1: [domain.mod1, app.mod1]
@@ -102,7 +102,7 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
     @Test(expected = InvalidBlueprintDefinitionException.class)
     public void readSubmoduleDefinitions_missingModuleDefinitions_throwsException() {
         String yaml = """
-            checks:
+            constraints:
               modules:
                 module-dependencies:
                   MOD1: [MOD2]
@@ -116,7 +116,7 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
     @Test(expected = InvalidBlueprintDefinitionException.class)
     public void readSubmoduleDefinitions_missingModuleDependencies_throwsException() {
         String yaml = """
-            checks:
+            constraints:
               modules:
                 module-definitions:
                   MOD1: [domain.mod1, app.mod1]
@@ -131,7 +131,7 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
     @Test(expected = OverlappingSubmoduleDefinitionsException.class)
     public void readSubmoduleDefinitions_overlappingModules_throwsOnOverlapCheck() {
         String yaml = """
-            checks:
+            constraints:
               modules:
                 module-definitions:
                   MOD1: [domain]

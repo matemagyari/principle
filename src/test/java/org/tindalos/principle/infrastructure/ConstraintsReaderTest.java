@@ -32,7 +32,7 @@ public class ConstraintsReaderTest {
     public void rootPackage_isParsed() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
-                checks:
+                constraints:
                   package_coupling:
                     cyclic_dependencies_threshold: 0
                 """);
@@ -46,7 +46,7 @@ public class ConstraintsReaderTest {
     public void layering_isParsed() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
-                checks:
+                constraints:
                   layering:
                     layers: [infrastructure, app, domain]
                     violation_threshold: 2
@@ -63,7 +63,7 @@ public class ConstraintsReaderTest {
     public void layering_defaultThresholdIsZero() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
-                checks:
+                constraints:
                   layering:
                     layers: [a, b]
                 """);
@@ -77,7 +77,7 @@ public class ConstraintsReaderTest {
     public void noLayering_layeringIsAbsent() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
-                checks:
+                constraints:
                   package_coupling:
                     cyclic_dependencies_threshold: 0
                 """);
@@ -91,7 +91,7 @@ public class ConstraintsReaderTest {
     public void packageCoupling_adpThreshold_isParsed() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
-                checks:
+                constraints:
                   package_coupling:
                     cyclic_dependencies_threshold: 5
                 """);
@@ -107,7 +107,7 @@ public class ConstraintsReaderTest {
     public void packageCoupling_racdThreshold_isParsed() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
-                checks:
+                constraints:
                   package_coupling:
                     acd_threshold: 0.35
                 """);
@@ -123,7 +123,7 @@ public class ConstraintsReaderTest {
     public void structureAnalysisEnabled_groupingIsPresent() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
-                checks:
+                constraints:
                   package_coupling:
                     cyclic_dependencies_threshold: 0
                 structure_analysis_enabled: true
@@ -138,7 +138,7 @@ public class ConstraintsReaderTest {
     public void structureAnalysisDisabled_groupingIsAbsent() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
-                checks:
+                constraints:
                   package_coupling:
                     cyclic_dependencies_threshold: 0
                 structure_analysis_enabled: false
@@ -153,7 +153,7 @@ public class ConstraintsReaderTest {
     public void thirdPartyRestrictions_isParsed() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
-                checks:
+                constraints:
                   package_coupling:
                     cyclic_dependencies_threshold: 0
                   third_party_restrictions:
@@ -181,7 +181,7 @@ public class ConstraintsReaderTest {
     public void noThirdPartyRestrictions_thirdPartyIsAbsent() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
-                checks:
+                constraints:
                   package_coupling:
                     cyclic_dependencies_threshold: 0
                 """);
@@ -195,7 +195,7 @@ public class ConstraintsReaderTest {
     public void modules_withThreeModuleDefinitions_isParsed() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
-                checks:
+                constraints:
                   modules:
                     module-definitions:
                       AUTH: [domain.auth, app.auth]
@@ -217,7 +217,7 @@ public class ConstraintsReaderTest {
     public void modules_withDefinitions_isParsed() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
-                checks:
+                constraints:
                   package_coupling:
                     cyclic_dependencies_threshold: 0
                   modules:
@@ -238,7 +238,7 @@ public class ConstraintsReaderTest {
     public void modules_defaultThresholdIsZero() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
-                checks:
+                constraints:
                   package_coupling:
                     cyclic_dependencies_threshold: 0
                   modules:
@@ -257,7 +257,7 @@ public class ConstraintsReaderTest {
     public void noModules_submoduleDefinitionsIsAbsent() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
-                checks:
+                constraints:
                   package_coupling:
                     cyclic_dependencies_threshold: 0
                 """);
@@ -271,7 +271,7 @@ public class ConstraintsReaderTest {
     public void modules_withoutDefinitions_submoduleDefinitionsIsAbsent() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
-                checks:
+                constraints:
                   package_coupling:
                     cyclic_dependencies_threshold: 0
                   modules:
@@ -292,7 +292,7 @@ public class ConstraintsReaderTest {
     public void fullConfig_isParsedCorrectly() throws Exception {
         var path = writeTempYaml("""
                 root_package: org.example.myapp
-                checks:
+                constraints:
                   layering:
                     layers: [infrastructure, app, domain]
                     violation_threshold: 0

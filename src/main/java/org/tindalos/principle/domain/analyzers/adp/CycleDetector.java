@@ -57,9 +57,9 @@ public final class CycleDetector implements Analyzer {
     }
 
     @Override
-    public boolean isEnabled(Constraints expectations) {
-        return expectations.packageCoupling().isPresent()
-                && expectations.packageCoupling().get().adp().isPresent();
+    public boolean isEnabled(Constraints constraints) {
+        return constraints.packageCoupling().isPresent()
+                && constraints.packageCoupling().get().adp().isPresent();
     }
 
     private List<Package> toPackages(List<PackageWithMetrics> packages) {

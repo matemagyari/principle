@@ -37,7 +37,7 @@ public class SDPViolationAnalyzer implements Analyzer {
     }
 
     @Override
-    public boolean isEnabled(Constraints expectations) {
-        return expectations.packageCoupling().isPresent() && expectations.packageCoupling().get().sdp().isPresent();
+    public boolean isEnabled(Constraints constraints) {
+        return constraints.packageCoupling().isPresent() && constraints.packageCoupling().get().sdp().isPresent();
     }
 }

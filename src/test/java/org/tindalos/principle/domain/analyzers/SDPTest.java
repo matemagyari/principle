@@ -21,7 +21,7 @@ public class SDPTest {
 
     private AnalysisPlan plan;
     private final AnalysisRunner analysisRunner = PoorMansDIContainer.buildAnalysisRunner();
-    private final Constraints checks = Constraints.builder()
+    private final Constraints constraints = Constraints.builder()
             .packageCoupling(PackageCouplingConstraints.builder().sdp(new SDP(0)).build())
             .build();
 
@@ -37,7 +37,7 @@ public class SDPTest {
     }
 
     private void init(String basePackage) {
-        plan = new AnalysisPlan(checks, basePackage);
+        plan = new AnalysisPlan(constraints, basePackage);
     }
 
     private SDPResult run(String basePackage) {

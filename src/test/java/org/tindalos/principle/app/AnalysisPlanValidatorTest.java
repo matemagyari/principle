@@ -60,10 +60,10 @@ public class AnalysisPlanValidatorTest {
 
     @Test
     public void noThirdParty_isValid() {
-        Constraints expectations = Constraints.builder()
+        Constraints constraints = Constraints.builder()
                 .layering(aLayering)
                 .build();
-        AnalysisPlan plan = new AnalysisPlan(expectations, basePackage);
+        AnalysisPlan plan = new AnalysisPlan(constraints, basePackage);
 
         ValidationResult result = testObj.validate(plan);
 
@@ -122,11 +122,11 @@ public class AnalysisPlanValidatorTest {
 
     private AnalysisPlan config(List<Barrier> barriers) {
         ThirdParty aThirdParty = new ThirdParty(barriers, 0);
-        Constraints expectations = Constraints.builder()
+        Constraints constraints = Constraints.builder()
                 .layering(aLayering)
                 .thirdParty(aThirdParty)
                 .build();
-        return new AnalysisPlan(expectations, basePackage);
+        return new AnalysisPlan(constraints, basePackage);
     }
 }
 

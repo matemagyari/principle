@@ -44,12 +44,12 @@ public class ComponentDependenciesAnalyzer implements Analyzer {
                 cumulatedComponentDependency,
                 relevantPackages.size(),
                 checkInput.packageCouplingExpectations()
-                        .orElseThrow(() -> new NoSuchElementException("Package coupling expectations are required")));
+                        .orElseThrow(() -> new NoSuchElementException("Package coupling constraints are required")));
     }
 
     @Override
-    public boolean isEnabled(Constraints expectations) {
-        return expectations.packageCoupling()
+    public boolean isEnabled(Constraints constraints) {
+        return constraints.packageCoupling()
                 .map(pc -> pc.acd().isPresent() || pc.racd().isPresent() || pc.nccd().isPresent())
                 .orElse(false);
     }

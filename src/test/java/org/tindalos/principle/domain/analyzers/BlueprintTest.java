@@ -81,7 +81,7 @@ public class BlueprintTest {
     }
 
     @Test
-    public void expectationsFailedWhenViolationsExceedThreshold() {
+    public void constraintsFailedWhenViolationsExceedThreshold() {
         var result = run("org.tindalos.principletest.submodulesblueprint", "src/test/resources/principle_blueprint_test.yaml");
         assertTrue("Expectations should fail when violations exceed threshold", result.constraintViolated());
     }
