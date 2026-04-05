@@ -1,28 +1,21 @@
 package org.tindalos.principle.domain.analyzers;
 
-import java.util.List;
-import java.util.Set;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.tindalos.principle.domain.plan.AnalysisInput;
-import org.tindalos.principle.domain.AnalysisRunner;
 import org.tindalos.principle.domain.analyzers.layering.LayerReference;
-import org.tindalos.principle.domain.analyzers.layering.LayerViolationsResult;
 import org.tindalos.principle.domain.constraints.Constraints;
 import org.tindalos.principle.domain.constraints.Layering;
 import org.tindalos.principle.domain.plan.AnalysisPlan;
-import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
-import org.tindalos.principle.infrastructure.service.jdepend.JDependBasedPackageListBuilder;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
+
+import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 
 public class LayeringTest {
 
-    private AnalysisPlan plan;
-    private final AnalysisRunner analysisRunner = PoorMansDIContainer.buildAnalysisRunner();
-    private final Constraints constraints = prepareChecks();
+    private final Constraints constraints = Constraints.builder().layering(new Layering(List.of("infrastructure", "app", "domain"), 0)).build();
 
     @Before
     public void setup() {
@@ -48,20 +41,10 @@ public class LayeringTest {
         assertEquals(expected, Set.copyOf(result));
     }
 
-    private void init(String basePackage) {
-        plan = new AnalysisPlan(constraints, basePackage);
-    }
-
     private List<LayerReference> run(String basePackage) {
-        init(basePackage);
-        var packageList = new JDependBasedPackageListBuilder(basePackage).build();
-        var packageInputs = packageList.stream().map(p -> (PackageWithMetrics) p).toList();
-        var result = analysisRunner.run(new AnalysisInput(packageInputs, Set.of(), plan));
-        assertEquals(1, result.size());
-        return ((LayerViolationsResult) result.get(0)).violations();
+        var plan = new AnalysisPlan(constraints, basePackage);
+        var analyzer = PoorMansDIContainer.buildAnalyzer(basePackage);
+        return analyzer.analyze(plan).layerViolationsResult().get().violations();
     }
 
-    private static Constraints prepareChecks() {
-        return Constraints.builder().layering(new Layering(List.of("infrastructure", "app", "domain"), 0)).build();
-    }
 }

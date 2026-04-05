@@ -1,31 +1,24 @@
 package org.tindalos.principle.domain.analyzers;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.tindalos.principle.domain.plan.AnalysisInput;
-import org.tindalos.principle.domain.AnalysisRunner;
-import org.tindalos.principle.domain.analyzers.adp.ADPResult;
 import org.tindalos.principle.domain.constraints.ADP;
 import org.tindalos.principle.domain.constraints.Constraints;
 import org.tindalos.principle.domain.constraints.PackageCouplingConstraints;
-import org.tindalos.principle.domain.plan.AnalysisPlan;
 import org.tindalos.principle.domain.core.Cycle;
 import org.tindalos.principle.domain.core.packages.PackageReference;
-import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
-import org.tindalos.principle.infrastructure.service.jdepend.JDependBasedPackageListBuilder;
+import org.tindalos.principle.domain.plan.AnalysisPlan;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
-import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.MyJDependRunner;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 
 public class ADPTest {
 
     private AnalysisPlan plan;
-    private final AnalysisRunner analysisRunner = PoorMansDIContainer.buildAnalysisRunner();
     private final Constraints constraints = Constraints.builder()
             .packageCoupling(PackageCouplingConstraints.builder().adp(new ADP()).build())
             .build();
@@ -96,19 +89,10 @@ public class ADPTest {
         assertEquals(expected, result);
     }
 
-    private void init(String basePackage) {
-        plan = new AnalysisPlan(constraints, basePackage);
-    }
-
     private Map<PackageReference, Set<Cycle>> run(String basePackage) {
-        init(basePackage);
-        var packageList = new JDependBasedPackageListBuilder(basePackage).build();
-        var classes = MyJDependRunner.createNodesOfClasses(basePackage);
-        var packageInputs = packageList.stream().map(p -> (PackageWithMetrics) p).toList();
-
-        var result = analysisRunner.run(new AnalysisInput(packageInputs, classes, plan));
-        assertEquals(1, result.size());
-        return ((ADPResult) result.get(0)).cyclesByBreakingPoints();
+        var plan = new AnalysisPlan(constraints, basePackage);
+        var analyzer = PoorMansDIContainer.buildAnalyzer(basePackage);
+        return analyzer.analyze(plan).adpResult().get().cyclesByBreakingPoints();
     }
 
     private static PackageReference ref(String reference) {

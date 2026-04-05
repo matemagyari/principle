@@ -1,20 +1,18 @@
 package org.tindalos.principle.domain.analyzers;
 
-import java.util.Map;
-import java.util.Set;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.tindalos.principle.domain.plan.AnalysisInput;
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.Submodule;
-import org.tindalos.principle.domain.constraints.submodules.SubmoduleId;
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmodulesBlueprintAnalysisResult;
 import org.tindalos.principle.domain.constraints.Constraints;
-import org.tindalos.principle.domain.plan.AnalysisPlan;
+import org.tindalos.principle.domain.constraints.submodules.SubmoduleId;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
-import org.tindalos.principle.infrastructure.service.jdepend.JDependBasedPackageListBuilder;
+import org.tindalos.principle.domain.plan.AnalysisPlan;
 import org.tindalos.principle.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider;
 import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
+
+import java.util.Map;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -122,16 +120,8 @@ public class BlueprintTest {
         var provider = new YAMLBasedSubmodulesBlueprintProvider();
         var submoduleDefinitions = provider.readSubmoduleDefinitions(basePackage, location, 0);
         var constraints = Constraints.builder().submoduleDefinitions(submoduleDefinitions).build();
-        var packageList = new JDependBasedPackageListBuilder(basePackage).build();
-        var analysisRunner = PoorMansDIContainer.buildAnalysisRunner();
         var plan = new AnalysisPlan(constraints, basePackage);
-
-        var packageInputs = packageList.stream()
-                .map(p -> (PackageWithMetrics) p)
-                .toList();
-
-        var result = analysisRunner.run(new AnalysisInput(packageInputs, Set.of(), plan));
-        assertEquals(1, result.size());
-        return (SubmodulesBlueprintAnalysisResult) result.get(0);
+        var analyzer = PoorMansDIContainer.buildAnalyzer(basePackage);
+        return analyzer.analyze(plan).submodulesBlueprintAnalysisResult().get();
     }
 }
