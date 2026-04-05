@@ -1,4 +1,4 @@
-package org.tindalos.principle.domain.core;
+package org.tindalos.principle.infrastructure.core;
 
 import java.util.Comparator;
 import java.util.List;

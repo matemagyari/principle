@@ -1,21 +1,22 @@
 package org.tindalos.principle.infrastructure.service.jdepend;
 
-import jdepend.framework.JDepend;
-import jdepend.framework.JavaPackage;
-import jdepend.framework.PackageFilter;
-import org.tindalos.principle.infrastructure.core.BuildPathUtils;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+
+import org.tindalos.principle.infrastructure.core.BuildPathUtils;
+
+import jdepend.framework.JDepend;
+import jdepend.framework.JavaPackage;
+import jdepend.framework.PackageFilter;
 
 /**
  * Runs JDepend analysis on compiled class directories, returning the analyzed packages.
  * Supports both Maven and Gradle build output layouts via {@link BuildPathUtils}.
  */
-public class JDependRunner {
+final class JDependRunner {
 
-    public static List<JavaPackage> preparePackages(String rootPackage, boolean filterEnabled) {
+    static List<JavaPackage> preparePackages(String rootPackage, boolean filterEnabled) {
         try {
             var jDepend = new JDepend();
             var directory = BuildPathUtils.getClassesDirectoryForPackage(rootPackage)
@@ -30,7 +31,6 @@ public class JDependRunner {
 
             jDepend.addPackage(rootPackage);
 
-            @SuppressWarnings("unchecked")
             var packages = (Collection<JavaPackage>) jDepend.analyze();
             return List.copyOf(packages);
         } catch (IOException e) {

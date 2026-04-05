@@ -6,19 +6,19 @@ import com.google.common.collect.Sets;
 
 import jdepend.framework.JavaClass;
 
-public class MyJavaClass extends JavaClass {
+class MyJavaClass extends JavaClass {
 
-    private Set<String> dependencies = Sets.newHashSet();
+    private final Set<String> dependencies = Sets.newHashSet();
 
-    public MyJavaClass(String name) {
+    MyJavaClass(String name) {
         super(name);
     }
 
-    public void addDependency(String classPath) {
+    void addDependency(String classPath) {
         dependencies.add(classPath);
     }
 
-    public Set<String> getDependencies() {
+    Set<String> getDependencies() {
         return Sets.newHashSet(dependencies);
     }
 }

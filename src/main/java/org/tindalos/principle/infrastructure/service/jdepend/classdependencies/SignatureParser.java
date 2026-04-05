@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * see https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.3.4
  */
-public class SignatureParser {
+final class SignatureParser {
     private static final char EOF = (char) -1;
     private static final String NOT_IDENT = ".;[/<>:";
     private static final String BASE_TYPES = "BCDFIJSZ";
@@ -15,7 +15,7 @@ public class SignatureParser {
     private final String s;
     private char c;
     private int pos;
-    private Set<String> packages = new HashSet<String>();
+    private final Set<String> packages = new HashSet<>();
 
     private SignatureParser(String s) {
         this.s = s;
@@ -23,26 +23,26 @@ public class SignatureParser {
         read();
     }
 
-    public static SignatureParser parseClassSignature(String signature) {
+    static SignatureParser parseClassSignature(String signature) {
         final SignatureParser parser = new SignatureParser(signature);
         parser.classSignature();
         return parser;
     }
 
 
-    public static SignatureParser parseFieldSignature(String signature) {
+    static SignatureParser parseFieldSignature(String signature) {
         final SignatureParser parser = new SignatureParser(signature);
         parser.fieldTypeSignature(false);
         return parser;
     }
 
-    public static SignatureParser parseMethodSignature(String signature) {
+    static SignatureParser parseMethodSignature(String signature) {
         final SignatureParser parser = new SignatureParser(signature);
         parser.methodTypeSignature();
         return parser;
     }
 
-    public Collection<String> getPackages() {
+    Collection<String> getPackages() {
         return packages;
     }
 
@@ -95,14 +95,14 @@ public class SignatureParser {
 
     private void classTypeSignature() {
         read('L');
-        final StringBuilder s = new StringBuilder();
-        s.append(classIdentifier());
+        final StringBuilder signature = new StringBuilder();
+        signature.append(classIdentifier());
         while (!is('$') && !is(';') && !is('<')) {
-            s.append('.');
+            signature.append('.');
             read();
-            s.append(classIdentifier());
+            signature.append(classIdentifier());
         }
-        String id = s.toString();
+        String id = signature.toString();
         if (is('$')) {
             id = classTypeSignatureSuffix(id);
         } else {
@@ -110,8 +110,8 @@ public class SignatureParser {
                 typeArguments();
             }
         }
-        final int pos = id.lastIndexOf('.');
-        packages.add(pos < 0 ? id : id.substring(0, pos));
+        final int packageSeparator = id.lastIndexOf('.');
+        packages.add(packageSeparator < 0 ? id : id.substring(0, packageSeparator));
         read(';');
     }
 
@@ -212,12 +212,12 @@ public class SignatureParser {
     }
 
     private String identifier(boolean clazz) {
-        StringBuilder s = new StringBuilder();
+        StringBuilder identifierBuilder = new StringBuilder();
         do {
-            s.append(c);
+            identifierBuilder.append(c);
             read();
         } while (NOT_IDENT.indexOf(c) < 0 && (!clazz || c != '$'));
-        return s.toString();
+        return identifierBuilder.toString();
     }
 
     private boolean is(char ch) {

@@ -1,6 +1,7 @@
-package org.tindalos.principle.domain.analyzers;
+package org.tindalos.principle;
 
 import org.junit.Test;
+import org.tindalos.principle.domain.analyzers.TestFixture;
 import org.tindalos.principle.domain.analyzers.adp.ADPResult;
 import org.tindalos.principle.domain.analyzers.layering.LayerViolationsResult;
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmodulesBlueprintAnalysisResult;
@@ -14,16 +15,15 @@ import java.util.Optional;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
-public class ApplicationModuleTest {
+public class SelfTest {
 
     @Test
     public void checkItself() {
         ReportsDirectoryManager.ensureReportsDirectoryExists();
-        var basePackage = "org.tindalos.principle";
 
         TestFixture.setLogger();
 
-        var application = PoorMansDIContainer.buildAnalyzer(basePackage);
+        var application = PoorMansDIContainer.buildAnalyzer("org.tindalos.principle");
 
         var reporter = PoorMansDIContainer.createReporter();
 

@@ -6,8 +6,8 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.tindalos.principle.domain.core.Node;
 import org.tindalos.principle.domain.analyzers.structure.NodeGroup;
+import org.tindalos.principle.domain.core.Node;
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager;
 import static org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionConstants.COHESIVE_GROUPS_FILE_NAME;
 import static org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionConstants.GENERAL_DESCRIPTION;
@@ -18,7 +18,7 @@ import static org.tindalos.principle.infrastructure.reporters.packagestructure.P
 /**
  * Writes cohesive node groups to a plain text report.
  */
-public final class CohesiveGroupsFileWriter {
+final class CohesiveGroupsFileWriter {
 
     private static final String COHESIVE_GROUPS_DESCRIPTION =
             "The following groups are formed as a result of cohesion analysis";
@@ -28,7 +28,7 @@ public final class CohesiveGroupsFileWriter {
     private CohesiveGroupsFileWriter() {
     }
 
-    public static void writeToFile(Set<NodeGroup> cohesiveNodeGroups) {
+        static void writeToFile(Set<NodeGroup> cohesiveNodeGroups) {
         try (var printWriter = new PrintWriter(ReportsDirectoryManager.reportDirectoryPath + "/" + COHESIVE_GROUPS_FILE_NAME)) {
             printWriter
                     .append(GENERAL_DESCRIPTION)

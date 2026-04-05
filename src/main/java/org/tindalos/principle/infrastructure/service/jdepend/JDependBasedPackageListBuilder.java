@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.tindalos.principle.app.PackageListBuilder;
 import org.tindalos.principle.domain.core.Package;
-import org.tindalos.principle.domain.core.PackageSorterModule;
+import org.tindalos.principle.infrastructure.core.PackageSorterModule;
 
 import jdepend.framework.JavaPackage;
 

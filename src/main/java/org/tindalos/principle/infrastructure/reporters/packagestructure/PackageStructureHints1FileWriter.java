@@ -14,7 +14,7 @@ import static org.tindalos.principle.infrastructure.reporters.packagestructure.P
 /**
  * Writes source-based package structure hints to a plain text report.
  */
-public final class PackageStructureHints1FileWriter {
+final class PackageStructureHints1FileWriter {
 
     private static final String DESCRIPTION = """
             In the first step the algorithm finds the "source" vertices in the graph, the classes that are on the top of the dependency hierarchy (no other class refers to them).The second step groups all the classes in the graph based on sources as upstream dependencies. This gives some good package structuring hints. E.g.
@@ -29,7 +29,7 @@ public final class PackageStructureHints1FileWriter {
     private PackageStructureHints1FileWriter() {
     }
 
-    public static void writeToFile(GroupingResult grouping) {
+        static void writeToFile(GroupingResult grouping) {
         try (var printWriter = new PrintWriter(ReportsDirectoryManager.reportDirectoryPath + "/" + PACKAGE_STRUCTURE_HINTS1_FILE_NAME)) {
             printWriter
                     .append(GRAPH_DESCRIPTION)

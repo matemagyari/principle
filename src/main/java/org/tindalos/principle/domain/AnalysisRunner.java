@@ -3,6 +3,7 @@ package org.tindalos.principle.domain;
 import org.tindalos.principle.domain.core.AnalysisResult;
 import org.tindalos.principle.domain.plan.AnalysisInput;
 import org.tindalos.principle.domain.plan.AnalysisInput;
+import org.tindalos.principle.domain.plan.AnalysisInput;
 
 import java.util.List;
 

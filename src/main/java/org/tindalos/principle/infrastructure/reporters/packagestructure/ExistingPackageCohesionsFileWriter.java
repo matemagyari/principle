@@ -16,7 +16,7 @@ import static org.tindalos.principle.infrastructure.reporters.packagestructure.P
 /**
  * Writes package cohesion analysis results for existing packages to a plain text report.
  */
-public final class ExistingPackageCohesionsFileWriter {
+final class ExistingPackageCohesionsFileWriter {
 
     private static final String COLUMNS = """
             | Cohesion | Size | Upstream/Downstream dependencies of package | Internal/External edges of the classes |
@@ -34,7 +34,7 @@ public final class ExistingPackageCohesionsFileWriter {
     private ExistingPackageCohesionsFileWriter() {
     }
 
-    public static void writeToFile(CohesionAnalysisResult result) {
+        static void writeToFile(CohesionAnalysisResult result) {
         try (var printWriter = new PrintWriter(ReportsDirectoryManager.reportDirectoryPath + "/" + PACKAGE_COHESIONS_FILE_NAME)) {
             printWriter
                     .append(GENERAL_DESCRIPTION)

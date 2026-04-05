@@ -1,37 +1,38 @@
 package org.tindalos.principle.infrastructure.service.jdepend;
 
-import jdepend.framework.JavaPackage;
-import org.tindalos.principle.domain.core.Package;
-import org.tindalos.principle.domain.core.packages.PackageMetrics;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
+import org.tindalos.principle.domain.core.Package;
+import org.tindalos.principle.domain.core.packages.PackageMetrics;
+
+import jdepend.framework.JavaPackage;
+
 /**
  * Creates domain packages from JDepend package models for a configured root package.
  */
-public final class PackageFactory {
+final class PackageFactory {
 
     private final String rootPackage;
 
-    public PackageFactory(String rootPackage) {
+    PackageFactory(String rootPackage) {
         this.rootPackage = Objects.requireNonNull(rootPackage, "rootPackage");
     }
 
-    public boolean isRelevant(JavaPackage javaPackage) {
+    boolean isRelevant(JavaPackage javaPackage) {
         return javaPackage.getName().startsWith(rootPackage);
     }
 
-    public Package transform(JavaPackage javaPackage) {
+    Package transform(JavaPackage javaPackage) {
         var metrics = calculateMetrics(javaPackage);
         Predicate<JavaPackage> relevanceCheck = this::isRelevant;
         return new LazyLoadingJDependBasedPackage(javaPackage, metrics, this, relevanceCheck);
     }
 
-    public Function<List<JavaPackage>, List<Package>> buildPackageListFactory(UnaryOperator<List<Package>> sortByName) {
+    Function<List<JavaPackage>, List<Package>> buildPackageListFactory(UnaryOperator<List<Package>> sortByName) {
         Objects.requireNonNull(sortByName, "sortByName");
         return analyzedPackages -> sortByName.apply(
                 analyzedPackages.stream()
