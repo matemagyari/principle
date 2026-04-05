@@ -1,6 +1,5 @@
 package org.tindalos.principle.domain.constraints;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -13,7 +12,7 @@ import java.util.List;
 public record Barrier(String layer, List<String> components) {
 
     public Barrier {
-        components = Collections.unmodifiableList(components);
+        components = List.copyOf(components);
     }
 
     public static Barrier of(String layer) {

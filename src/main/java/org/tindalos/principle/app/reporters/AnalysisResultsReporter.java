@@ -1,6 +1,6 @@
 package org.tindalos.principle.app.reporters;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.tindalos.principle.domain.AggregatedAnalysisResults;
 import org.tindalos.principle.domain.core.AnalysisResult;
@@ -47,10 +47,9 @@ public final class AnalysisResultsReporter {
     }
 
     public String summary(AggregatedAnalysisResults results) {
-        var reports = new ArrayList<ReportWithViolation>(results.results().size());
-        for (var result : results.results()) {
-            reports.add(toReport(result));
-        }
+        var reports = results.results().stream()
+            .map(this::toReport)
+            .toList();
 
         var success = !results.hasViolations();
         var violatedNames = reports.stream()
@@ -66,16 +65,12 @@ public final class AnalysisResultsReporter {
                 ? "All constraints satisfied"
                 : "Constraints violated in: " + String.join(", ", violatedNames);
 
-        String resultsYaml;
-        if (reports.isEmpty()) {
-            resultsYaml = "  results: {}\n";
-        } else {
-            var builder = new StringBuilder("  results:\n");
-            for (var report : reports) {
-                builder.append(indentYaml(report.report()));
-            }
-            resultsYaml = builder.toString();
-        }
+        var resultsYaml = reports.isEmpty()
+            ? "  results: {}\n"
+            : "  results:\n" + reports.stream()
+                .map(ReportWithViolation::report)
+                .map(this::indentYaml)
+                .collect(java.util.stream.Collectors.joining());
 
         return """
                 analysis_summary:
@@ -86,16 +81,13 @@ public final class AnalysisResultsReporter {
 
     private String indentYaml(String yaml) {
         var lines = yaml.split("\\n", -1);
-        var length = lines.length;
-        if (length > 0 && lines[length - 1].isEmpty()) {
-            length -= 1;
+        var limit = lines.length;
+        if (limit > 0 && lines[limit - 1].isEmpty()) {
+            limit -= 1;
         }
-
-        var builder = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            builder.append("    ").append(lines[i]).append("\n");
-        }
-        return builder.toString();
+        return Arrays.stream(lines, 0, limit)
+            .map(line -> "    " + line + "\n")
+            .collect(java.util.stream.Collectors.joining());
     }
 
     private ReportWithViolation toReport(AnalysisResult result) {
