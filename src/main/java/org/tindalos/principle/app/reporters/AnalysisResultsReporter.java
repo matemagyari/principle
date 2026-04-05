@@ -3,7 +3,6 @@ package org.tindalos.principle.app.reporters;
 import java.util.Arrays;
 
 import org.tindalos.principle.domain.AggregatedAnalysisResults;
-import org.tindalos.principle.domain.core.AnalysisResult;
 import org.tindalos.principle.domain.analyzers.acd.ComponentDependenciesResult;
 import org.tindalos.principle.domain.analyzers.adp.ADPResult;
 import org.tindalos.principle.domain.analyzers.layering.LayerViolationsResult;
@@ -12,6 +11,7 @@ import org.tindalos.principle.domain.analyzers.sdp.SDPResult;
 import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult;
 import org.tindalos.principle.domain.analyzers.submodulesblueprint.SubmodulesBlueprintAnalysisResult;
 import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyViolationsResult;
+import org.tindalos.principle.domain.core.AnalysisResult;
 
 /**
  * Aggregates individual analysis reports into a single YAML summary.
