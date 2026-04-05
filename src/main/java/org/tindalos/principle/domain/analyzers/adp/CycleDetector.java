@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import org.tindalos.principle.domain.plan.AnalysisInput;
 import org.tindalos.principle.domain.analyzers.Analyzer;
 import org.tindalos.principle.domain.constraints.Constraints;
 import org.tindalos.principle.domain.core.CyclesInSubgraph;
@@ -14,6 +13,7 @@ import org.tindalos.principle.domain.core.Package;
 import org.tindalos.principle.domain.core.PackageStructureBuilder;
 import org.tindalos.principle.domain.core.packages.PackageReference;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
+import org.tindalos.principle.domain.plan.AnalysisInput;
 
 /**
  * Analyzer for the Acyclic Dependency Principle (ADP).

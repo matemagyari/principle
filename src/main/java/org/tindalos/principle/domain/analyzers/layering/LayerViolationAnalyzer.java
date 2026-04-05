@@ -1,14 +1,12 @@
 package org.tindalos.principle.domain.analyzers.layering;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.tindalos.principle.domain.plan.AnalysisInput;
 import org.tindalos.principle.domain.analyzers.Analyzer;
 import org.tindalos.principle.domain.constraints.Constraints;
-import org.tindalos.principle.domain.plan.AnalysisPlan;
-import org.tindalos.principle.domain.core.packages.PackageReference;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
+import org.tindalos.principle.domain.plan.AnalysisInput;
+import org.tindalos.principle.domain.plan.AnalysisPlan;
 
 /**
  * Detects violations of configured architectural layering constraints.
@@ -32,38 +30,25 @@ public class LayerViolationAnalyzer implements Analyzer {
                 .map(layer -> configuration.basePackage() + "." + layer)
                 .toList();
 
-        var violations = new ArrayList<LayerReference>();
-        for (var aPackage : packages) {
-            if (!aPackage.reference().startsWith(configuration.basePackage())) {
-                continue;
-            }
-
-            String layer = null;
-            for (var candidate : layers) {
-                if (aPackage.reference().startsWith(candidate)) {
-                    layer = candidate;
-                    break;
-                }
-            }
-            if (layer == null) {
-                continue;
-            }
-
-            var layerIndex = layers.indexOf(layer);
-            for (PackageReference referencedPackage : aPackage.getOwnPackageReferences()) {
-                if (!referencedPackage.startsWith(configuration.basePackage())) {
-                    continue;
-                }
-
-                for (int i = 0; i < layerIndex; i++) {
-                    var referencedLayer = layers.get(i);
-                    if (referencedPackage.startsWith(referencedLayer)) {
-                        violations.add(new LayerReference(aPackage.reference().name(), referencedPackage.name()));
-                    }
-                }
-            }
-        }
-
-        return violations;
+        return packages.stream()
+            .filter(pkg -> pkg.reference().startsWith(configuration.basePackage()))
+            .flatMap(pkg -> {
+                // Find matching layer for this package
+                var matchingLayer = layers.stream()
+                    .filter(layer -> pkg.reference().startsWith(layer))
+                    .findFirst();
+                
+                return matchingLayer.stream().flatMap(layer -> {
+                    int layerIndex = layers.indexOf(layer);
+                    // Return violations for references to lower layers
+                    return pkg.getOwnPackageReferences().stream()
+                        .filter(ref -> ref.startsWith(configuration.basePackage()))
+                        .filter(ref -> layers.stream()
+                            .limit(layerIndex)
+                            .anyMatch(ref::startsWith))
+                        .map(ref -> new LayerReference(pkg.reference().name(), ref.name()));
+                });
+            })
+            .toList();
     }
 }

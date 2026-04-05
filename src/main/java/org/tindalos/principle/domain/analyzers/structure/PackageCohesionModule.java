@@ -1,11 +1,11 @@
 package org.tindalos.principle.domain.analyzers.structure;
 
-import org.tindalos.principle.domain.core.Node;
-
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.tindalos.principle.domain.core.Node;
 
 /**
  * Utility operations for grouping classes by package and deriving package cohesion inputs.
@@ -54,15 +54,11 @@ public final class PackageCohesionModule {
     }
 
     public static Set<String> getPackageNames(String rootPackage, String packageName) {
-        var result = new HashSet<String>();
-        var current = packageName;
-
-        while (!rootPackage.equals(current)) {
-            result.add(current);
-            current = current.substring(0, current.lastIndexOf('.'));
-        }
-
-        return Set.copyOf(result);
+        return Stream.iterate(
+            packageName,
+            name -> !rootPackage.equals(name),
+            name -> name.substring(0, name.lastIndexOf('.'))
+        ).collect(Collectors.toUnmodifiableSet());
     }
 
     private static Set<Node> findNodesInPackageRecursively(String packageName, Set<Node> nodes) {
