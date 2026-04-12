@@ -26,7 +26,7 @@ public class AnalysisPlanValidatorImpl implements AnalysisPlanValidator {
         }
 
         List<String> layers = layeringOpt.orElseThrow().layers();
-        List<Barrier> barriers = thirdPartyOpt.orElseThrow().barriers();
+        List<Barrier> barriers = thirdPartyOpt.map(thirdParty -> thirdParty.barriers()).orElse(List.of());
 
         // Check if all barrier layers are valid (exist in layering definition)
         List<Barrier> invalidBarriers = barriers.stream()

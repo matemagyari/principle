@@ -26,9 +26,11 @@ public class LayerViolationAnalyzer implements Analyzer {
     }
 
     private List<LayerReference> findViolations(List<PackageWithMetrics> packages, AnalysisPlan configuration) {
-        var layers = configuration.constraints().layering().orElseThrow().layers().stream()
+        var layers = configuration.constraints().layering()
+            .map(layering -> layering.layers().stream()
                 .map(layer -> configuration.basePackage() + "." + layer)
-                .toList();
+                .toList())
+            .orElse(List.of());
 
         return packages.stream()
             .filter(pkg -> pkg.reference().startsWith(configuration.basePackage()))
