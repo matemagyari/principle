@@ -195,23 +195,22 @@ public abstract class Package implements PackageWithMetrics {
         var cyclesAfterInvestigating = foundCycles.withInvestigatedPackage(this);
 
         Optional<List<PackageReference>> cycleCandidateEndingHere = findCycleCandidateEndingHere(traversedPackages);
-        if (cycleCandidateEndingHere.isPresent()) {
-            if (isValid(cycleCandidateEndingHere.get())) {
-                return cyclesAfterInvestigating.withAddedCycle(new Cycle(cycleCandidateEndingHere.get()));
-            }
-            return cyclesAfterInvestigating;
-        } else {
-            // Process all referred packages sequentially, threading the accumulator through
-            var accumulatedCycles = cyclesAfterInvestigating;
-            for (var referencedPackage : accumulatedDirectlyReferredPackages(packageReferences)) {
-                CyclesInSubgraph cyclesInSubgraph = referencedPackage.detectCyclesOnThePathFromHere(
-                    traversedPackages.add(reference),
-                    accumulatedCycles,
-                    packageReferences);
-                accumulatedCycles = accumulatedCycles.mergedWith(cyclesInSubgraph);
-            }
-            return accumulatedCycles;
-        }
+        return cycleCandidateEndingHere
+                .map(candidate -> isValid(candidate)
+                        ? cyclesAfterInvestigating.withAddedCycle(new Cycle(candidate))
+                        : cyclesAfterInvestigating)
+                .orElseGet(() -> {
+                    // Process all referred packages sequentially, threading the accumulator through
+                    var accumulatedCycles = cyclesAfterInvestigating;
+                    for (var referencedPackage : accumulatedDirectlyReferredPackages(packageReferences)) {
+                        CyclesInSubgraph cyclesInSubgraph = referencedPackage.detectCyclesOnThePathFromHere(
+                                traversedPackages.add(reference),
+                                accumulatedCycles,
+                                packageReferences);
+                        accumulatedCycles = accumulatedCycles.mergedWith(cyclesInSubgraph);
+                    }
+                    return accumulatedCycles;
+                });
     }
 
     private Optional<List<PackageReference>> findCycleCandidateEndingHere(TraversedPackages traversedPackages) {

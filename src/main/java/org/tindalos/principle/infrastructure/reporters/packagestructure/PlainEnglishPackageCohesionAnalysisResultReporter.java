@@ -1,7 +1,7 @@
 package org.tindalos.principle.infrastructure.reporters.packagestructure;
 
-import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult;
 import org.tindalos.principle.app.reporters.PackageCohesionAnalysisResultReporter;
+import org.tindalos.principle.domain.analyzers.structure.CohesionAnalysisResult;
 import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager;
 import static org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionConstants.COHESIVE_GROUPS_FILE_NAME;
 import static org.tindalos.principle.infrastructure.reporters.packagestructure.PackageCohesionConstants.PACKAGE_COHESIONS_FILE_NAME;
@@ -24,10 +24,13 @@ public final class PlainEnglishPackageCohesionAnalysisResultReporter implements 
         PackageStructureHints1FileWriter.writeToFile(result.groupingResult());
         PackageStructureHints2FileWriter.writeToFile(result.subgraphDecomposition());
 
-        if (result.cohesiveNodeGroups().isPresent()) {
-            CohesiveGroupsFileWriter.writeToFile(result.cohesiveNodeGroups().get());
-            fileNames += ", " + COHESIVE_GROUPS_FILE_NAME;
-        }
+        var cohesiveGroupsSuffix = result.cohesiveNodeGroups()
+                .map(groups -> {
+                    CohesiveGroupsFileWriter.writeToFile(groups);
+                    return ", " + COHESIVE_GROUPS_FILE_NAME;
+                })
+                .orElse("");
+        fileNames += cohesiveGroupsSuffix;
 
         var sb = new StringBuilder("\n" + SECTION_LINE + "\n");
         sb.append("\tPackage Cohesion Analysis\t");

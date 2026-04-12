@@ -15,7 +15,7 @@ public class LayerViolationAnalyzer implements Analyzer {
 
     @Override
     public LayerViolationsResult analyze(AnalysisInput checkInput) {
-        var layering = checkInput.layeringExpectations().get();
+        var layering = checkInput.layeringExpectations().orElseThrow();
         var layerReferences = findViolations(checkInput.packages(), checkInput.analysisPlan());
         return new LayerViolationsResult(layerReferences, layering.violationThreshold());
     }
@@ -26,7 +26,7 @@ public class LayerViolationAnalyzer implements Analyzer {
     }
 
     private List<LayerReference> findViolations(List<PackageWithMetrics> packages, AnalysisPlan configuration) {
-        var layers = configuration.constraints().layering().get().layers().stream()
+        var layers = configuration.constraints().layering().orElseThrow().layers().stream()
                 .map(layer -> configuration.basePackage() + "." + layer)
                 .toList();
 

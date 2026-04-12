@@ -33,11 +33,11 @@ public class SDPViolationAnalyzer implements Analyzer {
             }
         }
 
-        return new SDPResult(sdpViolations, checkInput.packageCouplingExpectations().flatMap(pc -> pc.sdp()).get());
+        return new SDPResult(sdpViolations, checkInput.packageCouplingExpectations().flatMap(pc -> pc.sdp()).orElseThrow());
     }
 
     @Override
     public boolean isEnabled(Constraints constraints) {
-        return constraints.packageCoupling().isPresent() && constraints.packageCoupling().get().sdp().isPresent();
+        return constraints.packageCoupling().flatMap(pc -> pc.sdp()).isPresent();
     }
 }

@@ -5,10 +5,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.tindalos.principle.domain.constraints.submodules.OverlappingSubmoduleDefinitionsException;
-import org.tindalos.principle.domain.plan.AnalysisInput;
 import org.tindalos.principle.domain.analyzers.Analyzer;
 import org.tindalos.principle.domain.constraints.Constraints;
+import org.tindalos.principle.domain.constraints.submodules.OverlappingSubmoduleDefinitionsException;
+import org.tindalos.principle.domain.plan.AnalysisInput;
 
 /**
  * Analyzes discovered packages against declared submodule blueprint definitions.
@@ -32,7 +32,7 @@ public class SubmodulesBlueprintAnalyzer implements Analyzer {
             return SubmodulesBlueprintAnalysisResult.empty(0);
         }
 
-        var submoduleDefinitions = checkInput.submoduleDefinitions().get();
+        var submoduleDefinitions = checkInput.submoduleDefinitions().orElseThrow();
         try {
             Set<Submodule> submodules = Set.copyOf(submodulesBuilder.build(
                 submoduleDefinitions,

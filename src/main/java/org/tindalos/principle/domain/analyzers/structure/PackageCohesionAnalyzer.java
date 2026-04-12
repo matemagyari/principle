@@ -6,9 +6,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.tindalos.principle.domain.plan.AnalysisInput;
 import org.tindalos.principle.domain.analyzers.Analyzer;
 import org.tindalos.principle.domain.constraints.Constraints;
+import org.tindalos.principle.domain.plan.AnalysisInput;
 
 /**
  * Analyzer producing package cohesion metrics and structure hints.
@@ -41,7 +41,6 @@ public final class PackageCohesionAnalyzer implements Analyzer {
 
     @Override
     public boolean isEnabled(Constraints constraints) {
-        return constraints.packageCoupling().isPresent()
-                && constraints.packageCoupling().get().grouping().isPresent();
+        return constraints.packageCoupling().flatMap(pc -> pc.grouping()).isPresent();
     }
 }

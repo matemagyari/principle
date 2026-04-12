@@ -1,12 +1,10 @@
 package org.tindalos.principle.app;
 
-import org.tindalos.principle.domain.constraints.Barrier;
-import org.tindalos.principle.domain.constraints.ThirdParty;
-import org.tindalos.principle.domain.plan.AnalysisPlan;
-
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
+
+import org.tindalos.principle.domain.constraints.Barrier;
+import org.tindalos.principle.domain.plan.AnalysisPlan;
 
 /**
  * Implementation of AnalysisPlanValidator that validates analysis plan configuration,
@@ -16,18 +14,19 @@ public class AnalysisPlanValidatorImpl implements AnalysisPlanValidator {
 
     @Override
     public ValidationResult validate(AnalysisPlan plan) {
-        Optional<ThirdParty> thirdPartyOpt = plan.constraints().thirdParty();
+        var thirdPartyOpt = plan.constraints().thirdParty();
+        var layeringOpt = plan.constraints().layering();
 
         if (thirdPartyOpt.isEmpty()) {
             return ValidationResult.successful();
         }
 
-        ThirdParty thirdParty = thirdPartyOpt.get();
-        if (plan.constraints().layering().isEmpty()) {
+        if (layeringOpt.isEmpty()) {
             return ValidationResult.failure("Layering must be defined when third-party restrictions are specified");
         }
-        List<String> layers = plan.constraints().layering().get().layers();
-        List<Barrier> barriers = thirdParty.barriers();
+
+        List<String> layers = layeringOpt.orElseThrow().layers();
+        List<Barrier> barriers = thirdPartyOpt.orElseThrow().barriers();
 
         // Check if all barrier layers are valid (exist in layering definition)
         List<Barrier> invalidBarriers = barriers.stream()

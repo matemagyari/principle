@@ -26,14 +26,14 @@ public final class ThirdPartyAnalyzer implements Analyzer {
             return new ThirdPartyViolationsResult(Collections.emptyMap(), null);
         }
 
-        var thirdParty = checkInput.thirdPartyExpectations().get();
+        var thirdParty = checkInput.thirdPartyExpectations().orElseThrow();
         var barriers = thirdParty.barriers();
 
         if (barriers.isEmpty()) {
             return new ThirdPartyViolationsResult(Collections.emptyMap(), thirdParty);
         }
 
-        var layers = checkInput.layeringExpectations().get().layers();
+        var layers = checkInput.layeringExpectations().orElseThrow().layers();
         var basePackage = checkInput.analysisPlan().basePackage();
         var violations = new HashMap<PackageReference, Set<PackageReference>>();
 

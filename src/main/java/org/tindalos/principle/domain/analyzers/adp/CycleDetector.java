@@ -45,7 +45,7 @@ public final class CycleDetector implements Analyzer {
             references, 
             new CyclesInSubgraph(Set.of(), Map.of()));
 
-        var expectation = input.packageCouplingExpectations().flatMap(packageCoupling -> packageCoupling.adp()).get();
+        var expectation = input.packageCouplingExpectations().flatMap(packageCoupling -> packageCoupling.adp()).orElseThrow();
         return new ADPResult(cycles.cycles(), expectation);
     }
 
@@ -77,8 +77,7 @@ public final class CycleDetector implements Analyzer {
 
     @Override
     public boolean isEnabled(Constraints constraints) {
-        return constraints.packageCoupling().isPresent()
-                && constraints.packageCoupling().get().adp().isPresent();
+        return constraints.packageCoupling().flatMap(pc -> pc.adp()).isPresent();
     }
 
     private List<Package> toPackages(List<PackageWithMetrics> packages) {

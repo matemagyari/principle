@@ -25,9 +25,7 @@ public final class YAMLPackageCohesionAnalysisResultReporter implements PackageC
         ExistingPackageCohesionsFileWriter.writeToFile(result);
         PackageStructureHints1FileWriter.writeToFile(result.groupingResult());
         PackageStructureHints2FileWriter.writeToFile(result.subgraphDecomposition());
-        if (result.cohesiveNodeGroups().isPresent()) {
-            CohesiveGroupsFileWriter.writeToFile(result.cohesiveNodeGroups().get());
-        }
+        result.cohesiveNodeGroups().ifPresent(CohesiveGroupsFileWriter::writeToFile);
 
         return """
             package_cohesion_result:

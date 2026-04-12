@@ -3,10 +3,10 @@ package org.tindalos.principle.domain.analyzers.sap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.tindalos.principle.domain.plan.AnalysisInput;
 import org.tindalos.principle.domain.analyzers.Analyzer;
 import org.tindalos.principle.domain.constraints.Constraints;
 import org.tindalos.principle.domain.core.packages.PackageWithMetrics;
+import org.tindalos.principle.domain.plan.AnalysisInput;
 
 /**
  * Analyzer for the Stable Abstractions Principle (SAP).
@@ -15,7 +15,7 @@ public final class SAPViolationAnalyzer implements Analyzer {
 
     @Override
     public SAPResult analyze(AnalysisInput checkInput) {
-        var sapExpectation = checkInput.packageCouplingExpectations().flatMap(pc -> pc.sap()).get();
+        var sapExpectation = checkInput.packageCouplingExpectations().flatMap(pc -> pc.sap()).orElseThrow();
         var maxDistance = sapExpectation.maxDistance();
 
         var outlierPackages = removeRootPackageIfEmpty(checkInput.packages()).stream()
@@ -35,7 +35,6 @@ public final class SAPViolationAnalyzer implements Analyzer {
 
     @Override
     public boolean isEnabled(Constraints constraints) {
-        return constraints.packageCoupling().isPresent()
-                && constraints.packageCoupling().get().sap().isPresent();
+        return constraints.packageCoupling().flatMap(pc -> pc.sap()).isPresent();
     }
 }
