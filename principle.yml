@@ -1,6 +1,6 @@
-root_package: org.tindalos.principle
+root_package: org.tindalos.principle.internal
 
-checks:
+constraints:
 
   layering:
     layers: [infrastructure, app, domain]
@@ -21,18 +21,16 @@ checks:
   modules:
     # Map modules to packages
     module-definitions:
-      EXPECTATIONS: [domain.expectations]
       CORE: [domain.core]
-      AGENTSCORE: [domain.agentscore]
-      AGENTS: [domain.agents, infrastructure.reporters]
-      CHECKER: [domain.checker]
+      CONSTRAINTS: [domain.constraints]
+      ANALYZERS: [domain.analyzers]
+      REPORTERS: [app.reporters]
     # Define dependencies between modules
     module-dependencies:
-      EXPECTATIONS: []
-      CORE: [EXPECTATIONS]
-      AGENTSCORE: [CORE, EXPECTATIONS]
-      AGENTS: [CORE,AGENTSCORE,EXPECTATIONS]
-      CHECKER: [CORE, AGENTSCORE]
+      CORE: []
+      CONSTRAINTS: [CORE]
+      ANALYZERS: [CORE, CONSTRAINTS]
+      REPORTERS: [CORE, ANALYZERS]
 
     violation_threshold: 0
 

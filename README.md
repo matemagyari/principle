@@ -163,13 +163,13 @@ Put the following xml-snippet into the plugins section of your pom.xml
 </plugin>
 ```
 
-An example yaml file (referred as principle.yml above). Each entry under `checks` is optional, also is any entry under `package_coupling`.
+An example yaml file (referred as principle.yml above). Each entry under `constraints` is optional, also is any entry under `package_coupling`.
 
 ```yaml
 #The root package for the analysis. All packages below are relative to this.
 root_package: org.tindalos.principle
 
-checks:
+constraints:
 
   layering:
     #Layers are the packages under root package. The allowed dependencies point from left to right. 
@@ -197,7 +197,7 @@ checks:
   modules:
     # Map modules to packages
     module-definitions:
-      EXPECTATIONS: [domain.expectations]
+      EXPECTATIONS: [domain.constraints]
       CORE: [domain.core]
       AGENTSCORE: [domain.agentscore]
       AGENTS: [domain.agents, infrastructure.reporters]
@@ -229,7 +229,7 @@ Simply put the following xml-snippet into the plugins section of your pom.xml. K
   <configuration>
     <!-- This should the root package of you project -->
     <basePackage>com.your.root</basePackage>
-    <checks>
+    <constraints>
       <!-- The package names (relative to the baseBackage). Only downward dependencies are allowed. -->
       <layering>
         <layers>
@@ -257,8 +257,8 @@ Simply put the following xml-snippet into the plugins section of your pom.xml. K
         </barriers>
         <violationsThreshold>0</violationsThreshold>
       </thirdParty>
-      <!-- Some Constraints are grouped under 'packageCoupling'--> 
-      <packageCoupling>
+      <!-- Some Constraints are grouped under 'packageCouplingConstraints'--> 
+      <packageCouplingConstraints>
         <!-- Acyclic Dependency Principle.The build will break if the number of cycles detected exceeds 4. -->
         <adp>
           <violationsThreshold>4</violationsThreshold>
@@ -278,7 +278,7 @@ Simply put the following xml-snippet into the plugins section of your pom.xml. K
         <racd>
            <threshold>0.15</threshold>
         </racd>
-    </packageCoupling>
+    </packageCouplingConstraints>
     <!-- the vertical slices (sub-modules)-->
     <submodulesBlueprint>
       <!-- the relative path of the YAML file containing the definitions -->
@@ -286,7 +286,7 @@ Simply put the following xml-snippet into the plugins section of your pom.xml. K
       <!-- The build will break if the number of violations detected exceeds 0 -->
       <violationsThreshold>0</violationsThreshold>
     </submodulesBlueprint>
-  </checks>
+  </constraints>
 </configuration>
 <executions>
   <execution>

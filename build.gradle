@@ -1,5 +1,4 @@
 plugins {
-    id 'scala'
     id 'java'
     id 'maven-publish'
     id 'signing'
@@ -9,8 +8,9 @@ group = 'org.tindalos.principle'
 version = '0.38-SNAPSHOT'
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 repositories {
@@ -20,15 +20,7 @@ repositories {
     }
 }
 
-ext {
-    scalaVersion = '2.12.18'
-    scalaCompatVersion = '2.12'
-}
-
 dependencies {
-    // Scala
-    implementation "org.scala-lang:scala-library:${scalaVersion}"
-
     // Maven Plugin API (if still needed for plugin development)
     implementation 'org.apache.maven:maven-plugin-api:3.1.0'
     compileOnly 'org.apache.maven.plugin-tools:maven-plugin-annotations:3.2'
@@ -38,7 +30,6 @@ dependencies {
 
     // Testing
     testImplementation 'junit:junit:4.11'
-    testImplementation 'org.scalatest:scalatest_2.11:2.2.4'
 
     // Utilities
     implementation 'com.google.guava:guava:14.0.1'
@@ -50,18 +41,25 @@ dependencies {
     implementation 'org.specs2:classycle:1.4.1'
 }
 
-tasks.withType(ScalaCompile) {
-    scalaCompileOptions.with {
-        deprecation = true
-        unchecked = true
-    }
-}
-
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
     options.compilerArgs << '-Xlint:unchecked'
     options.compilerArgs << '-Xlint:deprecation'
 }
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+    }
+}
+
 
 // Custom task to run principle checks (if applicable)
 task principleCheck {
@@ -73,7 +71,7 @@ task principleCheck {
 }
 
 // Make principleCheck run after compile
-compileScala.finalizedBy principleCheck
+compileJava.finalizedBy principleCheck
 
 // Publishing configuration
 publishing {
