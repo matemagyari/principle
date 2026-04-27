@@ -25,6 +25,8 @@ nbdist/
 
 # VS Code
 .vscode/
+.metals/
+.bloop/
 
 # macOS
 .DS_Store
