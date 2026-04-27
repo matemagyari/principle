@@ -1,4 +1,4 @@
-root_package: org.tindalos.principle
+root_package: org.tindalos.principle.internal
 
 constraints:
 
