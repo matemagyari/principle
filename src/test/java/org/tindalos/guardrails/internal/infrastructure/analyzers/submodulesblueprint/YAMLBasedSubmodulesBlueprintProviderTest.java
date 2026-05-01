@@ -1,13 +1,11 @@
 package org.tindalos.guardrails.internal.infrastructure.analyzers.submodulesblueprint;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.constraints.submodules.*;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
+import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,12 +17,13 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class YAMLBasedSubmodulesBlueprintProviderTest {
 
-    private String yamlFile;
+  private Map<String, Object> yamlObject;
     private YAMLBasedSubmodulesBlueprintProvider provider;
 
     @BeforeEach
     public void setUp() {
         String yaml = """
+            root_package: com
             constraints:
               modules:
                 module-definitions:
@@ -38,24 +37,18 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
                 violation_threshold: 0
             """;
 
-        yamlFile = createTempYamlFile(yaml);
+            yamlObject = parseYaml(yaml);
         provider = new YAMLBasedSubmodulesBlueprintProvider();
     }
 
-    private String createTempYamlFile(String content) {
-        try {
-            File tempFile = File.createTempFile("test_blueprint_", ".yaml");
-            tempFile.deleteOnExit();
-            FileUtils.writeStringToFile(tempFile, content);
-            return tempFile.getAbsolutePath();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to create temp YAML file", e);
-        }
+          @SuppressWarnings("unchecked")
+          private Map<String, Object> parseYaml(String content) {
+            return (Map<String, Object>) new Yaml().load(content);
     }
 
     @Test
     public void readSubmoduleDefinitions_validYaml_parsesSuccessfully() {
-        SubmoduleDefinitions result = provider.readSubmoduleDefinitions("com", yamlFile, 0);
+      SubmoduleDefinitions result = provider.readSubmoduleDefinitions(yamlObject);
 
         assertNotNull(result, "SubmoduleDefinitions should not be null");
 
@@ -95,14 +88,24 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
     }
 
     @Test
-    public void readSubmoduleDefinitions_missingFile_throwsException() {
+    public void readSubmoduleDefinitions_missingRootPackage_throwsException() {
+      var yamlObject = parseYaml("""
+          constraints:
+            modules:
+              module-definitions:
+                MOD1: [domain.mod1]
+              module-dependencies:
+                MOD1: []
+          """);
+
       assertThrows(InvalidBlueprintDefinitionException.class,
-          () -> provider.readSubmoduleDefinitions("com", "src/test/resources/non_existent_file.yaml", 0));
+          () -> provider.readSubmoduleDefinitions(yamlObject));
     }
 
     @Test
     public void readSubmoduleDefinitions_missingModuleDefinitions_throwsException() {
         String yaml = """
+            root_package: com
             constraints:
               modules:
                 module-dependencies:
@@ -110,14 +113,15 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
                 violation_threshold: 0
             """;
 
-        String yamlFile = createTempYamlFile(yaml);
+        var yamlObject = parseYaml(yaml);
         assertThrows(InvalidBlueprintDefinitionException.class,
-                () -> provider.readSubmoduleDefinitions("com", yamlFile, 0));
+          () -> provider.readSubmoduleDefinitions(yamlObject));
     }
 
       @Test
     public void readSubmoduleDefinitions_missingModuleDependencies_throwsException() {
         String yaml = """
+            root_package: com
             constraints:
               modules:
                 module-definitions:
@@ -126,14 +130,15 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
                 violation_threshold: 0
             """;
 
-        String yamlFile = createTempYamlFile(yaml);
+        var yamlObject = parseYaml(yaml);
         assertThrows(InvalidBlueprintDefinitionException.class,
-                () -> provider.readSubmoduleDefinitions("com", yamlFile, 0));
+          () -> provider.readSubmoduleDefinitions(yamlObject));
     }
 
       @Test
     public void readSubmoduleDefinitions_overlappingModules_throwsOnOverlapCheck() {
         String yaml = """
+            root_package: com
             constraints:
               modules:
                 module-definitions:
@@ -147,8 +152,8 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
 
         assertThrows(OverlappingSubmoduleDefinitionsException.class,
             () -> {
-              String yamlFile = createTempYamlFile(yaml);
-              SubmoduleDefinitions definitions = provider.readSubmoduleDefinitions("com", yamlFile, 0);
+              var yamlObject = parseYaml(yaml);
+              SubmoduleDefinitions definitions = provider.readSubmoduleDefinitions(yamlObject);
               definitions.checkNoOverlaps();
             });
     }

@@ -37,7 +37,7 @@ public class ConstraintsReader {
 
         Map <String, Object> constraintsYaml = getYamlStructure(yamlObject, "constraints").orElseThrow();
 
-        var modules = parseModules(constraintsYaml, rootPackage, fileLocation);
+        var modules = parseModules(yamlObject);
 
         var constraints = new Constraints(
             LAYERING_READER.read(yamlObject),
@@ -48,16 +48,11 @@ public class ConstraintsReader {
         return new AnalysisPlan(constraints, rootPackage);
     }
 
-    private static Optional<SubmoduleDefinitions> parseModules(Map<String, Object> constraintsYaml,
-                                                                String rootPackage,
-                                                                String fileLocation) {
-        return getYamlStructure(constraintsYaml, "modules")
+    private static Optional<SubmoduleDefinitions> parseModules(Map<String, Object> yamlObject) {
+        return getYamlStructure(yamlObject, "constraints")
+                .flatMap(constraintsYaml -> getYamlStructure(constraintsYaml, "modules"))
                 .filter(m -> m.containsKey("module-definitions"))
-                .map(modules -> {
-                    var threshold = Optional.ofNullable((Integer) modules.get("violation_threshold")).orElse(0);
-                    return new YAMLBasedSubmodulesBlueprintProvider()
-                            .readSubmoduleDefinitions(rootPackage, fileLocation, threshold);
-                });
+                .map(modules -> new YAMLBasedSubmodulesBlueprintProvider().readSubmoduleDefinitions(yamlObject));
     }
 
     @SuppressWarnings("unchecked")
