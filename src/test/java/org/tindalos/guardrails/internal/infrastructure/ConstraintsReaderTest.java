@@ -140,7 +140,7 @@ public class ConstraintsReaderTest {
                 constraints:
                   package_coupling:
                     cyclic_dependencies_threshold: 0
-                structure_analysis_enabled: true
+                    structure_analysis_enabled: true
                 """);
 
         var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
@@ -155,7 +155,8 @@ public class ConstraintsReaderTest {
                 constraints:
                   layering:
                     layers: [infrastructure, domain]
-                structure_analysis_enabled: true
+                  package_coupling:
+                    structure_analysis_enabled: true
                 """);
 
         var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
@@ -173,7 +174,7 @@ public class ConstraintsReaderTest {
                 constraints:
                   package_coupling:
                     cyclic_dependencies_threshold: 0
-                structure_analysis_enabled: false
+                    structure_analysis_enabled: false
                 """);
 
         var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
@@ -337,13 +338,13 @@ public class ConstraintsReaderTest {
                   package_coupling:
                     cyclic_dependencies_threshold: 0
                     acd_threshold: 0.5
+                    structure_analysis_enabled: true
                   modules:
                     module-definitions:
                       MOD1: [domain.mod1]
                     module-dependencies:
                       MOD1: []
                     violation_threshold: 0
-                structure_analysis_enabled: true
                 """);
 
         var plan = ConstraintsReader.readFromFile(Optional.of(path));

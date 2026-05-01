@@ -38,7 +38,7 @@ public class ConstraintsReader {
         Map <String, Object> constraintsYaml = getYamlStructure(yamlObject, "constraints").orElseThrow();
 
         var modules = parseModules(constraintsYaml, rootPackage, fileLocation);
-        var packageCoupling = parsePackageCoupling(constraintsYaml, yamlObject);
+        var packageCoupling = PACKAGE_COUPLING_READER.read(constraintsYaml);
 
         var constraints = new Constraints(
                 LAYERING_READER.read(constraintsYaml),
@@ -59,35 +59,6 @@ public class ConstraintsReader {
                     return new YAMLBasedSubmodulesBlueprintProvider()
                             .readSubmoduleDefinitions(rootPackage, fileLocation, threshold);
                 });
-    }
-
-    private static Optional<PackageCouplingConstraints> parsePackageCoupling(Map<String, Object> constraintsYaml,
-                                                                             Map<String, Object> yamlObject) {
-        var grouping = Optional.ofNullable(yamlObject.get("structure_analysis_enabled"))
-                .filter(Boolean.class::isInstance)
-                .map(Boolean.class::cast)
-                .filter(Boolean::booleanValue)
-                .map(ignored -> Grouping.of());
-
-        return PACKAGE_COUPLING_READER.read(constraintsYaml)
-                .map(packageCoupling -> {
-                    if (grouping.isEmpty()) {
-                        return packageCoupling;
-                    }
-
-                    var builder = PackageCouplingConstraints.builder();
-                    packageCoupling.adp().ifPresent(builder::adp);
-                    packageCoupling.sdp().ifPresent(builder::sdp);
-                    packageCoupling.sap().ifPresent(builder::sap);
-                    packageCoupling.acd().ifPresent(builder::acd);
-                    packageCoupling.racd().ifPresent(builder::racd);
-                    packageCoupling.nccd().ifPresent(builder::nccd);
-                    grouping.ifPresent(builder::grouping);
-                    return builder.build();
-                })
-                .or(() -> grouping.map(value -> PackageCouplingConstraints.builder()
-                        .grouping(value)
-                        .build()));
     }
 
     @SuppressWarnings("unchecked")
