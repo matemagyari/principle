@@ -13,17 +13,17 @@ offset: 1320
 uri: file://<WORKSPACE>/src/main/scala/org/tindalos/principle/infrastructure/plugin/DesignQualityCheckerMojo.scala
 text:
 ```scala
-package org.tindalos.principle.infrastructure.plugin
+package org.tindalos.guardrails.infrastructure.plugin
 
 import java.io.IOException
 import org.apache.maven.plugin.{AbstractMojo, MojoFailureException}
 import org.apache.maven.plugins.annotations.{Mojo, Parameter}
-import org.tindalos.principle.domain.plan.AnalysisPlan
-import org.tindalos.principle.domain.constraints.exception.InvalidConfigurationException
-import org.tindalos.principle.infrastructure.core.ConstraintsReader
-import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
-import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
-import org.tindalos.principle.utils.logging.{SimpleLogger, TheLogger}
+import org.tindalos.guardrails.domain.plan.AnalysisPlan
+import org.tindalos.guardrails.domain.constraints.exception.InvalidConfigurationException
+import org.tindalos.guardrails.infrastructure.core.ConstraintsReader
+import org.tindalos.guardrails.infrastructure.di.PoorMansDIContainer
+import org.tindalos.guardrails.infrastructure.reporters.ReportsDirectoryManager
+import org.tindalos.guardrails.utils.logging.{SimpleLogger, TheLogger}
 
 @Mojo(name = "check")
 class DesignQualityCheckerMojo extends AbstractMojo {

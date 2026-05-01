@@ -9,7 +9,7 @@ offset: 821
 uri: file://<WORKSPACE>/src/main/java/org/tindalos/principle/domain/analyzers/submodulesblueprint/OverlappingSubmoduleDefinitionsException.java
 text:
 ```scala
-package org.tindalos.principle.domain.analyzers.submodulesblueprint;
+package org.tindalos.guardrails.domain.analyzers.submodulesblueprint;
 
 import scala.collection.JavaConverters;
 

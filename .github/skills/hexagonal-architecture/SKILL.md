@@ -38,9 +38,9 @@ Not allowed:
 
 ## Package-Level Guidance
 Prefer package naming that makes boundaries explicit:
-- org.tindalos.principle.domain.*
-- org.tindalos.principle.app.*
-- org.tindalos.principle.infrastructure.*
+- org.tindalos.guardrails.domain.*
+- org.tindalos.guardrails.app.*
+- org.tindalos.guardrails.infrastructure.*
 
 Keep cross-layer references intentional and minimal.
 

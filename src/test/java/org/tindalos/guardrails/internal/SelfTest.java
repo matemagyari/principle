@@ -1,0 +1,65 @@
+package org.tindalos.guardrails.internal;
+
+import org.junit.Test;
+import org.tindalos.guardrails.api.AnalysisOutcome;
+import org.tindalos.guardrails.api.AnalysisPlan;
+import org.tindalos.guardrails.api.GuardrailsAnalyzer;
+import org.tindalos.guardrails.internal.domain.analyzers.TestFixture;
+import org.tindalos.guardrails.internal.domain.analyzers.adp.ADPResult;
+import org.tindalos.guardrails.internal.domain.analyzers.layering.LayerViolationsResult;
+import org.tindalos.guardrails.internal.domain.analyzers.submodulesblueprint.SubmodulesBlueprintAnalysisResult;
+import org.tindalos.guardrails.internal.infrastructure.core.ConstraintsReader;
+import org.tindalos.guardrails.internal.infrastructure.di.Guardrails;
+import org.tindalos.guardrails.internal.infrastructure.reporters.ReportsDirectoryManager;
+import org.tindalos.guardrails.internal.utils.logging.TheLogger;
+
+import java.util.Optional;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
+
+public class SelfTest {
+
+    @Test
+    public void checkItselfFromInternalClasses() {
+        ReportsDirectoryManager.ensureReportsDirectoryExists();
+
+        TestFixture.setLogger();
+
+        var application = Guardrails.createAnalyser("org.tindalos.guardrails");
+
+        var reporter = Guardrails.createAggregatedYAMLReporter();
+
+        var plan = ConstraintsReader.readFromFile(Optional.of("guardrails.yml"));
+
+        try {
+            var results = application.analyze(plan);
+            var summary = reporter.summary(results);
+            TheLogger.info(summary);
+            var adpViolated = results.adpResult().map(ADPResult::constraintViolated).orElse(false);
+            var layeringViolated = results.layerViolationsResult().map(LayerViolationsResult::constraintViolated).orElse(false);
+            var submodulesViolated = results.submodulesBlueprintAnalysisResult().map(SubmodulesBlueprintAnalysisResult::constraintViolated).orElse(false);
+            assertFalse(adpViolated);
+            assertFalse(layeringViolated);
+            assertFalse(submodulesViolated);
+        } catch (Exception ex) {
+            TheLogger.error(ex.getMessage());
+            fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void checkItselfFromAPI() {
+        ReportsDirectoryManager.ensureReportsDirectoryExists();
+
+        TestFixture.setLogger();
+
+        AnalysisPlan plan = org.tindalos.guardrails.api.Guardrails.readPlan(Optional.of("guardrails.yml"));
+        GuardrailsAnalyzer analyzer = org.tindalos.guardrails.api.Guardrails.analyzer("org.tindalos.guardrails");
+        AnalysisOutcome outcome = analyzer.analyze(plan);
+
+        assertFalse(outcome.hasViolations());
+        TheLogger.info(outcome.summaryYaml());
+    }
+
+}

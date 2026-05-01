@@ -9,23 +9,23 @@ offset: 1105
 uri: file://<WORKSPACE>/src/test/java/org/tindalos/principle/domain/analyzers/ApplicationModuleTest.java
 text:
 ```scala
-package org.tindalos.principle.domain.analyzers;
+package org.tindalos.guardrails.domain.analyzers;
 
 import org.junit.Test;
-import org.tindalos.principle.domain.AggregatedAnalysisResults;
-import org.tindalos.principle.domain.constraints.ACD;
-import org.tindalos.principle.domain.constraints.ADP;
-import org.tindalos.principle.domain.constraints.Constraints;
-import org.tindalos.principle.domain.constraints.Grouping;
-import org.tindalos.principle.domain.constraints.Layering;
-import org.tindalos.principle.domain.constraints.PackageCouplingConstraints;
-import org.tindalos.principle.domain.constraints.SAP;
-import org.tindalos.principle.domain.constraints.SDP;
-import org.tindalos.principle.domain.plan.AnalysisPlan;
-import org.tindalos.principle.app.reporters.AnalysisResultsReporter;
-import org.tindalos.principle.infrastructure.ConsolePrinter;
-import org.tindalos.principle.infrastructure.di.PoorMansDIContainer;
-import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager;
+import org.tindalos.guardrails.domain.AggregatedAnalysisResults;
+import org.tindalos.guardrails.domain.constraints.ACD;
+import org.tindalos.guardrails.domain.constraints.ADP;
+import org.tindalos.guardrails.domain.constraints.Constraints;
+import org.tindalos.guardrails.domain.constraints.Grouping;
+import org.tindalos.guardrails.domain.constraints.Layering;
+import org.tindalos.guardrails.domain.constraints.PackageCouplingConstraints;
+import org.tindalos.guardrails.domain.constraints.SAP;
+import org.tindalos.guardrails.domain.constraints.SDP;
+import org.tindalos.guardrails.domain.plan.AnalysisPlan;
+import org.tindalos.guardrails.app.reporters.AnalysisResultsReporter;
+import org.tindalos.guardrails.infrastructure.ConsolePrinter;
+import org.tindalos.guardrails.infrastructure.di.PoorMansDIContainer;
+import org.tindalos.guardrails.infrastructure.reporters.ReportsDirectoryManager;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class ApplicationModuleTest@@ {
     @Test
     public void checkItself() {
         ReportsDirectoryManager.ensureReportsDirectoryExists();
-        var basePackage = "org.tindalos.principle";
+        var basePackage = "org.tindalos.guardrailss";
 
         TestFixture.setLogger();
 

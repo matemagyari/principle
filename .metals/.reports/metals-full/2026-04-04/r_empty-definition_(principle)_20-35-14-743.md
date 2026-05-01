@@ -9,13 +9,13 @@ offset: 613
 uri: file://<WORKSPACE>/src/main/java/org/tindalos/principle/domain/AnalysisRunnerImpl.java
 text:
 ```scala
-package org.tindalos.principle.domain;
+package org.tindalos.guardrails.domain;
 
 import java.util.List;
 import java.util.Optional;
 
-import org.tindalos.principle.domain.analyzers.Analyzer;
-import org.tindalos.principle.utils.logging.TheLogger;
+import org.tindalos.guardrails.domain.analyzers.Analyzer;
+import org.tindalos.guardrails.utils.logging.TheLogger;
 
 /**
  * Default implementation of {@link AnalysisRunner} that runs all enabled analyzers sequentially.

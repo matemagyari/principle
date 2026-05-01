@@ -8,14 +8,14 @@ offset: 693
 uri: file://<WORKSPACE>/src/test/scala/org/tindalos/principle/domain/checker/ApplicationModuleTest.scala
 text:
 ```scala
-package org.tindalos.principle.domain.checker
+package org.tindalos.guardrails.domain.checker
 
 import org.junit.{Assert, Test}
-import org.tindalos.principle.domain.plan.AnalysisPlan
-import org.tindalos.principle.domain.constraints._
-import org.tindalos.principle.infrastructure.ConsolePrinter
-import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
-import org.tindalos.principle.infrastructure.reporters.ReportsDirectoryManager
+import org.tindalos.guardrails.domain.plan.AnalysisPlan
+import org.tindalos.guardrails.domain.constraints._
+import org.tindalos.guardrails.infrastructure.ConsolePrinter
+import org.tindalos.guardrails.infrastructure.di.PoorMansDIContainer
+import org.tindalos.guardrails.infrastructure.reporters.ReportsDirectoryManager
 
 class ApplicationModuleTest {
 
@@ -23,8 +23,8 @@ class ApplicationModuleTest {
   def checkItself(): Unit = {
 
     ReportsDirectoryManager.ensureReportsDirectoryExists()
-    val basePackage = "org.tindalos.principle"
-    //basePackage = "org.tindalos.principletest"
+    val basePackage = "org.tindalos.guardrailss"
+    //basePackage = "org.tindalos.guardrailstest"
 
     TestFixture.setLogger()
 

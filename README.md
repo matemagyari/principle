@@ -143,31 +143,32 @@ This constraint enables the developer to constrain access to third party librari
 Put the following xml-snippet into the plugins section of your pom.xml
 
 ```xml
+
 <plugin>
-  <groupId>org.tindalos.principle</groupId>
-  <artifactid>principle</artifactid>
-  <version>0.37</version>
-  <configuration>
-    <!-- Location of the configuration file relative to the project's root folder-->
-    <location>principle.yml</location>
-</configuration>
-<executions>
-  <execution>
-    <!-- specify here after which lifecycle-phase the plugin should be executed -->
-    <phase>compile</phase>
-    <goals>
-      <goal>check</goal>
-    </goals>
-  </execution>
-</executions>
+    <groupId>org.tindalos.guardrailsorg.tindalos.guardrails</groupId>
+    <artifactid>principle</artifactid>
+    <version>0.37</version>
+    <configuration>
+        <!-- Location of the configuration file relative to the project's root folder-->
+        <location>guardrails.yml</location>
+    </configuration>
+    <executions>
+        <execution>
+            <!-- specify here after which lifecycle-phase the plugin should be executed -->
+            <phase>compile</phase>
+            <goals>
+                <goal>check</goal>
+            </goals>
+        </execution>
+    </executions>
 </plugin>
 ```
 
-An example yaml file (referred as principle.yml above). Each entry under `constraints` is optional, also is any entry under `package_coupling`.
+An example yaml file (referred as guardrails.yml above). Each entry under `constraints` is optional, also is any entry under `package_coupling`.
 
 ```yaml
 #The root package for the analysis. All packages below are relative to this.
-root_package: org.tindalos.principle
+root_package: org.tindalos.guardrailss
 
 constraints:
 
@@ -222,81 +223,82 @@ structure_analysis_enabled: true
 Simply put the following xml-snippet into the plugins section of your pom.xml. Keep in mind that you only need to define constraints that you actually want to use. Constraints are defined under the 'check' section. Similar ones (SDP, SAP, ADP, ACD) are grouped.
 
 ```xml
+
 <plugin>
-  <groupId>org.tindalos.principle</groupId>
-  <artifactid>principle</artifactid>
-  <version>0.30</version>
-  <configuration>
-    <!-- This should the root package of you project -->
-    <basePackage>com.your.root</basePackage>
-    <constraints>
-      <!-- The package names (relative to the baseBackage). Only downward dependencies are allowed. -->
-      <layering>
-        <layers>
-          <param>infrastructure</param> 
-          <param>app</param>
-          <param>domain</param>
-        </layers>
-        <!-- The build will break if the number of layering violations exceeds 2. -->
-        <violationsThreshold>2</violationsThreshold>
-      </layering>
-      <thirdParty>
-        <barriers>
-          <barrier>
-             <layer>infrastructure</layer>
-             <components>org.apache.camel,com.mongodb</components>
-          </barrier>
-          <barrier>
-             <layer>app</layer>
-             <components>org.quartz</components>
-          </barrier>
-          <barrier>
-             <layer>domain</layer>
-             <components>com.google.common,org.joda.time,org.slf4j</components>
-          </barrier>
-        </barriers>
-        <violationsThreshold>0</violationsThreshold>
-      </thirdParty>
-      <!-- Some Constraints are grouped under 'packageCouplingConstraints'--> 
-      <packageCouplingConstraints>
-        <!-- Acyclic Dependency Principle.The build will break if the number of cycles detected exceeds 4. -->
-        <adp>
-          <violationsThreshold>4</violationsThreshold>
-        </adp>
-        <!-- Stable Dependencies Principle.The build will break if the number of violations detected exceeds 5. -->
-        <sdp>
-          <violationsThreshold>5</violationsThreshold>
-        </sdp>
-        <!-- Stable Abstractions Principle. 'maxDistance' is the tolerance margin. 
-             The build will break if the number of packages with distance
-             greater than 'maxDistance' exceeds 5. -->
-        <sap>
-          <maxDistance>0.5</maxDistance>
-          <violationsThreshold>5</violationsThreshold>
-        </sap>
-        <!-- Relative Average Component Dependency. The build will break if the rACD > 15%. -->
-        <racd>
-           <threshold>0.15</threshold>
-        </racd>
-    </packageCouplingConstraints>
-    <!-- the vertical slices (sub-modules)-->
-    <submodulesBlueprint>
-      <!-- the relative path of the YAML file containing the definitions -->
-      <location>src/main/resources/principle_blueprint.yaml</location>
-      <!-- The build will break if the number of violations detected exceeds 0 -->
-      <violationsThreshold>0</violationsThreshold>
-    </submodulesBlueprint>
-  </constraints>
-</configuration>
-<executions>
-  <execution>
-    <!-- specify here after which lifecycle-phase the plugin should be executed -->
-    <phase>compile</phase>
-    <goals>
-      <goal>check</goal>
-    </goals>
-  </execution>
-</executions>
+    <groupId>org.tindalos.guardrailsorg.tindalos.guardrails</groupId>
+    <artifactid>principle</artifactid>
+    <version>0.30</version>
+    <configuration>
+        <!-- This should the root package of you project -->
+        <basePackage>com.your.root</basePackage>
+        <constraints>
+            <!-- The package names (relative to the baseBackage). Only downward dependencies are allowed. -->
+            <layering>
+                <layers>
+                    <param>infrastructure</param>
+                    <param>app</param>
+                    <param>domain</param>
+                </layers>
+                <!-- The build will break if the number of layering violations exceeds 2. -->
+                <violationsThreshold>2</violationsThreshold>
+            </layering>
+            <thirdParty>
+                <barriers>
+                    <barrier>
+                        <layer>infrastructure</layer>
+                        <components>org.apache.camel,com.mongodb</components>
+                    </barrier>
+                    <barrier>
+                        <layer>app</layer>
+                        <components>org.quartz</components>
+                    </barrier>
+                    <barrier>
+                        <layer>domain</layer>
+                        <components>com.google.common,org.joda.time,org.slf4j</components>
+                    </barrier>
+                </barriers>
+                <violationsThreshold>0</violationsThreshold>
+            </thirdParty>
+            <!-- Some Constraints are grouped under 'packageCouplingConstraints'-->
+            <packageCouplingConstraints>
+                <!-- Acyclic Dependency Principle.The build will break if the number of cycles detected exceeds 4. -->
+                <adp>
+                    <violationsThreshold>4</violationsThreshold>
+                </adp>
+                <!-- Stable Dependencies Principle.The build will break if the number of violations detected exceeds 5. -->
+                <sdp>
+                    <violationsThreshold>5</violationsThreshold>
+                </sdp>
+                <!-- Stable Abstractions Principle. 'maxDistance' is the tolerance margin. 
+                     The build will break if the number of packages with distance
+                     greater than 'maxDistance' exceeds 5. -->
+                <sap>
+                    <maxDistance>0.5</maxDistance>
+                    <violationsThreshold>5</violationsThreshold>
+                </sap>
+                <!-- Relative Average Component Dependency. The build will break if the rACD > 15%. -->
+                <racd>
+                    <threshold>0.15</threshold>
+                </racd>
+            </packageCouplingConstraints>
+            <!-- the vertical slices (sub-modules)-->
+            <submodulesBlueprint>
+                <!-- the relative path of the YAML file containing the definitions -->
+                <location>src/main/resources/principle_blueprint.yaml</location>
+                <!-- The build will break if the number of violations detected exceeds 0 -->
+                <violationsThreshold>0</violationsThreshold>
+            </submodulesBlueprint>
+        </constraints>
+    </configuration>
+    <executions>
+        <execution>
+            <!-- specify here after which lifecycle-phase the plugin should be executed -->
+            <phase>compile</phase>
+            <goals>
+                <goal>check</goal>
+            </goals>
+        </execution>
+    </executions>
 </plugin>
 ```
 

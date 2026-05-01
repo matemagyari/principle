@@ -6,7 +6,7 @@ error in qdox parser
 file content:
 ```java
 offset: 0
-uri: file://<WORKSPACE>/src/main/java/org/tindalos/principle/app/NodeBuilder.java
+uri: file://<WORKSPACE>/src/main/java/org/tindalos/guardrails/app/NodeBuilder.java
 text:
 ```scala
 @@

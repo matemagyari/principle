@@ -24,17 +24,17 @@ This is the MOST IMPORTANT rule. The entire purpose of this tool is to detect an
 The codebase follows hexagonal architecture principles:
 
 #### Core Layers:
-- **Domain** (`org.tindalos.principle.domain.*`): Pure business logic, NO external dependencies
+- **Domain** (`org.tindalos.guardrails.domain.*`): Pure business logic, NO external dependencies
   - Contains entities, value objects, domain services
   - Must not depend on infrastructure or application layers
   - No framework dependencies allowed
   
-- **Application** (`org.tindalos.principle.app.*`): Application services and use cases
+- **Application** (`org.tindalos.guardrails.app.*`): Application services and use cases
   - Orchestrates domain logic
   - Defines interfaces (ports) for infrastructure
   - May depend on domain layer only
   
-- **Infrastructure** (`org.tindalos.principle.infrastructure.*`): External integrations
+- **Infrastructure** (`org.tindalos.guardrails.infrastructure.*`): External integrations
   - Implements application interfaces (adapters)
   - File I/O, JDepend integration, reporting
   - May depend on domain and application layers
@@ -171,7 +171,7 @@ public List<Cycle> detectCycles(String rootPackage) {
 - **Classes/Objects/Records**: PascalCase (e.g., `ValidationResult`, `InputValidator2`)
 - **Methods/Fields**: camelCase (e.g., `validatePlan`, `getThreshold`)
 - **Constants**: UPPER_SNAKE_CASE (e.g., `MAX_VIOLATIONS`)
-- **Packages**: lowercase dot-separated (e.g., `org.tindalos.principle.domain.core`)
+- **Packages**: lowercase dot-separated (e.g., `org.tindalos.guardrails.domain.core`)
 
 ## Domain-Specific Guidelines
 

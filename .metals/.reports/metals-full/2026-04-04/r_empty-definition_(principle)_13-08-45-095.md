@@ -8,13 +8,13 @@ offset: 1003
 uri: file://<WORKSPACE>/src/main/scala/org/tindalos/principle/app/ApplicationModule.scala
 text:
 ```scala
-package org.tindalos.principle.app
+package org.tindalos.guardrails.app
 
-import org.tindalos.principle.domain.{AnalysisInput, AnalysisResult, AnalysisRunner}
-import org.tindalos.principle.domain.core.{AnalysisPlan, Package}
-import org.tindalos.principle.domain.core.packages.PackageWithMetrics
-import org.tindalos.principle.app.reporters.AnalysisResultsReporter
-import org.tindalos.principle.infrastructure.{JDependBasedPackageListBuilder, PackageListBuilder}
+import org.tindalos.guardrails.domain.{AnalysisInput, AnalysisResult, AnalysisRunner}
+import org.tindalos.guardrails.domain.core.{AnalysisPlan, Package}
+import org.tindalos.guardrails.domain.core.packages.PackageWithMetrics
+import org.tindalos.guardrails.app.reporters.AnalysisResultsReporter
+import org.tindalos.guardrails.infrastructure.{JDependBasedPackageListBuilder, PackageListBuilder}
 import scala.collection.JavaConverters._
 
 /*
