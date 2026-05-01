@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.constraints.submodules.*;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
-import org.tindalos.guardrails.internal.infrastructure.constraints.YAMLBasedSubmodulesBlueprintReader;
+import org.tindalos.guardrails.internal.infrastructure.constraints.SubmodulesBlueprintReader;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.Map;
@@ -16,10 +16,10 @@ import static org.junit.jupiter.api.Assertions.*;
  * Tests for YAMLBasedSubmodulesBlueprintProvider to verify YAML parsing,
  * module definition creation, and error handling.
  */
-public class YAMLBasedSubmodulesBlueprintReaderTest {
+public class SubmodulesBlueprintReaderTest {
 
   private Map<String, Object> yamlObject;
-    private YAMLBasedSubmodulesBlueprintReader provider;
+    private SubmodulesBlueprintReader provider;
 
     @BeforeEach
     public void setUp() {
@@ -39,7 +39,7 @@ public class YAMLBasedSubmodulesBlueprintReaderTest {
             """;
 
             yamlObject = parseYaml(yaml);
-        provider = new YAMLBasedSubmodulesBlueprintReader();
+        provider = new SubmodulesBlueprintReader();
     }
 
           @SuppressWarnings("unchecked")

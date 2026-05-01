@@ -21,7 +21,7 @@ public class ConstraintsReader {
     private static final LayeringReader LAYERING_READER = new LayeringReader();
     private static final ThirdPartyReader THIRD_PARTY_READER = new ThirdPartyReader();
     private static final PackageCouplingConstraintsReader PACKAGE_COUPLING_READER = new PackageCouplingConstraintsReader();
-    private static YAMLBasedSubmodulesBlueprintReader SUBMODULES_BLUEPRINT_READER = new YAMLBasedSubmodulesBlueprintReader();
+    private static SubmodulesBlueprintReader SUBMODULES_BLUEPRINT_READER = new SubmodulesBlueprintReader();
 
     public static AnalysisPlan readFromFile(Optional<String> fileLocation) {
         var location = fileLocation.orElse(DEFAULT_FILE_LOCATION);
@@ -33,9 +33,9 @@ public class ConstraintsReader {
         Map<String, Object> yamlObject = (Map<String, Object>) new Yaml().load(yamlText);
 
         var constraints = new Constraints(
-            LAYERING_READER.read(yamlObject),
-            THIRD_PARTY_READER.read(yamlObject),
-            PACKAGE_COUPLING_READER.read(yamlObject),
+                LAYERING_READER.read(yamlObject),
+                THIRD_PARTY_READER.read(yamlObject),
+                PACKAGE_COUPLING_READER.read(yamlObject),
                 SUBMODULES_BLUEPRINT_READER.read(yamlObject));
 
         return new AnalysisPlan(constraints, (String) yamlObject.get("root_package"));

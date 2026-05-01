@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * Converts YAML configuration into SubmoduleDefinitions objects that define module
  * structure, packages, and dependencies.
  */
-public class YAMLBasedSubmodulesBlueprintReader implements ConstraintDefinitionReader<SubmoduleDefinitions> {
+public class SubmodulesBlueprintReader implements ConstraintDefinitionReader<SubmoduleDefinitions> {
 
     @Override
     @SuppressWarnings("unchecked")

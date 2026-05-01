@@ -8,7 +8,7 @@ import org.tindalos.guardrails.internal.domain.constraints.Constraints;
 import org.tindalos.guardrails.internal.domain.constraints.submodules.SubmoduleId;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 import org.tindalos.guardrails.internal.domain.plan.AnalysisPlan;
-import org.tindalos.guardrails.internal.infrastructure.constraints.YAMLBasedSubmodulesBlueprintReader;
+import org.tindalos.guardrails.internal.infrastructure.constraints.SubmodulesBlueprintReader;
 import org.tindalos.guardrails.internal.infrastructure.di.Guardrails;
 import org.yaml.snakeyaml.Yaml;
 
@@ -121,7 +121,7 @@ public class BlueprintTest {
     }
 
     private SubmodulesBlueprintAnalysisResult run(String basePackage, String location) {
-        var provider = new YAMLBasedSubmodulesBlueprintReader();
+        var provider = new SubmodulesBlueprintReader();
         var yamlObject = readYamlObject(location);
         yamlObject.putIfAbsent("root_package", basePackage);
         var submoduleDefinitions = provider.read(yamlObject)
