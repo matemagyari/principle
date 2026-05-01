@@ -1,4 +1,4 @@
-package org.tindalos.guardrails.internal.infrastructure.readers;
+package org.tindalos.guardrails.internal.infrastructure.core;
 
 import org.tindalos.guardrails.internal.domain.core.Constraint;
 

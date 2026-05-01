@@ -1,7 +1,7 @@
 package org.tindalos.guardrails.internal.infrastructure.constraints;
 
 import org.tindalos.guardrails.internal.domain.constraints.Layering;
-import org.tindalos.guardrails.internal.infrastructure.readers.ConstraintDefinitionReader;
+import org.tindalos.guardrails.internal.infrastructure.core.ConstraintDefinitionReader;
 
 import java.util.List;
 import java.util.Map;

@@ -4,7 +4,7 @@ import org.tindalos.guardrails.internal.domain.constraints.ADP;
 import org.tindalos.guardrails.internal.domain.constraints.Grouping;
 import org.tindalos.guardrails.internal.domain.constraints.PackageCouplingConstraints;
 import org.tindalos.guardrails.internal.domain.constraints.RACD;
-import org.tindalos.guardrails.internal.infrastructure.readers.ConstraintDefinitionReader;
+import org.tindalos.guardrails.internal.infrastructure.core.ConstraintDefinitionReader;
 
 import java.util.Map;
 import java.util.Optional;

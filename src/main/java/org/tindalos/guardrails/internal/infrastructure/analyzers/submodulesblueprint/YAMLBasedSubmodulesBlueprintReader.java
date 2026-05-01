@@ -5,7 +5,7 @@ import org.tindalos.guardrails.internal.domain.constraints.submodules.SubmoduleD
 import org.tindalos.guardrails.internal.domain.constraints.submodules.SubmoduleDefinitions;
 import org.tindalos.guardrails.internal.domain.constraints.submodules.SubmoduleId;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
-import org.tindalos.guardrails.internal.infrastructure.readers.ConstraintDefinitionReader;
+import org.tindalos.guardrails.internal.infrastructure.core.ConstraintDefinitionReader;
 
 import java.util.*;
 import java.util.stream.Collectors;
