@@ -38,12 +38,11 @@ public class ConstraintsReader {
         Map <String, Object> constraintsYaml = getYamlStructure(yamlObject, "constraints").orElseThrow();
 
         var modules = parseModules(constraintsYaml, rootPackage, fileLocation);
-        var packageCoupling = PACKAGE_COUPLING_READER.read(constraintsYaml);
 
         var constraints = new Constraints(
                 LAYERING_READER.read(constraintsYaml),
                 THIRD_PARTY_READER.read(constraintsYaml),
-                packageCoupling,
+                 PACKAGE_COUPLING_READER.read(constraintsYaml),
                 modules);
 
         return new AnalysisPlan(constraints, rootPackage);
