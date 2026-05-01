@@ -3,7 +3,7 @@ package org.tindalos.guardrails.internal.infrastructure;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.constraints.exception.InvalidConfigurationException;
-import org.tindalos.guardrails.internal.infrastructure.core.ConstraintsReader;
+import org.tindalos.guardrails.internal.infrastructure.constraints.ConstraintsReader;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -88,6 +88,20 @@ public class ConstraintsReaderTest {
     }
 
     @Test
+    public void noPackageCoupling_packageCouplingIsAbsent() throws Exception {
+        var path = writeTempYaml("""
+                root_package: com.example
+                constraints:
+                  layering:
+                    layers: [infrastructure, domain]
+                """);
+
+        var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
+
+        assertTrue(constraints.packageCoupling().isEmpty());
+    }
+
+    @Test
     public void packageCoupling_adpThreshold_isParsed() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
@@ -126,12 +140,31 @@ public class ConstraintsReaderTest {
                 constraints:
                   package_coupling:
                     cyclic_dependencies_threshold: 0
-                structure_analysis_enabled: true
+                    structure_analysis_enabled: true
                 """);
 
         var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
 
         assertTrue(constraints.packageCoupling().get().grouping().isPresent());
+    }
+
+    @Test
+    public void structureAnalysisEnabledWithoutPackageCoupling_groupingOnlyPackageCouplingIsPresent() throws Exception {
+        var path = writeTempYaml("""
+                root_package: com.example
+                constraints:
+                  layering:
+                    layers: [infrastructure, domain]
+                  package_coupling:
+                    structure_analysis_enabled: true
+                """);
+
+        var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
+
+        assertTrue(constraints.packageCoupling().isPresent());
+        assertTrue(constraints.packageCoupling().get().grouping().isPresent());
+        assertTrue(constraints.packageCoupling().get().adp().isEmpty());
+        assertTrue(constraints.packageCoupling().get().racd().isEmpty());
     }
 
     @Test
@@ -141,7 +174,7 @@ public class ConstraintsReaderTest {
                 constraints:
                   package_coupling:
                     cyclic_dependencies_threshold: 0
-                structure_analysis_enabled: false
+                    structure_analysis_enabled: false
                 """);
 
         var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
@@ -305,13 +338,13 @@ public class ConstraintsReaderTest {
                   package_coupling:
                     cyclic_dependencies_threshold: 0
                     acd_threshold: 0.5
+                    structure_analysis_enabled: true
                   modules:
                     module-definitions:
                       MOD1: [domain.mod1]
                     module-dependencies:
                       MOD1: []
                     violation_threshold: 0
-                structure_analysis_enabled: true
                 """);
 
         var plan = ConstraintsReader.readFromFile(Optional.of(path));

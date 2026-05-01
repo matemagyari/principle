@@ -17,6 +17,7 @@ constraints:
   package_coupling:
     cyclic_dependencies_threshold: 0
     acd_threshold: 0.40
+    structure_analysis_enabled: true
 
   modules:
     # Map modules to packages
@@ -33,5 +34,3 @@ constraints:
       REPORTERS: [CORE, ANALYZERS]
 
     violation_threshold: 0
-
-structure_analysis_enabled: true

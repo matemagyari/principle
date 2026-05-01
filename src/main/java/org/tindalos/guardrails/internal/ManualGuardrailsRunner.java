@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.tindalos.guardrails.internal.app.reporters.AnalysisResultsReporter;
 import org.tindalos.guardrails.internal.domain.AggregatedAnalysisResults;
 import org.tindalos.guardrails.internal.infrastructure.ConsolePrinter;
-import org.tindalos.guardrails.internal.infrastructure.core.ConstraintsReader;
+import org.tindalos.guardrails.internal.infrastructure.constraints.ConstraintsReader;
 import org.tindalos.guardrails.internal.infrastructure.di.Guardrails;
 import org.tindalos.guardrails.internal.utils.logging.SimpleLogger;
 import org.tindalos.guardrails.internal.utils.logging.TheLogger;

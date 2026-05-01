@@ -8,9 +8,13 @@ import org.tindalos.guardrails.internal.domain.constraints.Constraints;
 import org.tindalos.guardrails.internal.domain.constraints.submodules.SubmoduleId;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 import org.tindalos.guardrails.internal.domain.plan.AnalysisPlan;
-import org.tindalos.guardrails.internal.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider;
+import org.tindalos.guardrails.internal.infrastructure.constraints.SubmodulesBlueprintReader;
 import org.tindalos.guardrails.internal.infrastructure.di.Guardrails;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
 
@@ -117,11 +121,24 @@ public class BlueprintTest {
     }
 
     private SubmodulesBlueprintAnalysisResult run(String basePackage, String location) {
-        var provider = new YAMLBasedSubmodulesBlueprintProvider();
-        var submoduleDefinitions = provider.readSubmoduleDefinitions(basePackage, location, 0);
+        var provider = new SubmodulesBlueprintReader();
+        var yamlObject = readYamlObject(location);
+        yamlObject.putIfAbsent("root_package", basePackage);
+        var submoduleDefinitions = provider.read(yamlObject)
+            .orElseThrow(() -> new IllegalStateException("Missing submodule definitions in " + location));
         var constraints = Constraints.builder().submoduleDefinitions(submoduleDefinitions).build();
         var plan = new AnalysisPlan(constraints, basePackage);
         var analyzer = Guardrails.createAnalyser(basePackage);
         return analyzer.analyze(plan).submodulesBlueprintAnalysisResult().get();
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> readYamlObject(String location) {
+        try {
+            var yaml = Files.readString(Path.of(location));
+            return (Map<String, Object>) new Yaml().load(yaml);
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to read blueprint file: " + location, ex);
+        }
     }
 }

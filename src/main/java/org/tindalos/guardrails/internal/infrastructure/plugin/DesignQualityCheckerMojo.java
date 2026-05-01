@@ -7,7 +7,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.tindalos.guardrails.internal.domain.constraints.exception.InvalidConfigurationException;
-import org.tindalos.guardrails.internal.infrastructure.core.ConstraintsReader;
+import org.tindalos.guardrails.internal.infrastructure.constraints.ConstraintsReader;
 import org.tindalos.guardrails.internal.infrastructure.di.Guardrails;
 import org.tindalos.guardrails.internal.infrastructure.reporters.ReportsDirectoryManager;
 import org.tindalos.guardrails.internal.utils.logging.SimpleLogger;

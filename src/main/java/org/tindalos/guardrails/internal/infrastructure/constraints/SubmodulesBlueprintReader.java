@@ -1,15 +1,12 @@
-package org.tindalos.guardrails.internal.infrastructure.analyzers.submodulesblueprint;
+package org.tindalos.guardrails.internal.infrastructure.constraints;
 
-import org.apache.commons.io.FileUtils;
 import org.tindalos.guardrails.internal.domain.constraints.submodules.InvalidBlueprintDefinitionException;
 import org.tindalos.guardrails.internal.domain.constraints.submodules.SubmoduleDefinition;
 import org.tindalos.guardrails.internal.domain.constraints.submodules.SubmoduleDefinitions;
 import org.tindalos.guardrails.internal.domain.constraints.submodules.SubmoduleId;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
-import org.yaml.snakeyaml.Yaml;
+import org.tindalos.guardrails.internal.infrastructure.core.ConstraintDefinitionReader;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,20 +15,25 @@ import java.util.stream.Collectors;
  * Converts YAML configuration into SubmoduleDefinitions objects that define module
  * structure, packages, and dependencies.
  */
-public class YAMLBasedSubmodulesBlueprintProvider implements SubmodulesBlueprintProvider {
+public class SubmodulesBlueprintReader implements ConstraintDefinitionReader<SubmoduleDefinitions> {
 
-    public SubmoduleDefinitions readSubmoduleDefinitions(String basePackageName, String submodulesDefinitionLocation, int violationThreshold) {
-        String yaml = getYAML(submodulesDefinitionLocation);
-        Map<String, Object> yamlObject = (Map<String, Object>) new Yaml().load(yaml);
-        Map<String, Object> constraints = (Map<String, Object>) yamlObject.get("constraints");
+    @Override
+    @SuppressWarnings("unchecked")
+    public Optional<SubmoduleDefinitions> read(Map<String, Object> yamlObject) {
+        var constraints = Optional.ofNullable((Map<String, Object>) yamlObject.get("constraints"));
+        var modules = constraints.map(section -> (Map<String, Object>) section.get("modules"));
+        if (modules.isEmpty() || modules.get().get("module-definitions") == null) {
+            return Optional.empty();
+        }
 
-        @SuppressWarnings("unchecked")
-        Map<String, Object> modules = (Map<String, Object>) constraints.get("modules");
+        var basePackageName = Optional.ofNullable((String) yamlObject.get("root_package"))
+                .orElseThrow(() -> new InvalidBlueprintDefinitionException("Root package not defined!"));
+        var violationThreshold = Optional.ofNullable((Integer) modules.get().get("violation_threshold")).orElse(0);
 
-        Map<SubmoduleId, SubmoduleDefinition> submoduleDefinitionMap = buildSubmoduleDefinitions(basePackageName, modules);
-        addDependencies(modules, submoduleDefinitionMap);
+        Map<SubmoduleId, SubmoduleDefinition> submoduleDefinitionMap = buildSubmoduleDefinitions(basePackageName, modules.get());
+        addDependencies(modules.get(), submoduleDefinitionMap);
 
-        return new SubmoduleDefinitions(submoduleDefinitionMap, violationThreshold);
+        return Optional.of(new SubmoduleDefinitions(submoduleDefinitionMap, violationThreshold));
     }
 
     private void checkSubmoduleExists(Set<SubmoduleId> validSubmodules, SubmoduleId submoduleId) {
@@ -90,12 +92,5 @@ public class YAMLBasedSubmodulesBlueprintProvider implements SubmodulesBlueprint
                 ));
     }
 
-    protected String getYAML(String submodulesDefinitionLocation) {
-        try {
-            return FileUtils.readFileToString(new File(submodulesDefinitionLocation));
-        } catch (IOException ex) {
-            throw new InvalidBlueprintDefinitionException("problem with reading file from " + submodulesDefinitionLocation);
-        }
-    }
 }
 

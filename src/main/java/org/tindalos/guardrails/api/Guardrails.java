@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.tindalos.guardrails.internal.app.GuardrailsAnalyser;
 import org.tindalos.guardrails.internal.app.reporters.AnalysisResultsReporter;
-import org.tindalos.guardrails.internal.infrastructure.core.ConstraintsReader;
+import org.tindalos.guardrails.internal.infrastructure.constraints.ConstraintsReader;
 
 /**
  * Public entry point for using Guardrails programmatically.

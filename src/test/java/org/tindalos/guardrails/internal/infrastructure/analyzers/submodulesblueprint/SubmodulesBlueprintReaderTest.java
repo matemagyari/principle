@@ -1,13 +1,12 @@
 package org.tindalos.guardrails.internal.infrastructure.analyzers.submodulesblueprint;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.constraints.submodules.*;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
+import org.tindalos.guardrails.internal.infrastructure.constraints.SubmodulesBlueprintReader;
+import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,14 +16,15 @@ import static org.junit.jupiter.api.Assertions.*;
  * Tests for YAMLBasedSubmodulesBlueprintProvider to verify YAML parsing,
  * module definition creation, and error handling.
  */
-public class YAMLBasedSubmodulesBlueprintProviderTest {
+public class SubmodulesBlueprintReaderTest {
 
-    private String yamlFile;
-    private YAMLBasedSubmodulesBlueprintProvider provider;
+  private Map<String, Object> yamlObject;
+    private SubmodulesBlueprintReader provider;
 
     @BeforeEach
     public void setUp() {
         String yaml = """
+            root_package: com
             constraints:
               modules:
                 module-definitions:
@@ -38,28 +38,26 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
                 violation_threshold: 0
             """;
 
-        yamlFile = createTempYamlFile(yaml);
-        provider = new YAMLBasedSubmodulesBlueprintProvider();
+            yamlObject = parseYaml(yaml);
+        provider = new SubmodulesBlueprintReader();
     }
 
-    private String createTempYamlFile(String content) {
-        try {
-            File tempFile = File.createTempFile("test_blueprint_", ".yaml");
-            tempFile.deleteOnExit();
-            FileUtils.writeStringToFile(tempFile, content);
-            return tempFile.getAbsolutePath();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to create temp YAML file", e);
-        }
+          @SuppressWarnings("unchecked")
+          private Map<String, Object> parseYaml(String content) {
+            return (Map<String, Object>) new Yaml().load(content);
     }
 
     @Test
     public void readSubmoduleDefinitions_validYaml_parsesSuccessfully() {
-        SubmoduleDefinitions result = provider.readSubmoduleDefinitions("com", yamlFile, 0);
+      var result = provider.read(yamlObject);
 
-        assertNotNull(result, "SubmoduleDefinitions should not be null");
+        assertTrue(result.isPresent(), "SubmoduleDefinitions should be present");
 
-        Map<SubmoduleId, SubmoduleDefinition> definitions = result.getDefinitions();
+        SubmoduleDefinitions definitionsResult = result.get();
+
+        assertNotNull(definitionsResult, "SubmoduleDefinitions should not be null");
+
+        Map<SubmoduleId, SubmoduleDefinition> definitions = definitionsResult.getDefinitions();
         assertEquals(3, definitions.size(), "Should have 3 module definitions");
         assertEquals(
                 Set.of(new SubmoduleId("MOD1"), new SubmoduleId("MOD2"), new SubmoduleId("MOD3")),
@@ -95,14 +93,24 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
     }
 
     @Test
-    public void readSubmoduleDefinitions_missingFile_throwsException() {
+    public void readSubmoduleDefinitions_missingRootPackage_throwsException() {
+      var yamlObject = parseYaml("""
+          constraints:
+            modules:
+              module-definitions:
+                MOD1: [domain.mod1]
+              module-dependencies:
+                MOD1: []
+          """);
+
       assertThrows(InvalidBlueprintDefinitionException.class,
-          () -> provider.readSubmoduleDefinitions("com", "src/test/resources/non_existent_file.yaml", 0));
+          () -> provider.read(yamlObject));
     }
 
     @Test
-    public void readSubmoduleDefinitions_missingModuleDefinitions_throwsException() {
+    public void readSubmoduleDefinitions_missingModuleDefinitions_returnsEmpty() {
         String yaml = """
+            root_package: com
             constraints:
               modules:
                 module-dependencies:
@@ -110,14 +118,14 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
                 violation_threshold: 0
             """;
 
-        String yamlFile = createTempYamlFile(yaml);
-        assertThrows(InvalidBlueprintDefinitionException.class,
-                () -> provider.readSubmoduleDefinitions("com", yamlFile, 0));
+        var yamlObject = parseYaml(yaml);
+        assertTrue(provider.read(yamlObject).isEmpty(), "Expected empty result when module-definitions are missing");
     }
 
       @Test
     public void readSubmoduleDefinitions_missingModuleDependencies_throwsException() {
         String yaml = """
+            root_package: com
             constraints:
               modules:
                 module-definitions:
@@ -126,14 +134,15 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
                 violation_threshold: 0
             """;
 
-        String yamlFile = createTempYamlFile(yaml);
+        var yamlObject = parseYaml(yaml);
         assertThrows(InvalidBlueprintDefinitionException.class,
-                () -> provider.readSubmoduleDefinitions("com", yamlFile, 0));
+          () -> provider.read(yamlObject));
     }
 
       @Test
     public void readSubmoduleDefinitions_overlappingModules_throwsOnOverlapCheck() {
         String yaml = """
+            root_package: com
             constraints:
               modules:
                 module-definitions:
@@ -147,8 +156,8 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
 
         assertThrows(OverlappingSubmoduleDefinitionsException.class,
             () -> {
-              String yamlFile = createTempYamlFile(yaml);
-              SubmoduleDefinitions definitions = provider.readSubmoduleDefinitions("com", yamlFile, 0);
+              var yamlObject = parseYaml(yaml);
+              SubmoduleDefinitions definitions = provider.read(yamlObject).orElseThrow();
               definitions.checkNoOverlaps();
             });
     }
