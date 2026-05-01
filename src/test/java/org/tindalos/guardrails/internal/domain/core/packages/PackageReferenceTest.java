@@ -1,8 +1,8 @@
 package org.tindalos.guardrails.internal.domain.core.packages;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PackageReferenceTest {
 
@@ -96,9 +96,9 @@ public class PackageReferenceTest {
         assertEquals("cc", testObj.relativeNameTo(ref("aa.bb")));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void invalidRelativeNameTo() {
-        testObj.relativeNameTo(ref("aa.b"));
+        assertThrows(IllegalArgumentException.class, () -> testObj.relativeNameTo(ref("aa.b")));
     }
 
     @Test

@@ -2,10 +2,11 @@ package org.tindalos.guardrails.internal.domain.analyzers.submodulesblueprint;
 
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.constraints.submodules.InvalidBlueprintDefinitionException;
 import org.tindalos.guardrails.internal.domain.constraints.submodules.SubmoduleId;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageMetrics;
@@ -43,9 +44,10 @@ public class SubmoduleTest {
     // Constructor
     // -------------------------------------------------------------------------
 
-    @Test(expected = InvalidBlueprintDefinitionException.class)
+    @Test
     public void constructor_selfDependency_throwsException() {
-        new Submodule(new SubmoduleId("MOD1"), Set.of(), Set.of(new SubmoduleId("MOD1")));
+        assertThrows(InvalidBlueprintDefinitionException.class,
+                () -> new Submodule(new SubmoduleId("MOD1"), Set.of(), Set.of(new SubmoduleId("MOD1"))));
     }
 
     @Test

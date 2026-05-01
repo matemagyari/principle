@@ -1,7 +1,7 @@
 package org.tindalos.guardrails.internal.infrastructure;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.constraints.exception.InvalidConfigurationException;
 import org.tindalos.guardrails.internal.infrastructure.core.ConstraintsReader;
 
@@ -11,13 +11,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ConstraintsReaderTest {
 
     private File tempFile;
 
-    @After
+    @AfterEach
     public void cleanup() throws Exception {
         if (tempFile != null && tempFile.exists()) tempFile.delete();
     }
@@ -283,9 +283,10 @@ public class ConstraintsReaderTest {
         assertFalse(constraints.submoduleDefinitions().isPresent());
     }
 
-    @Test(expected = InvalidConfigurationException.class)
+    @Test
     public void missingFile_throwsInvalidConfigurationException() {
-        ConstraintsReader.readFromFile(Optional.of("/non/existent/path/guardrails.yml"));
+      assertThrows(InvalidConfigurationException.class,
+          () -> ConstraintsReader.readFromFile(Optional.of("/non/existent/path/guardrails.yml")));
     }
 
     @Test

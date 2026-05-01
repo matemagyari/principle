@@ -1,7 +1,7 @@
 package org.tindalos.guardrails.internal.domain.analyzers;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.analyzers.submodulesblueprint.Submodule;
 import org.tindalos.guardrails.internal.domain.analyzers.submodulesblueprint.SubmodulesBlueprintAnalysisResult;
 import org.tindalos.guardrails.internal.domain.constraints.Constraints;
@@ -14,12 +14,12 @@ import org.tindalos.guardrails.internal.infrastructure.di.Guardrails;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BlueprintTest {
 
-    @Before
+    @BeforeEach
     public void setup() {
         TestFixture.setLogger();
     }
@@ -42,7 +42,7 @@ public class BlueprintTest {
 
         assertEquals(Map.of(), result.illegalDependencies());
         assertEquals(Map.of(), result.missingDependencies());
-        assertTrue("Expected overlaps to be detected", !result.overlaps().isEmpty());
+        assertTrue(!result.overlaps().isEmpty(), "Expected overlaps to be detected");
     }
 
     @Test
@@ -61,9 +61,9 @@ public class BlueprintTest {
         var mod3 = fakeSubmodule("MOD3");
         var mod2 = fakeSubmodule("MOD2");
 
-        assertTrue("MOD3 should have illegal dependencies", result.illegalDependencies().containsKey(mod3));
+        assertTrue(result.illegalDependencies().containsKey(mod3), "MOD3 should have illegal dependencies");
         var illegalDeps = result.illegalDependencies().get(mod3);
-        assertTrue("MOD3 illegally depends on MOD2", illegalDeps.contains(mod2));
+        assertTrue(illegalDeps.contains(mod2), "MOD3 illegally depends on MOD2");
     }
 
     @Test
@@ -73,15 +73,15 @@ public class BlueprintTest {
         var mod1 = fakeSubmodule("MOD1");
         var mod2 = fakeSubmodule("MOD2");
 
-        assertTrue("MOD1 should have missing dependencies", result.missingDependencies().containsKey(mod1));
+        assertTrue(result.missingDependencies().containsKey(mod1), "MOD1 should have missing dependencies");
         var missingDeps = result.missingDependencies().get(mod1);
-        assertTrue("MOD1 is missing dependency on MOD2", missingDeps.contains(mod2));
+        assertTrue(missingDeps.contains(mod2), "MOD1 is missing dependency on MOD2");
     }
 
     @Test
     public void constraintsFailedWhenViolationsExceedThreshold() {
         var result = run("org.tindalos.guardrailstest.submodulesblueprint", "src/test/resources/guardrails_blueprint_test.yaml");
-        assertTrue("Expectations should fail when violations exceed threshold", result.constraintViolated());
+        assertTrue(result.constraintViolated(), "Expectations should fail when violations exceed threshold");
     }
 
     @Test
@@ -91,7 +91,7 @@ public class BlueprintTest {
         var mod2 = fakeSubmodule("MOD2");
 
         assertEquals(mod1a, mod1b);
-        assertTrue("Submodules with different IDs should not be equal", !mod1a.equals(mod2));
+        assertTrue(!mod1a.equals(mod2), "Submodules with different IDs should not be equal");
     }
 
     @Test
@@ -99,8 +99,8 @@ public class BlueprintTest {
         var result = run("org.tindalos.guardrailstest.submodulesblueprint", "src/test/resources/guardrails_blueprint_test.yaml");
 
         assertEquals(0, result.threshold());
-        assertTrue("Illegal dependencies should be a Map", result.illegalDependencies() instanceof java.util.Map<?, ?>);
-        assertTrue("Missing dependencies should be a Map", result.missingDependencies() instanceof java.util.Map<?, ?>);
+        assertTrue(result.illegalDependencies() instanceof java.util.Map<?, ?>, "Illegal dependencies should be a Map");
+        assertTrue(result.missingDependencies() instanceof java.util.Map<?, ?>, "Missing dependencies should be a Map");
     }
 
     @Test
@@ -108,8 +108,8 @@ public class BlueprintTest {
         var result = run("org.tindalos.guardrailstest.submodulesblueprint", "src/test/resources/guardrails_blueprint_ok.yaml");
 
         assertEquals(0, result.threshold());
-        assertTrue("Valid blueprint should have no overlaps", result.overlaps().isEmpty());
-        assertTrue("Violations should be non-negative", result.violationsNumber() >= 0);
+        assertTrue(result.overlaps().isEmpty(), "Valid blueprint should have no overlaps");
+        assertTrue(result.violationsNumber() >= 0, "Violations should be non-negative");
     }
 
     private Submodule fakeSubmodule(String name) {

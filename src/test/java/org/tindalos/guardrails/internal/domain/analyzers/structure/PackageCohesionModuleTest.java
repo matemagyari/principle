@@ -3,9 +3,9 @@ package org.tindalos.guardrails.internal.domain.analyzers.structure;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.core.Node;
 
 /**

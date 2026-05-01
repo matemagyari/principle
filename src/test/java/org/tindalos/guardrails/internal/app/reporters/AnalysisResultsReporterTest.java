@@ -4,9 +4,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.AggregatedAnalysisResults;
 import org.tindalos.guardrails.internal.domain.analyzers.adp.ADPResult;
 import org.tindalos.guardrails.internal.domain.analyzers.layering.LayerReference;
@@ -56,7 +56,7 @@ public class AnalysisResultsReporterTest {
 
     private void assertValidYaml(String yaml) {
         var parsed = new Yaml().load(yaml);
-        assertNotNull("YAML must parse to a non-null object", parsed);
+        assertNotNull(parsed, "YAML must parse to a non-null object");
     }
 
     @Test

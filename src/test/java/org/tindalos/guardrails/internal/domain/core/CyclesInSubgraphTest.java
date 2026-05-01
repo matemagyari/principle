@@ -4,11 +4,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageMetrics;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
 
@@ -22,7 +22,7 @@ public class CyclesInSubgraphTest {
     private Package packageB;
     private Package packageC;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         cyclesInSubgraph = CyclesInSubgraph.empty();
         packageA = createTestPackage("org.example.a");

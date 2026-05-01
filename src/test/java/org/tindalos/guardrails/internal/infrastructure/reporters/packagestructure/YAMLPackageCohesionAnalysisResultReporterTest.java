@@ -7,9 +7,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.analyzers.structure.CohesionAnalysisResult;
 import org.tindalos.guardrails.internal.domain.analyzers.structure.GroupingResult;
 import org.tindalos.guardrails.internal.domain.core.Node;
@@ -23,7 +23,7 @@ public class YAMLPackageCohesionAnalysisResultReporterTest {
 
     private void assertValidYaml(String yaml) {
       var parsed = new Yaml().load(yaml);
-      assertNotNull("YAML must parse to a non-null object", parsed);
+      assertNotNull(parsed, "YAML must parse to a non-null object");
     }
 
     private CohesionAnalysisResult makeResult(Map<String, NodeGroup> packageMap) {

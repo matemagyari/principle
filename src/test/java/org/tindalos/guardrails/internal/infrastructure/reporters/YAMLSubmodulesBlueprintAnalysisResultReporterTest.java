@@ -1,6 +1,6 @@
 package org.tindalos.guardrails.internal.infrastructure.reporters;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.constraints.submodules.Overlap;
 import org.tindalos.guardrails.internal.domain.analyzers.submodulesblueprint.Submodule;
 import org.tindalos.guardrails.internal.domain.constraints.submodules.SubmoduleId;
@@ -10,8 +10,8 @@ import org.yaml.snakeyaml.Yaml;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Tests for YAMLSubmodulesBlueprintAnalysisResultReporter verifying correct YAML output
@@ -27,7 +27,7 @@ public class YAMLSubmodulesBlueprintAnalysisResultReporterTest {
 
     private void assertValidYaml(String yaml) {
         var parsed = new Yaml().load(yaml);
-        assertNotNull("YAML must parse to a non-null object", parsed);
+        assertNotNull(parsed, "YAML must parse to a non-null object");
     }
 
     @Test

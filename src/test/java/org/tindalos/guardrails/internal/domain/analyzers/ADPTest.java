@@ -1,7 +1,7 @@
 package org.tindalos.guardrails.internal.domain.analyzers;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.constraints.ADP;
 import org.tindalos.guardrails.internal.domain.constraints.Constraints;
 import org.tindalos.guardrails.internal.domain.constraints.PackageCouplingConstraints;
@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ADPTest {
 
@@ -23,7 +23,7 @@ public class ADPTest {
             .packageCoupling(PackageCouplingConstraints.builder().adp(new ADP()).build())
             .build();
 
-    @Before
+    @BeforeEach
     public void setup() {
         TestFixture.setLogger();
     }
