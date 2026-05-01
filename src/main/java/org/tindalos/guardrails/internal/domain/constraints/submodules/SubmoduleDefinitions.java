@@ -13,26 +13,12 @@ import java.util.Set;
  * threshold. Use {@link #checkNoOverlaps()} to validate that no modules
  * overlap (i.e., no two modules contain packages that are subpackages of each other).
  */
-public class SubmoduleDefinitions implements Constraint {
-
-    private final Map<SubmoduleId, SubmoduleDefinition> definitions;
-    private final int violationThreshold;
+public record SubmoduleDefinitions(Map<SubmoduleId, SubmoduleDefinition> definitions,
+                                   int violationThreshold) implements Constraint {
 
     public SubmoduleDefinitions(Map<SubmoduleId, SubmoduleDefinition> definitions, int violationThreshold) {
         this.definitions = Map.copyOf(definitions);
         this.violationThreshold = violationThreshold;
-    }
-
-    public SubmoduleDefinitions(Map<SubmoduleId, SubmoduleDefinition> definitions) {
-        this(definitions, 0);
-    }
-
-    public Map<SubmoduleId, SubmoduleDefinition> getDefinitions() {
-        return definitions;
-    }
-
-    public int violationThreshold() {
-        return violationThreshold;
     }
 
     /**
@@ -46,7 +32,7 @@ public class SubmoduleDefinitions implements Constraint {
         for (SubmoduleDefinition submoduleDefinition : definitionList) {
             for (SubmoduleDefinition anOtherDefinition : definitionList) {
                 if (!submoduleDefinition.equals(anOtherDefinition)
-                    && submoduleDefinition.overlapsWith(anOtherDefinition)) {
+                        && submoduleDefinition.overlapsWith(anOtherDefinition)) {
                     overlaps.add(new Overlap(submoduleDefinition.id(), anOtherDefinition.id()));
                 }
             }

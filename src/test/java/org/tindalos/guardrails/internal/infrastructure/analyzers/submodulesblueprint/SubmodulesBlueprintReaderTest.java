@@ -57,7 +57,7 @@ public class SubmodulesBlueprintReaderTest {
 
         assertNotNull(definitionsResult, "SubmoduleDefinitions should not be null");
 
-        Map<SubmoduleId, SubmoduleDefinition> definitions = definitionsResult.getDefinitions();
+        Map<SubmoduleId, SubmoduleDefinition> definitions = definitionsResult.definitions();
         assertEquals(3, definitions.size(), "Should have 3 module definitions");
         assertEquals(
                 Set.of(new SubmoduleId("MOD1"), new SubmoduleId("MOD2"), new SubmoduleId("MOD3")),

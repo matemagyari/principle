@@ -35,7 +35,7 @@ public class SubmodulesBuilder {
         Package basePackage = packageStructureBuilder.build(toPackageList(packages), basePackageName);
         Map<PackageReference, Package> packageMap = basePackage.toMap();
 
-        return submoduleDefinitions.getDefinitions().values().stream()
+        return submoduleDefinitions.definitions().values().stream()
             .map(definition -> convert(definition, packageMap))
             .collect(Collectors.toUnmodifiableSet());
     }

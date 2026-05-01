@@ -242,7 +242,7 @@ public class ConstraintsReaderTest {
 
         var definitions = ConstraintsReader.readFromFile(Optional.of(path)).constraints().submoduleDefinitions().get();
 
-        assertEquals(3, definitions.getDefinitions().size());
+        assertEquals(3, definitions.definitions().size());
         assertEquals(2, definitions.violationThreshold());
     }
 
