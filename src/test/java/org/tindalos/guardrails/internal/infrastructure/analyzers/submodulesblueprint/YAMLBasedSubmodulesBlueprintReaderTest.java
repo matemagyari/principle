@@ -15,10 +15,10 @@ import static org.junit.jupiter.api.Assertions.*;
  * Tests for YAMLBasedSubmodulesBlueprintProvider to verify YAML parsing,
  * module definition creation, and error handling.
  */
-public class YAMLBasedSubmodulesBlueprintProviderTest {
+public class YAMLBasedSubmodulesBlueprintReaderTest {
 
   private Map<String, Object> yamlObject;
-    private YAMLBasedSubmodulesBlueprintProvider provider;
+    private YAMLBasedSubmodulesBlueprintReader provider;
 
     @BeforeEach
     public void setUp() {
@@ -38,7 +38,7 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
             """;
 
             yamlObject = parseYaml(yaml);
-        provider = new YAMLBasedSubmodulesBlueprintProvider();
+        provider = new YAMLBasedSubmodulesBlueprintReader();
     }
 
           @SuppressWarnings("unchecked")
