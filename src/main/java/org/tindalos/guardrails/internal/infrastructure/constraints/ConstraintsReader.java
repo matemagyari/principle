@@ -5,6 +5,7 @@ import org.tindalos.guardrails.internal.domain.constraints.submodules.SubmoduleD
 import org.tindalos.guardrails.internal.domain.constraints.*;
 import org.tindalos.guardrails.internal.domain.constraints.exception.InvalidConfigurationException;
 import org.tindalos.guardrails.internal.domain.plan.AnalysisPlan;
+import org.tindalos.guardrails.internal.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -48,10 +49,7 @@ public class ConstraintsReader {
     }
 
     private static Optional<SubmoduleDefinitions> parseModules(Map<String, Object> yamlObject) {
-        return getYamlStructure(yamlObject, "constraints")
-                .flatMap(constraintsYaml -> getYamlStructure(constraintsYaml, "modules"))
-                .filter(m -> m.containsKey("module-definitions"))
-                .map(modules -> new YAMLBasedSubmodulesBlueprintProvider().readSubmoduleDefinitions(yamlObject));
+        return new YAMLBasedSubmodulesBlueprintProvider().read(yamlObject);
     }
 
     @SuppressWarnings("unchecked")

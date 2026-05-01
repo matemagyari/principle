@@ -8,7 +8,7 @@ import org.tindalos.guardrails.internal.domain.constraints.Constraints;
 import org.tindalos.guardrails.internal.domain.constraints.submodules.SubmoduleId;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 import org.tindalos.guardrails.internal.domain.plan.AnalysisPlan;
-import org.tindalos.guardrails.internal.infrastructure.constraints.YAMLBasedSubmodulesBlueprintProvider;
+import org.tindalos.guardrails.internal.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider;
 import org.tindalos.guardrails.internal.infrastructure.di.Guardrails;
 import org.yaml.snakeyaml.Yaml;
 
@@ -124,7 +124,8 @@ public class BlueprintTest {
         var provider = new YAMLBasedSubmodulesBlueprintProvider();
         var yamlObject = readYamlObject(location);
         yamlObject.putIfAbsent("root_package", basePackage);
-        var submoduleDefinitions = provider.readSubmoduleDefinitions(yamlObject);
+        var submoduleDefinitions = provider.read(yamlObject)
+            .orElseThrow(() -> new IllegalStateException("Missing submodule definitions in " + location));
         var constraints = Constraints.builder().submoduleDefinitions(submoduleDefinitions).build();
         var plan = new AnalysisPlan(constraints, basePackage);
         var analyzer = Guardrails.createAnalyser(basePackage);

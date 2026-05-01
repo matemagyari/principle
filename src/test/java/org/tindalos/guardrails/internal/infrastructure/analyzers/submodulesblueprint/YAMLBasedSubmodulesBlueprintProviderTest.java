@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.constraints.submodules.*;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
-import org.tindalos.guardrails.internal.infrastructure.constraints.YAMLBasedSubmodulesBlueprintProvider;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.Map;
@@ -49,11 +48,15 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
 
     @Test
     public void readSubmoduleDefinitions_validYaml_parsesSuccessfully() {
-      SubmoduleDefinitions result = provider.readSubmoduleDefinitions(yamlObject);
+      var result = provider.read(yamlObject);
 
-        assertNotNull(result, "SubmoduleDefinitions should not be null");
+        assertTrue(result.isPresent(), "SubmoduleDefinitions should be present");
 
-        Map<SubmoduleId, SubmoduleDefinition> definitions = result.getDefinitions();
+        SubmoduleDefinitions definitionsResult = result.get();
+
+        assertNotNull(definitionsResult, "SubmoduleDefinitions should not be null");
+
+        Map<SubmoduleId, SubmoduleDefinition> definitions = definitionsResult.getDefinitions();
         assertEquals(3, definitions.size(), "Should have 3 module definitions");
         assertEquals(
                 Set.of(new SubmoduleId("MOD1"), new SubmoduleId("MOD2"), new SubmoduleId("MOD3")),
@@ -100,11 +103,11 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
           """);
 
       assertThrows(InvalidBlueprintDefinitionException.class,
-          () -> provider.readSubmoduleDefinitions(yamlObject));
+          () -> provider.read(yamlObject));
     }
 
     @Test
-    public void readSubmoduleDefinitions_missingModuleDefinitions_throwsException() {
+    public void readSubmoduleDefinitions_missingModuleDefinitions_returnsEmpty() {
         String yaml = """
             root_package: com
             constraints:
@@ -115,8 +118,7 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
             """;
 
         var yamlObject = parseYaml(yaml);
-        assertThrows(InvalidBlueprintDefinitionException.class,
-          () -> provider.readSubmoduleDefinitions(yamlObject));
+        assertTrue(provider.read(yamlObject).isEmpty(), "Expected empty result when module-definitions are missing");
     }
 
       @Test
@@ -133,7 +135,7 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
 
         var yamlObject = parseYaml(yaml);
         assertThrows(InvalidBlueprintDefinitionException.class,
-          () -> provider.readSubmoduleDefinitions(yamlObject));
+          () -> provider.read(yamlObject));
     }
 
       @Test
@@ -154,7 +156,7 @@ public class YAMLBasedSubmodulesBlueprintProviderTest {
         assertThrows(OverlappingSubmoduleDefinitionsException.class,
             () -> {
               var yamlObject = parseYaml(yaml);
-              SubmoduleDefinitions definitions = provider.readSubmoduleDefinitions(yamlObject);
+              SubmoduleDefinitions definitions = provider.read(yamlObject).orElseThrow();
               definitions.checkNoOverlaps();
             });
     }
