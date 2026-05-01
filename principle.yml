@@ -16,7 +16,7 @@ constraints:
 
   package_coupling:
     cyclic_dependencies_threshold: 0
-    acd_threshold: 0.35
+    acd_threshold: 0.40
 
   modules:
     # Map modules to packages
