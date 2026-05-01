@@ -88,6 +88,20 @@ public class ConstraintsReaderTest {
     }
 
     @Test
+    public void noPackageCoupling_packageCouplingIsAbsent() throws Exception {
+        var path = writeTempYaml("""
+                root_package: com.example
+                constraints:
+                  layering:
+                    layers: [infrastructure, domain]
+                """);
+
+        var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
+
+        assertTrue(constraints.packageCoupling().isEmpty());
+    }
+
+    @Test
     public void packageCoupling_adpThreshold_isParsed() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
@@ -132,6 +146,24 @@ public class ConstraintsReaderTest {
         var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
 
         assertTrue(constraints.packageCoupling().get().grouping().isPresent());
+    }
+
+    @Test
+    public void structureAnalysisEnabledWithoutPackageCoupling_groupingOnlyPackageCouplingIsPresent() throws Exception {
+        var path = writeTempYaml("""
+                root_package: com.example
+                constraints:
+                  layering:
+                    layers: [infrastructure, domain]
+                structure_analysis_enabled: true
+                """);
+
+        var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
+
+        assertTrue(constraints.packageCoupling().isPresent());
+        assertTrue(constraints.packageCoupling().get().grouping().isPresent());
+        assertTrue(constraints.packageCoupling().get().adp().isEmpty());
+        assertTrue(constraints.packageCoupling().get().racd().isEmpty());
     }
 
     @Test

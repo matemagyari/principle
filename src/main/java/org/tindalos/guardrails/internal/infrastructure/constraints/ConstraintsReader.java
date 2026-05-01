@@ -35,21 +35,20 @@ public class ConstraintsReader {
 
         var rootPackage = (String) yamlObject.get("root_package");
 
-        var constraintsYaml = getYamlStructure(yamlObject, "constraints").orElseThrow();
+        Map <String, Object> constraintsYaml = getYamlStructure(yamlObject, "constraints").orElseThrow();
 
         var modules = parseModules(constraintsYaml, rootPackage, fileLocation);
         var packageCoupling = parsePackageCoupling(constraintsYaml, yamlObject);
 
         var constraints = new Constraints(
-                getYamlStructure(constraintsYaml, "layering").map(m -> LAYERING_READER.read(new Yaml().dump(m))),
-                getYamlStructure(constraintsYaml, "third_party_restrictions").map(m -> THIRD_PARTY_READER.read(new Yaml().dump(m))),
-                Optional.of(packageCoupling),
+                LAYERING_READER.read(constraintsYaml),
+                THIRD_PARTY_READER.read(constraintsYaml),
+                packageCoupling,
                 modules);
 
         return new AnalysisPlan(constraints, rootPackage);
     }
 
-    @SuppressWarnings("unchecked")
     private static Optional<SubmoduleDefinitions> parseModules(Map<String, Object> constraintsYaml,
                                                                 String rootPackage,
                                                                 String fileLocation) {
@@ -62,23 +61,33 @@ public class ConstraintsReader {
                 });
     }
 
-    @SuppressWarnings("unchecked")
-    private static PackageCouplingConstraints parsePackageCoupling(Map<String, Object> constraintsYaml,
-                                                                    Map<String, Object> yamlObject) {
-        var builder = PackageCouplingConstraints.builder();
+    private static Optional<PackageCouplingConstraints> parsePackageCoupling(Map<String, Object> constraintsYaml,
+                                                                             Map<String, Object> yamlObject) {
+        var grouping = Optional.ofNullable(yamlObject.get("structure_analysis_enabled"))
+                .filter(Boolean.class::isInstance)
+                .map(Boolean.class::cast)
+                .filter(Boolean::booleanValue)
+                .map(ignored -> Grouping.of());
 
-        getYamlStructure(constraintsYaml, "package_coupling").ifPresent(pc -> {
-            var partial = PACKAGE_COUPLING_READER.read(new Yaml().dump(pc));
-            partial.adp().ifPresent(builder::adp);
-            partial.racd().ifPresent(builder::racd);
-        });
+        return PACKAGE_COUPLING_READER.read(constraintsYaml)
+                .map(packageCoupling -> {
+                    if (grouping.isEmpty()) {
+                        return packageCoupling;
+                    }
 
-        Optional.ofNullable(yamlObject.get("structure_analysis_enabled"))
-                .filter(v -> (Boolean) v)
-                .map(v -> Grouping.of())
-                .ifPresent(builder::grouping);
-
-        return builder.build();
+                    var builder = PackageCouplingConstraints.builder();
+                    packageCoupling.adp().ifPresent(builder::adp);
+                    packageCoupling.sdp().ifPresent(builder::sdp);
+                    packageCoupling.sap().ifPresent(builder::sap);
+                    packageCoupling.acd().ifPresent(builder::acd);
+                    packageCoupling.racd().ifPresent(builder::racd);
+                    packageCoupling.nccd().ifPresent(builder::nccd);
+                    grouping.ifPresent(builder::grouping);
+                    return builder.build();
+                })
+                .or(() -> grouping.map(value -> PackageCouplingConstraints.builder()
+                        .grouping(value)
+                        .build()));
     }
 
     @SuppressWarnings("unchecked")
