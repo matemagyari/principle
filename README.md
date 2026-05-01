@@ -2,9 +2,9 @@
 As a code base grows, the level of quality gets gradually harder to uphold as the ever increasing complexity outgrows the developers' capability to keep up with it. Static code analysers are meant to ease the burden on the developers and highlight the problems with the code. But even the best tools are useless if the developers can ignore them. An analyser built into the build process, so it can break it, much like CI servers do if tests fail or coverage drops, is an unignorable way to enforce good practices and keep the level of quality constantly high from the start.
 
 # Introduction
-JPrinciple is an opinionated (biased towards DDD and Hexagonal Architecture-style), lightweight, non-intrusive static code analyzer written in Scala for Java/Scala projects in the form of a Maven plugin. It runs the analysis during Maven's *compile* phase, logs the results and even breaks the build if the predefined allowed number of violations is exceeded, enforcing discipline on the developer and ensuring that the code quality never drops.
+Guardrails is an opinionated (biased towards DDD and Hexagonal Architecture-style), lightweight, non-intrusive static code analyzer written in Scala for Java/Scala projects in the form of a Maven plugin. It runs the analysis during Maven's *compile* phase, logs the results and even breaks the build if the predefined allowed number of violations is exceeded, enforcing discipline on the developer and ensuring that the code quality never drops.
 
-In JPrinciple you can set up _constraints_ that can detect violations against OO principles, developer-imposed code-structuring rules, and can break the build process if those violations exceed the developer-defined thresholds. JPrinciple currently supports _constraints_ to _watch out_ for the following
+In Guardrails you can set up _constraints_ that can detect violations against OO principles, developer-imposed code-structuring rules, and can break the build process if those violations exceed the developer-defined thresholds. Guardrails currently supports _constraints_ to _watch out_ for the following
 * Onion Layering 
 * Acyclic Dependency Principle
 * Stable Abstractions Principle
@@ -19,7 +19,7 @@ You can configure the constraints in yaml from version 0.34 and in xml before th
 
 ## Acyclic Dependency Principle Constraint
 
-Cyclic dependencies yields entangled code bases that are difficult to maintain and extend. You can find in-depth material about it [here](http://stan4j.com/advanced/acyclic-dependencies-principle.html) or [here](http://www.objectmentor.com/resources/articles/granularity.pdf). JDepend, the well-known tool JPrinciple is largely based on, can detect some limited forms of cycles. It can only detect direct dependency cycles (not transitive ones), and can't detect cycles between larger blocks. Let me try to explain. Let's assume the following dependency chain
+Cyclic dependencies yields entangled code bases that are difficult to maintain and extend. You can find in-depth material about it [here](http://stan4j.com/advanced/acyclic-dependencies-principle.html) or [here](http://www.objectmentor.com/resources/articles/granularity.pdf). JDepend, the well-known tool Guardrails is largely based on, can detect some limited forms of cycles. It can only detect direct dependency cycles (not transitive ones), and can't detect cycles between larger blocks. Let me try to explain. Let's assume the following dependency chain
 
 ```
 org.sampleapp.app.client.GameListProvider ---> org.sampleapp.domain.game.GameRepository ---> org.sampleapp.domain.core.Event ---> org.sampleapp.app.impl.SomeAssembler
@@ -42,7 +42,7 @@ A UML-like figure would be nice to visualize it, but I don't know how to use one
 
 ## Onion Layering Constraint
 
-Most code bases use some level of layering. For example in DDD there are 3 basic layers, the Infrastructure, the Application and the Domain. The code structure is like an onion, where the core is the Domain, wrapped around by the Application layer, then the Infrastructure layer. The dependencies can only point inwards, so Infrastructure can depend on Application and Domain, the Application on Domain, and Domain on none of the others. About the benefits of this architectural style over the traditional layering you can read for example [here](http://blog.8thlight.com/uncle-bob/2012/08/13/the-clean-architecture.html). JPrinciple can force this style of layering, detecting deviations from it. In case of deviations are found, you'll see something like this in the console:
+Most code bases use some level of layering. For example in DDD there are 3 basic layers, the Infrastructure, the Application and the Domain. The code structure is like an onion, where the core is the Domain, wrapped around by the Application layer, then the Infrastructure layer. The dependencies can only point inwards, so Infrastructure can depend on Application and Domain, the Application on Domain, and Domain on none of the others. About the benefits of this architectural style over the traditional layering you can read for example [here](http://blog.8thlight.com/uncle-bob/2012/08/13/the-clean-architecture.html). Guardrails can force this style of layering, detecting deviations from it. In case of deviations are found, you'll see something like this in the console:
 
 ```
 Layering violations (1 of allowed 5)
@@ -79,7 +79,7 @@ org.amazon.customer[0.6666667] --> org.amazon.core[0.75]
 
 ## Average Component Dependency Constraint
 
-ACD is a numeric value telling you that picking up an arbitrary package, how many packages in average it depends on. And symmetrically how many packages depend on it. In other words, if you do a change in a package, how many of the other packages will be affected in average. Obviously we want to keep it as low as possible, so changes would affect only small part of the code instead of rippling through the whole code base. For more details read [this](https://qconsf.com/sf2009/dl/qcon-sanfran-2008/slides/AlexanderVonZitzewitz_Successful_projects_with_architecture_management.pdf). Principle can measure absolute ACD and relative ACD (rACD), which is the percentage-based version of ACD. E.g. 15% means an average package depends on the 15% of all packages in the code base.
+ACD is a numeric value telling you that picking up an arbitrary package, how many packages in average it depends on. And symmetrically how many packages depend on it. In other words, if you do a change in a package, how many of the other packages will be affected in average. Obviously we want to keep it as low as possible, so changes would affect only small part of the code instead of rippling through the whole code base. For more details read [this](https://qconsf.com/sf2009/dl/qcon-sanfran-2008/slides/AlexanderVonZitzewitz_Successful_projects_with_architecture_management.pdf). Guardrails can measure absolute ACD and relative ACD (rACD), which is the percentage-based version of ACD. E.g. 15% means an average package depends on the 15% of all packages in the code base.
 ```
 Component Dependency Metrics
 ====================================
@@ -96,7 +96,7 @@ Vertical slices are similar to layering, but instead of being a horizontal (or i
 |            CORE            |
 ```
 
-Each of these modules cuts through all the layers of course, but should be quite independent of each other, meaning that dependencies between them should be few and far between, if any (the exception is the _Core upon which all the others depend). In Principle you can define your vertical slices in a YAML file, explicitly defining what packages belong to a given module and what dependencies are allowed between the modules.
+Each of these modules cuts through all the layers of course, but should be quite independent of each other, meaning that dependencies between them should be few and far between, if any (the exception is the _Core upon which all the others depend). In Guardrails you can define your vertical slices in a YAML file, explicitly defining what packages belong to a given module and what dependencies are allowed between the modules.
 
 ```yaml
 # Map modules to packages 
@@ -145,8 +145,8 @@ Put the following xml-snippet into the plugins section of your pom.xml
 ```xml
 
 <plugin>
-    <groupId>org.tindalos.guardrailsorg.tindalos.guardrails</groupId>
-    <artifactid>principle</artifactid>
+    <groupId>org.tindalos.guardrails</groupId>
+    <artifactid>guardrails</artifactid>
     <version>0.37</version>
     <configuration>
         <!-- Location of the configuration file relative to the project's root folder-->
@@ -168,7 +168,7 @@ An example yaml file (referred as guardrails.yml above). Each entry under `const
 
 ```yaml
 #The root package for the analysis. All packages below are relative to this.
-root_package: org.tindalos.guardrailss
+root_package: org.tindalos.guardrails
 
 constraints:
 
@@ -214,7 +214,7 @@ constraints:
     #number of allowed invalid dependencies
     violation_threshold: 0
 
-#Runs some cohesion analysis on the code base and prints the results under principle_reports
+#Runs some cohesion analysis on the code base and prints the results under guardrails_reports
 structure_analysis_enabled: true
 ```
 
@@ -225,8 +225,8 @@ Simply put the following xml-snippet into the plugins section of your pom.xml. K
 ```xml
 
 <plugin>
-    <groupId>org.tindalos.guardrailsorg.tindalos.guardrails</groupId>
-    <artifactid>principle</artifactid>
+    <groupId>org.tindalos.guardrails</groupId>
+    <artifactid>guardrails</artifactid>
     <version>0.30</version>
     <configuration>
         <!-- This should the root package of you project -->
@@ -284,7 +284,7 @@ Simply put the following xml-snippet into the plugins section of your pom.xml. K
             <!-- the vertical slices (sub-modules)-->
             <submodulesBlueprint>
                 <!-- the relative path of the YAML file containing the definitions -->
-                <location>src/main/resources/principle_blueprint.yaml</location>
+                <location>src/main/resources/guardrails_blueprint.yaml</location>
                 <!-- The build will break if the number of violations detected exceeds 0 -->
                 <violationsThreshold>0</violationsThreshold>
             </submodulesBlueprint>
@@ -307,7 +307,7 @@ Simply put the following xml-snippet into the plugins section of your pom.xml. K
 
 
 
-The latest stable version of JPrinciple is 0.37
+The latest stable version of Guardrails is 0.37
 
 # Future plans
 
