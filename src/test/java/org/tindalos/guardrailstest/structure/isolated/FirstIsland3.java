@@ -1,0 +1,6 @@
+package org.tindalos.guardrailstest.structure.isolated;
+
+public class FirstIsland3 {
+
+    private final FirstIsland1 next = new FirstIsland1();
+}

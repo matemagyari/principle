@@ -4,7 +4,7 @@ plugins {
     id 'signing'
 }
 
-group = 'org.tindalos.principle'
+group = 'org.tindalos.guardrails'
 version = '0.38-SNAPSHOT'
 
 java {
@@ -58,6 +58,20 @@ tasks.named('compileJava', JavaCompile) {
     }
 }
 
+// Jar configuration
+jar {
+    manifest {
+        attributes(
+            'Implementation-Title': 'Principle',
+            'Implementation-Version': project.version,
+            'Implementation-Vendor': 'Tindalos',
+            'Built-By': System.getProperty('user.name'),
+            'Built-Date': new Date(),
+            'Build-Jdk': JavaVersion.current()
+        )
+    }
+}
+
 tasks.named('compileTestJava') {
     modularity.inferModulePath = false
 }
@@ -76,17 +90,17 @@ sourceSets {
 }
 
 
-// Custom task to run principle checks (if applicable)
-task principleCheck {
+// Custom task to run guardrails checks (if applicable)
+task guardrailsCheck {
     group = 'verification'
-    description = 'Run principle architecture checks'
+    description = 'Run guardrails architecture checks'
     doLast {
         println 'Principle checks would run here - configure based on your needs'
     }
 }
 
-// Make principleCheck run after compile
-compileJava.finalizedBy principleCheck
+// Make guardrailsCheck run after compile
+compileJava.finalizedBy guardrailsCheck
 
 // Publishing configuration
 publishing {
@@ -116,8 +130,8 @@ publishing {
                 }
 
                 scm {
-                    connection = 'scm:git:ssh://git@github.com/matemagyari/principle.git'
-                    developerConnection = 'scm:git:ssh://git@github.com/matemagyari/principle.git'
+                    connection = 'scm:git:ssh://git@github.com/matemagyari/guardrails.git'
+                    developerConnection = 'scm:git:ssh://git@github.com/matemagyari/guardrails.git'
                     url = 'https://github.com/matemagyari/principle'
                 }
             }

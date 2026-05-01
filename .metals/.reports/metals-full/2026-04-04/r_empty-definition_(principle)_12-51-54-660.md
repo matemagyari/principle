@@ -22,26 +22,26 @@ offset: 1587
 uri: file://<WORKSPACE>/src/main/scala/org/tindalos/principle/infrastructure/di/PoorMansDIContainer.scala
 text:
 ```scala
-package org.tindalos.principle.infrastructure.di
+package org.tindalos.guardrails.infrastructure.di
 
-import org.tindalos.principle.app.{AnalysisPlanValidatorImpl, ApplicationModule, NodeBuilder, Printer}
-import org.tindalos.principle.domain.analyzers.Analyzer
-import org.tindalos.principle.domain.analyzers.acd.ComponentDependenciesAnalyzer
-import org.tindalos.principle.domain.analyzers.adp.CycleDetector
-import org.tindalos.principle.domain.analyzers.layering.LayerViolationAnalyzer
-import org.tindalos.principle.domain.analyzers.sap.SAPViolationAnalyzer
-import org.tindalos.principle.domain.analyzers.sdp.SDPViolationAnalyzer
-import org.tindalos.principle.domain.core.Node
-import org.tindalos.principle.domain.analyzers.structure._
-import org.tindalos.principle.domain.analyzers.submodulesblueprint.{SubmodulesBlueprintAnalyzer, SubmodulesBuilder}
-import org.tindalos.principle.domain.analyzers.thirdparty.ThirdPartyAnalyzer
-import org.tindalos.principle.domain.core.PackageStructureBuilder
-import org.tindalos.principle.app.reporters.AnalysisResultsReporter
-import org.tindalos.principle.domain.{AnalysisRunner, AnalysisRunnerImpl}
-import org.tindalos.principle.infrastructure.reporters._
-import org.tindalos.principle.infrastructure.reporters.packagestructure.YAMLPackageCohesionAnalysisResultReporter
-import org.tindalos.principle.infrastructure.service.jdepend.classdependencies.DefaultNodeBuilder
-import org.tindalos.principle.infrastructure.{JDependBasedPackageListBuilder, PackageStructureBuilderImpl}
+import org.tindalos.guardrails.app.{AnalysisPlanValidatorImpl, ApplicationModule, NodeBuilder, Printer}
+import org.tindalos.guardrails.domain.analyzers.Analyzer
+import org.tindalos.guardrails.domain.analyzers.acd.ComponentDependenciesAnalyzer
+import org.tindalos.guardrails.domain.analyzers.adp.CycleDetector
+import org.tindalos.guardrails.domain.analyzers.layering.LayerViolationAnalyzer
+import org.tindalos.guardrails.domain.analyzers.sap.SAPViolationAnalyzer
+import org.tindalos.guardrails.domain.analyzers.sdp.SDPViolationAnalyzer
+import org.tindalos.guardrails.domain.core.Node
+import org.tindalos.guardrails.domain.analyzers.structure._
+import org.tindalos.guardrails.domain.analyzers.submodulesblueprint.{SubmodulesBlueprintAnalyzer, SubmodulesBuilder}
+import org.tindalos.guardrails.domain.analyzers.thirdparty.ThirdPartyAnalyzer
+import org.tindalos.guardrails.domain.core.PackageStructureBuilder
+import org.tindalos.guardrails.app.reporters.AnalysisResultsReporter
+import org.tindalos.guardrails.domain.{AnalysisRunner, AnalysisRunnerImpl}
+import org.tindalos.guardrails.infrastructure.reporters._
+import org.tindalos.guardrails.infrastructure.reporters.packagestructure.YAMLPackageCohesionAnalysisResultReporter
+import org.tindalos.guardrails.infrastructure.service.jdepend.classdependencies.DefaultNodeBuilder
+import org.tindalos.guardrails.infrastructure.{JDependBasedPackageListBuilder, PackageStructureBuilderImpl}
 import scala.collection.JavaConverters._
 
 object PoorMansDIContainer {

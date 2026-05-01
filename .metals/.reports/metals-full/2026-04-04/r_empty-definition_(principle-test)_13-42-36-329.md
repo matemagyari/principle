@@ -25,20 +25,20 @@ offset: 5050
 uri: file://<WORKSPACE>/src/test/scala/org/tindalos/principle/domain/checker/BlueprintTest.scala
 text:
 ```scala
-package org.tindalos.principle.domain.checker
+package org.tindalos.guardrails.domain.checker
 
 import org.junit.Assert.assertEquals
 import org.junit._
-import org.tindalos.principle.domain.plan.AnalysisInput
-import org.tindalos.principle.domain.plan.AnalysisPlan
-import org.tindalos.principle.domain.analyzers.submodulesblueprint._
-import org.tindalos.principle.domain.constraints._
-import org.tindalos.principle.domain.core.packages.PackageWithMetrics
+import org.tindalos.guardrails.domain.plan.AnalysisInput
+import org.tindalos.guardrails.domain.plan.AnalysisPlan
+import org.tindalos.guardrails.domain.analyzers.submodulesblueprint._
+import org.tindalos.guardrails.domain.constraints._
+import org.tindalos.guardrails.domain.core.packages.PackageWithMetrics
 
 import scala.collection.JavaConverters._
-import org.tindalos.principle.infrastructure.service.jdepend.JDependBasedPackageListBuilder
-import org.tindalos.principle.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider
-import org.tindalos.principle.infrastructure.di.PoorMansDIContainer
+import org.tindalos.guardrails.infrastructure.service.jdepend.JDependBasedPackageListBuilder
+import org.tindalos.guardrails.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintProvider
+import org.tindalos.guardrails.infrastructure.di.PoorMansDIContainer
 
 class BlueprintTest {
 
@@ -49,7 +49,7 @@ class BlueprintTest {
 
   @Test
   def missingAndIllegal() {
-    val result = run("org.tindalos.principletest.submodulesblueprint", "src/test/resources/principle_blueprint_test.yaml")
+    val result = run("org.tindalos.guardrailstest.submodulesblueprint", "src/test/resources/principle_blueprint_test.yaml")
 
     val mod1 = fakeSubmodule("MOD1")
     val mod2 = fakeSubmodule("MOD2")
@@ -61,7 +61,7 @@ class BlueprintTest {
 
   @Test
   def overlapping() = {
-    val result = run("org.tindalos.principletest.submodulesblueprint", "src/test/resources/principle_blueprint_test_overlapping.yaml")
+    val result = run("org.tindalos.guardrailstest.submodulesblueprint", "src/test/resources/principle_blueprint_test_overlapping.yaml")
 
     assertEquals(java.util.Map.of(), result.illegalDependencies())
     assertEquals(java.util.Map.of(), result.missingDependencies())
@@ -70,7 +70,7 @@ class BlueprintTest {
 
   @Test
   def violationsCount() = {
-    val result = run("org.tindalos.principletest.submodulesblueprint", "src/test/resources/principle_blueprint_test.yaml")
+    val result = run("org.tindalos.guardrailstest.submodulesblueprint", "src/test/resources/principle_blueprint_test.yaml")
 
     assertEquals(2, result.violationsNumber())
     assertEquals(1, result.illegalDependencies().size)
@@ -79,7 +79,7 @@ class BlueprintTest {
 
   @Test
   def illegalDependenciesOnly() = {
-    val result = run("org.tindalos.principletest.submodulesblueprint", "src/test/resources/principle_blueprint_test.yaml")
+    val result = run("org.tindalos.guardrailstest.submodulesblueprint", "src/test/resources/principle_blueprint_test.yaml")
 
     val mod3 = fakeSubmodule("MOD3")
     val mod2 = fakeSubmodule("MOD2")
@@ -91,7 +91,7 @@ class BlueprintTest {
 
   @Test
   def missingDependenciesOnly() = {
-    val result = run("org.tindalos.principletest.submodulesblueprint", "src/test/resources/principle_blueprint_test.yaml")
+    val result = run("org.tindalos.guardrailstest.submodulesblueprint", "src/test/resources/principle_blueprint_test.yaml")
 
     val mod1 = fakeSubmodule("MOD1")
     val mod2 = fakeSubmodule("MOD2")
@@ -103,7 +103,7 @@ class BlueprintTest {
 
   @Test
   def expectationsFailed_whenViolationsExceedThreshold() = {
-    val result = run("org.tindalos.principletest.submodulesblueprint", "src/test/resources/principle_blueprint_test.yaml")
+    val result = run("org.tindalos.guardrailstest.submodulesblueprint", "src/test/resources/principle_blueprint_test.yaml")
     assert(result.constraintViolated(), "Expectations should fail when violations exceed threshold")
   }
 
@@ -120,7 +120,7 @@ class BlueprintTest {
 
   @Test
   def verifyResultStructure() = {
-    val result = run("org.tindalos.principletest.submodulesblueprint", "src/test/resources/principle_blueprint_test.yaml")
+    val result = run("org.tindalos.guardrailstest.submodulesblueprint", "src/test/resources/principle_blueprint_test.yaml")
 
     assertEquals(0, result.threshold())
     assert(result.illegalDependencies().isInstanceOf[java.util.Map[_, _]], "Illegal dependencies should be a Map")
@@ -129,7 +129,7 @@ class BlueprintTest {
 
   @Test
   def blueprintOk_parsingSucceeds() = {
-    val result = run("org.tindalos.principletest.submodulesblueprint", "src/test/resources/principle_blueprint_ok.yaml")
+    val result = run("org.tindalos.guardrailstest.submodulesblueprint", "src/test/resources/principle_blueprint_ok.yaml")
 
     assertEquals(0, result.threshold())
     assert(result.overlaps().isEmpty, "Valid blueprint should have no overlaps")

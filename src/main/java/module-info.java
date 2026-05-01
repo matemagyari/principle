@@ -1,5 +1,5 @@
-module org.tindalos.principle {
-    exports org.tindalos.principle.api;
+module org.tindalos.guardrails {
+    exports org.tindalos.guardrails.api;
 
     requires commons.io;
     requires commons.lang3;
