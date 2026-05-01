@@ -50,7 +50,7 @@ public record Constraints(
     }
 
     /**
-     * Creates a new builder for Checks.
+     * Creates a new builder for Constraints.
      *
      * @return a new Builder instance
      */

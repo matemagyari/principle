@@ -1,5 +1,7 @@
 package org.tindalos.principle.internal.domain.constraints;
 
+import org.tindalos.principle.internal.domain.core.Constraint;
+
 import java.util.Optional;
 
 /**
@@ -14,7 +16,7 @@ public record PackageCouplingConstraints(
         Optional<ACD> acd,
         Optional<RACD> racd,
         Optional<NCCD> nccd,
-        Optional<Grouping> grouping) {
+        Optional<Grouping> grouping) implements Constraint {
 
     /**
      * Builder for creating PackageCoupling instances with a fluent API.

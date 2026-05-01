@@ -62,8 +62,8 @@ public final class ThirdPartyAnalyzer implements Analyzer {
     }
 
     @Override
-    public boolean isEnabled(Constraints designQualityChecks) {
-        return designQualityChecks.thirdParty().isPresent();
+    public boolean isEnabled(Constraints designQualityConstraints) {
+        return designQualityConstraints.thirdParty().isPresent();
     }
 
     private List<String> allowedComponentsForLayer(List<String> layers, String layer, List<Barrier> barriers) {
