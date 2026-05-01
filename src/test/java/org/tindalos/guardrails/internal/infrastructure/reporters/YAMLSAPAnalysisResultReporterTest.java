@@ -2,8 +2,8 @@ package org.tindalos.guardrails.internal.infrastructure.reporters;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.analyzers.sap.SAPResult;
 import org.tindalos.guardrails.internal.domain.constraints.SAP;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageMetrics;

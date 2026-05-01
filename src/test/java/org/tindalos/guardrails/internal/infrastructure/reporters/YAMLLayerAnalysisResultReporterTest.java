@@ -1,11 +1,11 @@
 package org.tindalos.guardrails.internal.infrastructure.reporters;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.analyzers.layering.LayerReference;
 import org.tindalos.guardrails.internal.domain.analyzers.layering.LayerViolationsResult;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.tindalos.guardrails.internal.infrastructure.reporters.YamlAssertions.assertValidYaml;
 
 /**

@@ -1,7 +1,7 @@
 package org.tindalos.guardrails.internal.domain.analyzers;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.analyzers.layering.LayerReference;
 import org.tindalos.guardrails.internal.domain.constraints.Constraints;
 import org.tindalos.guardrails.internal.domain.constraints.Layering;
@@ -11,13 +11,13 @@ import org.tindalos.guardrails.internal.infrastructure.di.Guardrails;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LayeringTest {
 
     private final Constraints constraints = Constraints.builder().layering(new Layering(List.of("infrastructure", "app", "domain"), 0)).build();
 
-    @Before
+    @BeforeEach
     public void setup() {
         TestFixture.setLogger();
     }

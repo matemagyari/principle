@@ -1,14 +1,14 @@
 package org.tindalos.guardrails.internal.domain.analyzers;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.constraints.ACD;
 import org.tindalos.guardrails.internal.domain.constraints.Constraints;
 import org.tindalos.guardrails.internal.domain.constraints.PackageCouplingConstraints;
 import org.tindalos.guardrails.internal.domain.plan.AnalysisPlan;
 import org.tindalos.guardrails.internal.infrastructure.di.Guardrails;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ACDTest {
 
@@ -16,7 +16,7 @@ public class ACDTest {
             .packageCoupling(PackageCouplingConstraints.builder().acd(new ACD()).build())
             .build();;
 
-    @Before
+    @BeforeEach
     public void setup() {
         TestFixture.setLogger();
     }

@@ -1,13 +1,13 @@
 package org.tindalos.guardrails.internal.domain.core;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CycleTest {
 
@@ -35,10 +35,10 @@ public class CycleTest {
         assertEquals(3, cycle.references().size());
     }
 
-    @Test(expected = DomainException.class)
+    @Test
     public void testCycleCreationWithSingleReference_shouldThrowException() {
         PackageReference ref1 = new PackageReference("org.example.a");
-        new Cycle(Arrays.asList(ref1));
+        assertThrows(DomainException.class, () -> new Cycle(Arrays.asList(ref1)));
     }
 
     @Test

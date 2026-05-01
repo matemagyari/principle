@@ -1,7 +1,7 @@
 package org.tindalos.guardrails.internal.domain.analyzers;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.analyzers.sdp.SDPResult;
 import org.tindalos.guardrails.internal.domain.constraints.Constraints;
 import org.tindalos.guardrails.internal.domain.constraints.PackageCouplingConstraints;
@@ -15,7 +15,7 @@ public class SDPTest {
             .packageCoupling(PackageCouplingConstraints.builder().sdp(new SDP(0)).build())
             .build();
 
-    @Before
+    @BeforeEach
     public void setup() {
         TestFixture.setLogger();
     }

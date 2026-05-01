@@ -4,13 +4,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Assert;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.core.Package;
 import org.tindalos.guardrails.internal.domain.core.PackageStructureBuildingException;
 
@@ -20,7 +21,7 @@ public class PackageTest {
     private TestPackage packageB;
     private TestPackage packageC;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         packageA = new TestPackage("org.example.a");
         packageB = new TestPackage("org.example.b");
@@ -30,15 +31,15 @@ public class PackageTest {
     @Test
     public void testPackageCreation() {
         TestPackage pkg = new TestPackage("org.example.test");
-        Assert.assertEquals("org.example.test", pkg.reference().name());
+        assertEquals("org.example.test", pkg.reference().name());
         assertFalse(pkg.isUnreferred());
-        Assert.assertEquals(0, pkg.subPackages().size());
+        assertEquals(0, pkg.subPackages().size());
     }
 
     @Test
     public void testPackageCreationWithString() {
         TestPackage pkg = new TestPackage("org.example.test");
-        Assert.assertEquals("org.example.test", pkg.reference().name());
+        assertEquals("org.example.test", pkg.reference().name());
     }
 
     @Test
@@ -48,7 +49,7 @@ public class PackageTest {
 
         parent.insert(child);
 
-        Assert.assertEquals(1, parent.subPackages().size());
+        assertEquals(1, parent.subPackages().size());
         assertTrue(parent.subPackages().contains(child));
     }
 
@@ -59,25 +60,25 @@ public class PackageTest {
 
         parent.insert(grandchild);
 
-        Assert.assertEquals(1, parent.subPackages().size());
+        assertEquals(1, parent.subPackages().size());
         org.tindalos.guardrails.internal.domain.core.Package child = parent.subPackages().get(0);
         assertEquals("org.example.child", child.reference().name());
         assertEquals(1, child.subPackages().size());
         assertEquals("org.example.child.grandchild", child.subPackages().get(0).reference().name());
     }
 
-    @Test(expected = PackageStructureBuildingException.class)
+    @Test
     public void testInsertIntoItself_shouldThrowException() {
         TestPackage pkg = new TestPackage("org.example");
-        pkg.insert(pkg);
+        assertThrows(PackageStructureBuildingException.class, () -> pkg.insert(pkg));
     }
 
-    @Test(expected = PackageStructureBuildingException.class)
+    @Test
     public void testInsertUnrelatedPackage_shouldThrowException() {
         TestPackage parent = new TestPackage("org.example");
         TestPackage unrelated = new TestPackage("org.other");
 
-        parent.insert(unrelated);
+        assertThrows(PackageStructureBuildingException.class, () -> parent.insert(unrelated));
     }
 
     @Test
@@ -131,7 +132,7 @@ public class PackageTest {
         TestPackage pkg = new TestPackage("org.example");
         pkg.setMetrics(new PackageMetrics(2, 3, 0.5f, 0.6f, 0.1f));
 
-        Assert.assertEquals(0.6f, pkg.getMetrics().instability(), 0.001);
+        assertEquals(0.6f, pkg.getMetrics().instability(), 0.001);
     }
 
     @Test
@@ -139,7 +140,7 @@ public class PackageTest {
         TestPackage pkg = new TestPackage("org.example");
         pkg.setMetrics(new PackageMetrics(2, 3, 0.5f, 0.6f, 0.1f));
 
-        Assert.assertEquals(0.1f, pkg.getMetrics().distance(), 0.001);
+        assertEquals(0.1f, pkg.getMetrics().distance(), 0.001);
     }
 
     @Test
@@ -206,7 +207,7 @@ public class PackageTest {
 
         root.insert(level3);
 
-        Assert.assertEquals(1, root.subPackages().size());
+        assertEquals(1, root.subPackages().size());
         org.tindalos.guardrails.internal.domain.core.Package org_example = root.subPackages().get(0);
         assertEquals("org.example", org_example.reference().name());
 

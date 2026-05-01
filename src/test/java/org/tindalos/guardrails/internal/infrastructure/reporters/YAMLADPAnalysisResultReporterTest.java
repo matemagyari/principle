@@ -1,6 +1,6 @@
 package org.tindalos.guardrails.internal.infrastructure.reporters;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.analyzers.adp.ADPResult;
 import org.tindalos.guardrails.internal.domain.constraints.ADP;
 import org.tindalos.guardrails.internal.domain.core.Cycle;
@@ -8,7 +8,7 @@ import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.tindalos.guardrails.internal.infrastructure.reporters.YamlAssertions.assertValidYaml;
 
 /**

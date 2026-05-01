@@ -1,6 +1,6 @@
 package org.tindalos.guardrails.internal.app;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.constraints.Barrier;
 import org.tindalos.guardrails.internal.domain.constraints.Constraints;
 import org.tindalos.guardrails.internal.domain.constraints.Layering;
@@ -9,8 +9,8 @@ import org.tindalos.guardrails.internal.domain.plan.AnalysisPlan;
 
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AnalysisPlanValidatorTest {
 

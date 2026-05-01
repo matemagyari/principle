@@ -1,6 +1,6 @@
 package org.tindalos.guardrails.internal;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.api.AnalysisOutcome;
 import org.tindalos.guardrails.api.AnalysisPlan;
 import org.tindalos.guardrails.api.GuardrailsAnalyzer;
@@ -15,8 +15,8 @@ import org.tindalos.guardrails.internal.utils.logging.TheLogger;
 
 import java.util.Optional;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class SelfTest {
 
@@ -50,8 +50,6 @@ public class SelfTest {
 
     @Test
     public void checkItselfFromAPI() {
-        ReportsDirectoryManager.ensureReportsDirectoryExists();
-
         TestFixture.setLogger();
 
         AnalysisPlan plan = org.tindalos.guardrails.api.Guardrails.readPlan(Optional.of("guardrails.yml"));

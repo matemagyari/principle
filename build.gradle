@@ -29,7 +29,9 @@ dependencies {
     implementation 'guru.nidi:jdepend:2.9.5'
 
     // Testing
-    testImplementation 'junit:junit:4.11'
+    testImplementation platform('org.junit:junit-bom:5.14.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     // Utilities
     implementation 'com.google.guava:guava:14.0.1'
@@ -161,7 +163,7 @@ signing {
 // Test configuration
 test {
     modularity.inferModulePath = false
-    useJUnit()
+    useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"
         exceptionFormat "full"
