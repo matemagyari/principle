@@ -1,6 +1,8 @@
 package org.tindalos.principle.internal.domain.constraints;
 
-public interface IntConstraint {
+import org.tindalos.principle.internal.domain.core.Constraint;
+
+public interface IntConstraint extends Constraint {
 
     int violationThreshold();
 }

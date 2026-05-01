@@ -22,8 +22,8 @@ public class SubmodulesBlueprintAnalyzer implements Analyzer {
     }
 
     @Override
-    public boolean isEnabled(Constraints designQualityChecks) {
-        return designQualityChecks.submoduleDefinitions().isPresent();
+    public boolean isEnabled(Constraints designQualityConstraints) {
+        return designQualityConstraints.submoduleDefinitions().isPresent();
     }
 
     @Override

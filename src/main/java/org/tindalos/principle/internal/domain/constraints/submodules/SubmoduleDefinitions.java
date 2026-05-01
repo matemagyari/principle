@@ -1,5 +1,7 @@
 package org.tindalos.principle.internal.domain.constraints.submodules;
 
+import org.tindalos.principle.internal.domain.core.Constraint;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.Set;
  * threshold. Use {@link #checkNoOverlaps()} to validate that no modules
  * overlap (i.e., no two modules contain packages that are subpackages of each other).
  */
-public class SubmoduleDefinitions {
+public class SubmoduleDefinitions implements Constraint {
 
     private final Map<SubmoduleId, SubmoduleDefinition> definitions;
     private final int violationThreshold;

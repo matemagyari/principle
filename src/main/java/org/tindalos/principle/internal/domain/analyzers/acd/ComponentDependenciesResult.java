@@ -1,7 +1,7 @@
 package org.tindalos.principle.internal.domain.analyzers.acd;
 
 import org.tindalos.principle.internal.domain.core.AnalysisResult;
-import org.tindalos.principle.internal.domain.constraints.DoubleExpectation;
+import org.tindalos.principle.internal.domain.constraints.DoubleConstraint;
 import org.tindalos.principle.internal.domain.constraints.PackageCouplingConstraints;
 
 /**
@@ -37,11 +37,11 @@ public record ComponentDependenciesResult(
 
     public double getRACDThreshold() {
         return packageCoupling.racd()
-                .map(DoubleExpectation::threshold)
+                .map(DoubleConstraint::threshold)
                 .orElse(999.0);
     }
 
-    private boolean greaterIfExists(double actual, DoubleExpectation expectation) {
+    private boolean greaterIfExists(double actual, DoubleConstraint expectation) {
         return expectation != null &&
                !Double.isNaN(expectation.threshold()) &&
                actual > expectation.threshold();
