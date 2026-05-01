@@ -40,10 +40,10 @@ public class ConstraintsReader {
         var modules = parseModules(constraintsYaml, rootPackage, fileLocation);
 
         var constraints = new Constraints(
-                LAYERING_READER.read(constraintsYaml),
-                THIRD_PARTY_READER.read(constraintsYaml),
-                 PACKAGE_COUPLING_READER.read(constraintsYaml),
-                modules);
+            LAYERING_READER.read(yamlObject),
+            THIRD_PARTY_READER.read(yamlObject),
+            PACKAGE_COUPLING_READER.read(yamlObject),
+            modules);
 
         return new AnalysisPlan(constraints, rootPackage);
     }

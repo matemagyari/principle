@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface ConstraintDefinitionReader<T extends Constraint> {
 
-    Optional<T> read(Map<String, Object> constraints);
+    Optional<T> read(Map<String, Object> yamlObject);
 }
