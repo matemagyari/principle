@@ -1,4 +1,4 @@
-package org.tindalos.guardrails.internal.infrastructure.analyzers.submodulesblueprint;
+package org.tindalos.guardrails.internal.infrastructure.constraints;
 
 import org.tindalos.guardrails.internal.domain.constraints.submodules.InvalidBlueprintDefinitionException;
 import org.tindalos.guardrails.internal.domain.constraints.submodules.SubmoduleDefinition;
@@ -14,9 +14,8 @@ import java.util.stream.Collectors;
  * Converts YAML configuration into SubmoduleDefinitions objects that define module
  * structure, packages, and dependencies.
  */
-public class YAMLBasedSubmodulesBlueprintProvider implements SubmodulesBlueprintProvider {
+public class YAMLBasedSubmodulesBlueprintProvider {
 
-    @Override
     @SuppressWarnings("unchecked")
     public SubmoduleDefinitions readSubmoduleDefinitions(Map<String, Object> yamlObject) {
     var basePackageName = Optional.ofNullable((String) yamlObject.get("root_package"))

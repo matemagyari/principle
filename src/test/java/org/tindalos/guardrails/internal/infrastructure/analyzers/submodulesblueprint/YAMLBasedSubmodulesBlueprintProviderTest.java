@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.constraints.submodules.*;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
+import org.tindalos.guardrails.internal.infrastructure.constraints.YAMLBasedSubmodulesBlueprintProvider;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.Map;
