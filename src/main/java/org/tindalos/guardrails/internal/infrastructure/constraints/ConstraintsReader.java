@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Reads and parses the Principle configuration YAML file into an {@link AnalysisPlan}.
+ * Reads and parses the Guardrails configuration YAML file into an {@link AnalysisPlan}.
  * Supports layering, third-party restrictions, package coupling, and submodule definitions.
  */
 public class ConstraintsReader {
@@ -21,15 +21,15 @@ public class ConstraintsReader {
     private static final LayeringReader LAYERING_READER = new LayeringReader();
     private static final ThirdPartyReader THIRD_PARTY_READER = new ThirdPartyReader();
     private static final PackageCouplingConstraintsReader PACKAGE_COUPLING_READER = new PackageCouplingConstraintsReader();
-    private static SubmodulesBlueprintReader SUBMODULES_BLUEPRINT_READER = new SubmodulesBlueprintReader();
+    private static final SubmodulesBlueprintReader SUBMODULES_BLUEPRINT_READER = new SubmodulesBlueprintReader();
 
     public static AnalysisPlan readFromFile(Optional<String> fileLocation) {
         var location = fileLocation.orElse(DEFAULT_FILE_LOCATION);
-        return fromYaml(readYAML(location), location);
+        return fromYaml(readYAML(location));
     }
 
     @SuppressWarnings("unchecked")
-    private static AnalysisPlan fromYaml(String yamlText, String fileLocation) {
+    private static AnalysisPlan fromYaml(String yamlText) {
         Map<String, Object> yamlObject = (Map<String, Object>) new Yaml().load(yamlText);
 
         var constraints = new Constraints(

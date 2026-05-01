@@ -97,7 +97,7 @@ task guardrailsCheck {
     group = 'verification'
     description = 'Run guardrails architecture checks'
     doLast {
-        println 'Principle checks would run here - configure based on your needs'
+        println 'Guardrails checks would run here - configure based on your needs'
     }
 }
 
