@@ -4,7 +4,6 @@ import org.apache.commons.io.FileUtils;
 import org.tindalos.guardrails.internal.domain.constraints.*;
 import org.tindalos.guardrails.internal.domain.constraints.exception.InvalidConfigurationException;
 import org.tindalos.guardrails.internal.domain.plan.AnalysisPlan;
-import org.tindalos.guardrails.internal.infrastructure.analyzers.submodulesblueprint.YAMLBasedSubmodulesBlueprintReader;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;

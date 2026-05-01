@@ -1,4 +1,4 @@
-package org.tindalos.guardrails.internal.infrastructure.analyzers.submodulesblueprint;
+package org.tindalos.guardrails.internal.infrastructure.constraints;
 
 import org.tindalos.guardrails.internal.domain.constraints.submodules.InvalidBlueprintDefinitionException;
 import org.tindalos.guardrails.internal.domain.constraints.submodules.SubmoduleDefinition;
