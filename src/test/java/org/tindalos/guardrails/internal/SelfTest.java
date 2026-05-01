@@ -8,7 +8,7 @@ import org.tindalos.guardrails.internal.domain.analyzers.TestFixture;
 import org.tindalos.guardrails.internal.domain.analyzers.adp.ADPResult;
 import org.tindalos.guardrails.internal.domain.analyzers.layering.LayerViolationsResult;
 import org.tindalos.guardrails.internal.domain.analyzers.submodulesblueprint.SubmodulesBlueprintAnalysisResult;
-import org.tindalos.guardrails.internal.infrastructure.core.ConstraintsReader;
+import org.tindalos.guardrails.internal.infrastructure.constraints.ConstraintsReader;
 import org.tindalos.guardrails.internal.infrastructure.di.Guardrails;
 import org.tindalos.guardrails.internal.infrastructure.reporters.ReportsDirectoryManager;
 import org.tindalos.guardrails.internal.utils.logging.TheLogger;

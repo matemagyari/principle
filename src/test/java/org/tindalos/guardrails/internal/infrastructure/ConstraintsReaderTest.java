@@ -3,7 +3,7 @@ package org.tindalos.guardrails.internal.infrastructure;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.constraints.exception.InvalidConfigurationException;
-import org.tindalos.guardrails.internal.infrastructure.core.ConstraintsReader;
+import org.tindalos.guardrails.internal.infrastructure.constraints.ConstraintsReader;
 
 import java.io.File;
 import java.nio.file.Files;

@@ -1,4 +1,4 @@
-package org.tindalos.guardrails.internal.infrastructure.core;
+package org.tindalos.guardrails.internal.infrastructure.constraints;
 
 import org.apache.commons.io.FileUtils;
 import org.tindalos.guardrails.internal.domain.constraints.submodules.SubmoduleDefinitions;
@@ -9,7 +9,6 @@ import org.tindalos.guardrails.internal.infrastructure.analyzers.submodulesbluep
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,6 +19,10 @@ import java.util.Optional;
 public class ConstraintsReader {
 
     private static final String DEFAULT_FILE_LOCATION = "/guardrails.yml";
+
+    private static final LayeringReader LAYERING_READER = new LayeringReader();
+    private static final ThirdPartyReader THIRD_PARTY_READER = new ThirdPartyReader();
+    private static final PackageCouplingConstraintsReader PACKAGE_COUPLING_READER = new PackageCouplingConstraintsReader();
 
     public static AnalysisPlan readFromFile(Optional<String> fileLocation) {
         var location = fileLocation.orElse(DEFAULT_FILE_LOCATION);
@@ -38,8 +41,8 @@ public class ConstraintsReader {
         var packageCoupling = parsePackageCoupling(constraintsYaml, yamlObject);
 
         var constraints = new Constraints(
-                getYamlStructure(constraintsYaml, "layering").map(ConstraintsReader::toLayering),
-                getYamlStructure(constraintsYaml, "third_party_restrictions").map(ConstraintsReader::toThirdParty),
+                getYamlStructure(constraintsYaml, "layering").map(m -> LAYERING_READER.read(new Yaml().dump(m))),
+                getYamlStructure(constraintsYaml, "third_party_restrictions").map(m -> THIRD_PARTY_READER.read(new Yaml().dump(m))),
                 Optional.of(packageCoupling),
                 modules);
 
@@ -65,12 +68,9 @@ public class ConstraintsReader {
         var builder = PackageCouplingConstraints.builder();
 
         getYamlStructure(constraintsYaml, "package_coupling").ifPresent(pc -> {
-            Optional.ofNullable(pc.get("acd_threshold"))
-                    .map(t -> new RACD((Double) t))
-                    .ifPresent(builder::racd);
-            Optional.ofNullable(pc.get("cyclic_dependencies_threshold"))
-                    .map(t -> new ADP((Integer) t))
-                    .ifPresent(builder::adp);
+            var partial = PACKAGE_COUPLING_READER.read(new Yaml().dump(pc));
+            partial.adp().ifPresent(builder::adp);
+            partial.racd().ifPresent(builder::racd);
         });
 
         Optional.ofNullable(yamlObject.get("structure_analysis_enabled"))
@@ -79,25 +79,6 @@ public class ConstraintsReader {
                 .ifPresent(builder::grouping);
 
         return builder.build();
-    }
-
-    @SuppressWarnings("unchecked")
-    private static ThirdParty toThirdParty(Map<String, Object> structure) {
-        var barriersYaml = (List<Map<String, Object>>) structure.get("allowed_libraries");
-        var barriers = barriersYaml.stream()
-                .map(m -> new Barrier(
-                        (String) m.get("layer"),
-                        (List<String>) m.get("libraries")))
-                .toList();
-        return new ThirdParty(barriers, (Integer) structure.get("violation_threshold"));
-    }
-
-    @SuppressWarnings("unchecked")
-    private static Layering toLayering(Map<String, Object> structure) {
-        var layers = Optional.ofNullable((List<String>) structure.get("layers"))
-                .orElse(List.of());
-        var threshold = Optional.ofNullable((Integer) structure.get("violation_threshold")).orElse(0);
-        return new Layering(layers, threshold);
     }
 
     @SuppressWarnings("unchecked")
