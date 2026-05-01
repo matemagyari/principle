@@ -36,7 +36,10 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.1'
     implementation 'org.apache.commons:commons-io:1.3.2'
     implementation 'org.json:json:20090211'
-    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+    implementation('com.googlecode.json-simple:json-simple:1.1.1') {
+        // Avoid leaking JUnit 4.10 onto the main module path via json-simple.
+        exclude group: 'junit', module: 'junit'
+    }
     implementation 'org.yaml:snakeyaml:1.5'
     implementation 'org.specs2:classycle:1.4.1'
 }
@@ -45,6 +48,18 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
     options.compilerArgs << '-Xlint:unchecked'
     options.compilerArgs << '-Xlint:deprecation'
+}
+
+tasks.named('compileJava', JavaCompile) {
+    doFirst {
+        // Compile main sources as a named JPMS module while keeping tests on the classpath.
+        options.compilerArgs += ['--module-path', configurations.compileClasspath.asPath]
+        classpath = files()
+    }
+}
+
+tasks.named('compileTestJava') {
+    modularity.inferModulePath = false
 }
 
 sourceSets {
@@ -131,6 +146,7 @@ signing {
 
 // Test configuration
 test {
+    modularity.inferModulePath = false
     useJUnit()
     testLogging {
         events "passed", "skipped", "failed"
