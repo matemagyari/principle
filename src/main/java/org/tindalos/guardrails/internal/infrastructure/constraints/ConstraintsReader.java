@@ -24,12 +24,16 @@ public class ConstraintsReader {
     private static final SubmodulesBlueprintReader SUBMODULES_BLUEPRINT_READER = new SubmodulesBlueprintReader();
 
     public static AnalysisPlan readFromFile(Optional<String> fileLocation) {
+        return readFromFile(fileLocation, ConstraintReaderRegistry.empty());
+    }
+
+    public static AnalysisPlan readFromFile(Optional<String> fileLocation, ConstraintReaderRegistry registry) {
         var location = fileLocation.orElse(DEFAULT_FILE_LOCATION);
-        return fromYaml(readYAML(location));
+        return fromYaml(readYAML(location), registry);
     }
 
     @SuppressWarnings("unchecked")
-    private static AnalysisPlan fromYaml(String yamlText) {
+    private static AnalysisPlan fromYaml(String yamlText, ConstraintReaderRegistry registry) {
         Map<String, Object> yamlObject = (Map<String, Object>) new Yaml().load(yamlText);
 
         var constraints = new Constraints(
@@ -38,7 +42,8 @@ public class ConstraintsReader {
                 PACKAGE_COUPLING_READER.read(yamlObject),
                 SUBMODULES_BLUEPRINT_READER.read(yamlObject));
 
-        return new AnalysisPlan(constraints, (String) yamlObject.get("root_package"));
+        var customDefinitions = registry.readAll(yamlObject);
+        return new AnalysisPlan(constraints, (String) yamlObject.get("root_package"), customDefinitions);
     }
 
     private static String readYAML(String fileLocation) {

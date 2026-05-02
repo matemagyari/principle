@@ -65,7 +65,7 @@ public final class AnalysisResultsReporter {
 
     private <T extends AnalysisResult> AnalysisResultReporter<T> getReporter(T t) {
         return reporters.stream()
-                .filter(reporter -> reporter.resultType().isInstance(t))
+                .filter(reporter -> reporter.supports(t))
                 .findFirst()
                 .map(reporter -> {
                     return (AnalysisResultReporter<T>) reporter;
