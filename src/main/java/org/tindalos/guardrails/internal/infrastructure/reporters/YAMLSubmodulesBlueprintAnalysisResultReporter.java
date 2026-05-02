@@ -16,6 +16,11 @@ import java.util.stream.Collectors;
 public class YAMLSubmodulesBlueprintAnalysisResultReporter implements SubmodulesBlueprintAnalysisResultReporter {
 
     @Override
+    public Class<SubmodulesBlueprintAnalysisResult> resultType() {
+        return SubmodulesBlueprintAnalysisResult.class;
+    }
+
+    @Override
     public String report(SubmodulesBlueprintAnalysisResult result) {
         var header = """
                 submodules_blueprint_result:

@@ -14,6 +14,11 @@ import java.util.stream.Collectors;
 public class YAMLThirdPartyAnalysisResultReporter implements ThirdPartyAnalysisResultReporter {
 
     @Override
+    public Class<ThirdPartyViolationsResult> resultType() {
+        return ThirdPartyViolationsResult.class;
+    }
+
+    @Override
     public String report(ThirdPartyViolationsResult result) {
         int violationCount = result.violations().values().stream().mapToInt(Set::size).sum();
         return """

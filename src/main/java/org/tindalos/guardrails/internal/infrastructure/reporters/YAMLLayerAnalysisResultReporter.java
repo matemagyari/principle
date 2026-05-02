@@ -13,6 +13,11 @@ import java.util.stream.Collectors;
 public class YAMLLayerAnalysisResultReporter implements LayerAnalysisResultReporter {
 
     @Override
+    public Class<LayerViolationsResult> resultType() {
+        return LayerViolationsResult.class;
+    }
+
+    @Override
     public String report(LayerViolationsResult result) {
         return """
                 layer_result:

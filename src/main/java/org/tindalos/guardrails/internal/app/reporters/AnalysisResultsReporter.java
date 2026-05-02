@@ -90,6 +90,20 @@ public final class AnalysisResultsReporter {
             .collect(java.util.stream.Collectors.joining());
     }
 
+    private <T extends AnalysisResult> AnalysisResultReporter<T> getReporter(T t) {
+        java.util.List<AnalysisResultReporter<?>> reporters = Arrays.asList(
+                adpReporter,
+                layerReporter,
+                thirdPartyReporter,
+                sapReporter,
+                componentDependencyReporter,
+                submodulesBlueprintReporter,
+                sdpReporter,
+                cohesionReporter
+        );
+        return null;
+    }
+
     private ReportWithViolation toReport(AnalysisResult result) {
         return switch (result) {
             case ADPResult typed -> new ReportWithViolation(adpReporter.report(typed), result.constraintViolated());

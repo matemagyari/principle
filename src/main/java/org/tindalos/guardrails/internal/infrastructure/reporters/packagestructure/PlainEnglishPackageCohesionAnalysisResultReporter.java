@@ -15,6 +15,11 @@ import static org.tindalos.guardrails.internal.infrastructure.reporters.packages
 public final class PlainEnglishPackageCohesionAnalysisResultReporter implements PackageCohesionAnalysisResultReporter {
 
     @Override
+    public Class<CohesionAnalysisResult> resultType() {
+        return CohesionAnalysisResult.class;
+    }
+
+    @Override
     public String report(CohesionAnalysisResult result) {
         String fileNames = PACKAGE_COHESIONS_FILE_NAME + ", " +
                 PACKAGE_STRUCTURE_HINTS1_FILE_NAME + ", " +

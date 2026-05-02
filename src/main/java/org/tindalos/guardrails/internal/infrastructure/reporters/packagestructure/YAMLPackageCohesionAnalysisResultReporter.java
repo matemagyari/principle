@@ -21,6 +21,11 @@ import static org.tindalos.guardrails.internal.infrastructure.reporters.packages
 public final class YAMLPackageCohesionAnalysisResultReporter implements PackageCohesionAnalysisResultReporter {
 
     @Override
+    public Class<CohesionAnalysisResult> resultType() {
+        return CohesionAnalysisResult.class;
+    }
+
+    @Override
     public String report(CohesionAnalysisResult result) {
         ExistingPackageCohesionsFileWriter.writeToFile(result);
         PackageStructureHints1FileWriter.writeToFile(result.groupingResult());

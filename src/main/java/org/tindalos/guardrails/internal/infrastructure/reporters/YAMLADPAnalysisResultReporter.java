@@ -17,6 +17,11 @@ import java.util.stream.Collectors;
 public class YAMLADPAnalysisResultReporter implements ADPAnalysisResultReporter {
 
     @Override
+    public Class<ADPResult> resultType() {
+        return ADPResult.class;
+    }
+
+    @Override
     public String report(ADPResult result) {
         return """
                 adp_result:

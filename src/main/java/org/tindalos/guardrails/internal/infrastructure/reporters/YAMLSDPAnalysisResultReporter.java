@@ -14,6 +14,11 @@ import java.util.stream.Collectors;
 public class YAMLSDPAnalysisResultReporter implements SDPAnalysisResultReporter {
 
     @Override
+    public Class<SDPResult> resultType() {
+        return SDPResult.class;
+    }
+
+    @Override
     public String report(SDPResult result) {
         return """
                 sdp_result:

@@ -10,6 +10,11 @@ import org.tindalos.guardrails.internal.domain.analyzers.acd.ComponentDependenci
  */
 public class YAMLComponentDependencyAnalysisResultReporter implements ComponentDependencyAnalysisResultReporter {
 
+  @Override
+  public Class<ComponentDependenciesResult> resultType() {
+    return ComponentDependenciesResult.class;
+  }
+
     @Override
     public String report(ComponentDependenciesResult result) {
         return """

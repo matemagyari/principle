@@ -13,6 +13,11 @@ import java.util.stream.Collectors;
 public class YAMLSAPAnalysisResultReporter implements SAPAnalysisResultReporter {
 
     @Override
+    public Class<SAPResult> resultType() {
+        return SAPResult.class;
+    }
+
+    @Override
     public String report(SAPResult result) {
         return """
                 sap_result:
