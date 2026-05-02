@@ -35,7 +35,7 @@ import org.yaml.snakeyaml.Yaml;
  */
 public class AnalysisResultsReporterTest {
 
-    private final AnalysisResultsReporter reporter = new AnalysisResultsReporter(
+    private final AnalysisResultsReporter reporter = new AnalysisResultsReporter(List.of(
             new YAMLADPAnalysisResultReporter(),
             new YAMLLayerAnalysisResultReporter(),
             new YAMLThirdPartyAnalysisResultReporter(),
@@ -43,7 +43,7 @@ public class AnalysisResultsReporterTest {
             new YAMLComponentDependencyAnalysisResultReporter(),
             new YAMLSubmodulesBlueprintAnalysisResultReporter(),
             new YAMLSDPAnalysisResultReporter(),
-            new YAMLPackageCohesionAnalysisResultReporter()
+            new YAMLPackageCohesionAnalysisResultReporter())
     );
 
     private PackageReference ref(String name) {

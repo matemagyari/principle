@@ -1,54 +1,27 @@
 package org.tindalos.guardrails.internal.app.reporters;
 
-import java.util.Arrays;
-
 import org.tindalos.guardrails.internal.domain.AggregatedAnalysisResults;
-import org.tindalos.guardrails.internal.domain.analyzers.acd.ComponentDependenciesResult;
-import org.tindalos.guardrails.internal.domain.analyzers.adp.ADPResult;
-import org.tindalos.guardrails.internal.domain.analyzers.layering.LayerViolationsResult;
-import org.tindalos.guardrails.internal.domain.analyzers.sap.SAPResult;
-import org.tindalos.guardrails.internal.domain.analyzers.sdp.SDPResult;
-import org.tindalos.guardrails.internal.domain.analyzers.structure.CohesionAnalysisResult;
-import org.tindalos.guardrails.internal.domain.analyzers.submodulesblueprint.SubmodulesBlueprintAnalysisResult;
-import org.tindalos.guardrails.internal.domain.analyzers.thirdparty.ThirdPartyViolationsResult;
 import org.tindalos.guardrails.internal.domain.core.AnalysisResult;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Aggregates individual analysis reports into a single YAML summary.
  */
 public final class AnalysisResultsReporter {
 
-    private final ADPAnalysisResultReporter adpReporter;
-    private final LayerAnalysisResultReporter layerReporter;
-    private final ThirdPartyAnalysisResultReporter thirdPartyReporter;
-    private final SAPAnalysisResultReporter sapReporter;
-    private final ComponentDependencyAnalysisResultReporter componentDependencyReporter;
-    private final SubmodulesBlueprintAnalysisResultReporter submodulesBlueprintReporter;
-    private final SDPAnalysisResultReporter sdpReporter;
-    private final PackageCohesionAnalysisResultReporter cohesionReporter;
+    private final java.util.List<AnalysisResultReporter<?>> reporters = new ArrayList<>();
 
-    public AnalysisResultsReporter(
-            ADPAnalysisResultReporter adpReporter,
-            LayerAnalysisResultReporter layerReporter,
-            ThirdPartyAnalysisResultReporter thirdPartyReporter,
-            SAPAnalysisResultReporter sapReporter,
-            ComponentDependencyAnalysisResultReporter componentDependencyReporter,
-            SubmodulesBlueprintAnalysisResultReporter submodulesBlueprintReporter,
-            SDPAnalysisResultReporter sdpReporter,
-            PackageCohesionAnalysisResultReporter cohesionReporter) {
-        this.adpReporter = adpReporter;
-        this.layerReporter = layerReporter;
-        this.thirdPartyReporter = thirdPartyReporter;
-        this.sapReporter = sapReporter;
-        this.componentDependencyReporter = componentDependencyReporter;
-        this.submodulesBlueprintReporter = submodulesBlueprintReporter;
-        this.sdpReporter = sdpReporter;
-        this.cohesionReporter = cohesionReporter;
+    public AnalysisResultsReporter(java.util.List<AnalysisResultReporter<?>> reporters) {
+        this.reporters.addAll(reporters);
     }
 
     public String summary(AggregatedAnalysisResults results) {
         var reports = results.results().stream()
-            .map(this::toReport)
+            .map(result -> new ReportWithViolation(
+                    getReporter(result).report(result),
+                    result.constraintViolated()))
             .toList();
 
         var success = !results.hasViolations();
@@ -91,31 +64,13 @@ public final class AnalysisResultsReporter {
     }
 
     private <T extends AnalysisResult> AnalysisResultReporter<T> getReporter(T t) {
-        java.util.List<AnalysisResultReporter<?>> reporters = Arrays.asList(
-                adpReporter,
-                layerReporter,
-                thirdPartyReporter,
-                sapReporter,
-                componentDependencyReporter,
-                submodulesBlueprintReporter,
-                sdpReporter,
-                cohesionReporter
-        );
-        return null;
-    }
-
-    private ReportWithViolation toReport(AnalysisResult result) {
-        return switch (result) {
-            case ADPResult typed -> new ReportWithViolation(adpReporter.report(typed), result.constraintViolated());
-            case LayerViolationsResult typed -> new ReportWithViolation(layerReporter.report(typed), result.constraintViolated());
-            case ThirdPartyViolationsResult typed -> new ReportWithViolation(thirdPartyReporter.report(typed), result.constraintViolated());
-            case SDPResult typed -> new ReportWithViolation(sdpReporter.report(typed), result.constraintViolated());
-            case SAPResult typed -> new ReportWithViolation(sapReporter.report(typed), result.constraintViolated());
-            case ComponentDependenciesResult typed -> new ReportWithViolation(componentDependencyReporter.report(typed), result.constraintViolated());
-            case SubmodulesBlueprintAnalysisResult typed -> new ReportWithViolation(submodulesBlueprintReporter.report(typed), result.constraintViolated());
-            case CohesionAnalysisResult typed -> new ReportWithViolation(cohesionReporter.report(typed), result.constraintViolated());
-            default -> throw new RuntimeException("terrible thing - no result type");
-        };
+        return reporters.stream()
+                .filter(reporter -> reporter.resultType().isInstance(t))
+                .findFirst()
+                .map(reporter -> {
+                    return (AnalysisResultReporter<T>) reporter;
+                })
+                .get();
     }
 
     private record ReportWithViolation(String report, boolean violated) {

@@ -45,7 +45,7 @@ public final class Guardrails {
     }
 
     public static AnalysisResultsReporter createAggregatedYAMLReporter() {
-        return new AnalysisResultsReporter(
+        return new AnalysisResultsReporter(List.of(
                 new YAMLADPAnalysisResultReporter(),
                 new YAMLLayerAnalysisResultReporter(),
                 new YAMLThirdPartyAnalysisResultReporter(),
@@ -53,7 +53,7 @@ public final class Guardrails {
                 new YAMLComponentDependencyAnalysisResultReporter(),
                 new YAMLSubmodulesBlueprintAnalysisResultReporter(),
                 new YAMLSDPAnalysisResultReporter(),
-                new YAMLPackageCohesionAnalysisResultReporter());
+                new YAMLPackageCohesionAnalysisResultReporter()));
     }
 
     private static AnalysisRunner createAnalysisRunner() {
