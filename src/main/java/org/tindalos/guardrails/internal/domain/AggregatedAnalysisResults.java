@@ -34,38 +34,38 @@ public final class AggregatedAnalysisResults {
     }
 
     public Optional<ADPResult> adpResult() {
-        return firstResultOfType(ADPResult.class);
+        return resultOfType(ADPResult.class);
     }
 
     public Optional<LayerViolationsResult> layerViolationsResult() {
-        return firstResultOfType(LayerViolationsResult.class);
+        return resultOfType(LayerViolationsResult.class);
     }
 
     public Optional<ThirdPartyViolationsResult> thirdPartyViolationsResult() {
-        return firstResultOfType(ThirdPartyViolationsResult.class);
+        return resultOfType(ThirdPartyViolationsResult.class);
     }
 
     public Optional<SDPResult> sdpResult() {
-        return firstResultOfType(SDPResult.class);
+        return resultOfType(SDPResult.class);
     }
 
     public Optional<SAPResult> sapResult() {
-        return firstResultOfType(SAPResult.class);
+        return resultOfType(SAPResult.class);
     }
 
     public Optional<ComponentDependenciesResult> componentDependenciesResult() {
-        return firstResultOfType(ComponentDependenciesResult.class);
+        return resultOfType(ComponentDependenciesResult.class);
     }
 
     public Optional<SubmodulesBlueprintAnalysisResult> submodulesBlueprintAnalysisResult() {
-        return firstResultOfType(SubmodulesBlueprintAnalysisResult.class);
+        return resultOfType(SubmodulesBlueprintAnalysisResult.class);
     }
 
     public Optional<CohesionAnalysisResult> cohesionAnalysisResult() {
-        return firstResultOfType(CohesionAnalysisResult.class);
+        return resultOfType(CohesionAnalysisResult.class);
     }
 
-    private <T extends AnalysisResult> Optional<T> firstResultOfType(Class<T> resultType) {
+    public <T extends AnalysisResult> Optional<T> resultOfType(Class<T> resultType) {
         return results.stream()
                 .filter(resultType::isInstance)
                 .map(resultType::cast)
