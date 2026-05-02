@@ -27,6 +27,8 @@ public final class AnalysisResultsReporter {
     private final SDPAnalysisResultReporter sdpReporter;
     private final PackageCohesionAnalysisResultReporter cohesionReporter;
 
+    private final java.util.List<AnalysisResultReporter<?>> reporters;
+
     public AnalysisResultsReporter(
             ADPAnalysisResultReporter adpReporter,
             LayerAnalysisResultReporter layerReporter,
@@ -44,11 +46,22 @@ public final class AnalysisResultsReporter {
         this.submodulesBlueprintReporter = submodulesBlueprintReporter;
         this.sdpReporter = sdpReporter;
         this.cohesionReporter = cohesionReporter;
+
+        this.reporters = Arrays.asList(
+                adpReporter,
+                layerReporter,
+                thirdPartyReporter,
+                sapReporter,
+                componentDependencyReporter,
+                submodulesBlueprintReporter,
+                sdpReporter,
+                cohesionReporter
+        );
     }
 
     public String summary(AggregatedAnalysisResults results) {
         var reports = results.results().stream()
-            .map(this::toReport)
+            .map(result -> new ReportWithViolation(getReporter(result).report(result), result.constraintViolated()))
             .toList();
 
         var success = !results.hasViolations();
@@ -101,21 +114,14 @@ public final class AnalysisResultsReporter {
                 sdpReporter,
                 cohesionReporter
         );
-        return null;
-    }
 
-    private ReportWithViolation toReport(AnalysisResult result) {
-        return switch (result) {
-            case ADPResult typed -> new ReportWithViolation(adpReporter.report(typed), result.constraintViolated());
-            case LayerViolationsResult typed -> new ReportWithViolation(layerReporter.report(typed), result.constraintViolated());
-            case ThirdPartyViolationsResult typed -> new ReportWithViolation(thirdPartyReporter.report(typed), result.constraintViolated());
-            case SDPResult typed -> new ReportWithViolation(sdpReporter.report(typed), result.constraintViolated());
-            case SAPResult typed -> new ReportWithViolation(sapReporter.report(typed), result.constraintViolated());
-            case ComponentDependenciesResult typed -> new ReportWithViolation(componentDependencyReporter.report(typed), result.constraintViolated());
-            case SubmodulesBlueprintAnalysisResult typed -> new ReportWithViolation(submodulesBlueprintReporter.report(typed), result.constraintViolated());
-            case CohesionAnalysisResult typed -> new ReportWithViolation(cohesionReporter.report(typed), result.constraintViolated());
-            default -> throw new RuntimeException("terrible thing - no result type");
-        };
+        return reporters.stream()
+                .filter(reporter -> reporter.resultType().isInstance(t))
+                .findFirst()
+                .map(reporter -> {
+                    return (AnalysisResultReporter<T>) reporter;
+                })
+                .get();
     }
 
     private record ReportWithViolation(String report, boolean violated) {
