@@ -1,67 +1,27 @@
 package org.tindalos.guardrails.internal.app.reporters;
 
-import java.util.Arrays;
-
 import org.tindalos.guardrails.internal.domain.AggregatedAnalysisResults;
-import org.tindalos.guardrails.internal.domain.analyzers.acd.ComponentDependenciesResult;
-import org.tindalos.guardrails.internal.domain.analyzers.adp.ADPResult;
-import org.tindalos.guardrails.internal.domain.analyzers.layering.LayerViolationsResult;
-import org.tindalos.guardrails.internal.domain.analyzers.sap.SAPResult;
-import org.tindalos.guardrails.internal.domain.analyzers.sdp.SDPResult;
-import org.tindalos.guardrails.internal.domain.analyzers.structure.CohesionAnalysisResult;
-import org.tindalos.guardrails.internal.domain.analyzers.submodulesblueprint.SubmodulesBlueprintAnalysisResult;
-import org.tindalos.guardrails.internal.domain.analyzers.thirdparty.ThirdPartyViolationsResult;
 import org.tindalos.guardrails.internal.domain.core.AnalysisResult;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Aggregates individual analysis reports into a single YAML summary.
  */
 public final class AnalysisResultsReporter {
 
-    private final ADPAnalysisResultReporter adpReporter;
-    private final LayerAnalysisResultReporter layerReporter;
-    private final ThirdPartyAnalysisResultReporter thirdPartyReporter;
-    private final SAPAnalysisResultReporter sapReporter;
-    private final ComponentDependencyAnalysisResultReporter componentDependencyReporter;
-    private final SubmodulesBlueprintAnalysisResultReporter submodulesBlueprintReporter;
-    private final SDPAnalysisResultReporter sdpReporter;
-    private final PackageCohesionAnalysisResultReporter cohesionReporter;
+    private final java.util.List<AnalysisResultReporter<?>> reporters = new ArrayList<>();
 
-    private final java.util.List<AnalysisResultReporter<?>> reporters;
-
-    public AnalysisResultsReporter(
-            ADPAnalysisResultReporter adpReporter,
-            LayerAnalysisResultReporter layerReporter,
-            ThirdPartyAnalysisResultReporter thirdPartyReporter,
-            SAPAnalysisResultReporter sapReporter,
-            ComponentDependencyAnalysisResultReporter componentDependencyReporter,
-            SubmodulesBlueprintAnalysisResultReporter submodulesBlueprintReporter,
-            SDPAnalysisResultReporter sdpReporter,
-            PackageCohesionAnalysisResultReporter cohesionReporter) {
-        this.adpReporter = adpReporter;
-        this.layerReporter = layerReporter;
-        this.thirdPartyReporter = thirdPartyReporter;
-        this.sapReporter = sapReporter;
-        this.componentDependencyReporter = componentDependencyReporter;
-        this.submodulesBlueprintReporter = submodulesBlueprintReporter;
-        this.sdpReporter = sdpReporter;
-        this.cohesionReporter = cohesionReporter;
-
-        this.reporters = Arrays.asList(
-                adpReporter,
-                layerReporter,
-                thirdPartyReporter,
-                sapReporter,
-                componentDependencyReporter,
-                submodulesBlueprintReporter,
-                sdpReporter,
-                cohesionReporter
-        );
+    public AnalysisResultsReporter(java.util.List<AnalysisResultReporter<?>> reporters) {
+        this.reporters.addAll(reporters);
     }
 
     public String summary(AggregatedAnalysisResults results) {
         var reports = results.results().stream()
-            .map(result -> new ReportWithViolation(getReporter(result).report(result), result.constraintViolated()))
+            .map(result -> new ReportWithViolation(
+                    getReporter(result).report(result),
+                    result.constraintViolated()))
             .toList();
 
         var success = !results.hasViolations();
