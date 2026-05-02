@@ -31,6 +31,6 @@ constraints:
       CORE: []
       CONSTRAINTS: [CORE]
       ANALYZERS: [CORE, CONSTRAINTS]
-      REPORTERS: [CORE, ANALYZERS]
+      REPORTERS: [CORE]
 
     violation_threshold: 0

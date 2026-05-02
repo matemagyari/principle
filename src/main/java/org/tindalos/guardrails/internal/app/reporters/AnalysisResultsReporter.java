@@ -104,17 +104,6 @@ public final class AnalysisResultsReporter {
     }
 
     private <T extends AnalysisResult> AnalysisResultReporter<T> getReporter(T t) {
-        java.util.List<AnalysisResultReporter<?>> reporters = Arrays.asList(
-                adpReporter,
-                layerReporter,
-                thirdPartyReporter,
-                sapReporter,
-                componentDependencyReporter,
-                submodulesBlueprintReporter,
-                sdpReporter,
-                cohesionReporter
-        );
-
         return reporters.stream()
                 .filter(reporter -> reporter.resultType().isInstance(t))
                 .findFirst()
