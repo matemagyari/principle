@@ -18,8 +18,6 @@ import org.tindalos.guardrails.internal.infrastructure.constraints.ConstraintsRe
  */
 public final class Guardrails {
 
-    private static final String DEFAULT_FILE_LOCATION = "/guardrails.yml";
-
     private Guardrails() {
     }
 
@@ -30,6 +28,13 @@ public final class Guardrails {
 
     public static Builder builder(String rootPackage) {
         return new Builder(rootPackage);
+    }
+
+    public static <T extends AnalysisResult> Extension<T> extension(
+            Analyzer<T> analyzer,
+            AnalysisResultReporter<T> reporter,
+            ConstraintDefinitionReader<T> reader) {
+        return new Extension<>(analyzer, reporter, reader);
     }
 
     @SuppressWarnings("deprecation")
@@ -58,18 +63,11 @@ public final class Guardrails {
             this.rootPackage = Objects.requireNonNull(rootPackage, "rootPackage");
         }
 
-        public Builder registerAnalyzer(Analyzer<? extends AnalysisResult> analyzer) {
-            customAnalyzers.add(Objects.requireNonNull(analyzer, "analyzer"));
-            return this;
-        }
-
-        public Builder registerReporter(AnalysisResultReporter<? extends AnalysisResult> reporter) {
-            customReporters.add(Objects.requireNonNull(reporter, "reporter"));
-            return this;
-        }
-
-        public Builder registerReader(ConstraintDefinitionReader<? extends AnalysisResult> reader) {
-            customReaders.add(Objects.requireNonNull(reader, "reader"));
+        public Builder register(Extension<? extends AnalysisResult> extension) {
+            var validated = Objects.requireNonNull(extension, "extension");
+            customAnalyzers.add(validated.analyzer());
+            customReporters.add(validated.reporter());
+            customReaders.add(validated.reader());
             return this;
         }
 
@@ -165,6 +163,21 @@ public final class Guardrails {
                 var typedReporter = (AnalysisResultReporter<AnalysisResult>) delegate;
                 return typedReporter.report(wrapped.delegate());
             }
+        }
+    }
+
+    /**
+     * Strongly typed registration triplet for one extension result type.
+     */
+    public record Extension<T extends AnalysisResult>(
+            Analyzer<T> analyzer,
+            AnalysisResultReporter<T> reporter,
+            ConstraintDefinitionReader<T> reader) {
+
+        public Extension {
+            analyzer = Objects.requireNonNull(analyzer, "analyzer");
+            reporter = Objects.requireNonNull(reporter, "reporter");
+            reader = Objects.requireNonNull(reader, "reader");
         }
     }
 }

@@ -112,9 +112,7 @@ class GuardrailsExtensibilityTest {
         Files.writeString(tempFile, yaml, StandardCharsets.UTF_8);
 
         var builder = Guardrails.builder("org.tindalos.guardrails.internal")
-                .registerReader(new XResultReader())
-                .registerAnalyzer(new XResultAnalyzer())
-                .registerReporter(new YAMLXResultReporter());
+          .register(Guardrails.extension(new XResultAnalyzer(), new YAMLXResultReporter(), new XResultReader()));
 
         var plan = builder.readPlan(Optional.of(tempFile.toString()));
         var analyzer = builder.build();
