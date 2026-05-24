@@ -5,11 +5,10 @@ import java.util.Optional;
 
 import org.tindalos.guardrails.internal.domain.analyzers.acd.ComponentDependenciesResult;
 import org.tindalos.guardrails.internal.domain.analyzers.adp.ADPResult;
-import org.tindalos.guardrails.internal.domain.analyzers.layering.LayerViolationsResult;
 import org.tindalos.guardrails.internal.domain.analyzers.sap.SAPResult;
 import org.tindalos.guardrails.internal.domain.analyzers.sdp.SDPResult;
+import org.tindalos.guardrails.internal.domain.analyzers.slices.SlicesAnalysisResult;
 import org.tindalos.guardrails.internal.domain.analyzers.structure.CohesionAnalysisResult;
-import org.tindalos.guardrails.internal.domain.analyzers.submodulesblueprint.SubmodulesBlueprintAnalysisResult;
 import org.tindalos.guardrails.internal.domain.analyzers.thirdparty.ThirdPartyViolationsResult;
 import org.tindalos.guardrails.internal.domain.core.AnalysisResult;
 
@@ -37,10 +36,6 @@ public final class AggregatedAnalysisResults {
         return resultOfType(ADPResult.class);
     }
 
-    public Optional<LayerViolationsResult> layerViolationsResult() {
-        return resultOfType(LayerViolationsResult.class);
-    }
-
     public Optional<ThirdPartyViolationsResult> thirdPartyViolationsResult() {
         return resultOfType(ThirdPartyViolationsResult.class);
     }
@@ -57,8 +52,8 @@ public final class AggregatedAnalysisResults {
         return resultOfType(ComponentDependenciesResult.class);
     }
 
-    public Optional<SubmodulesBlueprintAnalysisResult> submodulesBlueprintAnalysisResult() {
-        return resultOfType(SubmodulesBlueprintAnalysisResult.class);
+    public Optional<SlicesAnalysisResult> slicesAnalysisResult() {
+        return resultOfType(SlicesAnalysisResult.class);
     }
 
     public Optional<CohesionAnalysisResult> cohesionAnalysisResult() {

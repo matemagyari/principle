@@ -3,6 +3,7 @@ package org.tindalos.guardrails.internal.infrastructure;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.constraints.exception.InvalidConfigurationException;
+import org.tindalos.guardrails.internal.domain.constraints.slices.SliceId;
 import org.tindalos.guardrails.internal.infrastructure.constraints.ConstraintsReader;
 
 import java.io.File;
@@ -43,38 +44,43 @@ public class ConstraintsReaderTest {
     }
 
     @Test
-    public void layering_isParsed() throws Exception {
+    public void slices_isParsed() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
                 constraints:
-                  layering:
-                    layers: [infrastructure, app, domain]
-                    violation_threshold: 2
+                  slices:
+                    - name: layers
+                      violation_threshold: 1
+                      slices:
+                        infrastructure: [infrastructure]
+                        app: [app]
+                        domain: [domain]
+                      dependencies:
+                        infrastructure: [app, domain]
+                        app: [domain]
+                        domain: []
                 """);
 
         var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
 
-        var layering = constraints.layering().get();
-        assertEquals(List.of("infrastructure", "app", "domain"), layering.layers());
-        assertEquals(2, layering.violationThreshold());
+        var slices = constraints.slices().get();
+        assertEquals(1, slices.sliceGroups().size());
+
+        var group = slices.sliceGroups().get(0);
+        assertEquals("layers", group.name());
+        assertEquals(1, group.violationThreshold());
+        assertEquals(3, group.slices().size());
+
+        var infraItem = group.slices().get(new SliceId("infrastructure"));
+        assertNotNull(infraItem);
+        assertEquals(1, infraItem.packages().size());
+        assertEquals(2, infraItem.legalDependencies().size());
+        assertTrue(infraItem.legalDependencies().contains(new SliceId("app")));
+        assertTrue(infraItem.legalDependencies().contains(new SliceId("domain")));
     }
 
     @Test
-    public void layering_defaultThresholdIsZero() throws Exception {
-        var path = writeTempYaml("""
-                root_package: com.example
-                constraints:
-                  layering:
-                    layers: [a, b]
-                """);
-
-        var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
-
-        assertEquals(0, constraints.layering().get().violationThreshold());
-    }
-
-    @Test
-    public void noLayering_layeringIsAbsent() throws Exception {
+    public void noSlices_slicesIsAbsent() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
                 constraints:
@@ -84,7 +90,7 @@ public class ConstraintsReaderTest {
 
         var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
 
-        assertTrue(constraints.layering().isEmpty());
+        assertTrue(constraints.slices().isEmpty());
     }
 
     @Test
@@ -92,8 +98,12 @@ public class ConstraintsReaderTest {
         var path = writeTempYaml("""
                 root_package: com.example
                 constraints:
-                  layering:
-                    layers: [infrastructure, domain]
+                  slices:
+                    - name: layers
+                      slices:
+                        domain: [domain]
+                      dependencies:
+                        domain: []
                 """);
 
         var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
@@ -153,8 +163,12 @@ public class ConstraintsReaderTest {
         var path = writeTempYaml("""
                 root_package: com.example
                 constraints:
-                  layering:
-                    layers: [infrastructure, domain]
+                  slices:
+                    - name: layers
+                      slices:
+                        domain: [domain]
+                      dependencies:
+                        domain: []
                   package_coupling:
                     structure_analysis_enabled: true
                 """);
@@ -191,10 +205,8 @@ public class ConstraintsReaderTest {
                     cyclic_dependencies_threshold: 0
                   third_party_restrictions:
                     allowed_libraries:
-                      - layer: infrastructure
-                        libraries: [org.apache.commons, com.google]
-                      - layer: app
-                        libraries: [org.apache.commons]
+                      - layers.infrastructure: [org.apache.commons, com.google]
+                      - layers.app: [org.apache.commons]
                     violation_threshold: 3
                 """);
 
@@ -204,9 +216,9 @@ public class ConstraintsReaderTest {
         assertTrue(tp.isPresent());
         assertEquals(3, tp.get().violationThreshold());
         assertEquals(2, tp.get().barriers().size());
-        assertEquals("infrastructure", tp.get().barriers().get(0).layer());
+        assertEquals("layers.infrastructure", tp.get().barriers().get(0).slice());
         assertEquals(List.of("org.apache.commons", "com.google"), tp.get().barriers().get(0).components());
-        assertEquals("app", tp.get().barriers().get(1).layer());
+        assertEquals("layers.app", tp.get().barriers().get(1).slice());
         assertEquals(Collections.singletonList("org.apache.commons"), tp.get().barriers().get(1).components());
     }
 
@@ -225,98 +237,6 @@ public class ConstraintsReaderTest {
     }
 
     @Test
-    public void modules_withThreeModuleDefinitions_isParsed() throws Exception {
-        var path = writeTempYaml("""
-                root_package: com.example
-                constraints:
-                  modules:
-                    module-definitions:
-                      AUTH: [domain.auth, app.auth]
-                      BILLING: [domain.billing, app.billing]
-                      NOTIFICATION: [domain.notification, app.notification]
-                    module-dependencies:
-                      AUTH: [BILLING]
-                      BILLING: [NOTIFICATION]
-                    violation_threshold: 2
-                """);
-
-        var definitions = ConstraintsReader.readFromFile(Optional.of(path)).constraints().submoduleDefinitions().get();
-
-        assertEquals(3, definitions.definitions().size());
-        assertEquals(2, definitions.violationThreshold());
-    }
-
-    @Test
-    public void modules_withDefinitions_isParsed() throws Exception {
-        var path = writeTempYaml("""
-                root_package: com.example
-                constraints:
-                  package_coupling:
-                    cyclic_dependencies_threshold: 0
-                  modules:
-                    module-definitions:
-                      MOD1: [domain.mod1]
-                    module-dependencies:
-                      MOD1: []
-                    violation_threshold: 1
-                """);
-
-        var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
-
-        assertTrue(constraints.submoduleDefinitions().isPresent());
-        assertEquals(1, constraints.submoduleDefinitions().get().violationThreshold());
-    }
-
-    @Test
-    public void modules_defaultThresholdIsZero() throws Exception {
-        var path = writeTempYaml("""
-                root_package: com.example
-                constraints:
-                  package_coupling:
-                    cyclic_dependencies_threshold: 0
-                  modules:
-                    module-definitions:
-                      MOD1: [domain.mod1]
-                    module-dependencies:
-                      MOD1: []
-                """);
-
-        var definitions = ConstraintsReader.readFromFile(Optional.of(path)).constraints().submoduleDefinitions().get();
-
-        assertEquals(0, definitions.violationThreshold());
-    }
-
-    @Test
-    public void noModules_submoduleDefinitionsIsAbsent() throws Exception {
-        var path = writeTempYaml("""
-                root_package: com.example
-                constraints:
-                  package_coupling:
-                    cyclic_dependencies_threshold: 0
-                """);
-
-        var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
-
-        assertFalse(constraints.submoduleDefinitions().isPresent());
-    }
-
-    @Test
-    public void modules_withoutDefinitions_submoduleDefinitionsIsAbsent() throws Exception {
-        var path = writeTempYaml("""
-                root_package: com.example
-                constraints:
-                  package_coupling:
-                    cyclic_dependencies_threshold: 0
-                  modules:
-                    violation_threshold: 1
-                """);
-
-        var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
-
-        assertFalse(constraints.submoduleDefinitions().isPresent());
-    }
-
-    @Test
     public void missingFile_throwsInvalidConfigurationException() {
       assertThrows(InvalidConfigurationException.class,
           () -> ConstraintsReader.readFromFile(Optional.of("/non/existent/path/guardrails.yml")));
@@ -327,37 +247,36 @@ public class ConstraintsReaderTest {
         var path = writeTempYaml("""
                 root_package: org.example.myapp
                 constraints:
-                  layering:
-                    layers: [infrastructure, app, domain]
-                    violation_threshold: 0
+                  slices:
+                    - name: layers
+                      slices:
+                        infrastructure: [infrastructure]
+                        app: [app]
+                        domain: [domain]
+                      dependencies:
+                        infrastructure: [app]
+                        app: [domain]
+                        domain: []
+                      violation_threshold: 0
                   third_party_restrictions:
                     allowed_libraries:
-                      - layer: infrastructure
-                        libraries: [org.apache.commons]
+                      - layers.infrastructure: [org.apache.commons]
                     violation_threshold: 0
                   package_coupling:
                     cyclic_dependencies_threshold: 0
                     acd_threshold: 0.5
                     structure_analysis_enabled: true
-                  modules:
-                    module-definitions:
-                      MOD1: [domain.mod1]
-                    module-dependencies:
-                      MOD1: []
-                    violation_threshold: 0
                 """);
 
         var plan = ConstraintsReader.readFromFile(Optional.of(path));
         var constraints = plan.constraints();
 
         assertEquals("org.example.myapp", plan.basePackage());
-        assertTrue(constraints.layering().isPresent());
+        assertTrue(constraints.slices().isPresent());
         assertTrue(constraints.thirdParty().isPresent());
         assertTrue(constraints.packageCoupling().isPresent());
         assertTrue(constraints.packageCoupling().get().adp().isPresent());
         assertTrue(constraints.packageCoupling().get().racd().isPresent());
         assertTrue(constraints.packageCoupling().get().grouping().isPresent());
-        assertTrue(constraints.submoduleDefinitions().isPresent());
     }
 }
-

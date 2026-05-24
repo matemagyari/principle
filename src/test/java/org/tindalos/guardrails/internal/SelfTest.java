@@ -1,22 +1,20 @@
 package org.tindalos.guardrails.internal;
 
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.api.AnalysisOutcome;
 import org.tindalos.guardrails.api.AnalysisPlan;
 import org.tindalos.guardrails.api.GuardrailsAnalyzer;
 import org.tindalos.guardrails.internal.domain.analyzers.TestFixture;
 import org.tindalos.guardrails.internal.domain.analyzers.adp.ADPResult;
-import org.tindalos.guardrails.internal.domain.analyzers.layering.LayerViolationsResult;
-import org.tindalos.guardrails.internal.domain.analyzers.submodulesblueprint.SubmodulesBlueprintAnalysisResult;
+import org.tindalos.guardrails.internal.domain.analyzers.slices.SlicesAnalysisResult;
 import org.tindalos.guardrails.internal.infrastructure.constraints.ConstraintsReader;
 import org.tindalos.guardrails.internal.infrastructure.di.Guardrails;
 import org.tindalos.guardrails.internal.infrastructure.reporters.ReportsDirectoryManager;
 import org.tindalos.guardrails.internal.utils.logging.TheLogger;
-
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class SelfTest {
 
@@ -37,11 +35,9 @@ public class SelfTest {
             var summary = reporter.summary(results);
             TheLogger.info(summary);
             var adpViolated = results.adpResult().map(ADPResult::constraintViolated).orElse(false);
-            var layeringViolated = results.layerViolationsResult().map(LayerViolationsResult::constraintViolated).orElse(false);
-            var submodulesViolated = results.submodulesBlueprintAnalysisResult().map(SubmodulesBlueprintAnalysisResult::constraintViolated).orElse(false);
+            var slicesViolated = results.slicesAnalysisResult().map(SlicesAnalysisResult::constraintViolated).orElse(false);
             assertFalse(adpViolated);
-            assertFalse(layeringViolated);
-            assertFalse(submodulesViolated);
+            assertFalse(slicesViolated);
         } catch (Exception ex) {
             TheLogger.error(ex.getMessage());
             fail(ex.getMessage());

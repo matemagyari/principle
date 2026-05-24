@@ -1,67 +1,68 @@
-package org.tindalos.guardrails.internal.domain.analyzers.submodulesblueprint;
+package org.tindalos.guardrails.internal.domain.analyzers.slices;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.tindalos.guardrails.internal.domain.constraints.submodules.InvalidBlueprintDefinitionException;
-import org.tindalos.guardrails.internal.domain.constraints.submodules.SubmoduleId;
+import org.tindalos.guardrails.internal.domain.constraints.slices.InvalidSliceDefinitionException;
+import org.tindalos.guardrails.internal.domain.constraints.slices.SliceId;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 
 /**
- * Represents a submodule in the blueprint definition, grouping packages into a named module
- * and declaring which other submodules it is allowed to depend on.
+ * Concrete representation of a slice in a slice group, combining the definition
+ * with actual project packages and calculating illegal or missing dependencies.
  */
-public class Submodule {
+public class Slice {
 
-    public final SubmoduleId id;
-    public final Set<PackageWithMetrics> packagesUnderModule;
-    public final Set<SubmoduleId> plannedDependencies;
+    public final SliceId id;
+    public final Set<PackageWithMetrics> packagesUnderSlice;
+    public final Set<SliceId> plannedDependencies;
     private final Set<PackageReference> outgoingReferences;
 
-    public Submodule(SubmoduleId id, Set<PackageWithMetrics> packagesUnderModule, Set<SubmoduleId> plannedDependencies) {
-        if (plannedDependencies.contains(id))
-            throw new InvalidBlueprintDefinitionException("Submodule should not depend on itself: " + id);
+    public Slice(SliceId id, Set<PackageWithMetrics> packagesUnderSlice, Set<SliceId> plannedDependencies) {
+        if (plannedDependencies.contains(id)) {
+            throw new InvalidSliceDefinitionException("Slice should not depend on itself: " + id.value());
+        }
         this.id = id;
-        this.packagesUnderModule = Set.copyOf(packagesUnderModule);
+        this.packagesUnderSlice = Set.copyOf(packagesUnderSlice);
         this.plannedDependencies = Set.copyOf(plannedDependencies);
-        this.outgoingReferences = this.packagesUnderModule.stream()
+        this.outgoingReferences = this.packagesUnderSlice.stream()
                 .flatMap(p -> p.accumulatedDirectPackageReferences().stream())
                 .collect(Collectors.toUnmodifiableSet());
     }
 
-    public Set<Submodule> findMissingPredefinedDependencies(Set<Submodule> otherSubmodules) {
-        assert !otherSubmodules.contains(this);
-        return otherSubmodules.stream()
+    public Set<Slice> findMissingPredefinedDependencies(Set<Slice> otherSlices) {
+        assert !otherSlices.contains(this);
+        return otherSlices.stream()
                 .filter(x -> plannedDependencies.contains(x.id))
                 .filter(x -> !x.isReferredBy(outgoingReferences))
                 .collect(Collectors.toUnmodifiableSet());
     }
 
-    public Set<Submodule> findIllegalDependencies(Set<Submodule> otherSubmodules) {
-        assert !otherSubmodules.contains(this);
-        boolean hasIllegalDependencies = otherSubmodules.stream()
+    public Set<Slice> findIllegalDependencies(Set<Slice> otherSlices) {
+        assert !otherSlices.contains(this);
+        boolean hasIllegalDependencies = otherSlices.stream()
                 .anyMatch(x -> !plannedDependencies.contains(x.id));
         if (!hasIllegalDependencies) return Set.of();
-        Set<Submodule> legalDependencies = otherSubmodules.stream()
+        Set<Slice> legalDependencies = otherSlices.stream()
                 .filter(x -> plannedDependencies.contains(x.id))
                 .collect(Collectors.toSet());
         Set<PackageReference> extraReferences = calculateExtraReferences(legalDependencies);
-        return otherSubmodules.stream()
+        return otherSlices.stream()
                 .filter(x -> x.isReferredBy(extraReferences))
                 .collect(Collectors.toUnmodifiableSet());
     }
 
     private boolean isReferredBy(Set<PackageReference> references) {
         return references.stream().anyMatch(ref ->
-                packagesUnderModule.stream().anyMatch(pkg ->
+                packagesUnderSlice.stream().anyMatch(pkg ->
                         ref.pointsToThatOrInside(pkg.reference())));
     }
 
-    private Set<PackageReference> calculateExtraReferences(Set<Submodule> legalDependencies) {
+    private Set<PackageReference> calculateExtraReferences(Set<Slice> legalDependencies) {
         Set<PackageReference> potentiallyIllegal = new java.util.HashSet<>(outgoingReferences);
-        for (Submodule legalDependency : legalDependencies) {
+        for (Slice legalDependency : legalDependencies) {
             potentiallyIllegal = legalDependency.removeOutsideReferences(potentiallyIllegal);
         }
         return potentiallyIllegal;
@@ -69,15 +70,15 @@ public class Submodule {
 
     private Set<PackageReference> removeOutsideReferences(Set<PackageReference> references) {
         return references.stream()
-                .filter(ref -> packagesUnderModule.stream()
+                .filter(ref -> packagesUnderSlice.stream()
                         .noneMatch(pkg -> ref.pointsToThatOrInside(pkg.reference())))
                 .collect(Collectors.toUnmodifiableSet());
     }
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof Submodule)) return false;
-        return ((Submodule) other).id.equals(id);
+        if (!(other instanceof Slice)) return false;
+        return ((Slice) other).id.equals(id);
     }
 
     @Override
@@ -90,4 +91,3 @@ public class Submodule {
         return id.value();
     }
 }
-

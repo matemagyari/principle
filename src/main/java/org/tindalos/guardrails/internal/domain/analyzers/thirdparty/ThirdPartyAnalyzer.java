@@ -7,16 +7,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.tindalos.guardrails.internal.domain.plan.AnalysisInput;
 import org.tindalos.guardrails.internal.domain.analyzers.Analyzer;
 import org.tindalos.guardrails.internal.domain.constraints.Barrier;
 import org.tindalos.guardrails.internal.domain.constraints.Constraints;
+import org.tindalos.guardrails.internal.domain.constraints.slices.SliceDefinition;
+import org.tindalos.guardrails.internal.domain.constraints.slices.SliceGroup;
+import org.tindalos.guardrails.internal.domain.constraints.slices.SliceId;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 
 /**
- * Validates third-party dependency usage against configured layer barriers.
+ * Validates third-party dependency usage against configured layer barriers from slices.
  */
 public final class ThirdPartyAnalyzer implements Analyzer {
 
@@ -33,7 +37,12 @@ public final class ThirdPartyAnalyzer implements Analyzer {
             return new ThirdPartyViolationsResult(Collections.emptyMap(), thirdParty);
         }
 
-        var layers = checkInput.layeringExpectations().orElseThrow().layers();
+        var slicesOpt = checkInput.slices();
+        if (slicesOpt.isEmpty()) {
+            return new ThirdPartyViolationsResult(Collections.emptyMap(), thirdParty);
+        }
+
+        var slicesConstraint = slicesOpt.get();
         var basePackage = checkInput.analysisPlan().basePackage();
         var violations = new HashMap<PackageReference, Set<PackageReference>>();
 
@@ -42,15 +51,23 @@ public final class ThirdPartyAnalyzer implements Analyzer {
                 continue;
             }
 
-            layerOf(layers, basePackage, aPackage)
-                .ifPresent(layer -> {
-                    for (var referencedPackage : aPackage.getOwnExternalPackageReferences()) {
-                        if (outOfAllowedComponents(layer, layers, barriers, referencedPackage)) {
-                            violations.computeIfAbsent(aPackage.reference(), ignored -> new HashSet<>())
-                                    .add(referencedPackage);
+            for (var group : slicesConstraint.sliceGroups()) {
+                var currentSliceOpt = sliceOf(group, aPackage);
+                if (currentSliceOpt.isPresent()) {
+                    var currentSlice = currentSliceOpt.get();
+                    var allowedLibs = getAllowedLibraries(group, currentSlice, barriers);
+                    if (allowedLibs != null) {
+                        for (var referencedPackage : aPackage.getOwnExternalPackageReferences()) {
+                            boolean allowed = allowedLibs.stream()
+                                    .anyMatch(referencedPackage::startsWith);
+                            if (!allowed) {
+                                violations.computeIfAbsent(aPackage.reference(), ignored -> new HashSet<>())
+                                        .add(referencedPackage);
+                            }
                         }
                     }
-                });
+                }
+            }
         }
 
         var immutableViolations = new HashMap<PackageReference, Set<PackageReference>>();
@@ -66,27 +83,48 @@ public final class ThirdPartyAnalyzer implements Analyzer {
         return designQualityConstraints.thirdParty().isPresent();
     }
 
-    private List<String> allowedComponentsForLayer(List<String> layers, String layer, List<Barrier> barriers) {
-        var index = layers.indexOf(layer);
-        if (index < 0) {
-            return List.of();
+    private Set<String> getAllowedLibraries(SliceGroup group, SliceId currentSlice, List<Barrier> barriers) {
+        var transitiveSliceIds = getTransitiveSlices(group, currentSlice);
+        var searchKeys = transitiveSliceIds.stream()
+                .map(id -> group.name() + "." + id.value())
+                .toList();
+
+        boolean hasBarriersForThisGroup = barriers.stream()
+                .anyMatch(b -> b.slice().toLowerCase().startsWith(group.name().toLowerCase() + "."));
+
+        if (!hasBarriersForThisGroup) {
+            return null;
         }
 
-        var innerLayers = layers.subList(index, layers.size());
         return barriers.stream()
-                .filter(barrier -> innerLayers.contains(barrier.layer()))
-                .flatMap(barrier -> barrier.components().stream())
-                .toList();
+                .filter(b -> searchKeys.stream().anyMatch(key -> key.equalsIgnoreCase(b.slice())))
+                .flatMap(b -> b.components().stream())
+                .collect(Collectors.toSet());
     }
 
-    private boolean outOfAllowedComponents(String layer, List<String> layers, List<Barrier> barriers, PackageReference referencedPackage) {
-        return allowedComponentsForLayer(layers, layer, barriers).stream()
-                .noneMatch(referencedPackage::startsWith);
+    private Set<SliceId> getTransitiveSlices(SliceGroup group, SliceId startSliceId) {
+        Set<SliceId> visited = new HashSet<>();
+        collectSlices(group, startSliceId, visited);
+        return visited;
     }
 
-    private Optional<String> layerOf(List<String> layers, String basePackage, PackageWithMetrics aPackage) {
-        return layers.stream()
-            .filter(layer -> aPackage.reference().startsWith(basePackage + "." + layer))
+    private void collectSlices(SliceGroup group, SliceId current, Set<SliceId> visited) {
+        if (!visited.add(current)) {
+            return;
+        }
+        var def = group.slices().get(current);
+        if (def != null) {
+            for (var depId : def.legalDependencies()) {
+                collectSlices(group, depId, visited);
+            }
+        }
+    }
+
+    private Optional<SliceId> sliceOf(SliceGroup group, PackageWithMetrics aPackage) {
+        return group.slices().values().stream()
+            .filter(sliceDef -> sliceDef.packages().stream()
+                .anyMatch(pkg -> aPackage.reference().equals(pkg) || aPackage.reference().startsWith(pkg.name() + ".")))
+            .map(SliceDefinition::id)
             .findFirst();
     }
 
