@@ -7,6 +7,7 @@ import org.tindalos.guardrails.internal.app.GuardrailsAnalyser;
 import org.tindalos.guardrails.internal.app.reporters.AnalysisResultsReporter;
 import org.tindalos.guardrails.internal.domain.AnalysisRunner;
 import org.tindalos.guardrails.internal.domain.AnalysisRunnerImpl;
+import org.tindalos.guardrails.internal.domain.analyzers.Analyzer;
 import org.tindalos.guardrails.internal.domain.analyzers.acd.ComponentDependenciesAnalyzer;
 import org.tindalos.guardrails.internal.domain.analyzers.adp.CycleDetector;
 import org.tindalos.guardrails.internal.domain.analyzers.layering.LayerViolationAnalyzer;
@@ -37,15 +38,24 @@ public final class Guardrails {
     }
 
     public static GuardrailsAnalyser createAnalyser(String rootPackage) {
+        return createAnalyser(rootPackage, List.of());
+        }
+
+        public static GuardrailsAnalyser createAnalyser(String rootPackage, List<Analyzer> additionalAnalyzers) {
         return new GuardrailsAnalyser(
                 new AnalysisPlanValidatorImpl(),
                 new JDependBasedPackageListBuilder(rootPackage),
                 new DefaultNodeBuilder(),
-                createAnalysisRunner());
+            createAnalysisRunner(additionalAnalyzers));
     }
 
     public static AnalysisResultsReporter createAggregatedYAMLReporter() {
-        return new AnalysisResultsReporter(List.of(
+        return createAggregatedYAMLReporter(List.of());
+        }
+
+        public static AnalysisResultsReporter createAggregatedYAMLReporter(
+            List<org.tindalos.guardrails.internal.app.reporters.AnalysisResultReporter<?>> additionalReporters) {
+        var builtIn = List.of(
                 new YAMLADPAnalysisResultReporter(),
                 new YAMLLayerAnalysisResultReporter(),
                 new YAMLThirdPartyAnalysisResultReporter(),
@@ -53,12 +63,17 @@ public final class Guardrails {
                 new YAMLComponentDependencyAnalysisResultReporter(),
                 new YAMLSubmodulesBlueprintAnalysisResultReporter(),
                 new YAMLSDPAnalysisResultReporter(),
-                new YAMLPackageCohesionAnalysisResultReporter()));
+            new YAMLPackageCohesionAnalysisResultReporter());
+
+        var all = new java.util.ArrayList<org.tindalos.guardrails.internal.app.reporters.AnalysisResultReporter<?>>();
+        all.addAll(builtIn);
+        all.addAll(additionalReporters);
+        return new AnalysisResultsReporter(all);
     }
 
-    private static AnalysisRunner createAnalysisRunner() {
+        private static AnalysisRunner createAnalysisRunner(List<Analyzer> additionalAnalyzers) {
         PackageStructureBuilder packageStructureBuilder = new PackageStructureBuilderImpl();
-        return new AnalysisRunnerImpl(List.of(
+        var builtIn = List.of(
                 new LayerViolationAnalyzer(),
                 new ThirdPartyAnalyzer(),
                 new CycleDetector(packageStructureBuilder),
@@ -66,7 +81,12 @@ public final class Guardrails {
                 new SAPViolationAnalyzer(),
                 new ComponentDependenciesAnalyzer(packageStructureBuilder),
                 new SubmodulesBlueprintAnalyzer(new SubmodulesBuilder(packageStructureBuilder)),
-                new PackageCohesionAnalyzer()));
+            new PackageCohesionAnalyzer());
+
+        var all = new java.util.ArrayList<Analyzer>();
+        all.addAll(builtIn);
+        all.addAll(additionalAnalyzers);
+        return new AnalysisRunnerImpl(all);
     }
 
 }
