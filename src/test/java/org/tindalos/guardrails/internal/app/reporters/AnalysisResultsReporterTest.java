@@ -9,8 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.AggregatedAnalysisResults;
 import org.tindalos.guardrails.internal.domain.analyzers.adp.ADPResult;
-import org.tindalos.guardrails.internal.domain.analyzers.layering.LayerReference;
-import org.tindalos.guardrails.internal.domain.analyzers.layering.LayerViolationsResult;
+import org.tindalos.guardrails.internal.domain.analyzers.labels.LabelGroupResult;
+import org.tindalos.guardrails.internal.domain.analyzers.labels.LabelsAnalysisResult;
 import org.tindalos.guardrails.internal.domain.analyzers.structure.CohesionAnalysisResult;
 import org.tindalos.guardrails.internal.domain.analyzers.structure.GroupingResult;
 import org.tindalos.guardrails.internal.domain.analyzers.structure.SubgraphDecomposition;
@@ -20,10 +20,9 @@ import org.tindalos.guardrails.internal.domain.core.Cycle;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
 import org.tindalos.guardrails.internal.infrastructure.reporters.YAMLADPAnalysisResultReporter;
 import org.tindalos.guardrails.internal.infrastructure.reporters.YAMLComponentDependencyAnalysisResultReporter;
-import org.tindalos.guardrails.internal.infrastructure.reporters.YAMLLayerAnalysisResultReporter;
+import org.tindalos.guardrails.internal.infrastructure.reporters.YAMLLabelsAnalysisResultReporter;
 import org.tindalos.guardrails.internal.infrastructure.reporters.YAMLSAPAnalysisResultReporter;
 import org.tindalos.guardrails.internal.infrastructure.reporters.YAMLSDPAnalysisResultReporter;
-import org.tindalos.guardrails.internal.infrastructure.reporters.YAMLSubmodulesBlueprintAnalysisResultReporter;
 import org.tindalos.guardrails.internal.infrastructure.reporters.YAMLThirdPartyAnalysisResultReporter;
 import org.tindalos.guardrails.internal.infrastructure.reporters.packagestructure.YAMLPackageCohesionAnalysisResultReporter;
 import org.yaml.snakeyaml.Yaml;
@@ -37,11 +36,10 @@ public class AnalysisResultsReporterTest {
 
     private final AnalysisResultsReporter reporter = new AnalysisResultsReporter(List.of(
             new YAMLADPAnalysisResultReporter(),
-            new YAMLLayerAnalysisResultReporter(),
             new YAMLThirdPartyAnalysisResultReporter(),
             new YAMLSAPAnalysisResultReporter(),
             new YAMLComponentDependencyAnalysisResultReporter(),
-            new YAMLSubmodulesBlueprintAnalysisResultReporter(),
+            new YAMLLabelsAnalysisResultReporter(),
             new YAMLSDPAnalysisResultReporter(),
             new YAMLPackageCohesionAnalysisResultReporter())
     );
@@ -129,17 +127,18 @@ public class AnalysisResultsReporterTest {
     public void multipleResults_someViolated_listsViolatedNamesInDescription() {
         var cycle = new Cycle(ref("com.a"), ref("com.b"));
         var adpResult = new ADPResult(Map.of(ref("com.a"), Collections.singleton(cycle)), new ADP(0));
-        var layerResult = new LayerViolationsResult(
-                Collections.singletonList(new LayerReference("com.a.Foo", "com.b.Bar")), 0);
+        var labelsResult = new LabelsAnalysisResult(List.of(
+                LabelGroupResult.empty("layers", 0)
+        ));
 
-        var result = reporter.summary(aggregatedResults(adpResult, layerResult));
+        var result = reporter.summary(aggregatedResults(adpResult, labelsResult));
 
         assertValidYaml(result);
 
         var expected = """
                 analysis_summary:
                   success: false
-                  description: "Constraints violated in: adp_result, layer_result"
+                  description: "Constraints violated in: adp_result"
                   results:
                     adp_result:
                       description: Acyclic Package Dependency Principle constraint
@@ -151,14 +150,16 @@ public class AnalysisResultsReporterTest {
                           cycle_count: 1
                           cycles:
                             - [com.a, com.b]
-                    layer_result:
-                      description: Layering constraint
-                      violation_count: 1
-                      threshold: 0
-                      constraint_violated: true
-                      violations:
-                        - referrer: com.a.Foo
-                          referee: com.b.Bar
+                    labels_result:
+                      description: Labels constraints
+                      constraint_violated: false
+                      groups:
+                        - name: layers
+                          violation_count: 0
+                          threshold: 0
+                          constraint_violated: false
+                          illegal_dependencies: []
+                          missing_dependencies: []
                 """.stripIndent();
         assertEquals(expected, result);
     }
@@ -166,9 +167,9 @@ public class AnalysisResultsReporterTest {
     @Test
     public void multipleResults_nonViolated_returnsSuccess() {
         var adpResult = new ADPResult(Map.of(), new ADP(0));
-        var layerResult = new LayerViolationsResult(java.util.List.of(), 0);
+        var labelsResult = new LabelsAnalysisResult(List.of());
 
-        var result = reporter.summary(aggregatedResults(adpResult, layerResult));
+        var result = reporter.summary(aggregatedResults(adpResult, labelsResult));
 
         assertValidYaml(result);
 
@@ -183,12 +184,10 @@ public class AnalysisResultsReporterTest {
                       threshold: 0
                       constraint_violated: false
                       breaking_points: []
-                    layer_result:
-                      description: Layering constraint
-                      violation_count: 0
-                      threshold: 0
+                    labels_result:
+                      description: Labels constraints
                       constraint_violated: false
-                      violations: []
+                      groups: []
                 """.stripIndent();
         assertEquals(expected, result);
     }

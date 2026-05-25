@@ -1,12 +1,12 @@
 package org.tindalos.guardrails.internal.infrastructure.constraints;
 
-import org.tindalos.guardrails.internal.domain.constraints.Barrier;
-import org.tindalos.guardrails.internal.domain.constraints.ThirdParty;
-import org.tindalos.guardrails.internal.infrastructure.core.ConstraintDefinitionReader;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import org.tindalos.guardrails.internal.domain.constraints.Barrier;
+import org.tindalos.guardrails.internal.domain.constraints.ThirdParty;
+import org.tindalos.guardrails.internal.infrastructure.core.ConstraintDefinitionReader;
 
 public class ThirdPartyReader implements ConstraintDefinitionReader<ThirdParty> {
 
@@ -18,9 +18,10 @@ public class ThirdPartyReader implements ConstraintDefinitionReader<ThirdParty> 
                 .map(structure -> {
                     var barriersYaml = (List<Map<String, Object>>) structure.get("allowed_libraries");
                     var barriers = barriersYaml.stream()
-                            .map(m -> new Barrier(
-                                    (String) m.get("layer"),
-                                    (List<String>) m.get("libraries")))
+                            .flatMap(m -> m.entrySet().stream()
+                                    .map(entry -> new Barrier(
+                                            entry.getKey(),
+                                            (List<String>) entry.getValue())))
                             .toList();
                     return new ThirdParty(barriers, (Integer) structure.get("violation_threshold"));
                 });

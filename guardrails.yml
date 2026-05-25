@@ -2,35 +2,38 @@ root_package: org.tindalos.guardrails.internal
 
 constraints:
 
-  layering:
-    layers: [infrastructure, app, domain]
-    violation_threshold: 0
+  labels:
+    - name: layers
+      violation_threshold: 0
+      labels:
+        infrastructure: [infrastructure]
+        app: [app]
+        domain: [domain]
+      dependencies:
+        infrastructure: [app, domain]
+        app: [domain]
+        domain: []
+
+    - name: modules
+      violation_threshold: 0
+      labels:
+        CORE: [domain.core]
+        CONSTRAINTS: [domain.constraints]
+        ANALYZERS: [domain.analyzers]
+        REPORTERS: [app.reporters]
+      dependencies:
+        CORE: []
+        CONSTRAINTS: [CORE]
+        ANALYZERS: [CORE, CONSTRAINTS]
+        REPORTERS: [CORE]
 
   third_party_restrictions:
     allowed_libraries:
-      - layer: infrastructure
-        libraries: [org.apache.maven, org.json, org.yaml, com.google.common.collect, jdepend]
-      - layer: domain
-        libraries: [org.apache.commons]
+      - layers.infrastructure: [org.apache.maven, org.json, org.yaml, com.google.common.collect, jdepend]
+      - layers.domain: [org.apache.commons]
     violation_threshold: 0
 
   package_coupling:
     cyclic_dependencies_threshold: 0
     acd_threshold: 0.40
     structure_analysis_enabled: true
-
-  modules:
-    # Map modules to packages
-    module-definitions:
-      CORE: [domain.core]
-      CONSTRAINTS: [domain.constraints]
-      ANALYZERS: [domain.analyzers]
-      REPORTERS: [app.reporters]
-    # Define dependencies between modules
-    module-dependencies:
-      CORE: []
-      CONSTRAINTS: [CORE]
-      ANALYZERS: [CORE, CONSTRAINTS]
-      REPORTERS: [CORE]
-
-    violation_threshold: 0

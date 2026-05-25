@@ -1,8 +1,5 @@
 package org.tindalos.guardrails.api;
 
-import org.junit.jupiter.api.Test;
-import org.tindalos.guardrails.internal.domain.analyzers.TestFixture;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -11,6 +8,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+import org.tindalos.guardrails.internal.domain.analyzers.TestFixture;
 
 class GuardrailsExtensibilityTest {
 
@@ -77,32 +76,38 @@ class GuardrailsExtensibilityTest {
         var yaml = """
                 root_package: org.tindalos.guardrails.internal
                 constraints:
-                  layering:
-                    layers: [infrastructure, app, domain]
-                    violation_threshold: 0
+                  labels:
+                    - name: layers
+                      labels:
+                        infrastructure: [infrastructure]
+                        app: [app]
+                        domain: [domain]
+                      dependencies:
+                        infrastructure: [app]
+                        app: [domain]
+                        domain: []
+                      violation_threshold: 0
+                    - name: modules
+                      labels:
+                        CORE: [domain.core]
+                        CONSTRAINTS: [domain.constraints]
+                        ANALYZERS: [domain.analyzers]
+                        REPORTERS: [app.reporters]
+                      dependencies:
+                        CORE: []
+                        CONSTRAINTS: [CORE]
+                        ANALYZERS: [CORE, CONSTRAINTS]
+                        REPORTERS: [CORE, ANALYZERS]
+                      violation_threshold: 0
                   third_party_restrictions:
                     allowed_libraries:
-                      - layer: infrastructure
-                        libraries: [org.apache.maven, org.json, org.yaml, com.google.common.collect, jdepend]
-                      - layer: domain
-                        libraries: [org.apache.commons]
+                      - layers.infrastructure: [org.apache.maven, org.json, org.yaml, com.google.common.collect, jdepend]
+                      - layers.domain: [org.apache.commons]
                     violation_threshold: 0
                   package_coupling:
                     cyclic_dependencies_threshold: 0
                     acd_threshold: 0.40
                     structure_analysis_enabled: true
-                  modules:
-                    module-definitions:
-                      CORE: [domain.core]
-                      CONSTRAINTS: [domain.constraints]
-                      ANALYZERS: [domain.analyzers]
-                      REPORTERS: [app.reporters]
-                    module-dependencies:
-                      CORE: []
-                      CONSTRAINTS: [CORE]
-                      ANALYZERS: [CORE, CONSTRAINTS]
-                      REPORTERS: [CORE, ANALYZERS]
-                    violation_threshold: 0
                 x_result:
                   constraint_violated: true
                   message: custom-check

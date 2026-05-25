@@ -7,16 +7,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.tindalos.guardrails.internal.domain.plan.AnalysisInput;
 import org.tindalos.guardrails.internal.domain.analyzers.Analyzer;
 import org.tindalos.guardrails.internal.domain.constraints.Barrier;
 import org.tindalos.guardrails.internal.domain.constraints.Constraints;
+import org.tindalos.guardrails.internal.domain.constraints.labels.LabelDefinition;
+import org.tindalos.guardrails.internal.domain.constraints.labels.LabelGroup;
+import org.tindalos.guardrails.internal.domain.constraints.labels.LabelId;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 
 /**
- * Validates third-party dependency usage against configured layer barriers.
+ * Validates third-party dependency usage against configured layer barriers from labels.
  */
 public final class ThirdPartyAnalyzer implements Analyzer {
 
@@ -33,7 +37,12 @@ public final class ThirdPartyAnalyzer implements Analyzer {
             return new ThirdPartyViolationsResult(Collections.emptyMap(), thirdParty);
         }
 
-        var layers = checkInput.layeringExpectations().orElseThrow().layers();
+        var labelsOpt = checkInput.labels();
+        if (labelsOpt.isEmpty()) {
+            return new ThirdPartyViolationsResult(Collections.emptyMap(), thirdParty);
+        }
+
+        var labelsConstraint = labelsOpt.get();
         var basePackage = checkInput.analysisPlan().basePackage();
         var violations = new HashMap<PackageReference, Set<PackageReference>>();
 
@@ -42,15 +51,23 @@ public final class ThirdPartyAnalyzer implements Analyzer {
                 continue;
             }
 
-            layerOf(layers, basePackage, aPackage)
-                .ifPresent(layer -> {
-                    for (var referencedPackage : aPackage.getOwnExternalPackageReferences()) {
-                        if (outOfAllowedComponents(layer, layers, barriers, referencedPackage)) {
-                            violations.computeIfAbsent(aPackage.reference(), ignored -> new HashSet<>())
-                                    .add(referencedPackage);
+            for (var group : labelsConstraint.labelGroups()) {
+                var currentLabelOpt = labelOf(group, aPackage);
+                if (currentLabelOpt.isPresent()) {
+                    var currentLabel = currentLabelOpt.get();
+                    var allowedLibs = getAllowedLibraries(group, currentLabel, barriers);
+                    if (allowedLibs != null) {
+                        for (var referencedPackage : aPackage.getOwnExternalPackageReferences()) {
+                            boolean allowed = allowedLibs.stream()
+                                    .anyMatch(referencedPackage::startsWith);
+                            if (!allowed) {
+                                violations.computeIfAbsent(aPackage.reference(), ignored -> new HashSet<>())
+                                        .add(referencedPackage);
+                            }
                         }
                     }
-                });
+                }
+            }
         }
 
         var immutableViolations = new HashMap<PackageReference, Set<PackageReference>>();
@@ -66,27 +83,48 @@ public final class ThirdPartyAnalyzer implements Analyzer {
         return designQualityConstraints.thirdParty().isPresent();
     }
 
-    private List<String> allowedComponentsForLayer(List<String> layers, String layer, List<Barrier> barriers) {
-        var index = layers.indexOf(layer);
-        if (index < 0) {
-            return List.of();
+    private Set<String> getAllowedLibraries(LabelGroup group, LabelId currentLabel, List<Barrier> barriers) {
+        var transitiveLabelIds = getTransitiveLabels(group, currentLabel);
+        var searchKeys = transitiveLabelIds.stream()
+                .map(id -> group.name() + "." + id.value())
+                .toList();
+
+        boolean hasBarriersForThisGroup = barriers.stream()
+                .anyMatch(b -> b.label().toLowerCase().startsWith(group.name().toLowerCase() + "."));
+
+        if (!hasBarriersForThisGroup) {
+            return null;
         }
 
-        var innerLayers = layers.subList(index, layers.size());
         return barriers.stream()
-                .filter(barrier -> innerLayers.contains(barrier.layer()))
-                .flatMap(barrier -> barrier.components().stream())
-                .toList();
+                .filter(b -> searchKeys.stream().anyMatch(key -> key.equalsIgnoreCase(b.label())))
+                .flatMap(b -> b.components().stream())
+                .collect(Collectors.toSet());
     }
 
-    private boolean outOfAllowedComponents(String layer, List<String> layers, List<Barrier> barriers, PackageReference referencedPackage) {
-        return allowedComponentsForLayer(layers, layer, barriers).stream()
-                .noneMatch(referencedPackage::startsWith);
+    private Set<LabelId> getTransitiveLabels(LabelGroup group, LabelId startLabelId) {
+        Set<LabelId> visited = new HashSet<>();
+        collectLabels(group, startLabelId, visited);
+        return visited;
     }
 
-    private Optional<String> layerOf(List<String> layers, String basePackage, PackageWithMetrics aPackage) {
-        return layers.stream()
-            .filter(layer -> aPackage.reference().startsWith(basePackage + "." + layer))
+    private void collectLabels(LabelGroup group, LabelId current, Set<LabelId> visited) {
+        if (!visited.add(current)) {
+            return;
+        }
+        var def = group.labels().get(current);
+        if (def != null) {
+            for (var depId : def.legalDependencies()) {
+                collectLabels(group, depId, visited);
+            }
+        }
+    }
+
+    private Optional<LabelId> labelOf(LabelGroup group, PackageWithMetrics aPackage) {
+        return group.labels().values().stream()
+            .filter(labelDef -> labelDef.packages().stream()
+                .anyMatch(pkg -> aPackage.reference().equals(pkg) || aPackage.reference().startsWith(pkg.name() + ".")))
+            .map(LabelDefinition::id)
             .findFirst();
     }
 
