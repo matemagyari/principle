@@ -13,15 +13,15 @@ import org.tindalos.guardrails.internal.domain.analyzers.adp.CycleDetector;
 import org.tindalos.guardrails.internal.domain.analyzers.sap.SAPViolationAnalyzer;
 import org.tindalos.guardrails.internal.domain.analyzers.sdp.SDPViolationAnalyzer;
 import org.tindalos.guardrails.internal.domain.analyzers.structure.PackageCohesionAnalyzer;
-import org.tindalos.guardrails.internal.domain.analyzers.slices.SlicesAnalyzer;
-import org.tindalos.guardrails.internal.domain.analyzers.slices.SlicesBuilder;
+import org.tindalos.guardrails.internal.domain.analyzers.labels.LabelsAnalyzer;
+import org.tindalos.guardrails.internal.domain.analyzers.labels.LabelsBuilder;
 import org.tindalos.guardrails.internal.domain.analyzers.thirdparty.ThirdPartyAnalyzer;
 import org.tindalos.guardrails.internal.domain.core.PackageStructureBuilder;
 import org.tindalos.guardrails.internal.infrastructure.reporters.YAMLADPAnalysisResultReporter;
 import org.tindalos.guardrails.internal.infrastructure.reporters.YAMLComponentDependencyAnalysisResultReporter;
 import org.tindalos.guardrails.internal.infrastructure.reporters.YAMLSAPAnalysisResultReporter;
 import org.tindalos.guardrails.internal.infrastructure.reporters.YAMLSDPAnalysisResultReporter;
-import org.tindalos.guardrails.internal.infrastructure.reporters.YAMLSlicesAnalysisResultReporter;
+import org.tindalos.guardrails.internal.infrastructure.reporters.YAMLLabelsAnalysisResultReporter;
 import org.tindalos.guardrails.internal.infrastructure.reporters.YAMLThirdPartyAnalysisResultReporter;
 import org.tindalos.guardrails.internal.infrastructure.reporters.packagestructure.YAMLPackageCohesionAnalysisResultReporter;
 import org.tindalos.guardrails.internal.infrastructure.service.jdepend.JDependBasedPackageListBuilder;
@@ -58,7 +58,7 @@ public final class Guardrails {
                 new YAMLThirdPartyAnalysisResultReporter(),
                 new YAMLSAPAnalysisResultReporter(),
                 new YAMLComponentDependencyAnalysisResultReporter(),
-                new YAMLSlicesAnalysisResultReporter(),
+                new YAMLLabelsAnalysisResultReporter(),
                 new YAMLSDPAnalysisResultReporter(),
             new YAMLPackageCohesionAnalysisResultReporter());
 
@@ -76,7 +76,7 @@ public final class Guardrails {
                 new SDPViolationAnalyzer(),
                 new SAPViolationAnalyzer(),
                 new ComponentDependenciesAnalyzer(packageStructureBuilder),
-                new SlicesAnalyzer(new SlicesBuilder(packageStructureBuilder)),
+                new LabelsAnalyzer(new LabelsBuilder(packageStructureBuilder)),
             new PackageCohesionAnalyzer());
 
         var all = new java.util.ArrayList<Analyzer>();

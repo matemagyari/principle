@@ -1,27 +1,25 @@
 package org.tindalos.guardrails.internal.app;
 
-import org.junit.jupiter.api.Test;
-import org.tindalos.guardrails.internal.domain.constraints.Barrier;
-import org.tindalos.guardrails.internal.domain.constraints.Constraints;
-import org.tindalos.guardrails.internal.domain.constraints.ThirdParty;
-import org.tindalos.guardrails.internal.domain.constraints.slices.SliceDefinition;
-import org.tindalos.guardrails.internal.domain.constraints.slices.SliceGroup;
-import org.tindalos.guardrails.internal.domain.constraints.slices.SliceId;
-import org.tindalos.guardrails.internal.domain.constraints.slices.Slices;
-import org.tindalos.guardrails.internal.domain.plan.AnalysisPlan;
-
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+import org.tindalos.guardrails.internal.domain.constraints.Barrier;
+import org.tindalos.guardrails.internal.domain.constraints.Constraints;
+import org.tindalos.guardrails.internal.domain.constraints.ThirdParty;
+import org.tindalos.guardrails.internal.domain.constraints.labels.LabelDefinition;
+import org.tindalos.guardrails.internal.domain.constraints.labels.LabelGroup;
+import org.tindalos.guardrails.internal.domain.constraints.labels.LabelId;
+import org.tindalos.guardrails.internal.domain.constraints.labels.Labels;
+import org.tindalos.guardrails.internal.domain.plan.AnalysisPlan;
 
 public class AnalysisPlanValidatorTest {
 
     private final String basePackage = "xx";
-    private final Slices aSlices = createSlices(List.of("a", "b", "c"));
+    private final Labels aLabels = createLabels(List.of("a", "b", "c"));
     private final AnalysisPlanValidatorImpl testObj = new AnalysisPlanValidatorImpl();
 
     @Test
@@ -67,7 +65,7 @@ public class AnalysisPlanValidatorTest {
     @Test
     public void noThirdParty_isValid() {
         Constraints constraints = Constraints.builder()
-                .slices(aSlices)
+                .labels(aLabels)
                 .build();
         AnalysisPlan plan = new AnalysisPlan(constraints, basePackage);
 
@@ -126,19 +124,19 @@ public class AnalysisPlanValidatorTest {
         assertTrue(result.message().contains("z"));
     }
 
-    private static Slices createSlices(List<String> layers) {
-        Map<SliceId, SliceDefinition> slicesMap = new java.util.LinkedHashMap<>();
+    private static Labels createLabels(List<String> layers) {
+        Map<LabelId, LabelDefinition> labelsMap = new java.util.LinkedHashMap<>();
         for (String layer : layers) {
-            SliceId sliceId = new SliceId(layer);
-            slicesMap.put(sliceId, new SliceDefinition(sliceId, Set.of(), Set.of()));
+            LabelId labelId = new LabelId(layer);
+            labelsMap.put(labelId, new LabelDefinition(labelId, Set.of(), Set.of()));
         }
-        return new Slices(List.of(new SliceGroup("layers", slicesMap, 0)));
+        return new Labels(List.of(new LabelGroup("layers", labelsMap, 0)));
     }
 
     private AnalysisPlan config(List<Barrier> barriers) {
         ThirdParty aThirdParty = new ThirdParty(barriers, 0);
         Constraints constraints = Constraints.builder()
-                .slices(aSlices)
+                .labels(aLabels)
                 .thirdParty(aThirdParty)
                 .build();
         return new AnalysisPlan(constraints, basePackage);

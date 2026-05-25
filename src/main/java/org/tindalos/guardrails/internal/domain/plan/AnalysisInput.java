@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.tindalos.guardrails.internal.domain.constraints.PackageCouplingConstraints;
 import org.tindalos.guardrails.internal.domain.constraints.ThirdParty;
-import org.tindalos.guardrails.internal.domain.constraints.slices.Slices;
+import org.tindalos.guardrails.internal.domain.constraints.labels.Labels;
 import org.tindalos.guardrails.internal.domain.core.Node;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 
@@ -33,7 +33,7 @@ public record AnalysisInput(
         return analysisPlan.constraints().thirdParty();
     }
 
-    public Optional<Slices> slices() {
-        return analysisPlan.constraints().slices();
+    public Optional<Labels> labels() {
+        return analysisPlan.constraints().labels();
     }
 }

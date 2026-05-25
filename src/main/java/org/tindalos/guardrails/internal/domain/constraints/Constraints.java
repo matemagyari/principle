@@ -2,17 +2,17 @@ package org.tindalos.guardrails.internal.domain.constraints;
 
 import java.util.Optional;
 
-import org.tindalos.guardrails.internal.domain.constraints.slices.Slices;
+import org.tindalos.guardrails.internal.domain.constraints.labels.Labels;
 
 /**
  * Represents the complete set of architectural constraints and constraints to be analyzed.
  * Contains configuration for third-party dependencies, package coupling metrics,
- * and slices.
+ * and labels.
  */
 public record Constraints(
         Optional<ThirdParty> thirdParty,
         Optional<PackageCouplingConstraints> packageCoupling,
-        Optional<Slices> slices) {
+        Optional<Labels> labels) {
 
     /**
      * Builder for creating Constraints instances with a fluent API.
@@ -20,7 +20,7 @@ public record Constraints(
     public static class Builder {
         private Optional<ThirdParty> thirdParty = Optional.empty();
         private Optional<PackageCouplingConstraints> packageCoupling = Optional.empty();
-        private Optional<Slices> slices = Optional.empty();
+        private Optional<Labels> labels = Optional.empty();
 
         public Builder thirdParty(ThirdParty thirdParty) {
             this.thirdParty = Optional.ofNullable(thirdParty);
@@ -32,13 +32,13 @@ public record Constraints(
             return this;
         }
 
-        public Builder slices(Slices slices) {
-            this.slices = Optional.ofNullable(slices);
+        public Builder labels(Labels labels) {
+            this.labels = Optional.ofNullable(labels);
             return this;
         }
 
         public Constraints build() {
-            return new Constraints(thirdParty, packageCoupling, slices);
+            return new Constraints(thirdParty, packageCoupling, labels);
         }
     }
 

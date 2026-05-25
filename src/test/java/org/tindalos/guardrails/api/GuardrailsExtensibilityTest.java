@@ -76,9 +76,9 @@ class GuardrailsExtensibilityTest {
         var yaml = """
                 root_package: org.tindalos.guardrails.internal
                 constraints:
-                  slices:
+                  labels:
                     - name: layers
-                      slices:
+                      labels:
                         infrastructure: [infrastructure]
                         app: [app]
                         domain: [domain]
@@ -88,7 +88,7 @@ class GuardrailsExtensibilityTest {
                         domain: []
                       violation_threshold: 0
                     - name: modules
-                      slices:
+                      labels:
                         CORE: [domain.core]
                         CONSTRAINTS: [domain.constraints]
                         ANALYZERS: [domain.analyzers]

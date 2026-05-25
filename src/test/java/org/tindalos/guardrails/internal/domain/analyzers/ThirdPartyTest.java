@@ -1,25 +1,24 @@
 package org.tindalos.guardrails.internal.domain.analyzers;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.tindalos.guardrails.internal.domain.analyzers.thirdparty.ThirdPartyViolationsResult;
-import org.tindalos.guardrails.internal.domain.constraints.Barrier;
-import org.tindalos.guardrails.internal.domain.constraints.Constraints;
-import org.tindalos.guardrails.internal.domain.constraints.ThirdParty;
-import org.tindalos.guardrails.internal.domain.constraints.slices.SliceDefinition;
-import org.tindalos.guardrails.internal.domain.constraints.slices.SliceGroup;
-import org.tindalos.guardrails.internal.domain.constraints.slices.SliceId;
-import org.tindalos.guardrails.internal.domain.constraints.slices.Slices;
-import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
-import org.tindalos.guardrails.internal.domain.plan.AnalysisPlan;
-import org.tindalos.guardrails.internal.infrastructure.di.Guardrails;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.tindalos.guardrails.internal.domain.analyzers.thirdparty.ThirdPartyViolationsResult;
+import org.tindalos.guardrails.internal.domain.constraints.Barrier;
+import org.tindalos.guardrails.internal.domain.constraints.Constraints;
+import org.tindalos.guardrails.internal.domain.constraints.ThirdParty;
+import org.tindalos.guardrails.internal.domain.constraints.labels.LabelDefinition;
+import org.tindalos.guardrails.internal.domain.constraints.labels.LabelGroup;
+import org.tindalos.guardrails.internal.domain.constraints.labels.LabelId;
+import org.tindalos.guardrails.internal.domain.constraints.labels.Labels;
+import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
+import org.tindalos.guardrails.internal.domain.plan.AnalysisPlan;
+import org.tindalos.guardrails.internal.infrastructure.di.Guardrails;
 
 public class ThirdPartyTest {
 
@@ -62,23 +61,23 @@ public class ThirdPartyTest {
     }
 
     private ThirdPartyViolationsResult run(String basePackage, ThirdParty thirdParty) {
-        var constraints = Constraints.builder().slices(slices(basePackage)).thirdParty(thirdParty).build();
+        var constraints = Constraints.builder().labels(labels(basePackage)).thirdParty(thirdParty).build();
         var plan = new AnalysisPlan(constraints, basePackage);
         var analyzer = Guardrails.createAnalyser(basePackage);
         return analyzer.analyze(plan).thirdPartyViolationsResult().get();
     }
 
-    private Slices slices(String basePackage) {
-        Map<SliceId, SliceDefinition> slicesMap = new java.util.LinkedHashMap<>();
+    private Labels labels(String basePackage) {
+        Map<LabelId, LabelDefinition> labelsMap = new java.util.LinkedHashMap<>();
         
-        SliceId infraId = new SliceId("infrastructure");
-        SliceId appId = new SliceId("app");
-        SliceId domainId = new SliceId("domain");
+        LabelId infraId = new LabelId("infrastructure");
+        LabelId appId = new LabelId("app");
+        LabelId domainId = new LabelId("domain");
         
-        slicesMap.put(infraId, new SliceDefinition(infraId, Set.of(new PackageReference(basePackage + ".infrastructure")), Set.of(appId)));
-        slicesMap.put(appId, new SliceDefinition(appId, Set.of(new PackageReference(basePackage + ".app")), Set.of(domainId)));
-        slicesMap.put(domainId, new SliceDefinition(domainId, Set.of(new PackageReference(basePackage + ".domain")), Set.of()));
+        labelsMap.put(infraId, new LabelDefinition(infraId, Set.of(new PackageReference(basePackage + ".infrastructure")), Set.of(appId)));
+        labelsMap.put(appId, new LabelDefinition(appId, Set.of(new PackageReference(basePackage + ".app")), Set.of(domainId)));
+        labelsMap.put(domainId, new LabelDefinition(domainId, Set.of(new PackageReference(basePackage + ".domain")), Set.of()));
         
-        return new Slices(List.of(new SliceGroup("layers", slicesMap, 0)));
+        return new Labels(List.of(new LabelGroup("layers", labelsMap, 0)));
     }
 }

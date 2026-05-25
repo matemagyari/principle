@@ -13,14 +13,14 @@ import org.tindalos.guardrails.internal.domain.plan.AnalysisInput;
 import org.tindalos.guardrails.internal.domain.analyzers.Analyzer;
 import org.tindalos.guardrails.internal.domain.constraints.Barrier;
 import org.tindalos.guardrails.internal.domain.constraints.Constraints;
-import org.tindalos.guardrails.internal.domain.constraints.slices.SliceDefinition;
-import org.tindalos.guardrails.internal.domain.constraints.slices.SliceGroup;
-import org.tindalos.guardrails.internal.domain.constraints.slices.SliceId;
+import org.tindalos.guardrails.internal.domain.constraints.labels.LabelDefinition;
+import org.tindalos.guardrails.internal.domain.constraints.labels.LabelGroup;
+import org.tindalos.guardrails.internal.domain.constraints.labels.LabelId;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 
 /**
- * Validates third-party dependency usage against configured layer barriers from slices.
+ * Validates third-party dependency usage against configured layer barriers from labels.
  */
 public final class ThirdPartyAnalyzer implements Analyzer {
 
@@ -37,12 +37,12 @@ public final class ThirdPartyAnalyzer implements Analyzer {
             return new ThirdPartyViolationsResult(Collections.emptyMap(), thirdParty);
         }
 
-        var slicesOpt = checkInput.slices();
-        if (slicesOpt.isEmpty()) {
+        var labelsOpt = checkInput.labels();
+        if (labelsOpt.isEmpty()) {
             return new ThirdPartyViolationsResult(Collections.emptyMap(), thirdParty);
         }
 
-        var slicesConstraint = slicesOpt.get();
+        var labelsConstraint = labelsOpt.get();
         var basePackage = checkInput.analysisPlan().basePackage();
         var violations = new HashMap<PackageReference, Set<PackageReference>>();
 
@@ -51,11 +51,11 @@ public final class ThirdPartyAnalyzer implements Analyzer {
                 continue;
             }
 
-            for (var group : slicesConstraint.sliceGroups()) {
-                var currentSliceOpt = sliceOf(group, aPackage);
-                if (currentSliceOpt.isPresent()) {
-                    var currentSlice = currentSliceOpt.get();
-                    var allowedLibs = getAllowedLibraries(group, currentSlice, barriers);
+            for (var group : labelsConstraint.labelGroups()) {
+                var currentLabelOpt = labelOf(group, aPackage);
+                if (currentLabelOpt.isPresent()) {
+                    var currentLabel = currentLabelOpt.get();
+                    var allowedLibs = getAllowedLibraries(group, currentLabel, barriers);
                     if (allowedLibs != null) {
                         for (var referencedPackage : aPackage.getOwnExternalPackageReferences()) {
                             boolean allowed = allowedLibs.stream()
@@ -83,48 +83,48 @@ public final class ThirdPartyAnalyzer implements Analyzer {
         return designQualityConstraints.thirdParty().isPresent();
     }
 
-    private Set<String> getAllowedLibraries(SliceGroup group, SliceId currentSlice, List<Barrier> barriers) {
-        var transitiveSliceIds = getTransitiveSlices(group, currentSlice);
-        var searchKeys = transitiveSliceIds.stream()
+    private Set<String> getAllowedLibraries(LabelGroup group, LabelId currentLabel, List<Barrier> barriers) {
+        var transitiveLabelIds = getTransitiveLabels(group, currentLabel);
+        var searchKeys = transitiveLabelIds.stream()
                 .map(id -> group.name() + "." + id.value())
                 .toList();
 
         boolean hasBarriersForThisGroup = barriers.stream()
-                .anyMatch(b -> b.slice().toLowerCase().startsWith(group.name().toLowerCase() + "."));
+                .anyMatch(b -> b.label().toLowerCase().startsWith(group.name().toLowerCase() + "."));
 
         if (!hasBarriersForThisGroup) {
             return null;
         }
 
         return barriers.stream()
-                .filter(b -> searchKeys.stream().anyMatch(key -> key.equalsIgnoreCase(b.slice())))
+                .filter(b -> searchKeys.stream().anyMatch(key -> key.equalsIgnoreCase(b.label())))
                 .flatMap(b -> b.components().stream())
                 .collect(Collectors.toSet());
     }
 
-    private Set<SliceId> getTransitiveSlices(SliceGroup group, SliceId startSliceId) {
-        Set<SliceId> visited = new HashSet<>();
-        collectSlices(group, startSliceId, visited);
+    private Set<LabelId> getTransitiveLabels(LabelGroup group, LabelId startLabelId) {
+        Set<LabelId> visited = new HashSet<>();
+        collectLabels(group, startLabelId, visited);
         return visited;
     }
 
-    private void collectSlices(SliceGroup group, SliceId current, Set<SliceId> visited) {
+    private void collectLabels(LabelGroup group, LabelId current, Set<LabelId> visited) {
         if (!visited.add(current)) {
             return;
         }
-        var def = group.slices().get(current);
+        var def = group.labels().get(current);
         if (def != null) {
             for (var depId : def.legalDependencies()) {
-                collectSlices(group, depId, visited);
+                collectLabels(group, depId, visited);
             }
         }
     }
 
-    private Optional<SliceId> sliceOf(SliceGroup group, PackageWithMetrics aPackage) {
-        return group.slices().values().stream()
-            .filter(sliceDef -> sliceDef.packages().stream()
+    private Optional<LabelId> labelOf(LabelGroup group, PackageWithMetrics aPackage) {
+        return group.labels().values().stream()
+            .filter(labelDef -> labelDef.packages().stream()
                 .anyMatch(pkg -> aPackage.reference().equals(pkg) || aPackage.reference().startsWith(pkg.name() + ".")))
-            .map(SliceDefinition::id)
+            .map(LabelDefinition::id)
             .findFirst();
     }
 

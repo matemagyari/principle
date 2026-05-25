@@ -1,18 +1,21 @@
 package org.tindalos.guardrails.internal.infrastructure;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.tindalos.guardrails.internal.domain.constraints.exception.InvalidConfigurationException;
-import org.tindalos.guardrails.internal.domain.constraints.slices.SliceId;
-import org.tindalos.guardrails.internal.infrastructure.constraints.ConstraintsReader;
-
 import java.io.File;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+import org.tindalos.guardrails.internal.domain.constraints.exception.InvalidConfigurationException;
+import org.tindalos.guardrails.internal.domain.constraints.labels.LabelId;
+import org.tindalos.guardrails.internal.infrastructure.constraints.ConstraintsReader;
 
 public class ConstraintsReaderTest {
 
@@ -44,14 +47,14 @@ public class ConstraintsReaderTest {
     }
 
     @Test
-    public void slices_isParsed() throws Exception {
+    public void labels_isParsed() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
                 constraints:
-                  slices:
+                  labels:
                     - name: layers
                       violation_threshold: 1
-                      slices:
+                      labels:
                         infrastructure: [infrastructure]
                         app: [app]
                         domain: [domain]
@@ -63,24 +66,24 @@ public class ConstraintsReaderTest {
 
         var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
 
-        var slices = constraints.slices().get();
-        assertEquals(1, slices.sliceGroups().size());
+        var labels = constraints.labels().get();
+        assertEquals(1, labels.labelGroups().size());
 
-        var group = slices.sliceGroups().get(0);
+        var group = labels.labelGroups().get(0);
         assertEquals("layers", group.name());
         assertEquals(1, group.violationThreshold());
-        assertEquals(3, group.slices().size());
+        assertEquals(3, group.labels().size());
 
-        var infraItem = group.slices().get(new SliceId("infrastructure"));
+        var infraItem = group.labels().get(new LabelId("infrastructure"));
         assertNotNull(infraItem);
         assertEquals(1, infraItem.packages().size());
         assertEquals(2, infraItem.legalDependencies().size());
-        assertTrue(infraItem.legalDependencies().contains(new SliceId("app")));
-        assertTrue(infraItem.legalDependencies().contains(new SliceId("domain")));
+        assertTrue(infraItem.legalDependencies().contains(new LabelId("app")));
+        assertTrue(infraItem.legalDependencies().contains(new LabelId("domain")));
     }
 
     @Test
-    public void noSlices_slicesIsAbsent() throws Exception {
+    public void noLabels_labelsIsAbsent() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
                 constraints:
@@ -90,7 +93,7 @@ public class ConstraintsReaderTest {
 
         var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
 
-        assertTrue(constraints.slices().isEmpty());
+        assertTrue(constraints.labels().isEmpty());
     }
 
     @Test
@@ -98,9 +101,9 @@ public class ConstraintsReaderTest {
         var path = writeTempYaml("""
                 root_package: com.example
                 constraints:
-                  slices:
+                  labels:
                     - name: layers
-                      slices:
+                      labels:
                         domain: [domain]
                       dependencies:
                         domain: []
@@ -163,9 +166,9 @@ public class ConstraintsReaderTest {
         var path = writeTempYaml("""
                 root_package: com.example
                 constraints:
-                  slices:
+                  labels:
                     - name: layers
-                      slices:
+                      labels:
                         domain: [domain]
                       dependencies:
                         domain: []
@@ -216,9 +219,9 @@ public class ConstraintsReaderTest {
         assertTrue(tp.isPresent());
         assertEquals(3, tp.get().violationThreshold());
         assertEquals(2, tp.get().barriers().size());
-        assertEquals("layers.infrastructure", tp.get().barriers().get(0).slice());
+        assertEquals("layers.infrastructure", tp.get().barriers().get(0).label());
         assertEquals(List.of("org.apache.commons", "com.google"), tp.get().barriers().get(0).components());
-        assertEquals("layers.app", tp.get().barriers().get(1).slice());
+        assertEquals("layers.app", tp.get().barriers().get(1).label());
         assertEquals(Collections.singletonList("org.apache.commons"), tp.get().barriers().get(1).components());
     }
 
@@ -247,9 +250,9 @@ public class ConstraintsReaderTest {
         var path = writeTempYaml("""
                 root_package: org.example.myapp
                 constraints:
-                  slices:
+                  labels:
                     - name: layers
-                      slices:
+                      labels:
                         infrastructure: [infrastructure]
                         app: [app]
                         domain: [domain]
@@ -272,7 +275,7 @@ public class ConstraintsReaderTest {
         var constraints = plan.constraints();
 
         assertEquals("org.example.myapp", plan.basePackage());
-        assertTrue(constraints.slices().isPresent());
+        assertTrue(constraints.labels().isPresent());
         assertTrue(constraints.thirdParty().isPresent());
         assertTrue(constraints.packageCoupling().isPresent());
         assertTrue(constraints.packageCoupling().get().adp().isPresent());

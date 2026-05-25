@@ -20,7 +20,7 @@ public class ConstraintsReader {
 
     private static final ThirdPartyReader THIRD_PARTY_READER = new ThirdPartyReader();
     private static final PackageCouplingConstraintsReader PACKAGE_COUPLING_READER = new PackageCouplingConstraintsReader();
-    private static final SlicesReader SLICES_READER = new SlicesReader();
+    private static final LabelsReader LABELS_READER = new LabelsReader();
 
     public static AnalysisPlan readFromFile(Optional<String> fileLocation) {
         return readFromFile(fileLocation, ConstraintReaderRegistry.empty());
@@ -38,7 +38,7 @@ public class ConstraintsReader {
         var constraints = new Constraints(
                 THIRD_PARTY_READER.read(yamlObject),
                 PACKAGE_COUPLING_READER.read(yamlObject),
-                SLICES_READER.read(yamlObject));
+                LABELS_READER.read(yamlObject));
 
         var customDefinitions = registry.readAll(yamlObject);
         return new AnalysisPlan(constraints, (String) yamlObject.get("root_package"), customDefinitions);

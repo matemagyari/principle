@@ -10,7 +10,7 @@ import org.tindalos.guardrails.api.AnalysisPlan;
 import org.tindalos.guardrails.api.GuardrailsAnalyzer;
 import org.tindalos.guardrails.internal.domain.analyzers.TestFixture;
 import org.tindalos.guardrails.internal.domain.analyzers.adp.ADPResult;
-import org.tindalos.guardrails.internal.domain.analyzers.slices.SlicesAnalysisResult;
+import org.tindalos.guardrails.internal.domain.analyzers.labels.LabelsAnalysisResult;
 import org.tindalos.guardrails.internal.infrastructure.constraints.ConstraintsReader;
 import org.tindalos.guardrails.internal.infrastructure.di.Guardrails;
 import org.tindalos.guardrails.internal.infrastructure.reporters.ReportsDirectoryManager;
@@ -35,9 +35,9 @@ public class SelfTest {
             var summary = reporter.summary(results);
             TheLogger.info(summary);
             var adpViolated = results.adpResult().map(ADPResult::constraintViolated).orElse(false);
-            var slicesViolated = results.slicesAnalysisResult().map(SlicesAnalysisResult::constraintViolated).orElse(false);
+            var labelsViolated = results.labelsAnalysisResult().map(LabelsAnalysisResult::constraintViolated).orElse(false);
             assertFalse(adpViolated);
-            assertFalse(slicesViolated);
+            assertFalse(labelsViolated);
         } catch (Exception ex) {
             TheLogger.error(ex.getMessage());
             fail(ex.getMessage());
