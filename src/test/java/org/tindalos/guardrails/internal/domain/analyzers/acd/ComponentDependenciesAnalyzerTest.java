@@ -15,7 +15,6 @@ import org.tindalos.guardrails.internal.domain.core.Package;
 import org.tindalos.guardrails.internal.domain.core.PackageStructureBuilder;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageMetrics;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
-import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 import org.tindalos.guardrails.internal.domain.plan.AnalysisInput;
 import org.tindalos.guardrails.internal.domain.plan.AnalysisPlan;
 import org.tindalos.guardrails.internal.infrastructure.packages.MutablePackage;
@@ -78,7 +77,7 @@ public class ComponentDependenciesAnalyzerTest {
         assertEquals(1.5, result.acd(), 0.0001);
     }
 
-    private static AnalysisInput input(List<PackageWithMetrics> packages) {
+    private static AnalysisInput input(List<Package> packages) {
         var constraints = Constraints.builder()
                 .packageCoupling(PackageCouplingConstraints.builder().acd(new ACD()).build())
                 .build();

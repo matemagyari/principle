@@ -9,13 +9,13 @@ import org.tindalos.guardrails.internal.domain.constraints.PackageCouplingConstr
 import org.tindalos.guardrails.internal.domain.constraints.ThirdParty;
 import org.tindalos.guardrails.internal.domain.constraints.labels.Labels;
 import org.tindalos.guardrails.internal.domain.core.Node;
-import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
+import org.tindalos.guardrails.internal.domain.core.Package;
 
 /**
  * Immutable analysis input used by analyzers.
  */
 public record AnalysisInput(
-        List<PackageWithMetrics> packages,
+        List<Package> packages,
         Set<Node> nodes,
         AnalysisPlan analysisPlan) {
 

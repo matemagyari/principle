@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import org.tindalos.guardrails.internal.domain.analyzers.Analyzer;
 import org.tindalos.guardrails.internal.domain.constraints.Constraints;
-import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
+import org.tindalos.guardrails.internal.domain.core.Package;
 import org.tindalos.guardrails.internal.domain.plan.AnalysisInput;
 
 /**
@@ -25,7 +25,7 @@ public final class SAPViolationAnalyzer implements Analyzer {
         return new SAPResult(outlierPackages, sapExpectation);
     }
 
-    private List<PackageWithMetrics> removeRootPackageIfEmpty(List<PackageWithMetrics> packages) {
+    private List<Package> removeRootPackageIfEmpty(List<Package> packages) {
         var metrics = packages.get(0).metrics();
         if (metrics.abstractness() == 0 && metrics.instability() == 0) {
             return packages.subList(1, packages.size());

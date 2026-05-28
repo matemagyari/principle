@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.analyzers.sap.SAPResult;
 import org.tindalos.guardrails.internal.domain.constraints.SAP;
+import org.tindalos.guardrails.internal.domain.core.Package;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageMetrics;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
-import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 import static org.tindalos.guardrails.internal.infrastructure.reporters.YamlAssertions.assertValidYaml;
 
 /**
@@ -20,14 +20,14 @@ public class YAMLSAPAnalysisResultReporterTest {
     private final YAMLSAPAnalysisResultReporter reporter = new YAMLSAPAnalysisResultReporter();
     private final SAP sap = new SAP(0, 0.25);
 
-    private PackageWithMetrics pkg(String name, float distance) {
-        return new PackageWithMetrics() {
-            public PackageReference reference() { return new PackageReference(name); }
-            public PackageMetrics metrics() { return new PackageMetrics(0, 0, 0, 0, distance); }
-          public java.util.Set<PackageReference> ownPackageReferences() { return java.util.Set.of(); }
-          public java.util.Set<PackageReference> ownExternalPackageReferences() { return java.util.Set.of(); }
-            public java.util.Set<PackageReference> accumulatedDirectPackageReferences() { return java.util.Set.of(); }
-        };
+    private Package pkg(String name, float distance) {
+        return new Package(
+            new PackageReference(name),
+            new PackageMetrics(0, 0, 0, 0, distance),
+            java.util.Set.of(),
+            java.util.Set.of(),
+            false
+        );
     }
 
     @Test

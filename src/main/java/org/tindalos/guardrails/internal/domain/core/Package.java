@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 
 import org.tindalos.guardrails.internal.domain.core.packages.PackageMetrics;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
-import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 
 /**
  * Represents an immutable Package with its metric values and sub-packages.
@@ -23,7 +22,7 @@ public record Package(
     Set<PackageReference> ownExternalPackageReferences,
     boolean isUnreferred,
     List<Package> subPackages
-) implements PackageWithMetrics {
+) {
 
     public Package {
         ownPackageReferences = Set.copyOf(ownPackageReferences);
@@ -51,11 +50,10 @@ public record Package(
         this(reference, metrics, ownPackageReferences, ownExternalPackageReferences, isUnreferred, List.of());
     }
 
-    @Override
     public Set<PackageReference> accumulatedDirectPackageReferences() {
         return Stream
             .concat(
-                subPackages
+                 subPackages
                     .stream()
                     .flatMap(aPackage -> aPackage.accumulatedDirectPackageReferences().stream())
                     .filter(x -> !x.equals(reference)),

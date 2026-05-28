@@ -5,7 +5,7 @@ import java.util.List;
 import org.tindalos.guardrails.internal.domain.AggregatedAnalysisResults;
 import org.tindalos.guardrails.internal.domain.AnalysisRunner;
 import org.tindalos.guardrails.internal.domain.constraints.exception.InvalidConfigurationException;
-import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
+import org.tindalos.guardrails.internal.domain.core.Package;
 import org.tindalos.guardrails.internal.domain.plan.AnalysisInput;
 import org.tindalos.guardrails.internal.domain.plan.AnalysisPlan;
 
@@ -39,9 +39,7 @@ public class GuardrailsAnalyser {
             throw new InvalidConfigurationException(validationResult.message());
         }
 
-        List<PackageWithMetrics> packages = packageListBuilder.build().stream()
-                .map(pkg -> (PackageWithMetrics) pkg)
-                .toList();
+        List<Package> packages = packageListBuilder.build();
         var nodes = nodeBuilder.build(analysisPlan.basePackage());
 
         return new AggregatedAnalysisResults(

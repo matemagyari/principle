@@ -7,7 +7,6 @@ import org.tindalos.guardrails.internal.domain.analyzers.Analyzer;
 import org.tindalos.guardrails.internal.domain.constraints.Constraints;
 import org.tindalos.guardrails.internal.domain.core.Package;
 import org.tindalos.guardrails.internal.domain.core.PackageStructureBuilder;
-import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 import org.tindalos.guardrails.internal.domain.plan.AnalysisInput;
 
 /**
@@ -23,15 +22,15 @@ public class ComponentDependenciesAnalyzer implements Analyzer {
 
     @Override
     public ComponentDependenciesResult analyze(AnalysisInput checkInput) {
-        List<PackageWithMetrics> packages = checkInput.packages();
+        List<Package> packages = checkInput.packages();
 
         var basePackage = packageStructureBuilder.build(
-                packages.stream().map(pkg -> (Package) pkg).toList(),
+                packages,
                 checkInput.analysisPlan().basePackage());
 
         var referenceMap = basePackage.toMap();
 
-        List<PackageWithMetrics> relevantPackages = basePackage.metrics().isIsolated()
+        List<Package> relevantPackages = basePackage.metrics().isIsolated()
                 ? packages.stream().filter(pkg -> !pkg.equals(basePackage)).toList()
                 : packages;
 

@@ -16,8 +16,8 @@ import org.tindalos.guardrails.internal.domain.constraints.Constraints;
 import org.tindalos.guardrails.internal.domain.constraints.labels.LabelDefinition;
 import org.tindalos.guardrails.internal.domain.constraints.labels.LabelGroup;
 import org.tindalos.guardrails.internal.domain.constraints.labels.LabelId;
+import org.tindalos.guardrails.internal.domain.core.Package;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
-import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 
 /**
  * Validates third-party dependency usage against configured layer barriers from labels.
@@ -120,7 +120,7 @@ public final class ThirdPartyAnalyzer implements Analyzer {
         }
     }
 
-    private Optional<LabelId> labelOf(LabelGroup group, PackageWithMetrics aPackage) {
+    private Optional<LabelId> labelOf(LabelGroup group, Package aPackage) {
         return group.labels().values().stream()
             .filter(labelDef -> labelDef.packages().stream()
                 .anyMatch(pkg -> aPackage.reference().equals(pkg) || aPackage.reference().startsWith(pkg.name() + ".")))

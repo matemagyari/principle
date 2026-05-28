@@ -36,7 +36,7 @@ final class PackageFactory {
     }
 
     @SuppressWarnings("unchecked")
-    LazyLoadingJDependBasedPackage transform(JavaPackage javaPackage) {
+    Package transform(JavaPackage javaPackage) {
         var metrics = calculateMetrics(javaPackage);
         var reference = new PackageReference(javaPackage.getName());
         var isUnreferred = metrics.afferentCoupling() == 0;
@@ -53,17 +53,7 @@ final class PackageFactory {
                 .map(eff -> new PackageReference(eff.getName()))
                 .collect(Collectors.toUnmodifiableSet());
 
-        return new LazyLoadingJDependBasedPackage(reference, metrics, ownReferences, ownExternalReferences, isUnreferred);
-    }
-
-    private Package toDomainPackage(LazyLoadingJDependBasedPackage record) {
-        return new Package(
-                record.reference(),
-                record.metrics(),
-                record.ownPackageReferences(),
-                record.ownExternalPackageReferences(),
-                record.isUnreferred()
-        );
+        return new Package(reference, metrics, ownReferences, ownExternalReferences, isUnreferred);
     }
 
     Function<List<JavaPackage>, List<Package>> buildPackageListFactory(UnaryOperator<List<Package>> sortByName) {
@@ -72,7 +62,6 @@ final class PackageFactory {
                 analyzedPackages.stream()
                         .filter(this::isRelevant)
                         .map(this::transform)
-                        .map(this::toDomainPackage)
                         .toList());
     }
 

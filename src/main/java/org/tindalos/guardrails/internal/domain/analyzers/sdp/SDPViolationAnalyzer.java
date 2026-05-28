@@ -6,8 +6,8 @@ import java.util.HashMap;
 import org.tindalos.guardrails.internal.domain.plan.AnalysisInput;
 import org.tindalos.guardrails.internal.domain.analyzers.Analyzer;
 import org.tindalos.guardrails.internal.domain.constraints.Constraints;
+import org.tindalos.guardrails.internal.domain.core.Package;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
-import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 
 /**
  * Detects Stable Dependencies Principle violations.
@@ -17,7 +17,7 @@ public class SDPViolationAnalyzer implements Analyzer {
     @Override
     public SDPResult analyze(AnalysisInput checkInput) {
         var packages = checkInput.packages();
-        var references = new HashMap<PackageReference, PackageWithMetrics>();
+        var references = new HashMap<PackageReference, Package>();
         for (var aPackage : packages) {
             references.put(aPackage.reference(), aPackage);
         }

@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.analyzers.sdp.SDPResult;
 import org.tindalos.guardrails.internal.domain.analyzers.sdp.SDPViolation;
 import org.tindalos.guardrails.internal.domain.constraints.SDP;
+import org.tindalos.guardrails.internal.domain.core.Package;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageMetrics;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
-import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 import static org.tindalos.guardrails.internal.infrastructure.reporters.YamlAssertions.assertValidYaml;
 
 /**
@@ -21,14 +21,14 @@ public class YAMLSDPAnalysisResultReporterTest {
     private final YAMLSDPAnalysisResultReporter reporter = new YAMLSDPAnalysisResultReporter();
     private final SDP sdp = new SDP(0);
 
-    private PackageWithMetrics pkg(String name, float instability) {
-        return new PackageWithMetrics() {
-            public PackageReference reference() { return new PackageReference(name); }
-            public PackageMetrics metrics() { return new PackageMetrics(0, 0, 0, instability, 0); }
-          public java.util.Set<PackageReference> ownPackageReferences() { return java.util.Set.of(); }
-          public java.util.Set<PackageReference> ownExternalPackageReferences() { return java.util.Set.of(); }
-            public java.util.Set<PackageReference> accumulatedDirectPackageReferences() { return java.util.Set.of(); }
-        };
+    private Package pkg(String name, float instability) {
+        return new Package(
+            new PackageReference(name),
+            new PackageMetrics(0, 0, 0, instability, 0),
+            java.util.Set.of(),
+            java.util.Set.of(),
+            false
+        );
     }
 
     private SDPViolation violation(String dependerName, float dependerInstability,

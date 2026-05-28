@@ -12,7 +12,6 @@ import org.tindalos.guardrails.internal.domain.constraints.Constraints;
 import org.tindalos.guardrails.internal.domain.core.Package;
 import org.tindalos.guardrails.internal.domain.core.PackageStructureBuilder;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
-import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 import org.tindalos.guardrails.internal.domain.plan.AnalysisInput;
 
 /**
@@ -29,7 +28,7 @@ public final class CycleDetector implements Analyzer {
 
     @Override
     public ADPResult analyze(AnalysisInput input) {
-        var basePackage = packageStructureBuilder.build(toPackages(input.packages()), input.analysisPlan().basePackage());
+        var basePackage = packageStructureBuilder.build(input.packages(), input.analysisPlan().basePackage());
         var references = basePackage.toMap();
         
         var sortedByAfferents = references.values().stream()
@@ -78,24 +77,6 @@ public final class CycleDetector implements Analyzer {
     @Override
     public boolean isEnabled(Constraints constraints) {
         return constraints.packageCoupling().flatMap(pc -> pc.adp()).isPresent();
-    }
-
-    private List<Package> toPackages(List<PackageWithMetrics> packages) {
-        return packages.stream()
-                .map(CycleDetector::toPackage)
-                .toList();
-    }
-
-    private static Package toPackage(PackageWithMetrics packageWithMetrics) {
-        Objects.requireNonNull(packageWithMetrics, "packageWithMetrics");
-        if (packageWithMetrics instanceof Package aPackage) {
-            return aPackage;
-        }
-
-        throw new IllegalArgumentException(
-                "Expected %s but got %s".formatted(
-                        Package.class.getName(),
-                        packageWithMetrics.getClass().getName()));
     }
 
     private CyclesInSubgraph detectCycles(Package startPackage, Map<PackageReference, Package> packageReferences) {

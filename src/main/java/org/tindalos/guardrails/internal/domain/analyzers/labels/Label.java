@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.tindalos.guardrails.internal.domain.constraints.labels.InvalidLabelDefinitionException;
 import org.tindalos.guardrails.internal.domain.constraints.labels.LabelId;
+import org.tindalos.guardrails.internal.domain.core.Package;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
-import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 
 /**
  * Concrete representation of a label in a label group, combining the definition
@@ -16,11 +16,11 @@ import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 public class Label {
 
     public final LabelId id;
-    public final Set<PackageWithMetrics> packagesUnderLabel;
+    public final Set<Package> packagesUnderLabel;
     public final Set<LabelId> plannedDependencies;
     private final Set<PackageReference> outgoingReferences;
 
-    public Label(LabelId id, Set<PackageWithMetrics> packagesUnderLabel, Set<LabelId> plannedDependencies) {
+    public Label(LabelId id, Set<Package> packagesUnderLabel, Set<LabelId> plannedDependencies) {
         if (plannedDependencies.contains(id)) {
             throw new InvalidLabelDefinitionException("Label should not depend on itself: " + id.value());
         }

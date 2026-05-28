@@ -9,7 +9,6 @@ import org.tindalos.guardrails.internal.domain.constraints.labels.Labels;
 import org.tindalos.guardrails.internal.domain.core.Package;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageMetrics;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
-import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 import org.tindalos.guardrails.internal.domain.plan.AnalysisInput;
 import org.tindalos.guardrails.internal.domain.plan.AnalysisPlan;
 import org.tindalos.guardrails.internal.infrastructure.di.PackageStructureBuilderImpl;
@@ -89,7 +88,7 @@ public class LabelsAnalyzerTest {
         var constraints = Constraints.builder().labels(labels).build();
         var plan = new AnalysisPlan(constraints, basePackage);
 
-        var packages = List.<PackageWithMetrics>of(rootPkg, infraPkg, appPkg, domainPkg);
+        var packages = List.<Package>of(rootPkg, infraPkg, appPkg, domainPkg);
         var input = new AnalysisInput(packages, Collections.emptySet(), plan);
 
         var result = testObj.analyze(input);
