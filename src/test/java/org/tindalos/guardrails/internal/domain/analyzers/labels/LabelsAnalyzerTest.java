@@ -58,10 +58,10 @@ public class LabelsAnalyzerTest {
         var basePackage = "org.example";
 
         // Setup base package and subpackages
-        var rootPkg = new TestPackage(basePackage, Set.of());
-        var infraPkg = new TestPackage("org.example.infra", Set.of(new PackageReference("org.example.domain")));
-        var appPkg = new TestPackage("org.example.app", Set.of());
-        var domainPkg = new TestPackage("org.example.domain", Set.of());
+        var rootPkg = pkg(basePackage, Set.of());
+        var infraPkg = pkg("org.example.infra", Set.of(new PackageReference("org.example.domain")));
+        var appPkg = pkg("org.example.app", Set.of());
+        var domainPkg = pkg("org.example.domain", Set.of());
 
         // Setup Labels constraint
         // infra is defined to depend on app, but in reality depends on domain (so domain is illegal, and app is missing dependency)
@@ -115,32 +115,7 @@ public class LabelsAnalyzerTest {
         assertEquals(Set.of(new LabelId("domain")), missing.get(appLabel).stream().map(s -> s.id).collect(Collectors.toSet()));
     }
 
-    private static final class TestPackage extends Package {
-        private final Set<PackageReference> ownReferences;
-
-        private TestPackage(String referenceName, Set<PackageReference> ownReferences) {
-            super(referenceName);
-            this.ownReferences = new HashSet<>(ownReferences);
-        }
-
-        @Override
-        public PackageMetrics metrics() {
-            return null;
-        }
-
-        @Override
-        public Set<PackageReference> ownPackageReferences() {
-            return Set.copyOf(ownReferences);
-        }
-
-        @Override
-        public Set<PackageReference> ownExternalPackageReferences() {
-            return Set.of();
-        }
-
-        @Override
-        public boolean isUnreferred() {
-            return false;
-        }
+    private static Package pkg(String name, Set<PackageReference> ownReferences) {
+        return new Package(new PackageReference(name), PackageMetrics.UNDEFINED, ownReferences, Set.of(), false, List.of());
     }
 }

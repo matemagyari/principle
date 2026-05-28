@@ -3,12 +3,12 @@ package org.tindalos.guardrails.internal.domain.analyzers.acd;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.tindalos.guardrails.internal.domain.plan.AnalysisInput;
 import org.tindalos.guardrails.internal.domain.analyzers.Analyzer;
 import org.tindalos.guardrails.internal.domain.constraints.Constraints;
 import org.tindalos.guardrails.internal.domain.core.Package;
 import org.tindalos.guardrails.internal.domain.core.PackageStructureBuilder;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
+import org.tindalos.guardrails.internal.domain.plan.AnalysisInput;
 
 /**
  * Calculates component dependency metrics (ACD/RACD/NCCD) for relevant packages.
@@ -36,7 +36,7 @@ public class ComponentDependenciesAnalyzer implements Analyzer {
                 : packages;
 
         int cumulatedComponentDependency = relevantPackages.stream()
-                .map(pkg -> (Package) pkg)
+                .map(pkg -> referenceMap.get(pkg.reference()))
                 .mapToInt(pkg -> pkg.cumulatedDependencies(referenceMap).size() + 1)
                 .sum();
 

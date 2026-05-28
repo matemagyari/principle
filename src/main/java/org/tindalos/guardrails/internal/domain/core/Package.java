@@ -11,71 +11,48 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageMetrics;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 
-public class Package implements PackageWithMetrics {
+/**
+ * Represents an immutable Package with its metric values and sub-packages.
+ */
+public record Package(
+    PackageReference reference,
+    PackageMetrics metrics,
+    Set<PackageReference> ownPackageReferences,
+    Set<PackageReference> ownExternalPackageReferences,
+    boolean isUnreferred,
+    List<Package> subPackages
+) implements PackageWithMetrics {
 
-    private final PackageReference reference;
-    private final List<Package> subPackages = new ArrayList<>();
-
-    private final PackageMetrics metrics;
-    private final Set<PackageReference> ownPackageReferences;
-    private final Set<PackageReference> ownExternalPackageReferences;
-    private final boolean unreferred;
-
-    protected Package(PackageReference reference) {
-        this.reference = reference;
-        this.metrics = PackageMetrics.UNDEFINED;
-        this.ownPackageReferences = Collections.emptySet();
-        this.ownExternalPackageReferences = Collections.emptySet();
-        this.unreferred = true;
+    public Package {
+        ownPackageReferences = Set.copyOf(ownPackageReferences);
+        ownExternalPackageReferences = Set.copyOf(ownExternalPackageReferences);
+        subPackages = List.copyOf(subPackages);
     }
 
-    protected Package(String referenceName) {
-        this(new PackageReference(referenceName));
+    // Constructor with String reference name and default empty collections
+    public Package(String referenceName) {
+        this(new PackageReference(referenceName), PackageMetrics.UNDEFINED, Set.of(), Set.of(), true, List.of());
     }
 
+    // Constructor with PackageReference and default empty collections
+    public Package(PackageReference reference) {
+        this(reference, PackageMetrics.UNDEFINED, Set.of(), Set.of(), true, List.of());
+    }
+
+    // Constructor for compatibility with existing tests and builders that don't pass subPackages
     public Package(
             PackageReference reference,
             PackageMetrics metrics,
             Set<PackageReference> ownPackageReferences,
             Set<PackageReference> ownExternalPackageReferences,
-            boolean unreferred) {
-        this.reference = reference;
-        this.metrics = metrics;
-        this.ownPackageReferences = Set.copyOf(ownPackageReferences);
-        this.ownExternalPackageReferences = Set.copyOf(ownExternalPackageReferences);
-        this.unreferred = unreferred;
+            boolean isUnreferred) {
+        this(reference, metrics, ownPackageReferences, ownExternalPackageReferences, isUnreferred, List.of());
     }
 
-    @Override
-    public PackageReference reference() {
-        return reference;
-    }
-
-    public List<Package> subPackages() {
-        return Collections.unmodifiableList(subPackages);
-    }
-
-    @Override
-    public PackageMetrics metrics() {
-        return metrics;
-    }
-
-    @Override
-    public Set<PackageReference> ownPackageReferences() {
-        return ownPackageReferences;
-    }
-
-    @Override
-    public Set<PackageReference> ownExternalPackageReferences() {
-        return ownExternalPackageReferences;
-    }
-
-    // all the references going out from this package
     @Override
     public Set<PackageReference> accumulatedDirectPackageReferences() {
         return Stream
@@ -88,12 +65,14 @@ public class Package implements PackageWithMetrics {
             .collect(Collectors.toUnmodifiableSet());
     }
 
-    public boolean isUnreferred() {
-        return unreferred;
-    }
-
     public Map<PackageReference, Package> toMap() {
         return Collections.unmodifiableMap(toMap(new HashMap<>()));
+    }
+
+    private Map<PackageReference, Package> toMap(Map<PackageReference, Package> accumulatingMap) {
+        accumulatingMap.put(reference, this);
+        subPackages.forEach(child -> child.toMap(accumulatingMap));
+        return accumulatingMap;
     }
 
     public CyclesInSubgraph detectCycles(Map<PackageReference, Package> packageReferences) {
@@ -103,68 +82,8 @@ public class Package implements PackageWithMetrics {
             Collections.unmodifiableMap(packageReferences));
     }
 
-    // it dies if there are cycles
-    // through references, not through subPackages. transaitive too
     public Set<PackageReference> cumulatedDependencies(Map<PackageReference, Package> packageReferenceMap) {
         return cumulatedDependenciesAcc(packageReferenceMap, new HashSet<>());
-    }
-
-    public void insert(Package aPackage) {
-        if (this.equals(aPackage)) {
-            throw new PackageStructureBuildingException("Attempted to insert into itself " + this);
-        } else if (doesNotContain(aPackage)) {
-            throw new PackageStructureBuildingException("Attempted to insert " + aPackage + " into " + this);
-        } else if (isDirectSuperPackageOf(aPackage)) {
-            subPackages.add(aPackage);
-        } else {
-            insertIndirectSubPackage(aPackage);
-        }
-    }
-
-    private Set<Package> accumulatedDirectlyReferredPackages(Map<PackageReference, Package> packageReferenceMap) {
-        return accumulatedDirectPackageReferences().stream()
-            .flatMap(r -> Optional.ofNullable(packageReferenceMap.get(r)).stream())
-            .collect(Collectors.toUnmodifiableSet());
-    }
-
-    private Map<PackageReference, Package> toMap(Map<PackageReference, Package> accumulatingMap) {
-        accumulatingMap.put(reference, this);
-        subPackages.forEach(child -> child.toMap(accumulatingMap));
-        return accumulatingMap;
-    }
-
-    private Package getSubPackageByRelativeName(String relativeName) {
-        PackageReference targetReference = reference.child(relativeName);
-
-        return subPackages.stream()
-            .filter(subPackage -> subPackage.reference.equals(targetReference))
-            .findFirst()
-            .orElseGet(() -> {
-                Package directSubPackage = new Package(reference.createChild(relativeName)) {
-                    @Override
-                    public Set<PackageReference> ownPackageReferences() {
-                        return Collections.emptySet();
-                    }
-
-                    @Override
-                    public Set<PackageReference> ownExternalPackageReferences() {
-                        return Collections.emptySet();
-                    }
-
-                    @Override
-                    public PackageMetrics metrics() {
-                        return PackageMetrics.UNDEFINED;
-                    }
-
-                    @Override
-                    public boolean isUnreferred() {
-                        return true;
-                    }
-                };
-
-                subPackages.add(directSubPackage);
-                return directSubPackage;
-            });
     }
 
     private int indexInTraversedPath(List<PackageReference> traversedPackages) {
@@ -255,16 +174,10 @@ public class Package implements PackageWithMetrics {
         return packages.stream().anyMatch(pkg -> !pkg.isDescendantOf(possibleAncestor));
     }
 
-    private boolean isDirectSuperPackageOf(Package aPackage) {
-        return reference.isDirectParentOf(aPackage.reference);
-    }
-
-    private boolean doesNotContain(Package aPackage) {
-        return !aPackage.reference.pointsInside(reference);
-    }
-
-    private String firstPartOfRelativeNameTo(Package parentPackage) {
-        return reference.firstPartOfRelativeNameTo(parentPackage.reference);
+    private Set<Package> accumulatedDirectlyReferredPackages(Map<PackageReference, Package> packageReferenceMap) {
+        return accumulatedDirectPackageReferences().stream()
+            .flatMap(r -> Optional.ofNullable(packageReferenceMap.get(r)).stream())
+            .collect(Collectors.toUnmodifiableSet());
     }
 
     private boolean notEveryNodeUnderFirst(List<PackageReference> cycleCandidate) {
@@ -285,11 +198,6 @@ public class Package implements PackageWithMetrics {
         return notEveryNodeUnderFirst(cycleCandidate);
     }
 
-    private void insertIndirectSubPackage(Package aPackage) {
-        String relativeNameOfDirectSubPackage = aPackage.firstPartOfRelativeNameTo(this);
-        getSubPackageByRelativeName(relativeNameOfDirectSubPackage).insert(aPackage);
-    }
-
     @Override
     public boolean equals(Object other) {
         return other instanceof Package castOther && castOther.reference.equals(reference);
@@ -297,7 +205,7 @@ public class Package implements PackageWithMetrics {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(reference).hashCode();
+        return reference.hashCode();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package org.tindalos.guardrails.internal.domain.analyzers.acd;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -8,17 +7,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
-import org.tindalos.guardrails.internal.domain.plan.AnalysisInput;
 import org.tindalos.guardrails.internal.domain.constraints.ACD;
 import org.tindalos.guardrails.internal.domain.constraints.Constraints;
 import org.tindalos.guardrails.internal.domain.constraints.PackageCouplingConstraints;
 import org.tindalos.guardrails.internal.domain.constraints.RACD;
-import org.tindalos.guardrails.internal.domain.plan.AnalysisPlan;
 import org.tindalos.guardrails.internal.domain.core.Package;
 import org.tindalos.guardrails.internal.domain.core.PackageStructureBuilder;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageMetrics;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
+import org.tindalos.guardrails.internal.domain.plan.AnalysisInput;
+import org.tindalos.guardrails.internal.domain.plan.AnalysisPlan;
+import org.tindalos.guardrails.internal.infrastructure.packages.MutablePackage;
 
 /**
  * Unit tests for ComponentDependenciesAnalyzer.
@@ -89,9 +89,9 @@ public class ComponentDependenciesAnalyzerTest {
         return new PackageMetrics(afferent, efferent, 0, 0, 0);
     }
 
-    private static TestPackage pkg(String name, Set<String> ownRefs, PackageMetrics metrics) {
+    private static Package pkg(String name, Set<String> ownRefs, PackageMetrics metrics) {
         var references = ownRefs.stream().map(PackageReference::new).collect(java.util.stream.Collectors.toSet());
-        return new TestPackage(name, references, metrics);
+        return new Package(new PackageReference(name), metrics, references, Set.of(), false, List.of());
     }
 
     private static final class ReturningBuilder implements PackageStructureBuilder {
@@ -103,43 +103,25 @@ public class ComponentDependenciesAnalyzerTest {
 
         @Override
         public Package build(List<Package> packages, String basePackageName) {
+            MutablePackage mp = new MutablePackage(
+                basePackage.reference(),
+                basePackage.metrics(),
+                basePackage.ownPackageReferences(),
+                basePackage.ownExternalPackageReferences(),
+                basePackage.isUnreferred()
+            );
             for (Package aPackage : packages) {
                 if (!aPackage.equals(basePackage)) {
-                    basePackage.insert(aPackage);
+                    mp.insert(new MutablePackage(
+                        aPackage.reference(),
+                        aPackage.metrics(),
+                        aPackage.ownPackageReferences(),
+                        aPackage.ownExternalPackageReferences(),
+                        aPackage.isUnreferred()
+                    ));
                 }
             }
-            return basePackage;
-        }
-    }
-
-    private static final class TestPackage extends Package {
-        private final Set<PackageReference> ownReferences;
-        private final PackageMetrics packageMetrics;
-
-        private TestPackage(String referenceName, Set<PackageReference> ownReferences, PackageMetrics packageMetrics) {
-            super(referenceName);
-            this.ownReferences = new HashSet<>(ownReferences);
-            this.packageMetrics = packageMetrics;
-        }
-
-        @Override
-        public PackageMetrics metrics() {
-            return packageMetrics;
-        }
-
-        @Override
-        public Set<PackageReference> ownPackageReferences() {
-            return Set.copyOf(ownReferences);
-        }
-
-        @Override
-        public Set<PackageReference> ownExternalPackageReferences() {
-            return Set.of();
-        }
-
-        @Override
-        public boolean isUnreferred() {
-            return false;
+            return mp.toImmutable();
         }
     }
 }

@@ -1,36 +1,24 @@
 package org.tindalos.guardrails.internal.domain.core.packages;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.core.Package;
 import org.tindalos.guardrails.internal.domain.core.PackageStructureBuildingException;
+import org.tindalos.guardrails.internal.infrastructure.packages.MutablePackage;
 
 public class PackageTest {
 
-    private TestPackage packageA;
-    private TestPackage packageB;
-    private TestPackage packageC;
-
-    @BeforeEach
-    public void setUp() {
-        packageA = new TestPackage("org.example.a");
-        packageB = new TestPackage("org.example.b");
-        packageC = new TestPackage("org.example.c");
-    }
-
     @Test
     public void testPackageCreation() {
-        TestPackage pkg = new TestPackage("org.example.test");
+        Package pkg = new Package(new PackageReference("org.example.test"), PackageMetrics.UNDEFINED, Set.of(), Set.of(), false, List.of());
         assertEquals("org.example.test", pkg.reference().name());
         assertFalse(pkg.isUnreferred());
         assertEquals(0, pkg.subPackages().size());
@@ -38,73 +26,83 @@ public class PackageTest {
 
     @Test
     public void testPackageCreationWithString() {
-        TestPackage pkg = new TestPackage("org.example.test");
+        Package pkg = new Package("org.example.test");
         assertEquals("org.example.test", pkg.reference().name());
     }
 
     @Test
     public void testInsertDirectSubPackage() {
-        TestPackage parent = new TestPackage("org.example");
-        TestPackage child = new TestPackage("org.example.child");
+        MutablePackage parent = new MutablePackage(new PackageReference("org.example"));
+        MutablePackage child = new MutablePackage(new PackageReference("org.example.child"));
 
         parent.insert(child);
 
         assertEquals(1, parent.subPackages().size());
         assertTrue(parent.subPackages().contains(child));
+
+        Package immutableParent = parent.toImmutable();
+        assertEquals(1, immutableParent.subPackages().size());
+        assertEquals("org.example.child", immutableParent.subPackages().get(0).reference().name());
     }
 
     @Test
     public void testInsertIndirectSubPackage() {
-        TestPackage parent = new TestPackage("org.example");
-        TestPackage grandchild = new TestPackage("org.example.child.grandchild");
+        MutablePackage parent = new MutablePackage(new PackageReference("org.example"));
+        MutablePackage grandchild = new MutablePackage(new PackageReference("org.example.child.grandchild"));
 
         parent.insert(grandchild);
 
         assertEquals(1, parent.subPackages().size());
-        org.tindalos.guardrails.internal.domain.core.Package child = parent.subPackages().get(0);
+        MutablePackage child = parent.subPackages().get(0);
         assertEquals("org.example.child", child.reference().name());
         assertEquals(1, child.subPackages().size());
         assertEquals("org.example.child.grandchild", child.subPackages().get(0).reference().name());
+
+        Package immutableParent = parent.toImmutable();
+        assertEquals(1, immutableParent.subPackages().size());
+        Package immutableChild = immutableParent.subPackages().get(0);
+        assertEquals("org.example.child", immutableChild.reference().name());
+        assertEquals(1, immutableChild.subPackages().size());
+        assertEquals("org.example.child.grandchild", immutableChild.subPackages().get(0).reference().name());
     }
 
     @Test
     public void testInsertIntoItself_shouldThrowException() {
-        TestPackage pkg = new TestPackage("org.example");
+        MutablePackage pkg = new MutablePackage(new PackageReference("org.example"));
         assertThrows(PackageStructureBuildingException.class, () -> pkg.insert(pkg));
     }
 
     @Test
     public void testInsertUnrelatedPackage_shouldThrowException() {
-        TestPackage parent = new TestPackage("org.example");
-        TestPackage unrelated = new TestPackage("org.other");
+        MutablePackage parent = new MutablePackage(new PackageReference("org.example"));
+        MutablePackage unrelated = new MutablePackage(new PackageReference("org.other"));
 
         assertThrows(PackageStructureBuildingException.class, () -> parent.insert(unrelated));
     }
 
     @Test
     public void testToMap() {
-        TestPackage parent = new TestPackage("org.example");
-        TestPackage child1 = new TestPackage("org.example.child1");
-        TestPackage child2 = new TestPackage("org.example.child2");
+        MutablePackage parent = new MutablePackage(new PackageReference("org.example"));
+        MutablePackage child1 = new MutablePackage(new PackageReference("org.example.child1"));
+        MutablePackage child2 = new MutablePackage(new PackageReference("org.example.child2"));
 
         parent.insert(child1);
         parent.insert(child2);
 
-        Map<PackageReference, org.tindalos.guardrails.internal.domain.core.Package> map = parent.toMap();
+        Package immutableParent = parent.toImmutable();
+        Map<PackageReference, Package> map = immutableParent.toMap();
 
         assertEquals(3, map.size());
-        assertTrue(map.containsKey(parent.reference()));
+        assertTrue(map.containsKey(immutableParent.reference()));
         assertTrue(map.containsKey(child1.reference()));
         assertTrue(map.containsKey(child2.reference()));
     }
 
     @Test
     public void testAccumulatedDirectPackageReferences() {
-        TestPackage pkg = new TestPackage("org.example.test");
         PackageReference ref1 = new PackageReference("org.external.lib1");
         PackageReference ref2 = new PackageReference("org.external.lib2");
-        pkg.addOwnReference(ref1);
-        pkg.addOwnReference(ref2);
+        Package pkg = new Package(new PackageReference("org.example.test"), PackageMetrics.UNDEFINED, Set.of(ref1, ref2), Set.of(), false, List.of());
 
         Set<PackageReference> refs = pkg.accumulatedDirectPackageReferences();
 
@@ -115,162 +113,109 @@ public class PackageTest {
 
     @Test
     public void testAccumulatedDirectPackageReferences_withSubPackages() {
-        TestPackage parent = new TestPackage("org.example");
-        TestPackage child = new TestPackage("org.example.child");
         PackageReference refFromChild = new PackageReference("org.external.lib");
-        child.addOwnReference(refFromChild);
+        MutablePackage parent = new MutablePackage(new PackageReference("org.example"));
+        MutablePackage child = new MutablePackage(
+            new PackageReference("org.example.child"),
+            PackageMetrics.UNDEFINED,
+            Set.of(refFromChild),
+            Set.of(),
+            false
+        );
 
         parent.insert(child);
 
-        Set<PackageReference> refs = parent.accumulatedDirectPackageReferences();
+        Package immutableParent = parent.toImmutable();
+        Set<PackageReference> refs = immutableParent.accumulatedDirectPackageReferences();
 
         assertTrue(refs.contains(refFromChild));
     }
 
     @Test
     public void testInstability() {
-        TestPackage pkg = new TestPackage("org.example");
-        pkg.setMetrics(new PackageMetrics(2, 3, 0.5f, 0.6f, 0.1f));
+        Package pkg = new Package(new PackageReference("org.example"), new PackageMetrics(2, 3, 0.5f, 0.6f, 0.1f), Set.of(), Set.of(), false, List.of());
 
         assertEquals(0.6f, pkg.metrics().instability(), 0.001);
     }
 
     @Test
     public void testDistance() {
-        TestPackage pkg = new TestPackage("org.example");
-        pkg.setMetrics(new PackageMetrics(2, 3, 0.5f, 0.6f, 0.1f));
+        Package pkg = new Package(new PackageReference("org.example"), new PackageMetrics(2, 3, 0.5f, 0.6f, 0.1f), Set.of(), Set.of(), false, List.of());
 
         assertEquals(0.1f, pkg.metrics().distance(), 0.001);
     }
 
     @Test
     public void testIsIsolated_whenNoConnections() {
-        TestPackage pkg = new TestPackage("org.example");
-        pkg.setMetrics(new PackageMetrics(0, 0, 0, 0, 0));
+        Package pkg = new Package(new PackageReference("org.example"), new PackageMetrics(0, 0, 0, 0, 0), Set.of(), Set.of(), false, List.of());
 
         assertTrue(pkg.metrics().isIsolated());
     }
 
     @Test
     public void testIsIsolated_whenHasAfferentCoupling() {
-        TestPackage pkg = new TestPackage("org.example");
-        pkg.setMetrics(new PackageMetrics(1, 0, 0, 0, 0));
+        Package pkg = new Package(new PackageReference("org.example"), new PackageMetrics(1, 0, 0, 0, 0), Set.of(), Set.of(), false, List.of());
 
         assertFalse(pkg.metrics().isIsolated());
     }
 
     @Test
     public void testIsIsolated_whenHasEfferentCoupling() {
-        TestPackage pkg = new TestPackage("org.example");
-        pkg.setMetrics(new PackageMetrics(0, 1, 0, 0, 0));
+        Package pkg = new Package(new PackageReference("org.example"), new PackageMetrics(0, 1, 0, 0, 0), Set.of(), Set.of(), false, List.of());
 
         assertFalse(pkg.metrics().isIsolated());
     }
 
     @Test
     public void testEquals_sameReference() {
-        TestPackage pkg1 = new TestPackage("org.example");
-        TestPackage pkg2 = new TestPackage("org.example");
+        Package pkg1 = new Package(new PackageReference("org.example"));
+        Package pkg2 = new Package(new PackageReference("org.example"));
 
         assertEquals(pkg1, pkg2);
     }
 
     @Test
     public void testEquals_differentReference() {
-        TestPackage pkg1 = new TestPackage("org.example.a");
-        TestPackage pkg2 = new TestPackage("org.example.b");
+        Package pkg1 = new Package(new PackageReference("org.example.a"));
+        Package pkg2 = new Package(new PackageReference("org.example.b"));
 
         assertNotEquals(pkg1, pkg2);
     }
 
     @Test
     public void testHashCode_sameReference() {
-        TestPackage pkg1 = new TestPackage("org.example");
-        TestPackage pkg2 = new TestPackage("org.example");
+        Package pkg1 = new Package(new PackageReference("org.example"));
+        Package pkg2 = new Package(new PackageReference("org.example"));
 
         assertEquals(pkg1.hashCode(), pkg2.hashCode());
     }
 
     @Test
     public void testToString() {
-        TestPackage pkg = new TestPackage("org.example.test");
+        Package pkg = new Package(new PackageReference("org.example.test"));
 
         assertEquals("org.example.test", pkg.toString());
     }
 
     @Test
     public void testMultipleLevelInsertion() {
-        TestPackage root = new TestPackage("org");
-        TestPackage level1 = new TestPackage("org.example");
-        TestPackage level2 = new TestPackage("org.example.app");
-        TestPackage level3 = new TestPackage("org.example.app.service");
+        MutablePackage root = new MutablePackage(new PackageReference("org"));
+        MutablePackage level3 = new MutablePackage(new PackageReference("org.example.app.service"));
 
         root.insert(level3);
 
-        assertEquals(1, root.subPackages().size());
-        org.tindalos.guardrails.internal.domain.core.Package org_example = root.subPackages().get(0);
+        Package immutableRoot = root.toImmutable();
+
+        assertEquals(1, immutableRoot.subPackages().size());
+        Package org_example = immutableRoot.subPackages().get(0);
         assertEquals("org.example", org_example.reference().name());
 
         assertEquals(1, org_example.subPackages().size());
-        org.tindalos.guardrails.internal.domain.core.Package org_example_app = org_example.subPackages().get(0);
+        Package org_example_app = org_example.subPackages().get(0);
         assertEquals("org.example.app", org_example_app.reference().name());
 
         assertEquals(1, org_example_app.subPackages().size());
         assertEquals("org.example.app.service", org_example_app.subPackages().get(0).reference().name());
-    }
-
-    /**
-     * Simple test implementation of Package for testing purposes.
-     */
-    private static class TestPackage extends Package {
-        private final Set<PackageReference> ownReferences = new HashSet<>();
-        private final Set<PackageReference> externalReferences = new HashSet<>();
-        private PackageMetrics metrics = PackageMetrics.UNDEFINED;
-        private boolean unreferred = false;
-
-        public TestPackage(String referenceName) {
-            super(referenceName);
-        }
-
-        public TestPackage(PackageReference reference) {
-            super(reference);
-        }
-
-        public void addOwnReference(PackageReference ref) {
-            ownReferences.add(ref);
-        }
-
-        public void addExternalReference(PackageReference ref) {
-            externalReferences.add(ref);
-        }
-
-        public void setMetrics(PackageMetrics metrics) {
-            this.metrics = metrics;
-        }
-
-        public void setUnreferred(boolean unreferred) {
-            this.unreferred = unreferred;
-        }
-
-        @Override
-        public boolean isUnreferred() {
-            return unreferred;
-        }
-
-        @Override
-        public PackageMetrics metrics() {
-            return metrics;
-        }
-
-        @Override
-        public java.util.Set<PackageReference> ownPackageReferences() {
-            return Set.copyOf(ownReferences);
-        }
-
-        @Override
-        public java.util.Set<PackageReference> ownExternalPackageReferences() {
-            return Set.copyOf(externalReferences);
-        }
     }
 }
 

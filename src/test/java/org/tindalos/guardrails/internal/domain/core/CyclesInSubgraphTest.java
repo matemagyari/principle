@@ -1,6 +1,5 @@
 package org.tindalos.guardrails.internal.domain.core;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -182,26 +181,6 @@ public class CyclesInSubgraphTest {
     }
 
     private static Package createTestPackage(String name) {
-        return new Package(name) {
-            @Override
-            public boolean isUnreferred() {
-                return false;
-            }
-
-            @Override
-            public PackageMetrics metrics() {
-                return PackageMetrics.UNDEFINED;
-            }
-
-            @Override
-            public Set<PackageReference> ownPackageReferences() {
-                return Collections.emptySet();
-            }
-
-            @Override
-            public Set<PackageReference> ownExternalPackageReferences() {
-                return Collections.emptySet();
-            }
-        };
+        return new Package(new PackageReference(name), PackageMetrics.UNDEFINED, Set.of(), Set.of(), false, List.of());
     }
 }
