@@ -1,4 +1,4 @@
-package org.tindalos.guardrails.internal.domain.core;
+package org.tindalos.guardrails.internal.domain.analyzers.adp;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.tindalos.guardrails.internal.domain.core.DomainException;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
 
 /**
@@ -91,4 +92,3 @@ public class Cycle implements Comparable<Cycle> {
     }
 
 }
-

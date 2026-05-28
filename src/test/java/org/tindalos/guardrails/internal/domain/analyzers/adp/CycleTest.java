@@ -1,13 +1,15 @@
-package org.tindalos.guardrails.internal.domain.core;
-
-import org.junit.jupiter.api.Test;
+package org.tindalos.guardrails.internal.domain.analyzers.adp;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+import org.tindalos.guardrails.internal.domain.core.DomainException;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class CycleTest {
 
@@ -222,4 +224,3 @@ public class CycleTest {
         assertNotEquals(cycle, notACycle);
     }
 }
-

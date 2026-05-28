@@ -1,13 +1,13 @@
 package org.tindalos.guardrails.internal.infrastructure.reporters;
 
-import org.tindalos.guardrails.internal.app.reporters.ADPAnalysisResultReporter;
-import org.tindalos.guardrails.internal.domain.analyzers.adp.ADPResult;
-import org.tindalos.guardrails.internal.domain.core.Cycle;
-import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
-
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.tindalos.guardrails.internal.app.reporters.ADPAnalysisResultReporter;
+import org.tindalos.guardrails.internal.domain.analyzers.adp.ADPResult;
+import org.tindalos.guardrails.internal.domain.analyzers.adp.Cycle;
+import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
 
 /**
  * Reports ADP analysis results in YAML format.

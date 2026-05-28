@@ -1,12 +1,10 @@
 package org.tindalos.guardrails.internal.domain.core;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -75,36 +73,8 @@ public record Package(
         return accumulatingMap;
     }
 
-    public CyclesInSubgraph detectCycles(Map<PackageReference, Package> packageReferences) {
-        return detectCyclesOnThePathFromHere(
-            TraversedPackages.empty(),
-            new CyclesInSubgraph(Set.of(), Map.of()),
-            Collections.unmodifiableMap(packageReferences));
-    }
-
     public Set<PackageReference> cumulatedDependencies(Map<PackageReference, Package> packageReferenceMap) {
         return cumulatedDependenciesAcc(packageReferenceMap, new HashSet<>());
-    }
-
-    private int indexInTraversedPath(List<PackageReference> traversedPackages) {
-        int index = traversedPackages.indexOf(reference);
-        if (index != -1) {
-            return index;
-        }
-
-        Integer matchFoundIndex = null;
-        for (int i = 0; i < traversedPackages.size() && matchFoundIndex == null; i++) {
-            PackageReference possibleMatch = traversedPackages.get(i);
-            if (possibleMatch.equals(reference)
-                || (reference.isDescendantOf(possibleMatch)
-                    && notAllAreDescendantsOf(
-                        traversedPackages.subList(i + 1, traversedPackages.size()),
-                        possibleMatch))) {
-                matchFoundIndex = i;
-            }
-        }
-
-        return matchFoundIndex == null ? -1 : matchFoundIndex;
     }
 
     private Set<PackageReference> cumulatedDependenciesAcc(
@@ -131,73 +101,6 @@ public record Package(
         return Set.copyOf(result);
     }
 
-    private CyclesInSubgraph detectCyclesOnThePathFromHere(
-        TraversedPackages traversedPackages,
-        CyclesInSubgraph foundCycles,
-        Map<PackageReference, Package> packageReferences) {
-
-        // enough cycles have been found already with this package
-        if (foundCycles.isBreakingPoint(this)) {
-            return foundCycles;
-        }
-
-        var cyclesAfterInvestigating = foundCycles.withInvestigatedPackage(this);
-
-        Optional<List<PackageReference>> cycleCandidateEndingHere = findCycleCandidateEndingHere(traversedPackages);
-        return cycleCandidateEndingHere
-                .map(candidate -> isValid(candidate)
-                        ? cyclesAfterInvestigating.withAddedCycle(new Cycle(candidate))
-                        : cyclesAfterInvestigating)
-                .orElseGet(() -> {
-                    // Process all referred packages sequentially, threading the accumulator through
-                    var accumulatedCycles = cyclesAfterInvestigating;
-                    for (var referencedPackage : accumulatedDirectlyReferredPackages(packageReferences)) {
-                        CyclesInSubgraph cyclesInSubgraph = referencedPackage.detectCyclesOnThePathFromHere(
-                                traversedPackages.add(reference),
-                                accumulatedCycles,
-                                packageReferences);
-                        accumulatedCycles = accumulatedCycles.mergedWith(cyclesInSubgraph);
-                    }
-                    return accumulatedCycles;
-                });
-    }
-
-    private Optional<List<PackageReference>> findCycleCandidateEndingHere(TraversedPackages traversedPackages) {
-        int indexOfThisPackage = indexInTraversedPath(traversedPackages.packages());
-        if (indexOfThisPackage > -1) {
-            return Optional.of(traversedPackages.from(indexOfThisPackage));
-        }
-        return Optional.empty();
-    }
-
-    private boolean notAllAreDescendantsOf(List<PackageReference> packages, PackageReference possibleAncestor) {
-        return packages.stream().anyMatch(pkg -> !pkg.isDescendantOf(possibleAncestor));
-    }
-
-    private Set<Package> accumulatedDirectlyReferredPackages(Map<PackageReference, Package> packageReferenceMap) {
-        return accumulatedDirectPackageReferences().stream()
-            .flatMap(r -> Optional.ofNullable(packageReferenceMap.get(r)).stream())
-            .collect(Collectors.toUnmodifiableSet());
-    }
-
-    private boolean notEveryNodeUnderFirst(List<PackageReference> cycleCandidate) {
-        PackageReference first = cycleCandidate.getFirst();
-        boolean hasNonDescendant = cycleCandidate.stream().skip(1).anyMatch(p -> !p.isDescendantOf(first));
-
-        if (!hasNonDescendant) {
-            return first.equals(reference);
-        }
-
-        return true;
-    }
-
-    private boolean isValid(List<PackageReference> cycleCandidate) {
-        if (cycleCandidate.size() < 2) {
-            return false;
-        }
-        return notEveryNodeUnderFirst(cycleCandidate);
-    }
-
     @Override
     public boolean equals(Object other) {
         return other instanceof Package castOther && castOther.reference.equals(reference);
@@ -211,36 +114,5 @@ public record Package(
     @Override
     public String toString() {
         return reference.toString();
-    }
-
-    private static final class TraversedPackages {
-
-        private final List<PackageReference> packages;
-
-        private TraversedPackages() {
-            this(List.of());
-        }
-
-        private TraversedPackages(List<PackageReference> packages) {
-            this.packages = packages;
-        }
-
-        private List<PackageReference> packages() {
-            return packages;
-        }
-
-        private TraversedPackages add(PackageReference reference) {
-            List<PackageReference> next = new ArrayList<>(packages);
-            next.add(reference);
-            return new TraversedPackages(List.copyOf(next));
-        }
-
-        private List<PackageReference> from(int index) {
-            return packages.subList(index, packages.size());
-        }
-
-        private static TraversedPackages empty() {
-            return new TraversedPackages();
-        }
     }
 }

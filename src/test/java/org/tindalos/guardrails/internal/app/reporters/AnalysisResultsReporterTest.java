@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
 import org.tindalos.guardrails.internal.domain.AggregatedAnalysisResults;
 import org.tindalos.guardrails.internal.domain.analyzers.adp.ADPResult;
+import org.tindalos.guardrails.internal.domain.analyzers.adp.Cycle;
 import org.tindalos.guardrails.internal.domain.analyzers.labels.LabelGroupResult;
 import org.tindalos.guardrails.internal.domain.analyzers.labels.LabelsAnalysisResult;
 import org.tindalos.guardrails.internal.domain.analyzers.structure.CohesionAnalysisResult;
@@ -16,7 +17,6 @@ import org.tindalos.guardrails.internal.domain.analyzers.structure.GroupingResul
 import org.tindalos.guardrails.internal.domain.analyzers.structure.SubgraphDecomposition;
 import org.tindalos.guardrails.internal.domain.constraints.ADP;
 import org.tindalos.guardrails.internal.domain.core.AnalysisResult;
-import org.tindalos.guardrails.internal.domain.core.Cycle;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
 import org.tindalos.guardrails.internal.infrastructure.reporters.YAMLADPAnalysisResultReporter;
 import org.tindalos.guardrails.internal.infrastructure.reporters.YAMLComponentDependencyAnalysisResultReporter;

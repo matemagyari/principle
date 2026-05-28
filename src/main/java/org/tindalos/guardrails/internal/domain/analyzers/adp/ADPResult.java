@@ -1,13 +1,12 @@
 package org.tindalos.guardrails.internal.domain.analyzers.adp;
 
-import org.tindalos.guardrails.internal.domain.core.AnalysisResult;
-import org.tindalos.guardrails.internal.domain.constraints.ADP;
-import org.tindalos.guardrails.internal.domain.core.Cycle;
-import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
-
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.tindalos.guardrails.internal.domain.constraints.ADP;
+import org.tindalos.guardrails.internal.domain.core.AnalysisResult;
+import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
 
 /**
  * Represents the result of an Acyclic Dependency Principle (ADP) analysis.

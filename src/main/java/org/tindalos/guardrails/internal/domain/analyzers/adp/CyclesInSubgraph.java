@@ -1,10 +1,11 @@
-package org.tindalos.guardrails.internal.domain.core;
+package org.tindalos.guardrails.internal.domain.analyzers.adp;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.tindalos.guardrails.internal.domain.core.Package;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
 
 /**

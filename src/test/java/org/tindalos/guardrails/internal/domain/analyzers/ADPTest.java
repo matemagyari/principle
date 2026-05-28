@@ -1,20 +1,19 @@
 package org.tindalos.guardrails.internal.domain.analyzers;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.tindalos.guardrails.internal.domain.constraints.ADP;
-import org.tindalos.guardrails.internal.domain.constraints.Constraints;
-import org.tindalos.guardrails.internal.domain.constraints.PackageCouplingConstraints;
-import org.tindalos.guardrails.internal.domain.core.Cycle;
-import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
-import org.tindalos.guardrails.internal.domain.plan.AnalysisPlan;
-import org.tindalos.guardrails.internal.infrastructure.di.Guardrails;
-
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.tindalos.guardrails.internal.domain.analyzers.adp.Cycle;
+import org.tindalos.guardrails.internal.domain.constraints.ADP;
+import org.tindalos.guardrails.internal.domain.constraints.Constraints;
+import org.tindalos.guardrails.internal.domain.constraints.PackageCouplingConstraints;
+import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
+import org.tindalos.guardrails.internal.domain.plan.AnalysisPlan;
+import org.tindalos.guardrails.internal.infrastructure.di.Guardrails;
 
 public class ADPTest {
 

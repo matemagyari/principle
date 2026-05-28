@@ -1,4 +1,4 @@
-package org.tindalos.guardrails.internal.domain.core;
+package org.tindalos.guardrails.internal.domain.analyzers.adp;
 
 import java.util.List;
 import java.util.Set;
@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.tindalos.guardrails.internal.domain.core.Package;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageMetrics;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
 
