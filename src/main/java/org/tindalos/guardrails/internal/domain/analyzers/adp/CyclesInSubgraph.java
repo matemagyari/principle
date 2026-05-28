@@ -14,7 +14,7 @@ import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
  * and remembers already investigated packages. Returns new instances for 
  * mutations to maintain functional purity.
  */
-public record CyclesInSubgraph(
+record CyclesInSubgraph(
     Set<Package> investigatedPackages,
     Map<PackageReference, Set<Cycle>> breakingPoints
 ) {

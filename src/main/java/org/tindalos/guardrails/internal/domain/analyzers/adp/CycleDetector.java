@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.tindalos.guardrails.internal.domain.analyzers.Analyzer;
 import org.tindalos.guardrails.internal.domain.constraints.Constraints;
@@ -30,48 +31,19 @@ public final class CycleDetector implements Analyzer {
     public ADPResult analyze(AnalysisInput input) {
         var basePackage = packageStructureBuilder.build(input.packages(), input.analysisPlan().basePackage());
         var references = basePackage.toMap();
-        
+
         var sortedByAfferents = references.values().stream()
+            .filter(pkg -> basePackage.metrics().afferentCoupling() > 0 || !pkg.equals(basePackage))
             .sorted(Comparator.comparingInt(pkg -> pkg.metrics().afferentCoupling()))
-            .collect(java.util.stream.Collectors.toCollection(java.util.ArrayList::new));
-
-        if (basePackage.metrics().afferentCoupling() == 0) {
-            sortedByAfferents.removeIf(basePackage::equals);
-        }
-        
-        var cycles = analyzeCyclesRecursively(
-            sortedByAfferents, 
-            references, 
-            new CyclesInSubgraph(Set.of(), Map.of()));
-
-        var expectation = input.packageCouplingExpectations().flatMap(packageCoupling -> packageCoupling.adp()).orElseThrow();
-        return new ADPResult(cycles.cycles(), expectation);
-    }
-
-    /**
-     * Recursively analyzes cycles by processing packages in sorted order,
-     * removing already-investigated packages to avoid redundant analysis.
-     */
-    private CyclesInSubgraph analyzeCyclesRecursively(
-        java.util.List<Package> remaining,
-        Map<PackageReference, Package> references,
-        CyclesInSubgraph accumulator) {
-        
-        if (remaining.isEmpty()) {
-            return accumulator;
-        }
-        
-        var current = remaining.get(0);
-        var cyclesInSubgraph = detectCycles(current, references);
-        var updatedAccumulator = accumulator.mergedWith(cyclesInSubgraph);
-        
-        var investigatedPackages = cyclesInSubgraph.investigatedPackages();
-        var next = remaining.stream()
-            .skip(1)
-            .filter(pkg -> !investigatedPackages.contains(pkg))
             .toList();
-        
-        return analyzeCyclesRecursively(new java.util.ArrayList<>(next), references, updatedAccumulator);
+
+        var cycles = analyzeCycles(sortedByAfferents, references);
+
+        var expectation = input.packageCouplingExpectations()
+            .flatMap(pc -> pc.adp())
+            .orElseThrow();
+            
+        return new ADPResult(cycles.cycles(), expectation);
     }
 
     @Override
@@ -79,45 +51,74 @@ public final class CycleDetector implements Analyzer {
         return constraints.packageCoupling().flatMap(pc -> pc.adp()).isPresent();
     }
 
+    /**
+     * Iteratively analyzes cycles across all remaining packages, tracking and skipping 
+     * already investigated package components to prevent redundant work.
+     */
+    private CyclesInSubgraph analyzeCycles(
+            List<Package> packagesToInvestigate,
+            Map<PackageReference, Package> packageReferences) {
+
+        var accumulator = CyclesInSubgraph.empty();
+        var remaining = new java.util.ArrayList<>(packagesToInvestigate);
+
+        while (!remaining.isEmpty()) {
+            var current = remaining.removeFirst();
+            var cyclesInSubgraph = detectCycles(current, packageReferences);
+            accumulator = accumulator.mergedWith(cyclesInSubgraph);
+
+            var investigated = cyclesInSubgraph.investigatedPackages();
+            remaining.removeIf(investigated::contains);
+        }
+        return accumulator;
+    }
+
     private CyclesInSubgraph detectCycles(Package startPackage, Map<PackageReference, Package> packageReferences) {
         return detectCyclesOnThePathFromHere(
             startPackage,
             TraversedPackages.empty(),
-            new CyclesInSubgraph(Set.of(), Map.of()),
+            CyclesInSubgraph.empty(),
             packageReferences);
     }
 
     private CyclesInSubgraph detectCyclesOnThePathFromHere(
-        Package currentPackage,
-        TraversedPackages traversedPackages,
-        CyclesInSubgraph foundCycles,
-        Map<PackageReference, Package> packageReferences) {
+            Package currentPackage,
+            TraversedPackages traversedPackages,
+            CyclesInSubgraph foundCycles,
+            Map<PackageReference, Package> packageReferences) {
 
-        // enough cycles have been found already with this package
+        // backtrack if enough cycles have been found already with this package
         if (foundCycles.isBreakingPoint(currentPackage)) {
             return foundCycles;
         }
 
         var cyclesAfterInvestigating = foundCycles.withInvestigatedPackage(currentPackage);
 
-        Optional<List<PackageReference>> cycleCandidateEndingHere = findCycleCandidateEndingHere(currentPackage, traversedPackages);
-        return cycleCandidateEndingHere
+        return findCycleCandidateEndingHere(currentPackage, traversedPackages)
                 .map(candidate -> isValid(currentPackage, candidate)
                         ? cyclesAfterInvestigating.withAddedCycle(new Cycle(candidate))
                         : cyclesAfterInvestigating)
-                .orElseGet(() -> {
-                    // Process all referred packages sequentially, threading the accumulator through
-                    var accumulatedCycles = cyclesAfterInvestigating;
-                    for (var referencedPackage : accumulatedDirectlyReferredPackages(currentPackage, packageReferences)) {
-                        CyclesInSubgraph cyclesInSubgraph = detectCyclesOnThePathFromHere(
-                                referencedPackage,
-                                traversedPackages.add(currentPackage.reference()),
-                                accumulatedCycles,
-                                packageReferences);
-                        accumulatedCycles = accumulatedCycles.mergedWith(cyclesInSubgraph);
-                    }
-                    return accumulatedCycles;
-                });
+                .orElseGet(() -> traverseReferredPackages(currentPackage, traversedPackages, cyclesAfterInvestigating, packageReferences));
+    }
+
+    private CyclesInSubgraph traverseReferredPackages(
+            Package currentPackage,
+            TraversedPackages traversedPackages,
+            CyclesInSubgraph accumulatedCycles,
+            Map<PackageReference, Package> packageReferences) {
+
+        var nextTraversed = traversedPackages.add(currentPackage.reference());
+        var currentAccumulator = accumulatedCycles;
+
+        for (var referencedPackage : accumulatedDirectlyReferredPackages(currentPackage, packageReferences)) {
+            var subgraphCycles = detectCyclesOnThePathFromHere(
+                    referencedPackage,
+                    nextTraversed,
+                    currentAccumulator,
+                    packageReferences);
+            currentAccumulator = currentAccumulator.mergedWith(subgraphCycles);
+        }
+        return currentAccumulator;
     }
 
     private Optional<List<PackageReference>> findCycleCandidateEndingHere(Package currentPackage, TraversedPackages traversedPackages) {
@@ -129,38 +130,37 @@ public final class CycleDetector implements Analyzer {
     }
 
     private int indexInTraversedPath(Package currentPackage, List<PackageReference> traversedPackages) {
-        int index = traversedPackages.indexOf(currentPackage.reference());
-        if (index != -1) {
-            return index;
+        var currentRef = currentPackage.reference();
+        int directIndex = traversedPackages.indexOf(currentRef);
+        if (directIndex != -1) {
+            return directIndex;
         }
 
-        Integer matchFoundIndex = null;
-        for (int i = 0; i < traversedPackages.size() && matchFoundIndex == null; i++) {
-            PackageReference possibleMatch = traversedPackages.get(i);
-            if (possibleMatch.equals(currentPackage.reference())
-                || (currentPackage.reference().isDescendantOf(possibleMatch)
-                    && notAllAreDescendantsOf(
-                        traversedPackages.subList(i + 1, traversedPackages.size()),
-                        possibleMatch))) {
-                matchFoundIndex = i;
+        for (int i = 0; i < traversedPackages.size(); i++) {
+            var possibleMatch = traversedPackages.get(i);
+            if (possibleMatch.equals(currentRef)) {
+                return i;
+            }
+            if (currentRef.isDescendantOf(possibleMatch)) {
+                var subsequentPackages = traversedPackages.subList(i + 1, traversedPackages.size());
+                boolean hasNonDescendant = subsequentPackages.stream()
+                        .anyMatch(pkg -> !pkg.isDescendantOf(possibleMatch));
+                if (hasNonDescendant) {
+                    return i;
+                }
             }
         }
-
-        return matchFoundIndex == null ? -1 : matchFoundIndex;
-    }
-
-    private boolean notAllAreDescendantsOf(List<PackageReference> packages, PackageReference possibleAncestor) {
-        return packages.stream().anyMatch(pkg -> !pkg.isDescendantOf(possibleAncestor));
+        return -1;
     }
 
     private Set<Package> accumulatedDirectlyReferredPackages(Package currentPackage, Map<PackageReference, Package> packageReferenceMap) {
         return currentPackage.accumulatedDirectPackageReferences().stream()
             .flatMap(r -> Optional.ofNullable(packageReferenceMap.get(r)).stream())
-            .collect(java.util.stream.Collectors.toUnmodifiableSet());
+            .collect(Collectors.toUnmodifiableSet());
     }
 
     private boolean notEveryNodeUnderFirst(Package currentPackage, List<PackageReference> cycleCandidate) {
-        PackageReference first = cycleCandidate.getFirst();
+        var first = cycleCandidate.getFirst();
         boolean hasNonDescendant = cycleCandidate.stream().skip(1).anyMatch(p -> !p.isDescendantOf(first));
 
         if (!hasNonDescendant) {
@@ -177,33 +177,27 @@ public final class CycleDetector implements Analyzer {
         return notEveryNodeUnderFirst(currentPackage, cycleCandidate);
     }
 
-    private static final class TraversedPackages {
-        private final List<PackageReference> packages;
+    /**
+     * Tracks the stack of currently traversed package references in the active DFS path.
+     */
+    private record TraversedPackages(List<PackageReference> packages) {
 
-        private TraversedPackages() {
-            this(List.of());
+        static TraversedPackages empty() {
+            return new TraversedPackages(List.of());
         }
 
-        private TraversedPackages(List<PackageReference> packages) {
-            this.packages = packages;
+        TraversedPackages {
+            packages = List.copyOf(packages);
         }
 
-        private List<PackageReference> packages() {
-            return packages;
-        }
-
-        private TraversedPackages add(PackageReference reference) {
-            List<PackageReference> next = new java.util.ArrayList<>(packages);
+        TraversedPackages add(PackageReference reference) {
+            var next = new java.util.ArrayList<>(packages);
             next.add(reference);
-            return new TraversedPackages(List.copyOf(next));
+            return new TraversedPackages(next);
         }
 
-        private List<PackageReference> from(int index) {
+        List<PackageReference> from(int index) {
             return packages.subList(index, packages.size());
-        }
-
-        private static TraversedPackages empty() {
-            return new TraversedPackages();
         }
     }
 }
