@@ -2,7 +2,35 @@ root_package: org.tindalos.guardrails.internal
 
 constraints:
 
+  # Labels Constraint
+  #
+  # The labels constraint provides a powerful, unified mechanism for grouping codebase packages into logical concepts 
+  # ("labels") and enforcing allowed dependencies between those groups. It replaces and generalizes separate layer 
+  # and submodule constraints.
+  #
+  # Example usages:
+  #   - Onion/Hexagonal Architecture: Partition packages into concentric layers (domain, app, infrastructure) where 
+  #     dependencies only point inwards.
+  #   - Vertical Slices/Modularity: Partition packages into distinct functional modules (Customer, Order, Payment) 
+  #     and enforce that they do not have circular or invalid cross-module dependencies.
   labels:
+
+    # Enforces the concentric dependencies defined by the Onion Architecture model.
+    # In this model, dependencies are strictly directed inwards:
+    # 
+    #       +-------------------------------------------+
+    #       |              infrastructure               |
+    #       |      +-----------------------------+      |
+    #       |      |             app             |      |
+    #       |      |      +---------------+      |      |
+    #       |      |      |    domain     |      |      |
+    #       |      |      +---------------+      |      |
+    #       |      +-----------------------------+      |
+    #       +-------------------------------------------+
+    #
+    # Packages under the `infrastructure` label can depend on `app` and `domain`.
+    # Packages under the `app` label can depend on `domain`.
+    # Packages under the `domain` label are the core business logic and have no internal outer dependencies.
     - name: layers
       violation_threshold: 0
       labels:
@@ -14,6 +42,28 @@ constraints:
         app: [domain]
         domain: []
 
+    # Enforces modularity, vertical slices, and explicit high-level boundaries between subsystems.
+    # It allows you to model clean modular dependencies and prevent cyclic references between modules.
+    # Here, the project's subsystems are defined around:
+    # 
+    #                      +---------------+
+    #                      |   ANALYZERS   |
+    #                      +---------------+
+    #                       /             \
+    #                      v               v
+    #              +-------------+   +-----------+
+    #              | CONSTRAINTS |   | REPORTERS |
+    #              +-------------+   +-----------+
+    #                       \             /
+    #                        v           v
+    #                      +---------------+
+    #                      |     CORE      |
+    #                      +---------------+
+    #
+    # - `CORE` has no outbound dependencies to other modules.
+    # - `CONSTRAINTS` builds solely on `CORE`.
+    # - `REPORTERS` builds solely on `CORE`.
+    # - `ANALYZERS` utilizes both `CORE` and `CONSTRAINTS` modules.
     - name: modules
       violation_threshold: 0
       labels:
@@ -27,6 +77,17 @@ constraints:
         ANALYZERS: [CORE, CONSTRAINTS]
         REPORTERS: [CORE]
 
+  # Third-party Restrictions Constraint
+  #
+  # Defines access controls over third-party external libraries. Instead of matching raw package prefixes, 
+  # it references the custom package sets mapped by the labels defined in the `labels` section above.
+  #
+  # Configuration format:
+  #   - <label_group_name>.<label_name>: [list_of_allowed_library_packages...]
+  # 
+  # Within the `layers` label group:
+  #   - `layers.infrastructure` packages are allowed access to heavy framework libraries (maven, json, yaml, jdepend, etc.).
+  #   - `layers.domain` packages (the core) are strictly blocked from most frameworks and are only allowed select utility libraries (org.apache.commons).
   third_party_restrictions:
     allowed_libraries:
       - layers.infrastructure: [org.apache.maven, org.json, org.yaml, com.google.common.collect, jdepend]

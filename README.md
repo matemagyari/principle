@@ -2,15 +2,14 @@
 As a code base grows, the level of quality gets gradually harder to uphold as the ever increasing complexity outgrows the developers' capability to keep up with it. Static code analysers are meant to ease the burden on the developers and highlight the problems with the code. But even the best tools are useless if the developers can ignore them. An analyser built into the build process, so it can break it, much like CI servers do if tests fail or coverage drops, is an unignorable way to enforce good practices and keep the level of quality constantly high from the start.
 
 # Introduction
-Guardrails is an opinionated (biased towards DDD and Hexagonal Architecture-style), lightweight, non-intrusive static code analyzer written in Scala for Java/Scala projects in the form of a Maven plugin. It runs the analysis during Maven's *compile* phase, logs the results and even breaks the build if the predefined allowed number of violations is exceeded, enforcing discipline on the developer and ensuring that the code quality never drops.
+Guardrails is an opinionated (biased towards DDD and Hexagonal Architecture-style), lightweight, non-intrusive static code analyzer written in Java (Java 21) for Java/Scala projects in the form of a Maven plugin. It runs the analysis during Maven's *compile* phase, logs the results and even breaks the build if the predefined allowed number of violations is exceeded, enforcing discipline on the developer and ensuring that the code quality never drops.
 
 In Guardrails you can set up _constraints_ that can detect violations against OO principles, developer-imposed code-structuring rules, and can break the build process if those violations exceed the developer-defined thresholds. Guardrails currently supports _constraints_ to _watch out_ for the following
-* Onion Layering 
+* Custom Package Groupings and Dependencies (Labels) — enforces custom layers (Onion or Hexagonal Architecture) or vertical slices/modules
 * Acyclic Dependency Principle
 * Stable Abstractions Principle
 * Stable Dependencies Principle
-* Modularity
-* Boundaries of the use of third-party libraries
+* Boundaries of the use of third-party libraries (flexible mapping using Labels)
 * Low Average Component Dependency
 
 # Constraints
@@ -40,21 +39,45 @@ org.sampleapp.app <----> org.sampleapp.domain
 ```
 A UML-like figure would be nice to visualize it, but I don't know how to use one inside the wiki (yeah, shame on me). If you draw a package-diagram on a paper, you'll see what I mean.
 
-## Onion Layering Constraint
+## Labels Constraint (Grouping & Dependencies)
 
-Most code bases use some level of layering. For example in DDD there are 3 basic layers, the Infrastructure, the Application and the Domain. The code structure is like an onion, where the core is the Domain, wrapped around by the Application layer, then the Infrastructure layer. The dependencies can only point inwards, so Infrastructure can depend on Application and Domain, the Application on Domain, and Domain on none of the others. About the benefits of this architectural style over the traditional layering you can read for example [here](http://blog.8thlight.com/uncle-bob/2012/08/13/the-clean-architecture.html). Guardrails can force this style of layering, detecting deviations from it. In case of deviations are found, you'll see something like this in the console:
+To organize growing codebases, Guardrails provides a unified, generic **Labels** constraint. Instead of hardcoded layering or submodule configurations, you can define custom package groupings (called *labels*) and specify the explicit dependencies allowed between them.
+
+A `labels` constraint contains one or more named label groups (e.g., `layers` or `modules`). For each group, you define:
+1. `labels`: Mapping of group names (labels) to package suffix/wildcard patterns.
+2. `dependencies`: Allowed outgoing dependencies from each label to other labels.
+3. `violation_threshold`: Maximum allowed illegal dependencies before the build breaks.
+
+This flexible model unifies and replaces the previous standalone "Onion Layering" and "Modularity" constraints.
+
+### Onion Layering Example with Labels
+
+Most codebases use some level of concentric layering. For example in DDD there are 3 basic layers: Infrastructure, Application, and Domain. The dependencies can only point inwards:
 
 ```
-Layering violations (1 of allowed 5)
+      +-------------------------------------------+
+      |              infrastructure               |
+      |      +-----------------------------+      |
+      |      |             app             |      |
+      |      |      +---------------+      |      |
+      |      |      |    domain     |      |      |
+      |      |      +---------------+      |      |
+      |      +-----------------------------+      |
+      +-------------------------------------------+
+```
+
+An outer layer can depend on inner layers, but inner layers must never depend on outer layers. For example:
+- `infrastructure` -> can depend on `app` and `domain`.
+- `app` -> can depend on `domain`.
+- `domain` -> cannot depend on anything outside itself.
+
+About the benefits of this architectural style over the traditional layering you can read for example [here](http://blog.8thlight.com/uncle-bob/2012/08/13/the-clean-architecture.html). Guardrails can force this style of layering, detecting deviations from it. In case deviations are found, you'll see something like this in the console:
+
+```
+Labels violations (1 of allowed 0) for group 'layers':
 =========================================================
--------------------------------
-org.someapp.infrastructure -->
-org.someapp.application-->
-org.someapp.domain-->
--------------------------------
+Invalid dependency: domain ---> infrastructure
 ```
-
-Package _org.someapp.infrastructure_ depends on _org.someapp.application_, which depends on _org.someapp.domain_, which depends on _org.someapp.infrastructure_ , closing the circle.
 
 ## Stable Abstractions Principle Constraint
 
@@ -86,55 +109,59 @@ Component Dependency Metrics
 Average Component Dependency 8.92
 Relative Average Component Dependency 35.23% ( of the allowed 20%)
 ```
-## Modularity Constraint
+## Modularity & Vertical Slices (with Labels)
 
-Vertical slices are similar to layering, but instead of being a horizontal (or in case of onion layering a concentric) partitioning, it is, as the name suggests, vertical (in case of onion layering cutting through the layers). For a little demonstration let's assume, a bit unrealistically, that Amazon is one monolithic application. In this case it has to have a _Customer Module_, a _Payment Module_, an _Order Module_, and several others. There probably is a _Core Module_, too, containing shared parts of the other ones. A simplified version of the architecture would look like this
+Vertical slices are similar to layering, but instead of being a horizontal (concentric) partitioning, they represent a vertical grouping (cutting through layers). If you configure modules, they should be quite independent of each other, meaning that dependencies between them should be few and far between, if any (with exceptions like a shared `CORE` library upon which others depend).
 
-```
-| CUSTOMER | ORDER | PAYMENT |	
-| -------------------------- |
-|            CORE            |
-```
-
-Each of these modules cuts through all the layers of course, but should be quite independent of each other, meaning that dependencies between them should be few and far between, if any (the exception is the _Core upon which all the others depend). In Guardrails you can define your vertical slices in a YAML file, explicitly defining what packages belong to a given module and what dependencies are allowed between the modules.
+In Guardrails, modularity is seamlessly configured as a named label group under the `labels` constraint. Here is how we define vertical slices, mapping packages to high-level modules and specifying exactly which modules are allowed to depend on which:
 
 ```yaml
-# Map modules to packages 
-
-  module-definitions: 
-  
-    CORE: [domain.core]
-    CUSTOMER: [domain.customer,app.customer,infrastructure.customer]
-    ORDER: [domain.order,app.order,infrastructure.order]
-    PAYMENT: [domain.payment,app.payment,infrastructure.payment]
-
-# Define dependencies between modules
-
-  module-dependencies: 
-
-    CORE: []
-    CUSTOMER: [CORE]
-    ORDER: [CORE]
-    PAYMENT: [CORE]
-```    
-
-Under module-definitions the modules are mapped to packages, and under module-dependencies we specified that all modules can depend on Core, but not on others. It's a very simple example, but conveys the general idea. So for example if in the code there is a dependency between classes _org.amazon.app.customer.CustomerAccountManager --> org.amazon.domain.order.Order_
-
-then you'll see this in the report:
-
-```
-Submodule Blueprint violations (1 of allowed 0)
-===============================================
-Invalid dependency: CUSTOMER ---> ORDER
+  labels:
+    - name: modules
+      violation_threshold: 0
+      labels:
+        CORE: [domain.core]
+        CONSTRAINTS: [domain.constraints]
+        ANALYZERS: [domain.analyzers]
+        REPORTERS: [app.reporters]
+      dependencies:
+        CORE: []
+        CONSTRAINTS: [CORE]
+        ANALYZERS: [CORE, CONSTRAINTS]
+        REPORTERS: [CORE]
 ```
 
-If the Payment Module doesn't actually have a dependency on Core Module (contrary to what's stated under module-dependencies), you'll see
+This ensures that:
+- `CORE` has no outgoing dependencies.
+- `CONSTRAINTS` depends only on `CORE`.
+- `REPORTERS` depends only on `CORE`.
+- `ANALYZERS` depends on both `CORE` and `CONSTRAINTS`.
 
-`Missing dependency: PAYMENT---> CORE`
+If an unacceptable dependency is introduced, Guardrails flags it immediately. For example, if `REPORTERS` attempts to reference `CONSTRAINTS`, they will trigger a violation:
+
+```
+Labels violations (1 of allowed 0) for group 'modules':
+=========================================================
+Invalid dependency: REPORTERS ---> CONSTRAINTS
+```
 
 ## Third-party Constraint
 
-This constraint enables the developer to constrain access to third party libraries to designated parts of the code. The developer can specify which libraries she allows access to in which layer. All the layers above the specified one can use those libraries of course, but nothing under it. The visual idea behind it is that your code is a castle with multiple circles of defending walls around it. You let foreign troops leaking into your territory only until certain walls. Different troops can have different privileges, one (org.yaml) can only set up his tent inside the outmost wall (Infrastructure), the other (org.apache.commons) is allowed to enter the inner sanctum (Domain).
+This constraint enables the developer to restrict access to third-party libraries to designated parts of the code. Instead of hardcoding layer packages or matching raw package prefixes, the Third-party constraint references the custom mapped package sets (defined as labels) using the format `<label_group_name>.<label_name>`.
+
+For example, in a codebase with a `layers` label group (containing `infrastructure` and `domain` labels), we can define constraints such that:
+- `layers.infrastructure` packages are allowed access to heavy external frameworks (like `org.json`, `org.yaml`, `jdepend`, etc.).
+- `layers.domain` packages (the core business domain) is kept clean of heavy external framework frameworks, and is only permitted to access a few general utilities (like `org.apache.commons`).
+
+```yaml
+  third_party_restrictions:
+    allowed_libraries:
+      - layers.infrastructure: [org.apache.maven, org.json, org.yaml, com.google.common.collect, jdepend]
+      - layers.domain: [org.apache.commons]
+    violation_threshold: 0
+```
+
+Any usage of an unconfigured library in these packages will trigger a violation.
 
 # How to use the plugin
 
@@ -172,50 +199,46 @@ root_package: org.tindalos.guardrails
 
 constraints:
 
-  layering:
-    #Layers are the packages under root package. The allowed dependencies point from left to right. 
-    #'infrastructure' can depend on 'app' and 'domain', 'app' can depend on 'domain', 'domain' should not depend on any other layer
-    layers: [infrastructure, app, domain]
-    #number of allowed invalid dependencies
-    violation_threshold: 0
+  # Group packages into labels and define allowed dependency structures
+  labels:
+    - name: layers
+      violation_threshold: 0
+      labels:
+        infrastructure: [infrastructure]
+        app: [app]
+        domain: [domain]
+      dependencies:
+        infrastructure: [app, domain]
+        app: [domain]
+        domain: []
 
-  #libraries access can be configured by layers.  
+    - name: modules
+      violation_threshold: 0
+      labels:
+        CORE: [domain.core]
+        CONSTRAINTS: [domain.constraints]
+        ANALYZERS: [domain.analyzers]
+        REPORTERS: [app.reporters]
+      dependencies:
+        CORE: []
+        CONSTRAINTS: [CORE]
+        ANALYZERS: [CORE, CONSTRAINTS]
+        REPORTERS: [CORE]
+
+  # third party restrictions mapped to the custom labels defined above
   third_party_restrictions:
     allowed_libraries:
-      - layer: infrastructure
-        #the values serve as prefixes. E.g any library is accessable under 'org.apache.maven' ('org.apache.maven.plugins', 'org.apache.maven.archetypes, ...')
-        libraries: [org.apache.maven, org.json, org.yaml, com.google.common.collect, jdepend]
-      - layer: domain
-        libraries: [org.apache.commons]
+      - layers.infrastructure: [org.apache.maven, org.json, org.yaml, com.google.common.collect, jdepend]
+      - layers.domain: [org.apache.commons]
     violation_threshold: 0
 
   package_coupling:
-    #number of allowed cyclic dependencies
+    # number of allowed cyclic dependencies
     cyclic_dependencies_threshold: 0
-    #Relative Average Component Dependency. The build will break if any package depends on more than 35% of all the packages
+    # Relative Average Component Dependency. The build will break if any package depends on more than 35% of all packages
     acd_threshold: 0.35
-
-  modules:
-    # Map modules to packages
-    module-definitions:
-      EXPECTATIONS: [domain.constraints]
-      CORE: [domain.core]
-      AGENTSCORE: [domain.agentscore]
-      AGENTS: [domain.agents, infrastructure.reporters]
-      CHECKER: [domain.checker]
-    # Define dependencies between modules
-    module-dependencies:
-      EXPECTATIONS: []
-      CORE: [EXPECTATIONS]
-      AGENTSCORE: [CORE, EXPECTATIONS]
-      AGENTS: [CORE,AGENTSCORE,EXPECTATIONS]
-      CHECKER: [CORE, AGENTSCORE]
-
-    #number of allowed invalid dependencies
-    violation_threshold: 0
-
-#Runs some cohesion analysis on the code base and prints the results under guardrails_reports
-structure_analysis_enabled: true
+    # Runs cohesion analysis on the codebase and prints results under guardrails_reports
+    structure_analysis_enabled: true
 ```
 
 ## Up to Version 0.30
