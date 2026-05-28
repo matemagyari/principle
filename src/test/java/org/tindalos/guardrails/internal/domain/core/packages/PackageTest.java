@@ -132,7 +132,7 @@ public class PackageTest {
         TestPackage pkg = new TestPackage("org.example");
         pkg.setMetrics(new PackageMetrics(2, 3, 0.5f, 0.6f, 0.1f));
 
-        assertEquals(0.6f, pkg.getMetrics().instability(), 0.001);
+        assertEquals(0.6f, pkg.metrics().instability(), 0.001);
     }
 
     @Test
@@ -140,7 +140,7 @@ public class PackageTest {
         TestPackage pkg = new TestPackage("org.example");
         pkg.setMetrics(new PackageMetrics(2, 3, 0.5f, 0.6f, 0.1f));
 
-        assertEquals(0.1f, pkg.getMetrics().distance(), 0.001);
+        assertEquals(0.1f, pkg.metrics().distance(), 0.001);
     }
 
     @Test
@@ -148,7 +148,7 @@ public class PackageTest {
         TestPackage pkg = new TestPackage("org.example");
         pkg.setMetrics(new PackageMetrics(0, 0, 0, 0, 0));
 
-        assertTrue(pkg.getMetrics().isIsolated());
+        assertTrue(pkg.metrics().isIsolated());
     }
 
     @Test
@@ -156,7 +156,7 @@ public class PackageTest {
         TestPackage pkg = new TestPackage("org.example");
         pkg.setMetrics(new PackageMetrics(1, 0, 0, 0, 0));
 
-        assertFalse(pkg.getMetrics().isIsolated());
+        assertFalse(pkg.metrics().isIsolated());
     }
 
     @Test
@@ -164,7 +164,7 @@ public class PackageTest {
         TestPackage pkg = new TestPackage("org.example");
         pkg.setMetrics(new PackageMetrics(0, 1, 0, 0, 0));
 
-        assertFalse(pkg.getMetrics().isIsolated());
+        assertFalse(pkg.metrics().isIsolated());
     }
 
     @Test
@@ -258,17 +258,17 @@ public class PackageTest {
         }
 
         @Override
-        public PackageMetrics getMetrics() {
+        public PackageMetrics metrics() {
             return metrics;
         }
 
         @Override
-        public java.util.Set<PackageReference> getOwnPackageReferences() {
+        public java.util.Set<PackageReference> ownPackageReferences() {
             return Set.copyOf(ownReferences);
         }
 
         @Override
-        public java.util.Set<PackageReference> getOwnExternalPackageReferences() {
+        public java.util.Set<PackageReference> ownExternalPackageReferences() {
             return Set.copyOf(externalReferences);
         }
     }

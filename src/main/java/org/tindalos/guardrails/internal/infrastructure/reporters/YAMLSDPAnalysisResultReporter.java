@@ -53,9 +53,9 @@ public class YAMLSDPAnalysisResultReporter implements SDPAnalysisResultReporter 
                       dependee_instability: %s
                 """.formatted(
                 violation.depender().reference().name(),
-                violation.depender().getMetrics().instability(),
+                violation.depender().metrics().instability(),
                 violation.dependee().reference().name(),
-                violation.dependee().getMetrics().instability());
+                violation.dependee().metrics().instability());
     }
 }
 

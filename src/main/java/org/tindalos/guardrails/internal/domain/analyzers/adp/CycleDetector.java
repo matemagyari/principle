@@ -33,10 +33,10 @@ public final class CycleDetector implements Analyzer {
         var references = basePackage.toMap();
         
         var sortedByAfferents = references.values().stream()
-            .sorted(Comparator.comparingInt(pkg -> pkg.getMetrics().afferentCoupling()))
+            .sorted(Comparator.comparingInt(pkg -> pkg.metrics().afferentCoupling()))
             .collect(java.util.stream.Collectors.toCollection(java.util.ArrayList::new));
 
-        if (basePackage.getMetrics().afferentCoupling() == 0) {
+        if (basePackage.metrics().afferentCoupling() == 0) {
             sortedByAfferents.removeIf(basePackage::equals);
         }
         

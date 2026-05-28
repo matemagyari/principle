@@ -24,10 +24,10 @@ public class SDPViolationAnalyzer implements Analyzer {
 
         var sdpViolations = new ArrayList<SDPViolation>();
         for (var aPackage : packages) {
-            for (var reference : aPackage.getOwnPackageReferences()) {
+            for (var reference : aPackage.ownPackageReferences()) {
                 var referencedPackage = references.get(reference);
                 if (referencedPackage != null
-                        && referencedPackage.getMetrics().instability() > aPackage.getMetrics().instability()) {
+                        && referencedPackage.metrics().instability() > aPackage.metrics().instability()) {
                     sdpViolations.add(new SDPViolation(aPackage, referencedPackage));
                 }
             }

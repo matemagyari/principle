@@ -57,7 +57,7 @@ public final class ThirdPartyAnalyzer implements Analyzer {
                     var currentLabel = currentLabelOpt.get();
                     var allowedLibs = getAllowedLibraries(group, currentLabel, barriers);
                     if (allowedLibs != null) {
-                        for (var referencedPackage : aPackage.getOwnExternalPackageReferences()) {
+                        for (var referencedPackage : aPackage.ownExternalPackageReferences()) {
                             boolean allowed = allowedLibs.stream()
                                     .anyMatch(referencedPackage::startsWith);
                             if (!allowed) {

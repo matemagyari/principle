@@ -1,75 +1,36 @@
 package org.tindalos.guardrails.internal.infrastructure.service.jdepend;
 
-import java.util.Collection;
-import java.util.Objects;
 import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
-import org.tindalos.guardrails.internal.domain.core.Package;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageMetrics;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
-
-import jdepend.framework.JavaPackage;
+import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 
 /**
- * Package adapter backed by a JDepend package.
- * Resolves internal and external references lazily from the underlying JDepend model.
+ * Immutable package representation containing metrics and references.
+ * Decoupled from JDepend framework.
+ *
+ * @param reference the package reference
+ * @param metrics the package metrics
+ * @param ownPackageReferences dependencies inside the analyzed package tree
+ * @param ownExternalPackageReferences dependencies outside the analyzed package tree
+ * @param isUnreferred true if there are no afferent (incoming) couplings
  */
-public final class LazyLoadingJDependBasedPackage extends Package {
+public record LazyLoadingJDependBasedPackage(
+    PackageReference reference,
+    PackageMetrics metrics,
+    Set<PackageReference> ownPackageReferences,
+    Set<PackageReference> ownExternalPackageReferences,
+    boolean isUnreferred
+) implements PackageWithMetrics {
 
-    private static final Set<String> VALID_EXTERNAL_EFFERENTS = Set.of("java", "scala");
-
-    private final JavaPackage javaPackage;
-    private final PackageMetrics metrics;
-    private final PackageFactory packageFactory;
-    private final Predicate<JavaPackage> isRelevant;
-
-    public LazyLoadingJDependBasedPackage(
-            JavaPackage javaPackage,
-            PackageMetrics metrics,
-            PackageFactory packageFactory,
-            Predicate<JavaPackage> isRelevant) {
-        super(Objects.requireNonNull(javaPackage, "javaPackage").getName());
-        this.javaPackage = javaPackage;
-        this.metrics = Objects.requireNonNull(metrics, "metrics");
-        this.packageFactory = Objects.requireNonNull(packageFactory, "packageFactory");
-        this.isRelevant = Objects.requireNonNull(isRelevant, "isRelevant");
+    public LazyLoadingJDependBasedPackage {
+        ownPackageReferences = Set.copyOf(ownPackageReferences);
+        ownExternalPackageReferences = Set.copyOf(ownExternalPackageReferences);
     }
 
     @Override
-    public PackageMetrics getMetrics() {
-        return metrics;
-    }
-
-    @Override
-    public boolean isUnreferred() {
-        return metrics.afferentCoupling() == 0;
-    }
-
-    @Override
-    public Set<PackageReference> getOwnPackageReferences() {
-        return efferents().stream()
-                .filter(isRelevant)
-                .map(packageFactory::transform)
-                .map(Package::reference)
-                .collect(Collectors.toUnmodifiableSet());
-    }
-
-    @Override
-    public Set<PackageReference> getOwnExternalPackageReferences() {
-        return efferents().stream()
-                .filter(aPackage -> !isRelevant.test(aPackage) && isNotValidExternalEfferent(aPackage))
-                .map(packageFactory::transform)
-                .map(Package::reference)
-                .collect(Collectors.toUnmodifiableSet());
-    }
-
-    private Collection<JavaPackage> efferents() {
-        return (Collection<JavaPackage>) javaPackage.getEfferents();
-    }
-
-    private boolean isNotValidExternalEfferent(JavaPackage aPackage) {
-        return VALID_EXTERNAL_EFFERENTS.stream().noneMatch(prefix -> aPackage.getName().startsWith(prefix));
+    public Set<PackageReference> accumulatedDirectPackageReferences() {
+        return ownPackageReferences;
     }
 }

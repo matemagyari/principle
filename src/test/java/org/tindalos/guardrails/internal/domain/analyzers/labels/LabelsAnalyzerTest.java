@@ -124,17 +124,17 @@ public class LabelsAnalyzerTest {
         }
 
         @Override
-        public PackageMetrics getMetrics() {
+        public PackageMetrics metrics() {
             return null;
         }
 
         @Override
-        public Set<PackageReference> getOwnPackageReferences() {
+        public Set<PackageReference> ownPackageReferences() {
             return Set.copyOf(ownReferences);
         }
 
         @Override
-        public Set<PackageReference> getOwnExternalPackageReferences() {
+        public Set<PackageReference> ownExternalPackageReferences() {
             return Set.of();
         }
 

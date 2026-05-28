@@ -31,7 +31,7 @@ public class ComponentDependenciesAnalyzer implements Analyzer {
 
         var referenceMap = basePackage.toMap();
 
-        List<PackageWithMetrics> relevantPackages = basePackage.getMetrics().isIsolated()
+        List<PackageWithMetrics> relevantPackages = basePackage.metrics().isIsolated()
                 ? packages.stream().filter(pkg -> !pkg.equals(basePackage)).toList()
                 : packages;
 

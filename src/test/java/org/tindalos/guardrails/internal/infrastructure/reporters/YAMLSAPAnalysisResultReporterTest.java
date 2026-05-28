@@ -23,9 +23,9 @@ public class YAMLSAPAnalysisResultReporterTest {
     private PackageWithMetrics pkg(String name, float distance) {
         return new PackageWithMetrics() {
             public PackageReference reference() { return new PackageReference(name); }
-            public PackageMetrics getMetrics() { return new PackageMetrics(0, 0, 0, 0, distance); }
-          public java.util.Set<PackageReference> getOwnPackageReferences() { return java.util.Set.of(); }
-          public java.util.Set<PackageReference> getOwnExternalPackageReferences() { return java.util.Set.of(); }
+            public PackageMetrics metrics() { return new PackageMetrics(0, 0, 0, 0, distance); }
+          public java.util.Set<PackageReference> ownPackageReferences() { return java.util.Set.of(); }
+          public java.util.Set<PackageReference> ownExternalPackageReferences() { return java.util.Set.of(); }
             public java.util.Set<PackageReference> accumulatedDirectPackageReferences() { return java.util.Set.of(); }
         };
     }

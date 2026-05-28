@@ -41,7 +41,7 @@ public class YAMLSAPAnalysisResultReporter implements SAPAnalysisResultReporter 
 
         var violationLines = result.outlierPackages().stream()
                 .map(pkg -> "    - package: %s\n      distance: %s\n"
-                        .formatted(pkg.reference().name(), pkg.getMetrics().distance()))
+                        .formatted(pkg.reference().name(), pkg.metrics().distance()))
                 .collect(Collectors.joining());
 
         return "  violations:\n" + violationLines;

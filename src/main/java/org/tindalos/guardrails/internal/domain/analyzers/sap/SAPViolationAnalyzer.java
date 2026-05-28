@@ -19,14 +19,14 @@ public final class SAPViolationAnalyzer implements Analyzer {
         var maxDistance = sapExpectation.maxDistance();
 
         var outlierPackages = removeRootPackageIfEmpty(checkInput.packages()).stream()
-                .filter(pkg -> pkg.getMetrics().distance() > maxDistance)
+                .filter(pkg -> pkg.metrics().distance() > maxDistance)
                 .collect(Collectors.toUnmodifiableList());
 
         return new SAPResult(outlierPackages, sapExpectation);
     }
 
     private List<PackageWithMetrics> removeRootPackageIfEmpty(List<PackageWithMetrics> packages) {
-        var metrics = packages.get(0).getMetrics();
+        var metrics = packages.get(0).metrics();
         if (metrics.abstractness() == 0 && metrics.instability() == 0) {
             return packages.subList(1, packages.size());
         }

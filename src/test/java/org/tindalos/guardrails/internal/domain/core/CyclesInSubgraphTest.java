@@ -189,17 +189,17 @@ public class CyclesInSubgraphTest {
             }
 
             @Override
-            public PackageMetrics getMetrics() {
+            public PackageMetrics metrics() {
                 return PackageMetrics.UNDEFINED;
             }
 
             @Override
-            public Set<PackageReference> getOwnPackageReferences() {
+            public Set<PackageReference> ownPackageReferences() {
                 return Collections.emptySet();
             }
 
             @Override
-            public Set<PackageReference> getOwnExternalPackageReferences() {
+            public Set<PackageReference> ownExternalPackageReferences() {
                 return Collections.emptySet();
             }
         };

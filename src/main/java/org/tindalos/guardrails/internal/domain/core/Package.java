@@ -16,17 +16,39 @@ import org.tindalos.guardrails.internal.domain.core.packages.PackageMetrics;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
 import org.tindalos.guardrails.internal.domain.core.packages.PackageWithMetrics;
 
-public abstract class Package implements PackageWithMetrics {
+public class Package implements PackageWithMetrics {
 
     private final PackageReference reference;
     private final List<Package> subPackages = new ArrayList<>();
 
+    private final PackageMetrics metrics;
+    private final Set<PackageReference> ownPackageReferences;
+    private final Set<PackageReference> ownExternalPackageReferences;
+    private final boolean unreferred;
+
     protected Package(PackageReference reference) {
         this.reference = reference;
+        this.metrics = PackageMetrics.UNDEFINED;
+        this.ownPackageReferences = Collections.emptySet();
+        this.ownExternalPackageReferences = Collections.emptySet();
+        this.unreferred = true;
     }
 
     protected Package(String referenceName) {
         this(new PackageReference(referenceName));
+    }
+
+    public Package(
+            PackageReference reference,
+            PackageMetrics metrics,
+            Set<PackageReference> ownPackageReferences,
+            Set<PackageReference> ownExternalPackageReferences,
+            boolean unreferred) {
+        this.reference = reference;
+        this.metrics = metrics;
+        this.ownPackageReferences = Set.copyOf(ownPackageReferences);
+        this.ownExternalPackageReferences = Set.copyOf(ownExternalPackageReferences);
+        this.unreferred = unreferred;
     }
 
     @Override
@@ -39,13 +61,19 @@ public abstract class Package implements PackageWithMetrics {
     }
 
     @Override
-    public abstract PackageMetrics getMetrics();
+    public PackageMetrics metrics() {
+        return metrics;
+    }
 
     @Override
-    public abstract Set<PackageReference> getOwnPackageReferences();
+    public Set<PackageReference> ownPackageReferences() {
+        return ownPackageReferences;
+    }
 
     @Override
-    public abstract Set<PackageReference> getOwnExternalPackageReferences();
+    public Set<PackageReference> ownExternalPackageReferences() {
+        return ownExternalPackageReferences;
+    }
 
     // all the references going out from this package
     @Override
@@ -56,11 +84,13 @@ public abstract class Package implements PackageWithMetrics {
                     .stream()
                     .flatMap(aPackage -> aPackage.accumulatedDirectPackageReferences().stream())
                     .filter(x -> !x.equals(reference)),
-                getOwnPackageReferences().stream())
+                ownPackageReferences().stream())
             .collect(Collectors.toUnmodifiableSet());
     }
 
-    public abstract boolean isUnreferred();
+    public boolean isUnreferred() {
+        return unreferred;
+    }
 
     public Map<PackageReference, Package> toMap() {
         return Collections.unmodifiableMap(toMap(new HashMap<>()));
@@ -112,17 +142,17 @@ public abstract class Package implements PackageWithMetrics {
             .orElseGet(() -> {
                 Package directSubPackage = new Package(reference.createChild(relativeName)) {
                     @Override
-                    public Set<PackageReference> getOwnPackageReferences() {
+                    public Set<PackageReference> ownPackageReferences() {
                         return Collections.emptySet();
                     }
 
                     @Override
-                    public Set<PackageReference> getOwnExternalPackageReferences() {
+                    public Set<PackageReference> ownExternalPackageReferences() {
                         return Collections.emptySet();
                     }
 
                     @Override
-                    public PackageMetrics getMetrics() {
+                    public PackageMetrics metrics() {
                         return PackageMetrics.UNDEFINED;
                     }
 

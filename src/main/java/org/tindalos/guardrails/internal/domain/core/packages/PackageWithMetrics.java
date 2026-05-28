@@ -4,8 +4,8 @@ import java.util.Set;
 
 public interface PackageWithMetrics {
     PackageReference reference();
-    PackageMetrics getMetrics();
-    Set<PackageReference> getOwnPackageReferences();
-    Set<PackageReference> getOwnExternalPackageReferences();
+    PackageMetrics metrics();
+    Set<PackageReference> ownPackageReferences();
+    Set<PackageReference> ownExternalPackageReferences();
     Set<PackageReference> accumulatedDirectPackageReferences();
 }
