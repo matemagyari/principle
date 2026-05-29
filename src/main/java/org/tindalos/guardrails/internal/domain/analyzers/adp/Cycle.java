@@ -14,32 +14,24 @@ import org.tindalos.guardrails.internal.domain.core.packages.PackageReference;
  * A cycle is a sequence of package references where the last package depends on the first,
  * creating a circular dependency chain.
  */
-public class Cycle implements Comparable<Cycle> {
+public record Cycle(List<PackageReference> references) implements Comparable<Cycle> {
 
-    private final List<PackageReference> references;
-    private final PackageReference end;
-
-    public Cycle(List<PackageReference> references) {
+    public Cycle {
         if (references == null || references.size() < 2) {
             throw new DomainException("Invalid cycle " + references);
         }
         if (references.stream().distinct().count() != references.size()) {
             throw new DomainException("Cycle contains duplicate references: " + references);
         }
-        this.references = List.copyOf(references);
-        this.end = references.getLast();
+        references = List.copyOf(references);
     }
 
     public Cycle(PackageReference... refs) {
         this(Arrays.asList(refs));
     }
 
-    public List<PackageReference> references() {
-        return references;
-    }
-
     public PackageReference end() {
-        return end;
+        return references.getLast();
     }
 
     @Override

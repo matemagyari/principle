@@ -94,11 +94,16 @@ public final class CycleDetector implements Analyzer {
 
         var cyclesAfterInvestigating = foundCycles.withInvestigatedPackage(currentPackage);
 
-        return findCycleCandidateEndingHere(currentPackage, traversedPackages)
-                .map(candidate -> isValid(currentPackage, candidate)
-                        ? cyclesAfterInvestigating.withAddedCycle(new Cycle(candidate))
-                        : cyclesAfterInvestigating)
-                .orElseGet(() -> traverseReferredPackages(currentPackage, traversedPackages, cyclesAfterInvestigating, packageReferences));
+        var cycleCandidate = findCycleCandidateEndingHere(currentPackage, traversedPackages);
+        if (cycleCandidate.isPresent()) {
+            var candidate = cycleCandidate.get();
+            if (isValid(currentPackage, candidate)) {
+                return cyclesAfterInvestigating.withAddedCycle(new Cycle(candidate));
+            }
+            return cyclesAfterInvestigating;
+        }
+
+        return traverseReferredPackages(currentPackage, traversedPackages, cyclesAfterInvestigating, packageReferences);
     }
 
     private CyclesInSubgraph traverseReferredPackages(
@@ -138,9 +143,6 @@ public final class CycleDetector implements Analyzer {
 
         for (int i = 0; i < traversedPackages.size(); i++) {
             var possibleMatch = traversedPackages.get(i);
-            if (possibleMatch.equals(currentRef)) {
-                return i;
-            }
             if (currentRef.isDescendantOf(possibleMatch)) {
                 var subsequentPackages = traversedPackages.subList(i + 1, traversedPackages.size());
                 boolean hasNonDescendant = subsequentPackages.stream()
@@ -155,19 +157,21 @@ public final class CycleDetector implements Analyzer {
 
     private Set<Package> accumulatedDirectlyReferredPackages(Package currentPackage, Map<PackageReference, Package> packageReferenceMap) {
         return currentPackage.accumulatedDirectPackageReferences().stream()
-            .flatMap(r -> Optional.ofNullable(packageReferenceMap.get(r)).stream())
+            .map(packageReferenceMap::get)
+            .filter(Objects::nonNull)
             .collect(Collectors.toUnmodifiableSet());
     }
 
     private boolean notEveryNodeUnderFirst(Package currentPackage, List<PackageReference> cycleCandidate) {
         var first = cycleCandidate.getFirst();
-        boolean hasNonDescendant = cycleCandidate.stream().skip(1).anyMatch(p -> !p.isDescendantOf(first));
+        boolean hasNonDescendant = cycleCandidate.stream()
+                .skip(1)
+                .anyMatch(p -> !p.isDescendantOf(first));
 
-        if (!hasNonDescendant) {
-            return first.equals(currentPackage.reference());
+        if (hasNonDescendant) {
+            return true;
         }
-
-        return true;
+        return first.equals(currentPackage.reference());
     }
 
     private boolean isValid(Package currentPackage, List<PackageReference> cycleCandidate) {

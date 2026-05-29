@@ -37,14 +37,11 @@ record CyclesInSubgraph(
         if (exists) return this;
 
         var updated = new HashMap<>(breakingPoints);
-        var cyclesForEndpoint = updated.get(cycle.end());
-        if (cyclesForEndpoint != null) {
-            var newCycles = new java.util.HashSet<Cycle>(cyclesForEndpoint);
-            newCycles.add(cycle);
-            updated.put(cycle.end(), Set.copyOf(newCycles));
-        } else {
-            updated.put(cycle.end(), Set.of(cycle));
-        }
+        updated.compute(cycle.end(), (key, existingCycles) -> {
+            var nextCycles = (existingCycles == null) ? new java.util.HashSet<Cycle>() : new java.util.HashSet<>(existingCycles);
+            nextCycles.add(cycle);
+            return Set.copyOf(nextCycles);
+        });
 
         return new CyclesInSubgraph(investigatedPackages, updated);
     }
@@ -53,6 +50,9 @@ record CyclesInSubgraph(
      * Returns a new CyclesInSubgraph with the package marked as investigated.
      */
     public CyclesInSubgraph withInvestigatedPackage(Package aPackage) {
+        if (investigatedPackages.contains(aPackage)) {
+            return this;
+        }
         var updated = new java.util.HashSet<Package>(investigatedPackages);
         updated.add(aPackage);
         return new CyclesInSubgraph(updated, breakingPoints);
@@ -63,6 +63,13 @@ record CyclesInSubgraph(
      * cycles and investigated packages.
      */
     public CyclesInSubgraph mergedWith(CyclesInSubgraph that) {
+        if (that.investigatedPackages.isEmpty() && that.breakingPoints.isEmpty()) {
+            return this;
+        }
+        if (this.investigatedPackages.isEmpty() && this.breakingPoints.isEmpty()) {
+            return that;
+        }
+
         var mergedInvestigated = new java.util.HashSet<Package>(investigatedPackages);
         mergedInvestigated.addAll(that.investigatedPackages);
 
@@ -71,21 +78,10 @@ record CyclesInSubgraph(
             mergedBreakingPoints.merge(key, cycles, (v1, v2) -> {
                 var combined = new java.util.HashSet<Cycle>(v1);
                 combined.addAll(v2);
-                return combined;
+                return Set.copyOf(combined);
             }));
 
         return new CyclesInSubgraph(mergedInvestigated, mergedBreakingPoints);
-    }
-
-    /**
-     * Merges cycles from another map into this subgraph and returns a map of all cycles.
-     * This is used during cycle detection accumulation.
-     */
-    public Map<PackageReference, Set<Cycle>> mergeBreakingPoints2(Map<PackageReference, Set<Cycle>> breakingPointsInOther) {
-        var accumulated = new CyclesInSubgraph(investigatedPackages, breakingPoints);
-        var temp = new CyclesInSubgraph(Set.of(), breakingPointsInOther);
-        var merged = accumulated.mergedWith(temp);
-        return merged.cycles();
     }
 
     public Map<PackageReference, Set<Cycle>> cycles() {
