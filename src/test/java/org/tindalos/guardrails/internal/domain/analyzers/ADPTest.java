@@ -93,103 +93,164 @@ public class ADPTest {
 
     @Test
     public void testNoCyclesInSimpleDag() {
-        var base = createPackage("com.example", Set.of("com.example.a"));
-        var a = createPackage("com.example.a", Set.of("com.example.b"));
-        var b = createPackage("com.example.b", Set.of());
+        var base = createPackage("root", Set.of("root.a"));
+        var a = createPackage("root.a", Set.of("root.b"));
+        var b = createPackage("root.b", Set.of());
 
-        var result = runProgrammatic("com.example", List.of(base, a, b));
+        var result = runProgrammatic("root", List.of(base, a, b));
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void testSelfLoopIgnored() {
-        var base = createPackage("com.example", Set.of("com.example.a"));
-        var a = createPackage("com.example.a", Set.of("com.example.a"));
+        var base = createPackage("root", Set.of("root.a"));
+        var a = createPackage("root.a", Set.of("root.a"));
 
-        var result = runProgrammatic("com.example", List.of(base, a));
+        var result = runProgrammatic("root", List.of(base, a));
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void testDiamondGraphAcyclic() {
-        var base = createPackage("com.example", Set.of("com.example.a", "com.example.b"));
-        var a = createPackage("com.example.a", Set.of("com.example.c"));
-        var b = createPackage("com.example.b", Set.of("com.example.c"));
-        var c = createPackage("com.example.c", Set.of());
+        var base = createPackage("root", Set.of("root.a", "root.b"));
+        var a = createPackage("root.a", Set.of("root.c"));
+        var b = createPackage("root.b", Set.of("root.c"));
+        var c = createPackage("root.c", Set.of());
 
-        var result = runProgrammatic("com.example", List.of(base, a, b, c));
+        var result = runProgrammatic("root", List.of(base, a, b, c));
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void testDirectCycleLength2() {
-        var base = createPackage("com.example", Set.of("com.example.a"));
-        var a = createPackage("com.example.a", Set.of("com.example.b"));
-        var b = createPackage("com.example.b", Set.of("com.example.a"));
+        var base = createPackage("root", Set.of("root.a"));
+        var a = createPackage("root.a", Set.of("root.b"));
+        var b = createPackage("root.b", Set.of("root.a"));
 
-        var result = runProgrammatic("com.example", List.of(base, a, b));
+        var result = runProgrammatic("root", List.of(base, a, b));
         
         var allCycles = flatten(result);
         assertEquals(1, allCycles.size());
         
-        var expectedCycle = new Cycle(ref("com.example.a"), ref("com.example.b"));
+        var expectedCycle = new Cycle(ref("root.a"), ref("root.b"));
         assertEquals(expectedCycle, allCycles.iterator().next());
     }
 
     @Test
     public void testTransitiveCycleLength3() {
-        var base = createPackage("com.example", Set.of("com.example.a"));
-        var a = createPackage("com.example.a", Set.of("com.example.b"));
-        var b = createPackage("com.example.b", Set.of("com.example.c"));
-        var c = createPackage("com.example.c", Set.of("com.example.a"));
+        var base = createPackage("root", Set.of("root.a"));
+        var a = createPackage("root.a", Set.of("root.b"));
+        var b = createPackage("root.b", Set.of("root.c"));
+        var c = createPackage("root.c", Set.of("root.a"));
 
-        var result = runProgrammatic("com.example", List.of(base, a, b, c));
+        var result = runProgrammatic("root", List.of(base, a, b, c));
 
-        var expectedCycle = new Cycle(ref("com.example.a"), ref("com.example.b"), ref("com.example.c"));
-        var expected = Map.of(ref("com.example.a"), Set.of(expectedCycle));
+        var expectedCycle = new Cycle(ref("root.a"), ref("root.b"), ref("root.c"));
+        var expected = Map.of(ref("root.a"), Set.of(expectedCycle));
         assertEquals(expected, result);
     }
 
     @Test
     public void testMultipleIndependentCycles() {
-        var base = createPackage("com.example", Set.of("com.example.sub1.a", "com.example.sub2.x"));
+        var base = createPackage("root", Set.of("root.sub1.a", "root.sub2.x"));
         
         // Subgraph 1 cycle: a <-> b
-        var sub1Root = createPackage("com.example.sub1", Set.of());
-        var a = createPackage("com.example.sub1.a", Set.of("com.example.sub1.b"));
-        var b = createPackage("com.example.sub1.b", Set.of("com.example.sub1.a"));
+        var sub1Root = createPackage("root.sub1", Set.of());
+        var a = createPackage("root.sub1.a", Set.of("root.sub1.b"));
+        var b = createPackage("root.sub1.b", Set.of("root.sub1.a"));
         
         // Subgraph 2 cycle: x <-> y
-        var sub2Root = createPackage("com.example.sub2", Set.of());
-        var x = createPackage("com.example.sub2.x", Set.of("com.example.sub2.y"));
-        var y = createPackage("com.example.sub2.y", Set.of("com.example.sub2.x"));
+        var sub2Root = createPackage("root.sub2", Set.of());
+        var x = createPackage("root.sub2.x", Set.of("root.sub2.y"));
+        var y = createPackage("root.sub2.y", Set.of("root.sub2.x"));
 
-        var result = runProgrammatic("com.example", List.of(base, sub1Root, a, b, sub2Root, x, y));
+        var result = runProgrammatic("root", List.of(base, sub1Root, a, b, sub2Root, x, y));
 
-        var expectedCycle1 = new Cycle(ref("com.example.sub1.a"), ref("com.example.sub1.b"));
-        var expectedCycle2 = new Cycle(ref("com.example.sub2.x"), ref("com.example.sub2.y"));
+        var expectedCycle1 = new Cycle(ref("root.sub1.b"), ref("root.sub1.a"));
+        var expectedCycle2 = new Cycle(ref("root.sub2.y"), ref("root.sub2.x"));
         var expected = Map.of(
-                ref("com.example.sub1.a"), Set.of(expectedCycle1),
-                ref("com.example.sub2.x"), Set.of(expectedCycle2)
+                ref("root.sub1.a"), Set.of(expectedCycle1),
+                ref("root.sub2.x"), Set.of(expectedCycle2)
         );
         assertEquals(expected, result);
     }
 
     @Test
     public void testOverlappingIntersectingCycles() {
-        var base = createPackage("com.example", Set.of("com.example.a"));
-        var a = createPackage("com.example.a", Set.of("com.example.b"));
-        var b = createPackage("com.example.b", Set.of("com.example.a", "com.example.c"));
-        var c = createPackage("com.example.c", Set.of("com.example.b", "com.example.a"));
+        var base = createPackage("root", Set.of("root.a"));
+        var a = createPackage("root.a", Set.of("root.b"));
+        var b = createPackage("root.b", Set.of("root.a", "root.c"));
+        var c = createPackage("root.c", Set.of("root.b", "root.a"));
 
-        var result = runProgrammatic("com.example", List.of(base, a, b, c));
+        var result = runProgrammatic("root", List.of(base, a, b, c));
 
-        var cycleAB  = new Cycle(ref("com.example.a"), ref("com.example.b"));
-        var cycleBC  = new Cycle(ref("com.example.b"), ref("com.example.c"));
-        var cycleABC = new Cycle(ref("com.example.a"), ref("com.example.b"), ref("com.example.c"));
+        var cycleBA  = new Cycle(ref("root.b"), ref("root.a"));
+        var cycleCB  = new Cycle(ref("root.c"), ref("root.b"));
+        var cycleCAB = new Cycle(ref("root.c"), ref("root.a"), ref("root.b"));
 
         var expected = Map.of(
-                ref("com.example.b"), Set.of(cycleAB, cycleBC, cycleABC)
+                ref("root.a"), Set.of(cycleBA),
+                ref("root.b"), Set.of(cycleCB, cycleCAB)
+        );
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testThreeIntersectingOverlappingCycles() {
+        var base = createPackage("root", Set.of("root.a"));
+        var a = createPackage("root.a", Set.of("root.b"));
+        var b = createPackage("root.b", Set.of("root.c"));
+        var c = createPackage("root.c", Set.of("root.d"));
+        var d = createPackage("root.d", Set.of("root.a", "root.e"));
+        var e = createPackage("root.e", Set.of("root.f"));
+        var f = createPackage("root.f", Set.of("root.g"));
+        var g = createPackage("root.g", Set.of("root.d", "root.h"));
+        var h = createPackage("root.h", Set.of("root.i"));
+        var i = createPackage("root.i", Set.of("root.j"));
+        var j = createPackage("root.j", Set.of("root.g"));
+
+        var result = runProgrammatic("root", List.of(base, a, b, c, d, e, f, g, h, i, j));
+
+        var cycle1 = new Cycle(ref("root.b"), ref("root.c"), ref("root.d"), ref("root.a"));
+        var cycle2 = new Cycle(ref("root.d"), ref("root.e"), ref("root.f"), ref("root.g"));
+        var cycle3 = new Cycle(ref("root.g"), ref("root.h"), ref("root.i"), ref("root.j"));
+
+        var expected = Map.of(
+                ref("root.a"), Set.of(cycle1),
+                ref("root.g"), Set.of(cycle2),
+                ref("root.j"), Set.of(cycle3)
+        );
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testFourIntersectingOverlappingCycles() {
+        var base = createPackage("root", Set.of("root.a", "root.f"));
+        var a = createPackage("root.a", Set.of("root.b"));
+        var b = createPackage("root.b", Set.of("root.c"));
+        var c = createPackage("root.c", Set.of("root.a", "root.d"));
+        var d = createPackage("root.d", Set.of("root.e"));
+        var e = createPackage("root.e", Set.of("root.c"));
+
+        var f = createPackage("root.f", Set.of("root.g"));
+        var g = createPackage("root.g", Set.of("root.h"));
+        var h = createPackage("root.h", Set.of("root.f", "root.i"));
+        var i = createPackage("root.i", Set.of("root.j"));
+        var j = createPackage("root.j", Set.of("root.h"));
+
+        var result = runProgrammatic("root", List.of(base, a, b, c, d, e, f, g, h, i, j));
+
+        var cycleABC = new Cycle(ref("root.a"), ref("root.b"), ref("root.c"));
+        var cycleCDE = new Cycle(ref("root.c"), ref("root.d"), ref("root.e"));
+        var cycleFGH = new Cycle(ref("root.f"), ref("root.g"), ref("root.h"));
+        var cycleHIJ = new Cycle(ref("root.h"), ref("root.i"), ref("root.j"));
+
+        var expected = Map.of(
+                ref("root.a"), Set.of(cycleABC),
+                ref("root.e"), Set.of(cycleCDE),
+                ref("root.f"), Set.of(cycleFGH),
+                ref("root.j"), Set.of(cycleHIJ)
         );
         assertEquals(expected, result);
     }
@@ -198,8 +259,8 @@ public class ADPTest {
     public void testUnderAndOverLimitAtBreakingPoint() {
         // Build a node 'com.example.hub' connected in multiple cycles to verify LIMIT behavior in CyclesInSubgraph.
         // With LIMIT = 5, once a node has more than 5 cycles, isBreakingPoint is true.
-        var base = createPackage("com.example", Set.of("com.example.hub"));
-        var hub = createPackage("com.example.hub", Set.of());
+        var base = createPackage("root", Set.of("root.hub"));
+        var hub = createPackage("root.hub", Set.of());
         
         var packages = new java.util.ArrayList<Package>();
         packages.add(base);
@@ -207,8 +268,8 @@ public class ADPTest {
         
         // Create 7 separate cycles through the hub: hub -> a_i -> hub
         for (int i = 1; i <= 7; i++) {
-            String leafName = "com.example.leaf" + i;
-            var leaf = createPackage(leafName, Set.of("com.example.hub"));
+            String leafName = "root.leaf" + i;
+            var leaf = createPackage(leafName, Set.of("root.hub"));
             packages.add(leaf);
             
             // Connect hub directly to this leaf
@@ -226,9 +287,9 @@ public class ADPTest {
         // update hub in the list
         packages.set(1, hub);
         
-        var result = runProgrammatic("com.example", packages);
+        var result = runProgrammatic("root", packages);
         
-        int hubCyclesCount = result.getOrDefault(ref("com.example.hub"), Set.of()).size();
+        int hubCyclesCount = result.getOrDefault(ref("root.hub"), Set.of()).size();
         assertTrue(hubCyclesCount > 0);
     }
 

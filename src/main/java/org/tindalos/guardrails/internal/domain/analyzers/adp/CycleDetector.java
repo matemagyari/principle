@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.tindalos.guardrails.internal.domain.analyzers.Analyzer;
 import org.tindalos.guardrails.internal.domain.constraints.Constraints;
@@ -156,11 +154,13 @@ public final class CycleDetector implements Analyzer {
         return -1;
     }
 
-    private Set<Package> accumulatedDirectlyReferredPackages(Package currentPackage, Map<PackageReference, Package> packageReferenceMap) {
+    private List<Package> accumulatedDirectlyReferredPackages(Package currentPackage, Map<PackageReference, Package> packageReferenceMap) {
         return currentPackage.accumulatedDirectPackageReferences().stream()
             .map(packageReferenceMap::get)
             .filter(Objects::nonNull)
-            .collect(Collectors.toUnmodifiableSet());
+            .sorted(Comparator.<Package>comparingInt(pkg -> pkg.metrics().afferentCoupling())
+                .thenComparing(Package::reference))
+            .toList();
     }
 
     private boolean notEveryNodeUnderFirst(Package currentPackage, List<PackageReference> cycleCandidate) {
