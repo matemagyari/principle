@@ -144,12 +144,10 @@ public class ADPTest {
         var c = createPackage("com.example.c", Set.of("com.example.a"));
 
         var result = runProgrammatic("com.example", List.of(base, a, b, c));
-        
-        var allCycles = flatten(result);
-        assertEquals(1, allCycles.size());
-        
+
         var expectedCycle = new Cycle(ref("com.example.a"), ref("com.example.b"), ref("com.example.c"));
-        assertEquals(expectedCycle, allCycles.iterator().next());
+        var expected = Map.of(ref("com.example.a"), Set.of(expectedCycle));
+        assertEquals(expected, result);
     }
 
     @Test
@@ -167,15 +165,14 @@ public class ADPTest {
         var y = createPackage("com.example.sub2.y", Set.of("com.example.sub2.x"));
 
         var result = runProgrammatic("com.example", List.of(base, sub1Root, a, b, sub2Root, x, y));
-        
-        var allCycles = flatten(result);
-        assertEquals(2, allCycles.size());
-        
+
         var expectedCycle1 = new Cycle(ref("com.example.sub1.a"), ref("com.example.sub1.b"));
         var expectedCycle2 = new Cycle(ref("com.example.sub2.x"), ref("com.example.sub2.y"));
-        
-        assertTrue(allCycles.contains(expectedCycle1));
-        assertTrue(allCycles.contains(expectedCycle2));
+        var expected = Map.of(
+                ref("com.example.sub1.a"), Set.of(expectedCycle1),
+                ref("com.example.sub2.x"), Set.of(expectedCycle2)
+        );
+        assertEquals(expected, result);
     }
 
     @Test
@@ -186,9 +183,15 @@ public class ADPTest {
         var c = createPackage("com.example.c", Set.of("com.example.b", "com.example.a"));
 
         var result = runProgrammatic("com.example", List.of(base, a, b, c));
-        
-        var allCycles = flatten(result);
-        assertTrue(allCycles.size() >= 2);
+
+        var cycleAB  = new Cycle(ref("com.example.a"), ref("com.example.b"));
+        var cycleBC  = new Cycle(ref("com.example.b"), ref("com.example.c"));
+        var cycleABC = new Cycle(ref("com.example.a"), ref("com.example.b"), ref("com.example.c"));
+
+        var expected = Map.of(
+                ref("com.example.b"), Set.of(cycleAB, cycleBC, cycleABC)
+        );
+        assertEquals(expected, result);
     }
 
     @Test
@@ -236,11 +239,33 @@ public class ADPTest {
     }
 
     private Map<PackageReference, Set<Cycle>> runProgrammatic(String basePackageName, List<Package> packages) {
+        var packagesWithMetrics = withCalculatedMetrics(packages);
         var plan = new AnalysisPlan(constraints, basePackageName);
-        var input = new org.tindalos.guardrails.internal.domain.plan.AnalysisInput(packages, Set.of(), plan);
+        var input = new org.tindalos.guardrails.internal.domain.plan.AnalysisInput(packagesWithMetrics, Set.of(), plan);
         var packageStructureBuilder = new org.tindalos.guardrails.internal.infrastructure.di.PackageStructureBuilderImpl();
         var detector = new org.tindalos.guardrails.internal.domain.analyzers.adp.CycleDetector(packageStructureBuilder);
         return detector.analyze(input).cyclesByBreakingPoints();
+    }
+
+    private static List<Package> withCalculatedMetrics(List<Package> packages) {
+        return packages.stream().map(pkg -> {
+            int efferentCount = pkg.accumulatedDirectPackageReferences().size();
+            int afferentCount = (int) packages.stream()
+                .filter(other -> !other.reference().equals(pkg.reference()))
+                .filter(other -> other.accumulatedDirectPackageReferences().contains(pkg.reference()))
+                .count();
+            var nextMetrics = new org.tindalos.guardrails.internal.domain.core.packages.PackageMetrics(
+                afferentCount, efferentCount, 0.0f, 0.0f, 0.0f
+            );
+            return new Package(
+                pkg.reference(),
+                nextMetrics,
+                pkg.ownPackageReferences(),
+                pkg.ownExternalPackageReferences(),
+                pkg.isUnreferred(),
+                pkg.subPackages()
+            );
+        }).toList();
     }
 
     private static Package createPackage(String name, Set<String> efferents) {

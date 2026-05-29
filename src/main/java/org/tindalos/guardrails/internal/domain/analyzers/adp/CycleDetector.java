@@ -34,7 +34,8 @@ public final class CycleDetector implements Analyzer {
 
         var sortedByAfferents = references.values().stream()
             .filter(pkg -> basePackage.metrics().afferentCoupling() > 0 || !pkg.equals(basePackage))
-            .sorted(Comparator.comparingInt(pkg -> pkg.metrics().afferentCoupling()))
+            .sorted(Comparator.<Package>comparingInt(pkg -> pkg.metrics().afferentCoupling())
+                .thenComparing(Package::reference))
             .toList();
 
         var cycles = analyzeCycles(sortedByAfferents, references);
