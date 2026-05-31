@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,18 @@ public class ADPTest {
         var expectedCycle = new Cycle(ref("org.tindalos.guardrailstest.cycle.simple.left"), ref("org.tindalos.guardrailstest.cycle.simple.right"));
         var expected = Map.of(ref("org.tindalos.guardrailstest.cycle.simple.right"), Set.of(expectedCycle));
         assertEquals(expected, result);
+    }
+
+    @Test
+    public void simple_cycleExceedsThreshold_constraintIsViolated() {
+        var result = runResult("org.tindalos.guardrailstest.cycle.simple", 0);
+        assertTrue(result.constraintViolated());
+    }
+
+    @Test
+    public void simple_cycleAtThreshold_constraintIsNotViolated() {
+        var result = runResult("org.tindalos.guardrailstest.cycle.simple", 1);
+        assertFalse(result.constraintViolated());
     }
 
     @Test
@@ -344,9 +357,16 @@ public class ADPTest {
     }
 
     private Map<PackageReference, Set<Cycle>> run(String basePackage) {
-        var plan = new AnalysisPlan(constraints, basePackage);
+        return runResult(basePackage, 0).cyclesByBreakingPoints();
+    }
+
+    private org.tindalos.guardrails.internal.domain.analyzers.adp.ADPResult runResult(String basePackage, int threshold) {
+        var localConstraints = Constraints.builder()
+                .packageCoupling(PackageCouplingConstraints.builder().adp(new ADP(threshold)).build())
+                .build();
+        var plan = new AnalysisPlan(localConstraints, basePackage);
         var analyzer = Guardrails.createAnalyser(basePackage);
-        return analyzer.analyze(plan).adpResult().get().cyclesByBreakingPoints();
+        return analyzer.analyze(plan).adpResult().get();
     }
 
     private static PackageReference ref(String reference) {

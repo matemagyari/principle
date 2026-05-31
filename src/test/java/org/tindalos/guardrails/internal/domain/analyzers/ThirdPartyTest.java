@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,7 @@ public class ThirdPartyTest {
                 new PackageReference("org.tindalos.guardrailstest.thirdparty.simple.domain"),
                 Set.of(new PackageReference("org.apache.commons.lang3")));
         assertEquals(expected, result.violations());
+        assertTrue(result.constraintViolated());
     }
 
     @Test
@@ -58,6 +60,22 @@ public class ThirdPartyTest {
                 new PackageReference("org.tindalos.guardrailstest.thirdparty.simple2.app"),
                 Set.of(new PackageReference("org.apache.commons.io")));
         assertEquals(expected, result.violations());
+        assertTrue(result.constraintViolated());
+    }
+
+    @Test
+    public void thresholdBoundary_equalViolationCount_isNotViolated() {
+        var barriers = List.of(new Barrier("layers.app", List.of("org.apache.commons.lang3")));
+        var thirdParty = new ThirdParty(barriers, 1);
+
+        var result = run("org.tindalos.guardrailstest.thirdparty.simple2", thirdParty);
+
+        assertEquals(1, result.violations().values().stream().mapToInt(Set::size).sum());
+        assertTrue(result.violations().containsKey(new PackageReference("org.tindalos.guardrailstest.thirdparty.simple2.app")));
+        assertTrue(result.violations().get(new PackageReference("org.tindalos.guardrailstest.thirdparty.simple2.app"))
+                .contains(new PackageReference("org.apache.commons.io")));
+        assertTrue(result.violations().size() == 1);
+        assertFalse(result.constraintViolated());
     }
 
     private ThirdPartyViolationsResult run(String basePackage, ThirdParty thirdParty) {
