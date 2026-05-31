@@ -96,5 +96,10 @@ constraints:
 
   package_coupling:
     cyclic_dependencies_threshold: 0
+    sdp:
+      violation_threshold: 999
+    sap:
+      violation_threshold: 0
+      max_distance: 1.0
     acd_threshold: 0.40
     structure_analysis_enabled: true

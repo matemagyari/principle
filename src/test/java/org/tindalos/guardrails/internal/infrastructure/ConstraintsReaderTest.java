@@ -147,6 +147,42 @@ public class ConstraintsReaderTest {
     }
 
     @Test
+    public void packageCoupling_sdp_isParsed() throws Exception {
+        var path = writeTempYaml("""
+                root_package: com.example
+                constraints:
+                  package_coupling:
+                    sdp:
+                      violation_threshold: 4
+                """);
+
+        var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
+
+        var sdp = constraints.packageCoupling().get().sdp();
+        assertTrue(sdp.isPresent());
+        assertEquals(4, sdp.get().violationThreshold());
+    }
+
+    @Test
+    public void packageCoupling_sap_isParsed() throws Exception {
+        var path = writeTempYaml("""
+                root_package: com.example
+                constraints:
+                  package_coupling:
+                    sap:
+                      violation_threshold: 2
+                      max_distance: 0.25
+                """);
+
+        var constraints = ConstraintsReader.readFromFile(Optional.of(path)).constraints();
+
+        var sap = constraints.packageCoupling().get().sap();
+        assertTrue(sap.isPresent());
+        assertEquals(2, sap.get().violationThreshold());
+        assertEquals(0.25, sap.get().maxDistance(), 0.001);
+    }
+
+    @Test
     public void structureAnalysisEnabled_groupingIsPresent() throws Exception {
         var path = writeTempYaml("""
                 root_package: com.example
@@ -267,6 +303,11 @@ public class ConstraintsReaderTest {
                     violation_threshold: 0
                   package_coupling:
                     cyclic_dependencies_threshold: 0
+                    sdp:
+                      violation_threshold: 1
+                    sap:
+                      violation_threshold: 2
+                      max_distance: 0.2
                     acd_threshold: 0.5
                     structure_analysis_enabled: true
                 """);
@@ -279,6 +320,8 @@ public class ConstraintsReaderTest {
         assertTrue(constraints.thirdParty().isPresent());
         assertTrue(constraints.packageCoupling().isPresent());
         assertTrue(constraints.packageCoupling().get().adp().isPresent());
+        assertTrue(constraints.packageCoupling().get().sdp().isPresent());
+        assertTrue(constraints.packageCoupling().get().sap().isPresent());
         assertTrue(constraints.packageCoupling().get().racd().isPresent());
         assertTrue(constraints.packageCoupling().get().grouping().isPresent());
     }

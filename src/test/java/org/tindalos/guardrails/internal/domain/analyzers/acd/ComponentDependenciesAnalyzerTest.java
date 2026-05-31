@@ -77,9 +77,41 @@ public class ComponentDependenciesAnalyzerTest {
         assertEquals(1.5, result.acd(), 0.0001);
     }
 
+    @Test
+    public void analyze_withRacdThresholdBelowActual_marksConstraintViolated() {
+        var base = pkg("com.example", Set.of(), metrics(0, 0));
+        var mod1 = pkg("com.example.mod1", Set.of("com.example.mod2"), metrics(0, 1));
+        var mod2 = pkg("com.example.mod2", Set.of(), metrics(1, 0));
+
+        var analyzer = new ComponentDependenciesAnalyzer(new ReturningBuilder(base));
+        var input = input(List.of(base, mod1, mod2), PackageCouplingConstraints.builder().racd(new RACD(0.5)).build());
+
+        ComponentDependenciesResult result = analyzer.analyze(input);
+
+        assertTrue(result.constraintViolated());
+    }
+
+    @Test
+    public void analyze_withRacdThresholdAtBoundary_isNotViolated() {
+        var base = pkg("com.example", Set.of(), metrics(0, 0));
+        var mod1 = pkg("com.example.mod1", Set.of("com.example.mod2"), metrics(0, 1));
+        var mod2 = pkg("com.example.mod2", Set.of(), metrics(1, 0));
+
+        var analyzer = new ComponentDependenciesAnalyzer(new ReturningBuilder(base));
+        var input = input(List.of(base, mod1, mod2), PackageCouplingConstraints.builder().racd(new RACD(0.75)).build());
+
+        ComponentDependenciesResult result = analyzer.analyze(input);
+
+        assertFalse(result.constraintViolated());
+    }
+
     private static AnalysisInput input(List<Package> packages) {
+        return input(packages, PackageCouplingConstraints.builder().acd(new ACD()).build());
+    }
+
+    private static AnalysisInput input(List<Package> packages, PackageCouplingConstraints packageCoupling) {
         var constraints = Constraints.builder()
-                .packageCoupling(PackageCouplingConstraints.builder().acd(new ACD()).build())
+                .packageCoupling(packageCoupling)
                 .build();
         return new AnalysisInput(packages, Set.of(), new AnalysisPlan(constraints, "com.example"));
     }
