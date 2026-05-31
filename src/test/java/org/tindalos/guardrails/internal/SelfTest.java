@@ -3,14 +3,12 @@ package org.tindalos.guardrails.internal;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.tindalos.guardrails.api.AnalysisOutcome;
-import org.tindalos.guardrails.api.AnalysisPlan;
-import org.tindalos.guardrails.api.GuardrailsAnalyzer;
+import org.tindalos.guardrails.internal.app.GuardrailsAnalyser;
+import org.tindalos.guardrails.internal.domain.AggregatedAnalysisResults;
 import org.tindalos.guardrails.internal.domain.analyzers.TestFixture;
-import org.tindalos.guardrails.internal.domain.analyzers.adp.ADPResult;
-import org.tindalos.guardrails.internal.domain.analyzers.labels.LabelsAnalysisResult;
+import org.tindalos.guardrails.internal.domain.plan.AnalysisPlan;
 import org.tindalos.guardrails.internal.infrastructure.constraints.ConstraintsReader;
 import org.tindalos.guardrails.internal.infrastructure.di.Guardrails;
 import org.tindalos.guardrails.internal.infrastructure.reporters.ReportsDirectoryManager;
@@ -18,42 +16,52 @@ import org.tindalos.guardrails.internal.utils.logging.TheLogger;
 
 public class SelfTest {
 
-    @Test
-    public void checkItselfFromInternalClasses() {
-        ReportsDirectoryManager.ensureReportsDirectoryExists();
+    private static final AnalysisPlan PLAN = ConstraintsReader.readFromFile(Optional.of("guardrails.yml"));
+    private static final GuardrailsAnalyser ANALYZER = Guardrails.createAnalyser(PLAN.basePackage());
+    private static AggregatedAnalysisResults analysisResults;
 
+    @BeforeAll
+    public static void setup() {
+        ReportsDirectoryManager.ensureReportsDirectoryExists();
         TestFixture.setLogger();
 
-        var application = Guardrails.createAnalyser("org.tindalos.guardrails");
-
-        var reporter = Guardrails.createAggregatedYAMLReporter();
-
-        var plan = ConstraintsReader.readFromFile(Optional.of("guardrails.yml"));
-
-        try {
-            var results = application.analyze(plan);
-            var summary = reporter.summary(results);
-            TheLogger.info(summary);
-            var adpViolated = results.adpResult().map(ADPResult::constraintViolated).orElse(false);
-            var labelsViolated = results.labelsAnalysisResult().map(LabelsAnalysisResult::constraintViolated).orElse(false);
-            assertFalse(adpViolated);
-            assertFalse(labelsViolated);
-        } catch (Exception ex) {
-            TheLogger.error(ex.getMessage());
-            fail(ex.getMessage());
-        }
+        analysisResults = ANALYZER.analyze(PLAN);
+        TheLogger.info(Guardrails.createAggregatedYAMLReporter().summary(analysisResults));
     }
 
     @Test
-    public void checkItselfFromAPI() {
-        TestFixture.setLogger();
+    public void checkItself_adpConstraintIsNotViolated() {
+        assertFalse(analysisResults.adpResult()
+                .orElseThrow(() -> new IllegalStateException("Missing ADP analysis result"))
+                .constraintViolated());
+    }
 
-        AnalysisPlan plan = org.tindalos.guardrails.api.Guardrails.readPlan(Optional.of("guardrails.yml"));
-        GuardrailsAnalyzer analyzer = org.tindalos.guardrails.api.Guardrails.analyzer("org.tindalos.guardrails");
-        AnalysisOutcome outcome = analyzer.analyze(plan);
+    @Test
+    public void checkItself_sapConstraintIsNotViolated() {
+        assertFalse(analysisResults.sapResult()
+                .orElseThrow(() -> new IllegalStateException("Missing SAP analysis result"))
+                .constraintViolated());
+    }
 
-        assertFalse(outcome.hasViolations());
-        TheLogger.info(outcome.summaryYaml());
+    @Test
+    public void checkItself_sdpConstraintIsNotViolated() {
+        assertFalse(analysisResults.sdpResult()
+                .orElseThrow(() -> new IllegalStateException("Missing SDP analysis result"))
+                .constraintViolated());
+    }
+
+    @Test
+    public void checkItself_acdConstraintIsNotViolated() {
+        assertFalse(analysisResults.componentDependenciesResult()
+                .orElseThrow(() -> new IllegalStateException("Missing ACD analysis result"))
+                .constraintViolated());
+    }
+
+    @Test
+    public void checkItself_thirdPartyConstraintIsNotViolated() {
+        assertFalse(analysisResults.thirdPartyViolationsResult()
+                .orElseThrow(() -> new IllegalStateException("Missing third-party analysis result"))
+                .constraintViolated());
     }
 
 }
